@@ -39,3 +39,4 @@ jobs:
         run: mvn deploy -s settings.xml
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          GPG_PASSPHRASE: ${{ secrets.MAVEN_CENTRAL_SECRET_KEY_PASSWORD }}
