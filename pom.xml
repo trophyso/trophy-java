@@ -200,9 +200,8 @@
                     <arg>--pinentry-mode</arg>
                     <arg>loopback</arg>
                   </gpgArguments>
-                  <!-- Enable batch mode and use the passphrase from the secret -->
-                  <useGpg>true</useGpg>
-                  <passphrase>${env.GPG_PASSPHRASE}</passphrase>
+                  <passphraseEnvName>GPG_PASSPHRASE</passphraseEnvName>
+                  <keyEnvName>GPG_KEY</keyEnvName>
                 </configuration>
               </execution>
             </executions>
