@@ -22,6 +22,12 @@ jobs:
           server-id: central
           overwrite-settings: false
 
+      # Import GPG key for signing
+      - name: Import GPG key
+        run: |
+          echo "$MAVEN_CENTRAL_SECRET_KEY" | gpg --batch --import
+          gpg --batch --pinentry-mode loopback --passphrase "$MAVEN_CENTRAL_SECRET_KEY_PASSWORD" --quick-sign-key MAVEN_CENTRAL_SECRET_KEY_KEY_ID
+
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 
