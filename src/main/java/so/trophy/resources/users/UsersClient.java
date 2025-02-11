@@ -7,14 +7,14 @@ package so.trophy.resources.users;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import core.ClientOptions;
-import core.ObjectMappers;
-import core.RequestOptions;
-import core.TrophyApiApiException;
-import core.TrophyApiException;
-import errors.NotFoundError;
-import errors.UnauthorizedError;
-import errors.UnprocessableEntityError;
+import so.trophy.core.ClientOptions;
+import so.trophy.core.ObjectMappers;
+import so.trophy.core.RequestOptions;
+import so.trophy.core.TrophyApiApiException;
+import so.trophy.core.TrophyApiException;
+import so.trophy.errors.NotFoundError;
+import so.trophy.errors.UnauthorizedError;
+import so.trophy.errors.UnprocessableEntityError;
 import java.io.IOException;
 import java.lang.Object;
 import java.lang.String;
@@ -25,9 +25,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import types.AchievementResponse;
-import types.ErrorBody;
-import types.MetricResponse;
+import so.trophy.types.AchievementResponse;
+import so.trophy.types.ErrorBody;
+import so.trophy.types.MetricResponse;
 
 public class UsersClient {
   protected final ClientOptions clientOptions;

@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import core.ObjectMappers;
+import so.trophy.core.ObjectMappers;
 import java.lang.Double;
 import java.lang.Object;
 import java.lang.String;

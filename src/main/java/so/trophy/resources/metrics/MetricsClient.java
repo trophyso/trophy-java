@@ -6,15 +6,15 @@ package so.trophy.resources.metrics;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import core.ClientOptions;
-import core.MediaTypes;
-import core.ObjectMappers;
-import core.RequestOptions;
-import core.TrophyApiApiException;
-import core.TrophyApiException;
-import errors.BadRequestError;
-import errors.UnauthorizedError;
-import errors.UnprocessableEntityError;
+import so.trophy.core.ClientOptions;
+import so.trophy.core.MediaTypes;
+import so.trophy.core.ObjectMappers;
+import so.trophy.core.RequestOptions;
+import so.trophy.core.TrophyApiApiException;
+import so.trophy.core.TrophyApiException;
+import so.trophy.errors.BadRequestError;
+import so.trophy.errors.UnauthorizedError;
+import so.trophy.errors.UnprocessableEntityError;
 import java.io.IOException;
 import java.lang.Object;
 import java.lang.String;
@@ -25,9 +25,9 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import resources.metrics.requests.MetricsEventRequest;
-import types.ErrorBody;
-import types.EventResponse;
+import so.trophy.resources.metrics.requests.MetricsEventRequest;
+import so.trophy.types.ErrorBody;
+import so.trophy.types.EventResponse;
 
 public class MetricsClient {
   protected final ClientOptions clientOptions;

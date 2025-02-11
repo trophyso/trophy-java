@@ -5,8 +5,8 @@ package so.trophy.errors;
  */
 
 
-import core.TrophyApiApiException;
-import types.ErrorBody;
+import so.trophy.core.TrophyApiApiException;
+import so.trophy.types.ErrorBody;
 
 public final class NotFoundError extends TrophyApiApiException {
   /**

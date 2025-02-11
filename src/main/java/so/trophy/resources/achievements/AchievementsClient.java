@@ -6,15 +6,15 @@ package so.trophy.resources.achievements;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import core.ClientOptions;
-import core.MediaTypes;
-import core.ObjectMappers;
-import core.RequestOptions;
-import core.TrophyApiApiException;
-import core.TrophyApiException;
-import errors.NotFoundError;
-import errors.UnauthorizedError;
-import errors.UnprocessableEntityError;
+import so.trophy.core.ClientOptions;
+import so.trophy.core.MediaTypes;
+import so.trophy.core.ObjectMappers;
+import so.trophy.core.RequestOptions;
+import so.trophy.core.TrophyApiApiException;
+import so.trophy.core.TrophyApiException;
+import so.trophy.errors.NotFoundError;
+import so.trophy.errors.UnauthorizedError;
+import so.trophy.errors.UnprocessableEntityError;
 import java.io.IOException;
 import java.lang.Object;
 import java.lang.String;
@@ -25,9 +25,9 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import resources.achievements.requests.AchievementsCompleteRequest;
-import types.AchievementCompletionResponse;
-import types.ErrorBody;
+import so.trophy.resources.achievements.requests.AchievementsCompleteRequest;
+import so.trophy.types.AchievementCompletionResponse;
+import so.trophy.types.ErrorBody;
 
 public class AchievementsClient {
   protected final ClientOptions clientOptions;
