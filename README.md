@@ -33,6 +33,34 @@ The package needs to be configured with your account's API key which is availabl
 dashboard.
 
 ```java
+import so.trophy.*;
+import so.trophy.resources.metrics.requests.MetricsEventRequest;
+import so.trophy.types.EventRequestUser;
+import so.trophy.types.EventResponse;
+
+public class Main {
+  public static void main(String[] args) {
+    // Create a new trophy client
+    TrophyApiClient client = TrophyApiClient.builder()
+      .apiKey("YOUR_API_KEY")
+      .build();
+
+    // Create a new event request
+    MetricsEventRequest request = MetricsEventRequest.builder()
+      .user(
+        EventRequestUser.builder()
+          .id("USER_ID")
+          .email("jk.rowling@harrypotter.com")
+          .build()
+      )
+      .value(750)
+      .build();
+
+    // Send the event request and log the created event ID
+    EventResponse response = client.metrics().event("words-written", request);
+    System.out.println(response.getEventId());
+  }
+}
 
 ```
 
