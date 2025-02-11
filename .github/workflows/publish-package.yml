@@ -36,7 +36,7 @@ jobs:
         run: mvn -B -Dmaven.javadoc.skip=true package --file pom.xml
 
       - name: Publish to Apache Maven
-        run: mvn deploy -s settings.xml
+        run: mvn deploy -Dmaven.javadoc.skip=true -s settings.xml
         env:
           GPG_PASSPHRASE: ${{ secrets.MAVEN_CENTRAL_SECRET_KEY_PASSWORD }}
           GPG_KEY: ${{ secrets.MAVEN_CENTRAL_SECRET_KEY_KEY_ID }}
