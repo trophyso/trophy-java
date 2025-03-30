@@ -19,20 +19,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
-import so.trophy.types.EventRequestUser;
+import so.trophy.types.UpsertedUser;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(
     builder = MetricsEventRequest.Builder.class
 )
 public final class MetricsEventRequest {
-  private final EventRequestUser user;
+  private final UpsertedUser user;
 
   private final double value;
 
   private final Map<String, Object> additionalProperties;
 
-  private MetricsEventRequest(EventRequestUser user, double value,
+  private MetricsEventRequest(UpsertedUser user, double value,
       Map<String, Object> additionalProperties) {
     this.user = user;
     this.value = value;
@@ -43,7 +43,7 @@ public final class MetricsEventRequest {
    * @return The user that triggered the event.
    */
   @JsonProperty("user")
-  public EventRequestUser getUser() {
+  public UpsertedUser getUser() {
     return user;
   }
 
@@ -85,7 +85,7 @@ public final class MetricsEventRequest {
   }
 
   public interface UserStage {
-    ValueStage user(@NotNull EventRequestUser user);
+    ValueStage user(@NotNull UpsertedUser user);
 
     Builder from(MetricsEventRequest other);
   }
@@ -102,7 +102,7 @@ public final class MetricsEventRequest {
       ignoreUnknown = true
   )
   public static final class Builder implements UserStage, ValueStage, _FinalStage {
-    private EventRequestUser user;
+    private UpsertedUser user;
 
     private double value;
 
@@ -125,7 +125,7 @@ public final class MetricsEventRequest {
      */
     @java.lang.Override
     @JsonSetter("user")
-    public ValueStage user(@NotNull EventRequestUser user) {
+    public ValueStage user(@NotNull UpsertedUser user) {
       this.user = Objects.requireNonNull(user, "user must not be null");
       return this;
     }

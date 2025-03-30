@@ -36,15 +36,18 @@ public final class EventResponse {
 
   private final Optional<List<EventResponseMetricsItem>> achievements;
 
+  private final Optional<StreakResponse> currentStreak;
+
   private final Map<String, Object> additionalProperties;
 
   private EventResponse(String eventId, String metricId, double total,
-      Optional<List<EventResponseMetricsItem>> achievements,
+      Optional<List<EventResponseMetricsItem>> achievements, Optional<StreakResponse> currentStreak,
       Map<String, Object> additionalProperties) {
     this.eventId = eventId;
     this.metricId = metricId;
     this.total = total;
     this.achievements = achievements;
+    this.currentStreak = currentStreak;
     this.additionalProperties = additionalProperties;
   }
 
@@ -80,6 +83,14 @@ public final class EventResponse {
     return achievements;
   }
 
+  /**
+   * @return The user's current streak for the metric, if the metric has streaks enabled.
+   */
+  @JsonProperty("currentStreak")
+  public Optional<StreakResponse> getCurrentStreak() {
+    return currentStreak;
+  }
+
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
@@ -92,12 +103,12 @@ public final class EventResponse {
   }
 
   private boolean equalTo(EventResponse other) {
-    return eventId.equals(other.eventId) && metricId.equals(other.metricId) && total == other.total && achievements.equals(other.achievements);
+    return eventId.equals(other.eventId) && metricId.equals(other.metricId) && total == other.total && achievements.equals(other.achievements) && currentStreak.equals(other.currentStreak);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.eventId, this.metricId, this.total, this.achievements);
+    return Objects.hash(this.eventId, this.metricId, this.total, this.achievements, this.currentStreak);
   }
 
   @java.lang.Override
@@ -129,6 +140,10 @@ public final class EventResponse {
     _FinalStage achievements(Optional<List<EventResponseMetricsItem>> achievements);
 
     _FinalStage achievements(List<EventResponseMetricsItem> achievements);
+
+    _FinalStage currentStreak(Optional<StreakResponse> currentStreak);
+
+    _FinalStage currentStreak(StreakResponse currentStreak);
   }
 
   @JsonIgnoreProperties(
@@ -140,6 +155,8 @@ public final class EventResponse {
     private String metricId;
 
     private double total;
+
+    private Optional<StreakResponse> currentStreak = Optional.empty();
 
     private Optional<List<EventResponseMetricsItem>> achievements = Optional.empty();
 
@@ -155,6 +172,7 @@ public final class EventResponse {
       metricId(other.getMetricId());
       total(other.getTotal());
       achievements(other.getAchievements());
+      currentStreak(other.getCurrentStreak());
       return this;
     }
 
@@ -192,6 +210,26 @@ public final class EventResponse {
     }
 
     /**
+     * <p>The user's current streak for the metric, if the metric has streaks enabled.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage currentStreak(StreakResponse currentStreak) {
+      this.currentStreak = Optional.ofNullable(currentStreak);
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter(
+        value = "currentStreak",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage currentStreak(Optional<StreakResponse> currentStreak) {
+      this.currentStreak = currentStreak;
+      return this;
+    }
+
+    /**
      * <p>Changes to achievements as a result of this event.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
@@ -213,7 +251,7 @@ public final class EventResponse {
 
     @java.lang.Override
     public EventResponse build() {
-      return new EventResponse(eventId, metricId, total, achievements, additionalProperties);
+      return new EventResponse(eventId, metricId, total, achievements, currentStreak, additionalProperties);
     }
   }
 }
