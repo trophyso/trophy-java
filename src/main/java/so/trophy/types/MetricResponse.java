@@ -43,7 +43,7 @@ public final class MetricResponse {
 
   private final double current;
 
-  private final List<AchievementResponse> achievements;
+  private final List<MultiStageAchievementResponse> achievements;
 
   private final Optional<StreakResponse> currentStreak;
 
@@ -51,7 +51,7 @@ public final class MetricResponse {
 
   private MetricResponse(String id, String key, String name, String emoji,
       StreakFrequency streakFrequency, MetricStatus status, double current,
-      List<AchievementResponse> achievements, Optional<StreakResponse> currentStreak,
+      List<MultiStageAchievementResponse> achievements, Optional<StreakResponse> currentStreak,
       Map<String, Object> additionalProperties) {
     this.id = id;
     this.key = key;
@@ -125,7 +125,7 @@ public final class MetricResponse {
    * @return A list of the metric's achievements and the user's progress towards each.
    */
   @JsonProperty("achievements")
-  public List<AchievementResponse> getAchievements() {
+  public List<MultiStageAchievementResponse> getAchievements() {
     return achievements;
   }
 
@@ -199,11 +199,11 @@ public final class MetricResponse {
   public interface _FinalStage {
     MetricResponse build();
 
-    _FinalStage achievements(List<AchievementResponse> achievements);
+    _FinalStage achievements(List<MultiStageAchievementResponse> achievements);
 
-    _FinalStage addAchievements(AchievementResponse achievements);
+    _FinalStage addAchievements(MultiStageAchievementResponse achievements);
 
-    _FinalStage addAllAchievements(List<AchievementResponse> achievements);
+    _FinalStage addAllAchievements(List<MultiStageAchievementResponse> achievements);
 
     _FinalStage currentStreak(Optional<StreakResponse> currentStreak);
 
@@ -230,7 +230,7 @@ public final class MetricResponse {
 
     private Optional<StreakResponse> currentStreak = Optional.empty();
 
-    private List<AchievementResponse> achievements = new ArrayList<>();
+    private List<MultiStageAchievementResponse> achievements = new ArrayList<>();
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -354,7 +354,7 @@ public final class MetricResponse {
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage addAllAchievements(List<AchievementResponse> achievements) {
+    public _FinalStage addAllAchievements(List<MultiStageAchievementResponse> achievements) {
       this.achievements.addAll(achievements);
       return this;
     }
@@ -364,7 +364,7 @@ public final class MetricResponse {
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage addAchievements(AchievementResponse achievements) {
+    public _FinalStage addAchievements(MultiStageAchievementResponse achievements) {
       this.achievements.add(achievements);
       return this;
     }
@@ -374,7 +374,7 @@ public final class MetricResponse {
         value = "achievements",
         nulls = Nulls.SKIP
     )
-    public _FinalStage achievements(List<AchievementResponse> achievements) {
+    public _FinalStage achievements(List<MultiStageAchievementResponse> achievements) {
       this.achievements.clear();
       this.achievements.addAll(achievements);
       return this;

@@ -28,9 +28,9 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import so.trophy.types.AchievementResponse;
 import so.trophy.types.ErrorBody;
 import so.trophy.types.MetricResponse;
+import so.trophy.types.MultiStageAchievementResponse;
 import so.trophy.types.UpdatedUser;
 import so.trophy.types.UpsertedUser;
 import so.trophy.types.User;
@@ -43,14 +43,14 @@ public class UsersClient {
   }
 
   /**
-   * Create a new user.
+   * Identify a new user.
    */
   public User create(UpsertedUser request) {
     return create(request,null);
   }
 
   /**
-   * Create a new user.
+   * Identify a new user.
    */
   public User create(UpsertedUser request, RequestOptions requestOptions) {
     HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
@@ -318,14 +318,15 @@ public class UsersClient {
   /**
    * Get all of a user's completed achievements.
    */
-  public List<AchievementResponse> allachievements(String id) {
+  public List<MultiStageAchievementResponse> allachievements(String id) {
     return allachievements(id,null);
   }
 
   /**
    * Get all of a user's completed achievements.
    */
-  public List<AchievementResponse> allachievements(String id, RequestOptions requestOptions) {
+  public List<MultiStageAchievementResponse> allachievements(String id,
+      RequestOptions requestOptions) {
     HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
 
       .addPathSegments("users")
@@ -346,7 +347,7 @@ public class UsersClient {
     try (Response response = client.newCall(okhttpRequest).execute()) {
       ResponseBody responseBody = response.body();
       if (response.isSuccessful()) {
-        return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<AchievementResponse>>() {});
+        return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<MultiStageAchievementResponse>>() {});
       }
       String responseBodyString = responseBody != null ? responseBody.string() : "{}";
       try {

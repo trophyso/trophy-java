@@ -29,12 +29,13 @@ import java.util.Optional;
 public final class EventResponseMetricsItem {
   private final Optional<String> metricId;
 
-  private final Optional<List<AchievementResponse>> completed;
+  private final Optional<List<MultiStageAchievementResponse>> completed;
 
   private final Map<String, Object> additionalProperties;
 
   private EventResponseMetricsItem(Optional<String> metricId,
-      Optional<List<AchievementResponse>> completed, Map<String, Object> additionalProperties) {
+      Optional<List<MultiStageAchievementResponse>> completed,
+      Map<String, Object> additionalProperties) {
     this.metricId = metricId;
     this.completed = completed;
     this.additionalProperties = additionalProperties;
@@ -52,7 +53,7 @@ public final class EventResponseMetricsItem {
    * @return A list of any new achievements that the user has now completed as a result of this event being submitted.
    */
   @JsonProperty("completed")
-  public Optional<List<AchievementResponse>> getCompleted() {
+  public Optional<List<MultiStageAchievementResponse>> getCompleted() {
     return completed;
   }
 
@@ -91,7 +92,7 @@ public final class EventResponseMetricsItem {
   public static final class Builder {
     private Optional<String> metricId = Optional.empty();
 
-    private Optional<List<AchievementResponse>> completed = Optional.empty();
+    private Optional<List<MultiStageAchievementResponse>> completed = Optional.empty();
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -123,12 +124,12 @@ public final class EventResponseMetricsItem {
         value = "completed",
         nulls = Nulls.SKIP
     )
-    public Builder completed(Optional<List<AchievementResponse>> completed) {
+    public Builder completed(Optional<List<MultiStageAchievementResponse>> completed) {
       this.completed = completed;
       return this;
     }
 
-    public Builder completed(List<AchievementResponse> completed) {
+    public Builder completed(List<MultiStageAchievementResponse> completed) {
       this.completed = Optional.ofNullable(completed);
       return this;
     }
