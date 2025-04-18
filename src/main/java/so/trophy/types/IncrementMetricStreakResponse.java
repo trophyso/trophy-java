@@ -14,10 +14,10 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import so.trophy.core.ObjectMappers;
+import java.lang.Boolean;
 import java.lang.Object;
 import java.lang.String;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -25,9 +25,9 @@ import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(
-    builder = StreakResponse.Builder.class
+    builder = IncrementMetricStreakResponse.Builder.class
 )
-public final class StreakResponse implements IBaseStreakResponse {
+public final class IncrementMetricStreakResponse implements IBaseStreakResponse {
   private final int length;
 
   private final StreakFrequency frequency;
@@ -40,13 +40,13 @@ public final class StreakResponse implements IBaseStreakResponse {
 
   private final Optional<String> expires;
 
-  private final Optional<List<StreakResponseStreakHistoryItem>> streakHistory;
+  private final Optional<Boolean> extended;
 
   private final Map<String, Object> additionalProperties;
 
-  private StreakResponse(int length, StreakFrequency frequency, Optional<String> started,
-      Optional<String> periodStart, Optional<String> periodEnd, Optional<String> expires,
-      Optional<List<StreakResponseStreakHistoryItem>> streakHistory,
+  private IncrementMetricStreakResponse(int length, StreakFrequency frequency,
+      Optional<String> started, Optional<String> periodStart, Optional<String> periodEnd,
+      Optional<String> expires, Optional<Boolean> extended,
       Map<String, Object> additionalProperties) {
     this.length = length;
     this.frequency = frequency;
@@ -54,7 +54,7 @@ public final class StreakResponse implements IBaseStreakResponse {
     this.periodStart = periodStart;
     this.periodEnd = periodEnd;
     this.expires = expires;
-    this.streakHistory = streakHistory;
+    this.extended = extended;
     this.additionalProperties = additionalProperties;
   }
 
@@ -113,17 +113,17 @@ public final class StreakResponse implements IBaseStreakResponse {
   }
 
   /**
-   * @return A list of the user's past streak periods up through the current period. Each period includes the start and end dates and the length of the streak.
+   * @return Whether this metric event increased the user's streak length.
    */
-  @JsonProperty("streakHistory")
-  public Optional<List<StreakResponseStreakHistoryItem>> getStreakHistory() {
-    return streakHistory;
+  @JsonProperty("extended")
+  public Optional<Boolean> getExtended() {
+    return extended;
   }
 
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
-    return other instanceof StreakResponse && equalTo((StreakResponse) other);
+    return other instanceof IncrementMetricStreakResponse && equalTo((IncrementMetricStreakResponse) other);
   }
 
   @JsonAnyGetter
@@ -131,13 +131,13 @@ public final class StreakResponse implements IBaseStreakResponse {
     return this.additionalProperties;
   }
 
-  private boolean equalTo(StreakResponse other) {
-    return length == other.length && frequency.equals(other.frequency) && started.equals(other.started) && periodStart.equals(other.periodStart) && periodEnd.equals(other.periodEnd) && expires.equals(other.expires) && streakHistory.equals(other.streakHistory);
+  private boolean equalTo(IncrementMetricStreakResponse other) {
+    return length == other.length && frequency.equals(other.frequency) && started.equals(other.started) && periodStart.equals(other.periodStart) && periodEnd.equals(other.periodEnd) && expires.equals(other.expires) && extended.equals(other.extended);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.length, this.frequency, this.started, this.periodStart, this.periodEnd, this.expires, this.streakHistory);
+    return Objects.hash(this.length, this.frequency, this.started, this.periodStart, this.periodEnd, this.expires, this.extended);
   }
 
   @java.lang.Override
@@ -152,7 +152,7 @@ public final class StreakResponse implements IBaseStreakResponse {
   public interface LengthStage {
     FrequencyStage length(int length);
 
-    Builder from(StreakResponse other);
+    Builder from(IncrementMetricStreakResponse other);
   }
 
   public interface FrequencyStage {
@@ -160,7 +160,7 @@ public final class StreakResponse implements IBaseStreakResponse {
   }
 
   public interface _FinalStage {
-    StreakResponse build();
+    IncrementMetricStreakResponse build();
 
     _FinalStage started(Optional<String> started);
 
@@ -178,9 +178,9 @@ public final class StreakResponse implements IBaseStreakResponse {
 
     _FinalStage expires(String expires);
 
-    _FinalStage streakHistory(Optional<List<StreakResponseStreakHistoryItem>> streakHistory);
+    _FinalStage extended(Optional<Boolean> extended);
 
-    _FinalStage streakHistory(List<StreakResponseStreakHistoryItem> streakHistory);
+    _FinalStage extended(Boolean extended);
   }
 
   @JsonIgnoreProperties(
@@ -191,7 +191,7 @@ public final class StreakResponse implements IBaseStreakResponse {
 
     private StreakFrequency frequency;
 
-    private Optional<List<StreakResponseStreakHistoryItem>> streakHistory = Optional.empty();
+    private Optional<Boolean> extended = Optional.empty();
 
     private Optional<String> expires = Optional.empty();
 
@@ -208,14 +208,14 @@ public final class StreakResponse implements IBaseStreakResponse {
     }
 
     @java.lang.Override
-    public Builder from(StreakResponse other) {
+    public Builder from(IncrementMetricStreakResponse other) {
       length(other.getLength());
       frequency(other.getFrequency());
       started(other.getStarted());
       periodStart(other.getPeriodStart());
       periodEnd(other.getPeriodEnd());
       expires(other.getExpires());
-      streakHistory(other.getStreakHistory());
+      extended(other.getExtended());
       return this;
     }
 
@@ -242,23 +242,22 @@ public final class StreakResponse implements IBaseStreakResponse {
     }
 
     /**
-     * <p>A list of the user's past streak periods up through the current period. Each period includes the start and end dates and the length of the streak.</p>
+     * <p>Whether this metric event increased the user's streak length.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage streakHistory(List<StreakResponseStreakHistoryItem> streakHistory) {
-      this.streakHistory = Optional.ofNullable(streakHistory);
+    public _FinalStage extended(Boolean extended) {
+      this.extended = Optional.ofNullable(extended);
       return this;
     }
 
     @java.lang.Override
     @JsonSetter(
-        value = "streakHistory",
+        value = "extended",
         nulls = Nulls.SKIP
     )
-    public _FinalStage streakHistory(
-        Optional<List<StreakResponseStreakHistoryItem>> streakHistory) {
-      this.streakHistory = streakHistory;
+    public _FinalStage extended(Optional<Boolean> extended) {
+      this.extended = extended;
       return this;
     }
 
@@ -343,8 +342,8 @@ public final class StreakResponse implements IBaseStreakResponse {
     }
 
     @java.lang.Override
-    public StreakResponse build() {
-      return new StreakResponse(length, frequency, started, periodStart, periodEnd, expires, streakHistory, additionalProperties);
+    public IncrementMetricStreakResponse build() {
+      return new IncrementMetricStreakResponse(length, frequency, started, periodStart, periodEnd, expires, extended, additionalProperties);
     }
   }
 }

@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
@@ -37,31 +36,24 @@ public final class MetricResponse {
 
   private final String emoji;
 
-  private final StreakFrequency streakFrequency;
-
   private final MetricStatus status;
 
   private final double current;
 
   private final List<MultiStageAchievementResponse> achievements;
 
-  private final Optional<StreakResponse> currentStreak;
-
   private final Map<String, Object> additionalProperties;
 
-  private MetricResponse(String id, String key, String name, String emoji,
-      StreakFrequency streakFrequency, MetricStatus status, double current,
-      List<MultiStageAchievementResponse> achievements, Optional<StreakResponse> currentStreak,
+  private MetricResponse(String id, String key, String name, String emoji, MetricStatus status,
+      double current, List<MultiStageAchievementResponse> achievements,
       Map<String, Object> additionalProperties) {
     this.id = id;
     this.key = key;
     this.name = name;
     this.emoji = emoji;
-    this.streakFrequency = streakFrequency;
     this.status = status;
     this.current = current;
     this.achievements = achievements;
-    this.currentStreak = currentStreak;
     this.additionalProperties = additionalProperties;
   }
 
@@ -98,14 +90,6 @@ public final class MetricResponse {
   }
 
   /**
-   * @return The frequency of the streak.
-   */
-  @JsonProperty("streakFrequency")
-  public StreakFrequency getStreakFrequency() {
-    return streakFrequency;
-  }
-
-  /**
    * @return The status of the metric.
    */
   @JsonProperty("status")
@@ -129,14 +113,6 @@ public final class MetricResponse {
     return achievements;
   }
 
-  /**
-   * @return The user's current streak for the metric, if the metric has streaks enabled.
-   */
-  @JsonProperty("currentStreak")
-  public Optional<StreakResponse> getCurrentStreak() {
-    return currentStreak;
-  }
-
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
@@ -149,12 +125,12 @@ public final class MetricResponse {
   }
 
   private boolean equalTo(MetricResponse other) {
-    return id.equals(other.id) && key.equals(other.key) && name.equals(other.name) && emoji.equals(other.emoji) && streakFrequency.equals(other.streakFrequency) && status.equals(other.status) && current == other.current && achievements.equals(other.achievements) && currentStreak.equals(other.currentStreak);
+    return id.equals(other.id) && key.equals(other.key) && name.equals(other.name) && emoji.equals(other.emoji) && status.equals(other.status) && current == other.current && achievements.equals(other.achievements);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.key, this.name, this.emoji, this.streakFrequency, this.status, this.current, this.achievements, this.currentStreak);
+    return Objects.hash(this.id, this.key, this.name, this.emoji, this.status, this.current, this.achievements);
   }
 
   @java.lang.Override
@@ -181,11 +157,7 @@ public final class MetricResponse {
   }
 
   public interface EmojiStage {
-    StreakFrequencyStage emoji(@NotNull String emoji);
-  }
-
-  public interface StreakFrequencyStage {
-    StatusStage streakFrequency(@NotNull StreakFrequency streakFrequency);
+    StatusStage emoji(@NotNull String emoji);
   }
 
   public interface StatusStage {
@@ -204,16 +176,12 @@ public final class MetricResponse {
     _FinalStage addAchievements(MultiStageAchievementResponse achievements);
 
     _FinalStage addAllAchievements(List<MultiStageAchievementResponse> achievements);
-
-    _FinalStage currentStreak(Optional<StreakResponse> currentStreak);
-
-    _FinalStage currentStreak(StreakResponse currentStreak);
   }
 
   @JsonIgnoreProperties(
       ignoreUnknown = true
   )
-  public static final class Builder implements IdStage, KeyStage, NameStage, EmojiStage, StreakFrequencyStage, StatusStage, CurrentStage, _FinalStage {
+  public static final class Builder implements IdStage, KeyStage, NameStage, EmojiStage, StatusStage, CurrentStage, _FinalStage {
     private String id;
 
     private String key;
@@ -222,13 +190,9 @@ public final class MetricResponse {
 
     private String emoji;
 
-    private StreakFrequency streakFrequency;
-
     private MetricStatus status;
 
     private double current;
-
-    private Optional<StreakResponse> currentStreak = Optional.empty();
 
     private List<MultiStageAchievementResponse> achievements = new ArrayList<>();
 
@@ -244,11 +208,9 @@ public final class MetricResponse {
       key(other.getKey());
       name(other.getName());
       emoji(other.getEmoji());
-      streakFrequency(other.getStreakFrequency());
       status(other.getStatus());
       current(other.getCurrent());
       achievements(other.getAchievements());
-      currentStreak(other.getCurrentStreak());
       return this;
     }
 
@@ -291,19 +253,8 @@ public final class MetricResponse {
      */
     @java.lang.Override
     @JsonSetter("emoji")
-    public StreakFrequencyStage emoji(@NotNull String emoji) {
+    public StatusStage emoji(@NotNull String emoji) {
       this.emoji = Objects.requireNonNull(emoji, "emoji must not be null");
-      return this;
-    }
-
-    /**
-     * <p>The frequency of the streak.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    @JsonSetter("streakFrequency")
-    public StatusStage streakFrequency(@NotNull StreakFrequency streakFrequency) {
-      this.streakFrequency = Objects.requireNonNull(streakFrequency, "streakFrequency must not be null");
       return this;
     }
 
@@ -326,26 +277,6 @@ public final class MetricResponse {
     @JsonSetter("current")
     public _FinalStage current(double current) {
       this.current = current;
-      return this;
-    }
-
-    /**
-     * <p>The user's current streak for the metric, if the metric has streaks enabled.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    public _FinalStage currentStreak(StreakResponse currentStreak) {
-      this.currentStreak = Optional.ofNullable(currentStreak);
-      return this;
-    }
-
-    @java.lang.Override
-    @JsonSetter(
-        value = "currentStreak",
-        nulls = Nulls.SKIP
-    )
-    public _FinalStage currentStreak(Optional<StreakResponse> currentStreak) {
-      this.currentStreak = currentStreak;
       return this;
     }
 
@@ -382,7 +313,7 @@ public final class MetricResponse {
 
     @java.lang.Override
     public MetricResponse build() {
-      return new MetricResponse(id, key, name, emoji, streakFrequency, status, current, achievements, currentStreak, additionalProperties);
+      return new MetricResponse(id, key, name, emoji, status, current, achievements, additionalProperties);
     }
   }
 }

@@ -36,12 +36,13 @@ public final class EventResponse {
 
   private final Optional<List<EventResponseMetricsItem>> achievements;
 
-  private final Optional<StreakResponse> currentStreak;
+  private final Optional<IncrementMetricStreakResponse> currentStreak;
 
   private final Map<String, Object> additionalProperties;
 
   private EventResponse(String eventId, String metricId, double total,
-      Optional<List<EventResponseMetricsItem>> achievements, Optional<StreakResponse> currentStreak,
+      Optional<List<EventResponseMetricsItem>> achievements,
+      Optional<IncrementMetricStreakResponse> currentStreak,
       Map<String, Object> additionalProperties) {
     this.eventId = eventId;
     this.metricId = metricId;
@@ -87,7 +88,7 @@ public final class EventResponse {
    * @return The user's current streak for the metric, if the metric has streaks enabled.
    */
   @JsonProperty("currentStreak")
-  public Optional<StreakResponse> getCurrentStreak() {
+  public Optional<IncrementMetricStreakResponse> getCurrentStreak() {
     return currentStreak;
   }
 
@@ -141,9 +142,9 @@ public final class EventResponse {
 
     _FinalStage achievements(List<EventResponseMetricsItem> achievements);
 
-    _FinalStage currentStreak(Optional<StreakResponse> currentStreak);
+    _FinalStage currentStreak(Optional<IncrementMetricStreakResponse> currentStreak);
 
-    _FinalStage currentStreak(StreakResponse currentStreak);
+    _FinalStage currentStreak(IncrementMetricStreakResponse currentStreak);
   }
 
   @JsonIgnoreProperties(
@@ -156,7 +157,7 @@ public final class EventResponse {
 
     private double total;
 
-    private Optional<StreakResponse> currentStreak = Optional.empty();
+    private Optional<IncrementMetricStreakResponse> currentStreak = Optional.empty();
 
     private Optional<List<EventResponseMetricsItem>> achievements = Optional.empty();
 
@@ -214,7 +215,7 @@ public final class EventResponse {
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage currentStreak(StreakResponse currentStreak) {
+    public _FinalStage currentStreak(IncrementMetricStreakResponse currentStreak) {
       this.currentStreak = Optional.ofNullable(currentStreak);
       return this;
     }
@@ -224,7 +225,7 @@ public final class EventResponse {
         value = "currentStreak",
         nulls = Nulls.SKIP
     )
-    public _FinalStage currentStreak(Optional<StreakResponse> currentStreak) {
+    public _FinalStage currentStreak(Optional<IncrementMetricStreakResponse> currentStreak) {
       this.currentStreak = currentStreak;
       return this;
     }
