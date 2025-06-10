@@ -217,14 +217,14 @@ public class UsersClient {
   /**
    * Get a single user's progress against all active metrics.
    */
-  public List<MetricResponse> allmetrics(String id) {
-    return allmetrics(id,null);
+  public List<MetricResponse> allMetrics(String id) {
+    return allMetrics(id,null);
   }
 
   /**
    * Get a single user's progress against all active metrics.
    */
-  public List<MetricResponse> allmetrics(String id, RequestOptions requestOptions) {
+  public List<MetricResponse> allMetrics(String id, RequestOptions requestOptions) {
     HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
 
       .addPathSegments("users")
@@ -268,14 +268,14 @@ public class UsersClient {
   /**
    * Get a user's progress against a single active metric.
    */
-  public MetricResponse singlemetric(String id, String key) {
-    return singlemetric(id,key,null);
+  public MetricResponse singleMetric(String id, String key) {
+    return singleMetric(id,key,null);
   }
 
   /**
    * Get a user's progress against a single active metric.
    */
-  public MetricResponse singlemetric(String id, String key, RequestOptions requestOptions) {
+  public MetricResponse singleMetric(String id, String key, RequestOptions requestOptions) {
     HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
 
       .addPathSegments("users")
@@ -320,14 +320,14 @@ public class UsersClient {
   /**
    * Get all of a user's completed achievements.
    */
-  public List<AchievementResponse> allachievements(String id) {
-    return allachievements(id,null);
+  public List<AchievementResponse> allAchievements(String id) {
+    return allAchievements(id,null);
   }
 
   /**
    * Get all of a user's completed achievements.
    */
-  public List<AchievementResponse> allachievements(String id, RequestOptions requestOptions) {
+  public List<AchievementResponse> allAchievements(String id, RequestOptions requestOptions) {
     HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
 
       .addPathSegments("users")
