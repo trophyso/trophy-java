@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import so.trophy.core.ObjectMappers;
 import java.lang.Object;
 import java.lang.String;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,22 +28,33 @@ import java.util.Optional;
     builder = EventResponseMetricsItem.Builder.class
 )
 public final class EventResponseMetricsItem {
+  private final Optional<String> trigger;
+
   private final Optional<String> metricId;
 
-  private final Optional<List<MultiStageAchievementResponse>> completed;
+  private final List<EventResponseMetricsItemCompletedItem> completed;
 
   private final Map<String, Object> additionalProperties;
 
-  private EventResponseMetricsItem(Optional<String> metricId,
-      Optional<List<MultiStageAchievementResponse>> completed,
+  private EventResponseMetricsItem(Optional<String> trigger, Optional<String> metricId,
+      List<EventResponseMetricsItemCompletedItem> completed,
       Map<String, Object> additionalProperties) {
+    this.trigger = trigger;
     this.metricId = metricId;
     this.completed = completed;
     this.additionalProperties = additionalProperties;
   }
 
   /**
-   * @return The ID of the metric.
+   * @return The trigger of the achievement, in this case either 'metric' or 'streak'.
+   */
+  @JsonProperty("trigger")
+  public Optional<String> getTrigger() {
+    return trigger;
+  }
+
+  /**
+   * @return The ID of the metric that these achievements are associated with, if any.
    */
   @JsonProperty("metricId")
   public Optional<String> getMetricId() {
@@ -53,7 +65,7 @@ public final class EventResponseMetricsItem {
    * @return A list of any new achievements that the user has now completed as a result of this event being submitted.
    */
   @JsonProperty("completed")
-  public Optional<List<MultiStageAchievementResponse>> getCompleted() {
+  public List<EventResponseMetricsItemCompletedItem> getCompleted() {
     return completed;
   }
 
@@ -69,12 +81,12 @@ public final class EventResponseMetricsItem {
   }
 
   private boolean equalTo(EventResponseMetricsItem other) {
-    return metricId.equals(other.metricId) && completed.equals(other.completed);
+    return trigger.equals(other.trigger) && metricId.equals(other.metricId) && completed.equals(other.completed);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.metricId, this.completed);
+    return Objects.hash(this.trigger, this.metricId, this.completed);
   }
 
   @java.lang.Override
@@ -90,9 +102,11 @@ public final class EventResponseMetricsItem {
       ignoreUnknown = true
   )
   public static final class Builder {
+    private Optional<String> trigger = Optional.empty();
+
     private Optional<String> metricId = Optional.empty();
 
-    private Optional<List<MultiStageAchievementResponse>> completed = Optional.empty();
+    private List<EventResponseMetricsItemCompletedItem> completed = new ArrayList<>();
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -101,8 +115,23 @@ public final class EventResponseMetricsItem {
     }
 
     public Builder from(EventResponseMetricsItem other) {
+      trigger(other.getTrigger());
       metricId(other.getMetricId());
       completed(other.getCompleted());
+      return this;
+    }
+
+    @JsonSetter(
+        value = "trigger",
+        nulls = Nulls.SKIP
+    )
+    public Builder trigger(Optional<String> trigger) {
+      this.trigger = trigger;
+      return this;
+    }
+
+    public Builder trigger(String trigger) {
+      this.trigger = Optional.ofNullable(trigger);
       return this;
     }
 
@@ -124,18 +153,24 @@ public final class EventResponseMetricsItem {
         value = "completed",
         nulls = Nulls.SKIP
     )
-    public Builder completed(Optional<List<MultiStageAchievementResponse>> completed) {
-      this.completed = completed;
+    public Builder completed(List<EventResponseMetricsItemCompletedItem> completed) {
+      this.completed.clear();
+      this.completed.addAll(completed);
       return this;
     }
 
-    public Builder completed(List<MultiStageAchievementResponse> completed) {
-      this.completed = Optional.ofNullable(completed);
+    public Builder addCompleted(EventResponseMetricsItemCompletedItem completed) {
+      this.completed.add(completed);
+      return this;
+    }
+
+    public Builder addAllCompleted(List<EventResponseMetricsItemCompletedItem> completed) {
+      this.completed.addAll(completed);
       return this;
     }
 
     public EventResponseMetricsItem build() {
-      return new EventResponseMetricsItem(metricId, completed, additionalProperties);
+      return new EventResponseMetricsItem(trigger, metricId, completed, additionalProperties);
     }
   }
 }

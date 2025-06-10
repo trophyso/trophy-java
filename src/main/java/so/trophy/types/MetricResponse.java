@@ -34,23 +34,19 @@ public final class MetricResponse {
 
   private final String name;
 
-  private final String emoji;
-
   private final MetricStatus status;
 
   private final double current;
 
-  private final List<MultiStageAchievementResponse> achievements;
+  private final List<MetricAchievementResponse> achievements;
 
   private final Map<String, Object> additionalProperties;
 
-  private MetricResponse(String id, String key, String name, String emoji, MetricStatus status,
-      double current, List<MultiStageAchievementResponse> achievements,
-      Map<String, Object> additionalProperties) {
+  private MetricResponse(String id, String key, String name, MetricStatus status, double current,
+      List<MetricAchievementResponse> achievements, Map<String, Object> additionalProperties) {
     this.id = id;
     this.key = key;
     this.name = name;
-    this.emoji = emoji;
     this.status = status;
     this.current = current;
     this.achievements = achievements;
@@ -82,14 +78,6 @@ public final class MetricResponse {
   }
 
   /**
-   * @return The emoji to represent the metric.
-   */
-  @JsonProperty("emoji")
-  public String getEmoji() {
-    return emoji;
-  }
-
-  /**
    * @return The status of the metric.
    */
   @JsonProperty("status")
@@ -109,7 +97,7 @@ public final class MetricResponse {
    * @return A list of the metric's achievements and the user's progress towards each.
    */
   @JsonProperty("achievements")
-  public List<MultiStageAchievementResponse> getAchievements() {
+  public List<MetricAchievementResponse> getAchievements() {
     return achievements;
   }
 
@@ -125,12 +113,12 @@ public final class MetricResponse {
   }
 
   private boolean equalTo(MetricResponse other) {
-    return id.equals(other.id) && key.equals(other.key) && name.equals(other.name) && emoji.equals(other.emoji) && status.equals(other.status) && current == other.current && achievements.equals(other.achievements);
+    return id.equals(other.id) && key.equals(other.key) && name.equals(other.name) && status.equals(other.status) && current == other.current && achievements.equals(other.achievements);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.key, this.name, this.emoji, this.status, this.current, this.achievements);
+    return Objects.hash(this.id, this.key, this.name, this.status, this.current, this.achievements);
   }
 
   @java.lang.Override
@@ -153,11 +141,7 @@ public final class MetricResponse {
   }
 
   public interface NameStage {
-    EmojiStage name(@NotNull String name);
-  }
-
-  public interface EmojiStage {
-    StatusStage emoji(@NotNull String emoji);
+    StatusStage name(@NotNull String name);
   }
 
   public interface StatusStage {
@@ -171,30 +155,28 @@ public final class MetricResponse {
   public interface _FinalStage {
     MetricResponse build();
 
-    _FinalStage achievements(List<MultiStageAchievementResponse> achievements);
+    _FinalStage achievements(List<MetricAchievementResponse> achievements);
 
-    _FinalStage addAchievements(MultiStageAchievementResponse achievements);
+    _FinalStage addAchievements(MetricAchievementResponse achievements);
 
-    _FinalStage addAllAchievements(List<MultiStageAchievementResponse> achievements);
+    _FinalStage addAllAchievements(List<MetricAchievementResponse> achievements);
   }
 
   @JsonIgnoreProperties(
       ignoreUnknown = true
   )
-  public static final class Builder implements IdStage, KeyStage, NameStage, EmojiStage, StatusStage, CurrentStage, _FinalStage {
+  public static final class Builder implements IdStage, KeyStage, NameStage, StatusStage, CurrentStage, _FinalStage {
     private String id;
 
     private String key;
 
     private String name;
 
-    private String emoji;
-
     private MetricStatus status;
 
     private double current;
 
-    private List<MultiStageAchievementResponse> achievements = new ArrayList<>();
+    private List<MetricAchievementResponse> achievements = new ArrayList<>();
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -207,7 +189,6 @@ public final class MetricResponse {
       id(other.getId());
       key(other.getKey());
       name(other.getName());
-      emoji(other.getEmoji());
       status(other.getStatus());
       current(other.getCurrent());
       achievements(other.getAchievements());
@@ -242,19 +223,8 @@ public final class MetricResponse {
      */
     @java.lang.Override
     @JsonSetter("name")
-    public EmojiStage name(@NotNull String name) {
+    public StatusStage name(@NotNull String name) {
       this.name = Objects.requireNonNull(name, "name must not be null");
-      return this;
-    }
-
-    /**
-     * <p>The emoji to represent the metric.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    @JsonSetter("emoji")
-    public StatusStage emoji(@NotNull String emoji) {
-      this.emoji = Objects.requireNonNull(emoji, "emoji must not be null");
       return this;
     }
 
@@ -285,7 +255,7 @@ public final class MetricResponse {
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage addAllAchievements(List<MultiStageAchievementResponse> achievements) {
+    public _FinalStage addAllAchievements(List<MetricAchievementResponse> achievements) {
       this.achievements.addAll(achievements);
       return this;
     }
@@ -295,7 +265,7 @@ public final class MetricResponse {
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage addAchievements(MultiStageAchievementResponse achievements) {
+    public _FinalStage addAchievements(MetricAchievementResponse achievements) {
       this.achievements.add(achievements);
       return this;
     }
@@ -305,7 +275,7 @@ public final class MetricResponse {
         value = "achievements",
         nulls = Nulls.SKIP
     )
-    public _FinalStage achievements(List<MultiStageAchievementResponse> achievements) {
+    public _FinalStage achievements(List<MetricAchievementResponse> achievements) {
       this.achievements.clear();
       this.achievements.addAll(achievements);
       return this;
@@ -313,7 +283,7 @@ public final class MetricResponse {
 
     @java.lang.Override
     public MetricResponse build() {
-      return new MetricResponse(id, key, name, emoji, status, current, achievements, additionalProperties);
+      return new MetricResponse(id, key, name, status, current, achievements, additionalProperties);
     }
   }
 }

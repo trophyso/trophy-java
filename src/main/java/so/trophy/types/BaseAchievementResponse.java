@@ -14,7 +14,6 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import so.trophy.core.ObjectMappers;
-import java.lang.Double;
 import java.lang.Object;
 import java.lang.String;
 import java.time.OffsetDateTime;
@@ -26,20 +25,14 @@ import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(
-    builder = MultiStageAchievementResponse.Builder.class
+    builder = BaseAchievementResponse.Builder.class
 )
-public final class MultiStageAchievementResponse {
+public final class BaseAchievementResponse implements IBaseAchievementResponse {
   private final String id;
 
-  private final Optional<String> name;
+  private final String name;
 
   private final Optional<String> badgeUrl;
-
-  private final Optional<String> metricId;
-
-  private final Optional<Double> metricValue;
-
-  private final Optional<String> metricName;
 
   private final Optional<String> key;
 
@@ -47,16 +40,12 @@ public final class MultiStageAchievementResponse {
 
   private final Map<String, Object> additionalProperties;
 
-  private MultiStageAchievementResponse(String id, Optional<String> name, Optional<String> badgeUrl,
-      Optional<String> metricId, Optional<Double> metricValue, Optional<String> metricName,
+  private BaseAchievementResponse(String id, String name, Optional<String> badgeUrl,
       Optional<String> key, Optional<OffsetDateTime> achievedAt,
       Map<String, Object> additionalProperties) {
     this.id = id;
     this.name = name;
     this.badgeUrl = badgeUrl;
-    this.metricId = metricId;
-    this.metricValue = metricValue;
-    this.metricName = metricName;
     this.key = key;
     this.achievedAt = achievedAt;
     this.additionalProperties = additionalProperties;
@@ -66,6 +55,7 @@ public final class MultiStageAchievementResponse {
    * @return The unique ID of the achievement.
    */
   @JsonProperty("id")
+  @java.lang.Override
   public String getId() {
     return id;
   }
@@ -74,7 +64,8 @@ public final class MultiStageAchievementResponse {
    * @return The name of this achievement.
    */
   @JsonProperty("name")
-  public Optional<String> getName() {
+  @java.lang.Override
+  public String getName() {
     return name;
   }
 
@@ -82,38 +73,16 @@ public final class MultiStageAchievementResponse {
    * @return The URL of the badge image for the achievement, if one has been uploaded.
    */
   @JsonProperty("badgeUrl")
+  @java.lang.Override
   public Optional<String> getBadgeUrl() {
     return badgeUrl;
-  }
-
-  /**
-   * @return The ID of the metric associated with this achievement, if any.
-   */
-  @JsonProperty("metricId")
-  public Optional<String> getMetricId() {
-    return metricId;
-  }
-
-  /**
-   * @return The value of the metric required to complete the achievement, if this achievement is associated with a metric.
-   */
-  @JsonProperty("metricValue")
-  public Optional<Double> getMetricValue() {
-    return metricValue;
-  }
-
-  /**
-   * @return The name of the metric associated with this achievement, if any.
-   */
-  @JsonProperty("metricName")
-  public Optional<String> getMetricName() {
-    return metricName;
   }
 
   /**
    * @return The key used to reference this achievement in the API.
    */
   @JsonProperty("key")
+  @java.lang.Override
   public Optional<String> getKey() {
     return key;
   }
@@ -122,6 +91,7 @@ public final class MultiStageAchievementResponse {
    * @return The date and time the achievement was completed, in ISO 8601 format.
    */
   @JsonProperty("achievedAt")
+  @java.lang.Override
   public Optional<OffsetDateTime> getAchievedAt() {
     return achievedAt;
   }
@@ -129,7 +99,7 @@ public final class MultiStageAchievementResponse {
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
-    return other instanceof MultiStageAchievementResponse && equalTo((MultiStageAchievementResponse) other);
+    return other instanceof BaseAchievementResponse && equalTo((BaseAchievementResponse) other);
   }
 
   @JsonAnyGetter
@@ -137,13 +107,13 @@ public final class MultiStageAchievementResponse {
     return this.additionalProperties;
   }
 
-  private boolean equalTo(MultiStageAchievementResponse other) {
-    return id.equals(other.id) && name.equals(other.name) && badgeUrl.equals(other.badgeUrl) && metricId.equals(other.metricId) && metricValue.equals(other.metricValue) && metricName.equals(other.metricName) && key.equals(other.key) && achievedAt.equals(other.achievedAt);
+  private boolean equalTo(BaseAchievementResponse other) {
+    return id.equals(other.id) && name.equals(other.name) && badgeUrl.equals(other.badgeUrl) && key.equals(other.key) && achievedAt.equals(other.achievedAt);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.name, this.badgeUrl, this.metricId, this.metricValue, this.metricName, this.key, this.achievedAt);
+    return Objects.hash(this.id, this.name, this.badgeUrl, this.key, this.achievedAt);
   }
 
   @java.lang.Override
@@ -156,33 +126,21 @@ public final class MultiStageAchievementResponse {
   }
 
   public interface IdStage {
-    _FinalStage id(@NotNull String id);
+    NameStage id(@NotNull String id);
 
-    Builder from(MultiStageAchievementResponse other);
+    Builder from(BaseAchievementResponse other);
+  }
+
+  public interface NameStage {
+    _FinalStage name(@NotNull String name);
   }
 
   public interface _FinalStage {
-    MultiStageAchievementResponse build();
-
-    _FinalStage name(Optional<String> name);
-
-    _FinalStage name(String name);
+    BaseAchievementResponse build();
 
     _FinalStage badgeUrl(Optional<String> badgeUrl);
 
     _FinalStage badgeUrl(String badgeUrl);
-
-    _FinalStage metricId(Optional<String> metricId);
-
-    _FinalStage metricId(String metricId);
-
-    _FinalStage metricValue(Optional<Double> metricValue);
-
-    _FinalStage metricValue(Double metricValue);
-
-    _FinalStage metricName(Optional<String> metricName);
-
-    _FinalStage metricName(String metricName);
 
     _FinalStage key(Optional<String> key);
 
@@ -196,22 +154,16 @@ public final class MultiStageAchievementResponse {
   @JsonIgnoreProperties(
       ignoreUnknown = true
   )
-  public static final class Builder implements IdStage, _FinalStage {
+  public static final class Builder implements IdStage, NameStage, _FinalStage {
     private String id;
+
+    private String name;
 
     private Optional<OffsetDateTime> achievedAt = Optional.empty();
 
     private Optional<String> key = Optional.empty();
 
-    private Optional<String> metricName = Optional.empty();
-
-    private Optional<Double> metricValue = Optional.empty();
-
-    private Optional<String> metricId = Optional.empty();
-
     private Optional<String> badgeUrl = Optional.empty();
-
-    private Optional<String> name = Optional.empty();
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -220,13 +172,10 @@ public final class MultiStageAchievementResponse {
     }
 
     @java.lang.Override
-    public Builder from(MultiStageAchievementResponse other) {
+    public Builder from(BaseAchievementResponse other) {
       id(other.getId());
       name(other.getName());
       badgeUrl(other.getBadgeUrl());
-      metricId(other.getMetricId());
-      metricValue(other.getMetricValue());
-      metricName(other.getMetricName());
       key(other.getKey());
       achievedAt(other.getAchievedAt());
       return this;
@@ -238,8 +187,19 @@ public final class MultiStageAchievementResponse {
      */
     @java.lang.Override
     @JsonSetter("id")
-    public _FinalStage id(@NotNull String id) {
+    public NameStage id(@NotNull String id) {
       this.id = Objects.requireNonNull(id, "id must not be null");
+      return this;
+    }
+
+    /**
+     * <p>The name of this achievement.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    @JsonSetter("name")
+    public _FinalStage name(@NotNull String name) {
+      this.name = Objects.requireNonNull(name, "name must not be null");
       return this;
     }
 
@@ -284,66 +244,6 @@ public final class MultiStageAchievementResponse {
     }
 
     /**
-     * <p>The name of the metric associated with this achievement, if any.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    public _FinalStage metricName(String metricName) {
-      this.metricName = Optional.ofNullable(metricName);
-      return this;
-    }
-
-    @java.lang.Override
-    @JsonSetter(
-        value = "metricName",
-        nulls = Nulls.SKIP
-    )
-    public _FinalStage metricName(Optional<String> metricName) {
-      this.metricName = metricName;
-      return this;
-    }
-
-    /**
-     * <p>The value of the metric required to complete the achievement, if this achievement is associated with a metric.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    public _FinalStage metricValue(Double metricValue) {
-      this.metricValue = Optional.ofNullable(metricValue);
-      return this;
-    }
-
-    @java.lang.Override
-    @JsonSetter(
-        value = "metricValue",
-        nulls = Nulls.SKIP
-    )
-    public _FinalStage metricValue(Optional<Double> metricValue) {
-      this.metricValue = metricValue;
-      return this;
-    }
-
-    /**
-     * <p>The ID of the metric associated with this achievement, if any.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    public _FinalStage metricId(String metricId) {
-      this.metricId = Optional.ofNullable(metricId);
-      return this;
-    }
-
-    @java.lang.Override
-    @JsonSetter(
-        value = "metricId",
-        nulls = Nulls.SKIP
-    )
-    public _FinalStage metricId(Optional<String> metricId) {
-      this.metricId = metricId;
-      return this;
-    }
-
-    /**
      * <p>The URL of the badge image for the achievement, if one has been uploaded.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
@@ -363,29 +263,9 @@ public final class MultiStageAchievementResponse {
       return this;
     }
 
-    /**
-     * <p>The name of this achievement.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
     @java.lang.Override
-    public _FinalStage name(String name) {
-      this.name = Optional.ofNullable(name);
-      return this;
-    }
-
-    @java.lang.Override
-    @JsonSetter(
-        value = "name",
-        nulls = Nulls.SKIP
-    )
-    public _FinalStage name(Optional<String> name) {
-      this.name = name;
-      return this;
-    }
-
-    @java.lang.Override
-    public MultiStageAchievementResponse build() {
-      return new MultiStageAchievementResponse(id, name, badgeUrl, metricId, metricValue, metricName, key, achievedAt, additionalProperties);
+    public BaseAchievementResponse build() {
+      return new BaseAchievementResponse(id, name, badgeUrl, key, achievedAt, additionalProperties);
     }
   }
 }

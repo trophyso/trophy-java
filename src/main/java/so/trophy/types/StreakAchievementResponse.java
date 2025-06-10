@@ -25,12 +25,12 @@ import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(
-    builder = OneOffAchievementResponse.Builder.class
+    builder = StreakAchievementResponse.Builder.class
 )
-public final class OneOffAchievementResponse {
+public final class StreakAchievementResponse implements IBaseAchievementResponse {
   private final String id;
 
-  private final Optional<String> name;
+  private final String name;
 
   private final Optional<String> badgeUrl;
 
@@ -38,16 +38,22 @@ public final class OneOffAchievementResponse {
 
   private final Optional<OffsetDateTime> achievedAt;
 
+  private final String trigger;
+
+  private final int streakLength;
+
   private final Map<String, Object> additionalProperties;
 
-  private OneOffAchievementResponse(String id, Optional<String> name, Optional<String> badgeUrl,
-      Optional<String> key, Optional<OffsetDateTime> achievedAt,
+  private StreakAchievementResponse(String id, String name, Optional<String> badgeUrl,
+      Optional<String> key, Optional<OffsetDateTime> achievedAt, String trigger, int streakLength,
       Map<String, Object> additionalProperties) {
     this.id = id;
     this.name = name;
     this.badgeUrl = badgeUrl;
     this.key = key;
     this.achievedAt = achievedAt;
+    this.trigger = trigger;
+    this.streakLength = streakLength;
     this.additionalProperties = additionalProperties;
   }
 
@@ -55,6 +61,7 @@ public final class OneOffAchievementResponse {
    * @return The unique ID of the achievement.
    */
   @JsonProperty("id")
+  @java.lang.Override
   public String getId() {
     return id;
   }
@@ -63,7 +70,8 @@ public final class OneOffAchievementResponse {
    * @return The name of this achievement.
    */
   @JsonProperty("name")
-  public Optional<String> getName() {
+  @java.lang.Override
+  public String getName() {
     return name;
   }
 
@@ -71,6 +79,7 @@ public final class OneOffAchievementResponse {
    * @return The URL of the badge image for the achievement, if one has been uploaded.
    */
   @JsonProperty("badgeUrl")
+  @java.lang.Override
   public Optional<String> getBadgeUrl() {
     return badgeUrl;
   }
@@ -79,6 +88,7 @@ public final class OneOffAchievementResponse {
    * @return The key used to reference this achievement in the API.
    */
   @JsonProperty("key")
+  @java.lang.Override
   public Optional<String> getKey() {
     return key;
   }
@@ -87,14 +97,31 @@ public final class OneOffAchievementResponse {
    * @return The date and time the achievement was completed, in ISO 8601 format.
    */
   @JsonProperty("achievedAt")
+  @java.lang.Override
   public Optional<OffsetDateTime> getAchievedAt() {
     return achievedAt;
+  }
+
+  /**
+   * @return The trigger of the achievement, in this case always 'streak'.
+   */
+  @JsonProperty("trigger")
+  public String getTrigger() {
+    return trigger;
+  }
+
+  /**
+   * @return The length of the streak required to complete the achievement.
+   */
+  @JsonProperty("streakLength")
+  public int getStreakLength() {
+    return streakLength;
   }
 
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
-    return other instanceof OneOffAchievementResponse && equalTo((OneOffAchievementResponse) other);
+    return other instanceof StreakAchievementResponse && equalTo((StreakAchievementResponse) other);
   }
 
   @JsonAnyGetter
@@ -102,13 +129,13 @@ public final class OneOffAchievementResponse {
     return this.additionalProperties;
   }
 
-  private boolean equalTo(OneOffAchievementResponse other) {
-    return id.equals(other.id) && name.equals(other.name) && badgeUrl.equals(other.badgeUrl) && key.equals(other.key) && achievedAt.equals(other.achievedAt);
+  private boolean equalTo(StreakAchievementResponse other) {
+    return id.equals(other.id) && name.equals(other.name) && badgeUrl.equals(other.badgeUrl) && key.equals(other.key) && achievedAt.equals(other.achievedAt) && trigger.equals(other.trigger) && streakLength == other.streakLength;
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.name, this.badgeUrl, this.key, this.achievedAt);
+    return Objects.hash(this.id, this.name, this.badgeUrl, this.key, this.achievedAt, this.trigger, this.streakLength);
   }
 
   @java.lang.Override
@@ -121,17 +148,25 @@ public final class OneOffAchievementResponse {
   }
 
   public interface IdStage {
-    _FinalStage id(@NotNull String id);
+    NameStage id(@NotNull String id);
 
-    Builder from(OneOffAchievementResponse other);
+    Builder from(StreakAchievementResponse other);
+  }
+
+  public interface NameStage {
+    TriggerStage name(@NotNull String name);
+  }
+
+  public interface TriggerStage {
+    StreakLengthStage trigger(@NotNull String trigger);
+  }
+
+  public interface StreakLengthStage {
+    _FinalStage streakLength(int streakLength);
   }
 
   public interface _FinalStage {
-    OneOffAchievementResponse build();
-
-    _FinalStage name(Optional<String> name);
-
-    _FinalStage name(String name);
+    StreakAchievementResponse build();
 
     _FinalStage badgeUrl(Optional<String> badgeUrl);
 
@@ -149,16 +184,20 @@ public final class OneOffAchievementResponse {
   @JsonIgnoreProperties(
       ignoreUnknown = true
   )
-  public static final class Builder implements IdStage, _FinalStage {
+  public static final class Builder implements IdStage, NameStage, TriggerStage, StreakLengthStage, _FinalStage {
     private String id;
+
+    private String name;
+
+    private String trigger;
+
+    private int streakLength;
 
     private Optional<OffsetDateTime> achievedAt = Optional.empty();
 
     private Optional<String> key = Optional.empty();
 
     private Optional<String> badgeUrl = Optional.empty();
-
-    private Optional<String> name = Optional.empty();
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -167,12 +206,14 @@ public final class OneOffAchievementResponse {
     }
 
     @java.lang.Override
-    public Builder from(OneOffAchievementResponse other) {
+    public Builder from(StreakAchievementResponse other) {
       id(other.getId());
       name(other.getName());
       badgeUrl(other.getBadgeUrl());
       key(other.getKey());
       achievedAt(other.getAchievedAt());
+      trigger(other.getTrigger());
+      streakLength(other.getStreakLength());
       return this;
     }
 
@@ -182,8 +223,41 @@ public final class OneOffAchievementResponse {
      */
     @java.lang.Override
     @JsonSetter("id")
-    public _FinalStage id(@NotNull String id) {
+    public NameStage id(@NotNull String id) {
       this.id = Objects.requireNonNull(id, "id must not be null");
+      return this;
+    }
+
+    /**
+     * <p>The name of this achievement.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    @JsonSetter("name")
+    public TriggerStage name(@NotNull String name) {
+      this.name = Objects.requireNonNull(name, "name must not be null");
+      return this;
+    }
+
+    /**
+     * <p>The trigger of the achievement, in this case always 'streak'.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    @JsonSetter("trigger")
+    public StreakLengthStage trigger(@NotNull String trigger) {
+      this.trigger = Objects.requireNonNull(trigger, "trigger must not be null");
+      return this;
+    }
+
+    /**
+     * <p>The length of the streak required to complete the achievement.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    @JsonSetter("streakLength")
+    public _FinalStage streakLength(int streakLength) {
+      this.streakLength = streakLength;
       return this;
     }
 
@@ -247,29 +321,9 @@ public final class OneOffAchievementResponse {
       return this;
     }
 
-    /**
-     * <p>The name of this achievement.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
     @java.lang.Override
-    public _FinalStage name(String name) {
-      this.name = Optional.ofNullable(name);
-      return this;
-    }
-
-    @java.lang.Override
-    @JsonSetter(
-        value = "name",
-        nulls = Nulls.SKIP
-    )
-    public _FinalStage name(Optional<String> name) {
-      this.name = name;
-      return this;
-    }
-
-    @java.lang.Override
-    public OneOffAchievementResponse build() {
-      return new OneOffAchievementResponse(id, name, badgeUrl, key, achievedAt, additionalProperties);
+    public StreakAchievementResponse build() {
+      return new StreakAchievementResponse(id, name, badgeUrl, key, achievedAt, trigger, streakLength, additionalProperties);
     }
   }
 }

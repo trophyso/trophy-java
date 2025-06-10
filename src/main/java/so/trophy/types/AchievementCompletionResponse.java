@@ -27,11 +27,11 @@ import org.jetbrains.annotations.NotNull;
 public final class AchievementCompletionResponse {
   private final String completionId;
 
-  private final OneOffAchievementResponse achievement;
+  private final ApiAchievementResponse achievement;
 
   private final Map<String, Object> additionalProperties;
 
-  private AchievementCompletionResponse(String completionId, OneOffAchievementResponse achievement,
+  private AchievementCompletionResponse(String completionId, ApiAchievementResponse achievement,
       Map<String, Object> additionalProperties) {
     this.completionId = completionId;
     this.achievement = achievement;
@@ -47,7 +47,7 @@ public final class AchievementCompletionResponse {
   }
 
   @JsonProperty("achievement")
-  public OneOffAchievementResponse getAchievement() {
+  public ApiAchievementResponse getAchievement() {
     return achievement;
   }
 
@@ -87,7 +87,7 @@ public final class AchievementCompletionResponse {
   }
 
   public interface AchievementStage {
-    _FinalStage achievement(@NotNull OneOffAchievementResponse achievement);
+    _FinalStage achievement(@NotNull ApiAchievementResponse achievement);
   }
 
   public interface _FinalStage {
@@ -100,7 +100,7 @@ public final class AchievementCompletionResponse {
   public static final class Builder implements CompletionIdStage, AchievementStage, _FinalStage {
     private String completionId;
 
-    private OneOffAchievementResponse achievement;
+    private ApiAchievementResponse achievement;
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -128,7 +128,7 @@ public final class AchievementCompletionResponse {
 
     @java.lang.Override
     @JsonSetter("achievement")
-    public _FinalStage achievement(@NotNull OneOffAchievementResponse achievement) {
+    public _FinalStage achievement(@NotNull ApiAchievementResponse achievement) {
       this.achievement = Objects.requireNonNull(achievement, "achievement must not be null");
       return this;
     }
