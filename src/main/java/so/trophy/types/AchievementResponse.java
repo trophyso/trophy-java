@@ -5,47 +5,137 @@ package so.trophy.types;
  */
 
 
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import so.trophy.core.ObjectMappers;
-import java.io.IOException;
-import java.lang.IllegalArgumentException;
-import java.lang.IllegalStateException;
+import java.lang.Double;
+import java.lang.Integer;
 import java.lang.Object;
 import java.lang.String;
+import java.time.OffsetDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+import org.jetbrains.annotations.NotNull;
 
+@JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(
-    using = AchievementResponse.Deserializer.class
+    builder = AchievementResponse.Builder.class
 )
 public final class AchievementResponse {
-  private final Object value;
+  private final String id;
 
-  private final int type;
+  private final String name;
 
-  private AchievementResponse(Object value, int type) {
-    this.value = value;
-    this.type = type;
+  private final Optional<String> badgeUrl;
+
+  private final Optional<OffsetDateTime> achievedAt;
+
+  private final Optional<String> key;
+
+  private final Optional<Integer> streakLength;
+
+  private final Optional<String> metricId;
+
+  private final Optional<Double> metricValue;
+
+  private final Optional<String> metricName;
+
+  private final Map<String, Object> additionalProperties;
+
+  private AchievementResponse(String id, String name, Optional<String> badgeUrl,
+      Optional<OffsetDateTime> achievedAt, Optional<String> key, Optional<Integer> streakLength,
+      Optional<String> metricId, Optional<Double> metricValue, Optional<String> metricName,
+      Map<String, Object> additionalProperties) {
+    this.id = id;
+    this.name = name;
+    this.badgeUrl = badgeUrl;
+    this.achievedAt = achievedAt;
+    this.key = key;
+    this.streakLength = streakLength;
+    this.metricId = metricId;
+    this.metricValue = metricValue;
+    this.metricName = metricName;
+    this.additionalProperties = additionalProperties;
   }
 
-  @JsonValue
-  public Object get() {
-    return this.value;
+  /**
+   * @return The unique ID of the achievement.
+   */
+  @JsonProperty("id")
+  public String getId() {
+    return id;
   }
 
-  public <T> T visit(Visitor<T> visitor) {
-    if(this.type == 0) {
-      return visitor.visit((MetricAchievementResponse) this.value);
-    } else if(this.type == 1) {
-      return visitor.visit((StreakAchievementResponse) this.value);
-    } else if(this.type == 2) {
-      return visitor.visit((ApiAchievementResponse) this.value);
-    }
-    throw new IllegalStateException("Failed to visit value. This should never happen.");
+  /**
+   * @return The name of this achievement.
+   */
+  @JsonProperty("name")
+  public String getName() {
+    return name;
+  }
+
+  /**
+   * @return The URL of the badge image for the achievement, if one has been uploaded.
+   */
+  @JsonProperty("badgeUrl")
+  public Optional<String> getBadgeUrl() {
+    return badgeUrl;
+  }
+
+  /**
+   * @return The date and time the achievement was completed, in ISO 8601 format.
+   */
+  @JsonProperty("achievedAt")
+  public Optional<OffsetDateTime> getAchievedAt() {
+    return achievedAt;
+  }
+
+  /**
+   * @return The key used to reference this achievement in the API (only applicable if trigger = 'api')
+   */
+  @JsonProperty("key")
+  public Optional<String> getKey() {
+    return key;
+  }
+
+  /**
+   * @return The length of the streak required to complete the achievement (only applicable if trigger = 'streak')
+   */
+  @JsonProperty("streakLength")
+  public Optional<Integer> getStreakLength() {
+    return streakLength;
+  }
+
+  /**
+   * @return The ID of the metric associated with this achievement (only applicable if trigger = 'metric')
+   */
+  @JsonProperty("metricId")
+  public Optional<String> getMetricId() {
+    return metricId;
+  }
+
+  /**
+   * @return The value of the metric required to complete the achievement (only applicable if trigger = 'metric')
+   */
+  @JsonProperty("metricValue")
+  public Optional<Double> getMetricValue() {
+    return metricValue;
+  }
+
+  /**
+   * @return The name of the metric associated with this achievement (only applicable if trigger = 'metric')
+   */
+  @JsonProperty("metricName")
+  public Optional<String> getMetricName() {
+    return metricName;
   }
 
   @java.lang.Override
@@ -54,62 +144,278 @@ public final class AchievementResponse {
     return other instanceof AchievementResponse && equalTo((AchievementResponse) other);
   }
 
+  @JsonAnyGetter
+  public Map<String, Object> getAdditionalProperties() {
+    return this.additionalProperties;
+  }
+
   private boolean equalTo(AchievementResponse other) {
-    return value.equals(other.value);
+    return id.equals(other.id) && name.equals(other.name) && badgeUrl.equals(other.badgeUrl) && achievedAt.equals(other.achievedAt) && key.equals(other.key) && streakLength.equals(other.streakLength) && metricId.equals(other.metricId) && metricValue.equals(other.metricValue) && metricName.equals(other.metricName);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.value);
+    return Objects.hash(this.id, this.name, this.badgeUrl, this.achievedAt, this.key, this.streakLength, this.metricId, this.metricValue, this.metricName);
   }
 
   @java.lang.Override
   public String toString() {
-    return this.value.toString();
+    return ObjectMappers.stringify(this);
   }
 
-  public static AchievementResponse of(MetricAchievementResponse value) {
-    return new AchievementResponse(value, 0);
+  public static IdStage builder() {
+    return new Builder();
   }
 
-  public static AchievementResponse of(StreakAchievementResponse value) {
-    return new AchievementResponse(value, 1);
+  public interface IdStage {
+    NameStage id(@NotNull String id);
+
+    Builder from(AchievementResponse other);
   }
 
-  public static AchievementResponse of(ApiAchievementResponse value) {
-    return new AchievementResponse(value, 2);
+  public interface NameStage {
+    _FinalStage name(@NotNull String name);
   }
 
-  public interface Visitor<T> {
-    T visit(MetricAchievementResponse value);
+  public interface _FinalStage {
+    AchievementResponse build();
 
-    T visit(StreakAchievementResponse value);
+    _FinalStage badgeUrl(Optional<String> badgeUrl);
 
-    T visit(ApiAchievementResponse value);
+    _FinalStage badgeUrl(String badgeUrl);
+
+    _FinalStage achievedAt(Optional<OffsetDateTime> achievedAt);
+
+    _FinalStage achievedAt(OffsetDateTime achievedAt);
+
+    _FinalStage key(Optional<String> key);
+
+    _FinalStage key(String key);
+
+    _FinalStage streakLength(Optional<Integer> streakLength);
+
+    _FinalStage streakLength(Integer streakLength);
+
+    _FinalStage metricId(Optional<String> metricId);
+
+    _FinalStage metricId(String metricId);
+
+    _FinalStage metricValue(Optional<Double> metricValue);
+
+    _FinalStage metricValue(Double metricValue);
+
+    _FinalStage metricName(Optional<String> metricName);
+
+    _FinalStage metricName(String metricName);
   }
 
-  static final class Deserializer extends StdDeserializer<AchievementResponse> {
-    Deserializer() {
-      super(AchievementResponse.class);
+  @JsonIgnoreProperties(
+      ignoreUnknown = true
+  )
+  public static final class Builder implements IdStage, NameStage, _FinalStage {
+    private String id;
+
+    private String name;
+
+    private Optional<String> metricName = Optional.empty();
+
+    private Optional<Double> metricValue = Optional.empty();
+
+    private Optional<String> metricId = Optional.empty();
+
+    private Optional<Integer> streakLength = Optional.empty();
+
+    private Optional<String> key = Optional.empty();
+
+    private Optional<OffsetDateTime> achievedAt = Optional.empty();
+
+    private Optional<String> badgeUrl = Optional.empty();
+
+    @JsonAnySetter
+    private Map<String, Object> additionalProperties = new HashMap<>();
+
+    private Builder() {
     }
 
     @java.lang.Override
-    public AchievementResponse deserialize(JsonParser p, DeserializationContext context) throws
-        IOException {
-      Object value = p.readValueAs(Object.class);
-      try {
-        return of(ObjectMappers.JSON_MAPPER.convertValue(value, MetricAchievementResponse.class));
-      } catch(IllegalArgumentException e) {
-      }
-      try {
-        return of(ObjectMappers.JSON_MAPPER.convertValue(value, StreakAchievementResponse.class));
-      } catch(IllegalArgumentException e) {
-      }
-      try {
-        return of(ObjectMappers.JSON_MAPPER.convertValue(value, ApiAchievementResponse.class));
-      } catch(IllegalArgumentException e) {
-      }
-      throw new JsonParseException(p, "Failed to deserialize");
+    public Builder from(AchievementResponse other) {
+      id(other.getId());
+      name(other.getName());
+      badgeUrl(other.getBadgeUrl());
+      achievedAt(other.getAchievedAt());
+      key(other.getKey());
+      streakLength(other.getStreakLength());
+      metricId(other.getMetricId());
+      metricValue(other.getMetricValue());
+      metricName(other.getMetricName());
+      return this;
+    }
+
+    /**
+     * <p>The unique ID of the achievement.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    @JsonSetter("id")
+    public NameStage id(@NotNull String id) {
+      this.id = Objects.requireNonNull(id, "id must not be null");
+      return this;
+    }
+
+    /**
+     * <p>The name of this achievement.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    @JsonSetter("name")
+    public _FinalStage name(@NotNull String name) {
+      this.name = Objects.requireNonNull(name, "name must not be null");
+      return this;
+    }
+
+    /**
+     * <p>The name of the metric associated with this achievement (only applicable if trigger = 'metric')</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage metricName(String metricName) {
+      this.metricName = Optional.ofNullable(metricName);
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter(
+        value = "metricName",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage metricName(Optional<String> metricName) {
+      this.metricName = metricName;
+      return this;
+    }
+
+    /**
+     * <p>The value of the metric required to complete the achievement (only applicable if trigger = 'metric')</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage metricValue(Double metricValue) {
+      this.metricValue = Optional.ofNullable(metricValue);
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter(
+        value = "metricValue",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage metricValue(Optional<Double> metricValue) {
+      this.metricValue = metricValue;
+      return this;
+    }
+
+    /**
+     * <p>The ID of the metric associated with this achievement (only applicable if trigger = 'metric')</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage metricId(String metricId) {
+      this.metricId = Optional.ofNullable(metricId);
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter(
+        value = "metricId",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage metricId(Optional<String> metricId) {
+      this.metricId = metricId;
+      return this;
+    }
+
+    /**
+     * <p>The length of the streak required to complete the achievement (only applicable if trigger = 'streak')</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage streakLength(Integer streakLength) {
+      this.streakLength = Optional.ofNullable(streakLength);
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter(
+        value = "streakLength",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage streakLength(Optional<Integer> streakLength) {
+      this.streakLength = streakLength;
+      return this;
+    }
+
+    /**
+     * <p>The key used to reference this achievement in the API (only applicable if trigger = 'api')</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage key(String key) {
+      this.key = Optional.ofNullable(key);
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter(
+        value = "key",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage key(Optional<String> key) {
+      this.key = key;
+      return this;
+    }
+
+    /**
+     * <p>The date and time the achievement was completed, in ISO 8601 format.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage achievedAt(OffsetDateTime achievedAt) {
+      this.achievedAt = Optional.ofNullable(achievedAt);
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter(
+        value = "achievedAt",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage achievedAt(Optional<OffsetDateTime> achievedAt) {
+      this.achievedAt = achievedAt;
+      return this;
+    }
+
+    /**
+     * <p>The URL of the badge image for the achievement, if one has been uploaded.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage badgeUrl(String badgeUrl) {
+      this.badgeUrl = Optional.ofNullable(badgeUrl);
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter(
+        value = "badgeUrl",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage badgeUrl(Optional<String> badgeUrl) {
+      this.badgeUrl = badgeUrl;
+      return this;
+    }
+
+    @java.lang.Override
+    public AchievementResponse build() {
+      return new AchievementResponse(id, name, badgeUrl, achievedAt, key, streakLength, metricId, metricValue, metricName, additionalProperties);
     }
   }
 }

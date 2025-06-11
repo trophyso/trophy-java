@@ -38,12 +38,12 @@ public final class MetricResponse {
 
   private final double current;
 
-  private final List<MetricAchievementResponse> achievements;
+  private final List<AchievementResponse> achievements;
 
   private final Map<String, Object> additionalProperties;
 
   private MetricResponse(String id, String key, String name, MetricStatus status, double current,
-      List<MetricAchievementResponse> achievements, Map<String, Object> additionalProperties) {
+      List<AchievementResponse> achievements, Map<String, Object> additionalProperties) {
     this.id = id;
     this.key = key;
     this.name = name;
@@ -97,7 +97,7 @@ public final class MetricResponse {
    * @return A list of the metric's achievements and the user's progress towards each.
    */
   @JsonProperty("achievements")
-  public List<MetricAchievementResponse> getAchievements() {
+  public List<AchievementResponse> getAchievements() {
     return achievements;
   }
 
@@ -155,11 +155,11 @@ public final class MetricResponse {
   public interface _FinalStage {
     MetricResponse build();
 
-    _FinalStage achievements(List<MetricAchievementResponse> achievements);
+    _FinalStage achievements(List<AchievementResponse> achievements);
 
-    _FinalStage addAchievements(MetricAchievementResponse achievements);
+    _FinalStage addAchievements(AchievementResponse achievements);
 
-    _FinalStage addAllAchievements(List<MetricAchievementResponse> achievements);
+    _FinalStage addAllAchievements(List<AchievementResponse> achievements);
   }
 
   @JsonIgnoreProperties(
@@ -176,7 +176,7 @@ public final class MetricResponse {
 
     private double current;
 
-    private List<MetricAchievementResponse> achievements = new ArrayList<>();
+    private List<AchievementResponse> achievements = new ArrayList<>();
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -255,7 +255,7 @@ public final class MetricResponse {
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage addAllAchievements(List<MetricAchievementResponse> achievements) {
+    public _FinalStage addAllAchievements(List<AchievementResponse> achievements) {
       this.achievements.addAll(achievements);
       return this;
     }
@@ -265,7 +265,7 @@ public final class MetricResponse {
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage addAchievements(MetricAchievementResponse achievements) {
+    public _FinalStage addAchievements(AchievementResponse achievements) {
       this.achievements.add(achievements);
       return this;
     }
@@ -275,7 +275,7 @@ public final class MetricResponse {
         value = "achievements",
         nulls = Nulls.SKIP
     )
-    public _FinalStage achievements(List<MetricAchievementResponse> achievements) {
+    public _FinalStage achievements(List<AchievementResponse> achievements) {
       this.achievements.clear();
       this.achievements.addAll(achievements);
       return this;
