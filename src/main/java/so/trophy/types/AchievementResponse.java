@@ -34,6 +34,8 @@ public final class AchievementResponse {
 
   private final String name;
 
+  private final String trigger;
+
   private final Optional<String> badgeUrl;
 
   private final Optional<OffsetDateTime> achievedAt;
@@ -50,12 +52,13 @@ public final class AchievementResponse {
 
   private final Map<String, Object> additionalProperties;
 
-  private AchievementResponse(String id, String name, Optional<String> badgeUrl,
+  private AchievementResponse(String id, String name, String trigger, Optional<String> badgeUrl,
       Optional<OffsetDateTime> achievedAt, Optional<String> key, Optional<Integer> streakLength,
       Optional<String> metricId, Optional<Double> metricValue, Optional<String> metricName,
       Map<String, Object> additionalProperties) {
     this.id = id;
     this.name = name;
+    this.trigger = trigger;
     this.badgeUrl = badgeUrl;
     this.achievedAt = achievedAt;
     this.key = key;
@@ -80,6 +83,14 @@ public final class AchievementResponse {
   @JsonProperty("name")
   public String getName() {
     return name;
+  }
+
+  /**
+   * @return The trigger of the achievement, either 'metric', 'streak', or 'api'.
+   */
+  @JsonProperty("trigger")
+  public String getTrigger() {
+    return trigger;
   }
 
   /**
@@ -150,12 +161,12 @@ public final class AchievementResponse {
   }
 
   private boolean equalTo(AchievementResponse other) {
-    return id.equals(other.id) && name.equals(other.name) && badgeUrl.equals(other.badgeUrl) && achievedAt.equals(other.achievedAt) && key.equals(other.key) && streakLength.equals(other.streakLength) && metricId.equals(other.metricId) && metricValue.equals(other.metricValue) && metricName.equals(other.metricName);
+    return id.equals(other.id) && name.equals(other.name) && trigger.equals(other.trigger) && badgeUrl.equals(other.badgeUrl) && achievedAt.equals(other.achievedAt) && key.equals(other.key) && streakLength.equals(other.streakLength) && metricId.equals(other.metricId) && metricValue.equals(other.metricValue) && metricName.equals(other.metricName);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.name, this.badgeUrl, this.achievedAt, this.key, this.streakLength, this.metricId, this.metricValue, this.metricName);
+    return Objects.hash(this.id, this.name, this.trigger, this.badgeUrl, this.achievedAt, this.key, this.streakLength, this.metricId, this.metricValue, this.metricName);
   }
 
   @java.lang.Override
@@ -174,7 +185,11 @@ public final class AchievementResponse {
   }
 
   public interface NameStage {
-    _FinalStage name(@NotNull String name);
+    TriggerStage name(@NotNull String name);
+  }
+
+  public interface TriggerStage {
+    _FinalStage trigger(@NotNull String trigger);
   }
 
   public interface _FinalStage {
@@ -212,10 +227,12 @@ public final class AchievementResponse {
   @JsonIgnoreProperties(
       ignoreUnknown = true
   )
-  public static final class Builder implements IdStage, NameStage, _FinalStage {
+  public static final class Builder implements IdStage, NameStage, TriggerStage, _FinalStage {
     private String id;
 
     private String name;
+
+    private String trigger;
 
     private Optional<String> metricName = Optional.empty();
 
@@ -241,6 +258,7 @@ public final class AchievementResponse {
     public Builder from(AchievementResponse other) {
       id(other.getId());
       name(other.getName());
+      trigger(other.getTrigger());
       badgeUrl(other.getBadgeUrl());
       achievedAt(other.getAchievedAt());
       key(other.getKey());
@@ -268,8 +286,19 @@ public final class AchievementResponse {
      */
     @java.lang.Override
     @JsonSetter("name")
-    public _FinalStage name(@NotNull String name) {
+    public TriggerStage name(@NotNull String name) {
       this.name = Objects.requireNonNull(name, "name must not be null");
+      return this;
+    }
+
+    /**
+     * <p>The trigger of the achievement, either 'metric', 'streak', or 'api'.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    @JsonSetter("trigger")
+    public _FinalStage trigger(@NotNull String trigger) {
+      this.trigger = Objects.requireNonNull(trigger, "trigger must not be null");
       return this;
     }
 
@@ -415,7 +444,7 @@ public final class AchievementResponse {
 
     @java.lang.Override
     public AchievementResponse build() {
-      return new AchievementResponse(id, name, badgeUrl, achievedAt, key, streakLength, metricId, metricValue, metricName, additionalProperties);
+      return new AchievementResponse(id, name, trigger, badgeUrl, achievedAt, key, streakLength, metricId, metricValue, metricName, additionalProperties);
     }
   }
 }
