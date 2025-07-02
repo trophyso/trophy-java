@@ -34,14 +34,14 @@ public final class EventResponse {
 
   private final double total;
 
-  private final Optional<List<AchievementResponse>> achievements;
+  private final Optional<List<CompletedAchievementResponse>> achievements;
 
   private final Optional<IncrementMetricStreakResponse> currentStreak;
 
   private final Map<String, Object> additionalProperties;
 
   private EventResponse(String eventId, String metricId, double total,
-      Optional<List<AchievementResponse>> achievements,
+      Optional<List<CompletedAchievementResponse>> achievements,
       Optional<IncrementMetricStreakResponse> currentStreak,
       Map<String, Object> additionalProperties) {
     this.eventId = eventId;
@@ -80,7 +80,7 @@ public final class EventResponse {
    * @return Achievements completed as a result of this event.
    */
   @JsonProperty("achievements")
-  public Optional<List<AchievementResponse>> getAchievements() {
+  public Optional<List<CompletedAchievementResponse>> getAchievements() {
     return achievements;
   }
 
@@ -138,9 +138,9 @@ public final class EventResponse {
   public interface _FinalStage {
     EventResponse build();
 
-    _FinalStage achievements(Optional<List<AchievementResponse>> achievements);
+    _FinalStage achievements(Optional<List<CompletedAchievementResponse>> achievements);
 
-    _FinalStage achievements(List<AchievementResponse> achievements);
+    _FinalStage achievements(List<CompletedAchievementResponse> achievements);
 
     _FinalStage currentStreak(Optional<IncrementMetricStreakResponse> currentStreak);
 
@@ -159,7 +159,7 @@ public final class EventResponse {
 
     private Optional<IncrementMetricStreakResponse> currentStreak = Optional.empty();
 
-    private Optional<List<AchievementResponse>> achievements = Optional.empty();
+    private Optional<List<CompletedAchievementResponse>> achievements = Optional.empty();
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -235,7 +235,7 @@ public final class EventResponse {
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage achievements(List<AchievementResponse> achievements) {
+    public _FinalStage achievements(List<CompletedAchievementResponse> achievements) {
       this.achievements = Optional.ofNullable(achievements);
       return this;
     }
@@ -245,7 +245,7 @@ public final class EventResponse {
         value = "achievements",
         nulls = Nulls.SKIP
     )
-    public _FinalStage achievements(Optional<List<AchievementResponse>> achievements) {
+    public _FinalStage achievements(Optional<List<CompletedAchievementResponse>> achievements) {
       this.achievements = achievements;
       return this;
     }

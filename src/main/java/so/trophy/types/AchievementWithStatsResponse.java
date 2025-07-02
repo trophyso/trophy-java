@@ -26,9 +26,9 @@ import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(
-    builder = AchievementResponse.Builder.class
+    builder = AchievementWithStatsResponse.Builder.class
 )
-public final class AchievementResponse implements IAchievementResponse {
+public final class AchievementWithStatsResponse implements IAchievementResponse {
   private final String id;
 
   private final String name;
@@ -49,12 +49,17 @@ public final class AchievementResponse implements IAchievementResponse {
 
   private final Optional<String> metricName;
 
+  private final Optional<Integer> completions;
+
+  private final Optional<Double> completedPercentage;
+
   private final Map<String, Object> additionalProperties;
 
-  private AchievementResponse(String id, String name, String trigger, Optional<String> description,
-      Optional<String> badgeUrl, Optional<String> key, Optional<Integer> streakLength,
-      Optional<String> metricId, Optional<Double> metricValue, Optional<String> metricName,
-      Map<String, Object> additionalProperties) {
+  private AchievementWithStatsResponse(String id, String name, String trigger,
+      Optional<String> description, Optional<String> badgeUrl, Optional<String> key,
+      Optional<Integer> streakLength, Optional<String> metricId, Optional<Double> metricValue,
+      Optional<String> metricName, Optional<Integer> completions,
+      Optional<Double> completedPercentage, Map<String, Object> additionalProperties) {
     this.id = id;
     this.name = name;
     this.trigger = trigger;
@@ -65,6 +70,8 @@ public final class AchievementResponse implements IAchievementResponse {
     this.metricId = metricId;
     this.metricValue = metricValue;
     this.metricName = metricName;
+    this.completions = completions;
+    this.completedPercentage = completedPercentage;
     this.additionalProperties = additionalProperties;
   }
 
@@ -158,10 +165,26 @@ public final class AchievementResponse implements IAchievementResponse {
     return metricName;
   }
 
+  /**
+   * @return The number of users who have completed this achievement.
+   */
+  @JsonProperty("completions")
+  public Optional<Integer> getCompletions() {
+    return completions;
+  }
+
+  /**
+   * @return The percentage of all users who have completed this achievement.
+   */
+  @JsonProperty("completedPercentage")
+  public Optional<Double> getCompletedPercentage() {
+    return completedPercentage;
+  }
+
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
-    return other instanceof AchievementResponse && equalTo((AchievementResponse) other);
+    return other instanceof AchievementWithStatsResponse && equalTo((AchievementWithStatsResponse) other);
   }
 
   @JsonAnyGetter
@@ -169,13 +192,13 @@ public final class AchievementResponse implements IAchievementResponse {
     return this.additionalProperties;
   }
 
-  private boolean equalTo(AchievementResponse other) {
-    return id.equals(other.id) && name.equals(other.name) && trigger.equals(other.trigger) && description.equals(other.description) && badgeUrl.equals(other.badgeUrl) && key.equals(other.key) && streakLength.equals(other.streakLength) && metricId.equals(other.metricId) && metricValue.equals(other.metricValue) && metricName.equals(other.metricName);
+  private boolean equalTo(AchievementWithStatsResponse other) {
+    return id.equals(other.id) && name.equals(other.name) && trigger.equals(other.trigger) && description.equals(other.description) && badgeUrl.equals(other.badgeUrl) && key.equals(other.key) && streakLength.equals(other.streakLength) && metricId.equals(other.metricId) && metricValue.equals(other.metricValue) && metricName.equals(other.metricName) && completions.equals(other.completions) && completedPercentage.equals(other.completedPercentage);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.name, this.trigger, this.description, this.badgeUrl, this.key, this.streakLength, this.metricId, this.metricValue, this.metricName);
+    return Objects.hash(this.id, this.name, this.trigger, this.description, this.badgeUrl, this.key, this.streakLength, this.metricId, this.metricValue, this.metricName, this.completions, this.completedPercentage);
   }
 
   @java.lang.Override
@@ -190,7 +213,7 @@ public final class AchievementResponse implements IAchievementResponse {
   public interface IdStage {
     NameStage id(@NotNull String id);
 
-    Builder from(AchievementResponse other);
+    Builder from(AchievementWithStatsResponse other);
   }
 
   public interface NameStage {
@@ -202,7 +225,7 @@ public final class AchievementResponse implements IAchievementResponse {
   }
 
   public interface _FinalStage {
-    AchievementResponse build();
+    AchievementWithStatsResponse build();
 
     _FinalStage description(Optional<String> description);
 
@@ -231,6 +254,14 @@ public final class AchievementResponse implements IAchievementResponse {
     _FinalStage metricName(Optional<String> metricName);
 
     _FinalStage metricName(String metricName);
+
+    _FinalStage completions(Optional<Integer> completions);
+
+    _FinalStage completions(Integer completions);
+
+    _FinalStage completedPercentage(Optional<Double> completedPercentage);
+
+    _FinalStage completedPercentage(Double completedPercentage);
   }
 
   @JsonIgnoreProperties(
@@ -242,6 +273,10 @@ public final class AchievementResponse implements IAchievementResponse {
     private String name;
 
     private String trigger;
+
+    private Optional<Double> completedPercentage = Optional.empty();
+
+    private Optional<Integer> completions = Optional.empty();
 
     private Optional<String> metricName = Optional.empty();
 
@@ -264,7 +299,7 @@ public final class AchievementResponse implements IAchievementResponse {
     }
 
     @java.lang.Override
-    public Builder from(AchievementResponse other) {
+    public Builder from(AchievementWithStatsResponse other) {
       id(other.getId());
       name(other.getName());
       trigger(other.getTrigger());
@@ -275,6 +310,8 @@ public final class AchievementResponse implements IAchievementResponse {
       metricId(other.getMetricId());
       metricValue(other.getMetricValue());
       metricName(other.getMetricName());
+      completions(other.getCompletions());
+      completedPercentage(other.getCompletedPercentage());
       return this;
     }
 
@@ -308,6 +345,46 @@ public final class AchievementResponse implements IAchievementResponse {
     @JsonSetter("trigger")
     public _FinalStage trigger(@NotNull String trigger) {
       this.trigger = Objects.requireNonNull(trigger, "trigger must not be null");
+      return this;
+    }
+
+    /**
+     * <p>The percentage of all users who have completed this achievement.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage completedPercentage(Double completedPercentage) {
+      this.completedPercentage = Optional.ofNullable(completedPercentage);
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter(
+        value = "completedPercentage",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage completedPercentage(Optional<Double> completedPercentage) {
+      this.completedPercentage = completedPercentage;
+      return this;
+    }
+
+    /**
+     * <p>The number of users who have completed this achievement.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage completions(Integer completions) {
+      this.completions = Optional.ofNullable(completions);
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter(
+        value = "completions",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage completions(Optional<Integer> completions) {
+      this.completions = completions;
       return this;
     }
 
@@ -452,8 +529,8 @@ public final class AchievementResponse implements IAchievementResponse {
     }
 
     @java.lang.Override
-    public AchievementResponse build() {
-      return new AchievementResponse(id, name, trigger, description, badgeUrl, key, streakLength, metricId, metricValue, metricName, additionalProperties);
+    public AchievementWithStatsResponse build() {
+      return new AchievementWithStatsResponse(id, name, trigger, description, badgeUrl, key, streakLength, metricId, metricValue, metricName, completions, completedPercentage, additionalProperties);
     }
   }
 }

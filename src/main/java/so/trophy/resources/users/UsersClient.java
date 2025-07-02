@@ -28,8 +28,10 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import so.trophy.resources.users.requests.UsersMetricEventSummaryRequest;
 import so.trophy.resources.users.requests.UsersStreakRequest;
-import so.trophy.types.AchievementResponse;
+import so.trophy.resources.users.types.UsersMetricEventSummaryResponseItem;
+import so.trophy.types.CompletedAchievementResponse;
 import so.trophy.types.ErrorBody;
 import so.trophy.types.MetricResponse;
 import so.trophy.types.StreakResponse;
@@ -318,82 +320,27 @@ public class UsersClient {
   }
 
   /**
-   * Get all of a user's completed achievements.
+   * Get a summary of metric events over time for a user.
    */
-  public List<AchievementResponse> allAchievements(String id) {
-    return allAchievements(id,null);
+  public List<UsersMetricEventSummaryResponseItem> metricEventSummary(String id, String key,
+      UsersMetricEventSummaryRequest request) {
+    return metricEventSummary(id,key,request,null);
   }
 
   /**
-   * Get all of a user's completed achievements.
+   * Get a summary of metric events over time for a user.
    */
-  public List<AchievementResponse> allAchievements(String id, RequestOptions requestOptions) {
-    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
-
-      .addPathSegments("users")
-      .addPathSegment(id)
-      .addPathSegments("achievements")
-      .build();
-    Request okhttpRequest = new Request.Builder()
-      .url(httpUrl)
-      .method("GET", null)
-      .headers(Headers.of(clientOptions.headers(requestOptions)))
-      .addHeader("Content-Type", "application/json")
-      .addHeader("Accept", "application/json")
-      .build();
-    OkHttpClient client = clientOptions.httpClient();
-    if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-      client = clientOptions.httpClientWithTimeout(requestOptions);
-    }
-    try (Response response = client.newCall(okhttpRequest).execute()) {
-      ResponseBody responseBody = response.body();
-      if (response.isSuccessful()) {
-        return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<AchievementResponse>>() {});
-      }
-      String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-      try {
-        switch (response.code()) {
-          case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-          case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-          case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-        }
-      }
-      catch (JsonProcessingException ignored) {
-        // unable to map error response, throwing generic error
-      }
-      throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-    }
-    catch (IOException e) {
-      throw new TrophyApiException("Network error executing HTTP request", e);
-    }
-  }
-
-  /**
-   * Get a user's streak data.
-   */
-  public StreakResponse streak(String id) {
-    return streak(id,UsersStreakRequest.builder().build());
-  }
-
-  /**
-   * Get a user's streak data.
-   */
-  public StreakResponse streak(String id, UsersStreakRequest request) {
-    return streak(id,request,null);
-  }
-
-  /**
-   * Get a user's streak data.
-   */
-  public StreakResponse streak(String id, UsersStreakRequest request,
-      RequestOptions requestOptions) {
+  public List<UsersMetricEventSummaryResponseItem> metricEventSummary(String id, String key,
+      UsersMetricEventSummaryRequest request, RequestOptions requestOptions) {
     HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
 
       .addPathSegments("users")
       .addPathSegment(id)
-      .addPathSegments("streak");if (request.getHistoryPeriods().isPresent()) {
-        httpUrl.addQueryParameter("historyPeriods", request.getHistoryPeriods().get().toString());
-      }
+      .addPathSegments("metrics")
+      .addPathSegment(key)
+      .addPathSegments("event-summary");httpUrl.addQueryParameter("aggregation", request.getAggregation().toString());
+      httpUrl.addQueryParameter("startDate", request.getStartDate());
+      httpUrl.addQueryParameter("endDate", request.getEndDate());
       Request.Builder _requestBuilder = new Request.Builder()
         .url(httpUrl.build())
         .method("GET", null)
@@ -407,7 +354,7 @@ public class UsersClient {
       try (Response response = client.newCall(okhttpRequest).execute()) {
         ResponseBody responseBody = response.body();
         if (response.isSuccessful()) {
-          return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), StreakResponse.class);
+          return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<UsersMetricEventSummaryResponseItem>>() {});
         }
         String responseBodyString = responseBody != null ? responseBody.string() : "{}";
         try {
@@ -426,4 +373,115 @@ public class UsersClient {
         throw new TrophyApiException("Network error executing HTTP request", e);
       }
     }
-  }
+
+    /**
+     * Get all of a user's completed achievements.
+     */
+    public List<CompletedAchievementResponse> allAchievements(String id) {
+      return allAchievements(id,null);
+    }
+
+    /**
+     * Get all of a user's completed achievements.
+     */
+    public List<CompletedAchievementResponse> allAchievements(String id,
+        RequestOptions requestOptions) {
+      HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
+
+        .addPathSegments("users")
+        .addPathSegment(id)
+        .addPathSegments("achievements")
+        .build();
+      Request okhttpRequest = new Request.Builder()
+        .url(httpUrl)
+        .method("GET", null)
+        .headers(Headers.of(clientOptions.headers(requestOptions)))
+        .addHeader("Content-Type", "application/json")
+        .addHeader("Accept", "application/json")
+        .build();
+      OkHttpClient client = clientOptions.httpClient();
+      if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
+        client = clientOptions.httpClientWithTimeout(requestOptions);
+      }
+      try (Response response = client.newCall(okhttpRequest).execute()) {
+        ResponseBody responseBody = response.body();
+        if (response.isSuccessful()) {
+          return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<CompletedAchievementResponse>>() {});
+        }
+        String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+        try {
+          switch (response.code()) {
+            case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
+            case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
+            case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
+          }
+        }
+        catch (JsonProcessingException ignored) {
+          // unable to map error response, throwing generic error
+        }
+        throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
+      }
+      catch (IOException e) {
+        throw new TrophyApiException("Network error executing HTTP request", e);
+      }
+    }
+
+    /**
+     * Get a user's streak data.
+     */
+    public StreakResponse streak(String id) {
+      return streak(id,UsersStreakRequest.builder().build());
+    }
+
+    /**
+     * Get a user's streak data.
+     */
+    public StreakResponse streak(String id, UsersStreakRequest request) {
+      return streak(id,request,null);
+    }
+
+    /**
+     * Get a user's streak data.
+     */
+    public StreakResponse streak(String id, UsersStreakRequest request,
+        RequestOptions requestOptions) {
+      HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
+
+        .addPathSegments("users")
+        .addPathSegment(id)
+        .addPathSegments("streak");if (request.getHistoryPeriods().isPresent()) {
+          httpUrl.addQueryParameter("historyPeriods", request.getHistoryPeriods().get().toString());
+        }
+        Request.Builder _requestBuilder = new Request.Builder()
+          .url(httpUrl.build())
+          .method("GET", null)
+          .headers(Headers.of(clientOptions.headers(requestOptions)))
+          .addHeader("Content-Type", "application/json").addHeader("Accept", "application/json");
+        Request okhttpRequest = _requestBuilder.build();
+        OkHttpClient client = clientOptions.httpClient();
+        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
+          client = clientOptions.httpClientWithTimeout(requestOptions);
+        }
+        try (Response response = client.newCall(okhttpRequest).execute()) {
+          ResponseBody responseBody = response.body();
+          if (response.isSuccessful()) {
+            return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), StreakResponse.class);
+          }
+          String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+          try {
+            switch (response.code()) {
+              case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
+              case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
+              case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
+            }
+          }
+          catch (JsonProcessingException ignored) {
+            // unable to map error response, throwing generic error
+          }
+          throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
+        }
+        catch (IOException e) {
+          throw new TrophyApiException("Network error executing HTTP request", e);
+        }
+      }
+    }

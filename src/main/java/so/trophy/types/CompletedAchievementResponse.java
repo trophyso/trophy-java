@@ -18,6 +18,7 @@ import java.lang.Double;
 import java.lang.Integer;
 import java.lang.Object;
 import java.lang.String;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -26,9 +27,9 @@ import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(
-    builder = AchievementResponse.Builder.class
+    builder = CompletedAchievementResponse.Builder.class
 )
-public final class AchievementResponse implements IAchievementResponse {
+public final class CompletedAchievementResponse implements IAchievementResponse {
   private final String id;
 
   private final String name;
@@ -49,11 +50,14 @@ public final class AchievementResponse implements IAchievementResponse {
 
   private final Optional<String> metricName;
 
+  private final Optional<OffsetDateTime> achievedAt;
+
   private final Map<String, Object> additionalProperties;
 
-  private AchievementResponse(String id, String name, String trigger, Optional<String> description,
-      Optional<String> badgeUrl, Optional<String> key, Optional<Integer> streakLength,
-      Optional<String> metricId, Optional<Double> metricValue, Optional<String> metricName,
+  private CompletedAchievementResponse(String id, String name, String trigger,
+      Optional<String> description, Optional<String> badgeUrl, Optional<String> key,
+      Optional<Integer> streakLength, Optional<String> metricId, Optional<Double> metricValue,
+      Optional<String> metricName, Optional<OffsetDateTime> achievedAt,
       Map<String, Object> additionalProperties) {
     this.id = id;
     this.name = name;
@@ -65,6 +69,7 @@ public final class AchievementResponse implements IAchievementResponse {
     this.metricId = metricId;
     this.metricValue = metricValue;
     this.metricName = metricName;
+    this.achievedAt = achievedAt;
     this.additionalProperties = additionalProperties;
   }
 
@@ -158,10 +163,18 @@ public final class AchievementResponse implements IAchievementResponse {
     return metricName;
   }
 
+  /**
+   * @return The date and time the achievement was completed, in ISO 8601 format.
+   */
+  @JsonProperty("achievedAt")
+  public Optional<OffsetDateTime> getAchievedAt() {
+    return achievedAt;
+  }
+
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
-    return other instanceof AchievementResponse && equalTo((AchievementResponse) other);
+    return other instanceof CompletedAchievementResponse && equalTo((CompletedAchievementResponse) other);
   }
 
   @JsonAnyGetter
@@ -169,13 +182,13 @@ public final class AchievementResponse implements IAchievementResponse {
     return this.additionalProperties;
   }
 
-  private boolean equalTo(AchievementResponse other) {
-    return id.equals(other.id) && name.equals(other.name) && trigger.equals(other.trigger) && description.equals(other.description) && badgeUrl.equals(other.badgeUrl) && key.equals(other.key) && streakLength.equals(other.streakLength) && metricId.equals(other.metricId) && metricValue.equals(other.metricValue) && metricName.equals(other.metricName);
+  private boolean equalTo(CompletedAchievementResponse other) {
+    return id.equals(other.id) && name.equals(other.name) && trigger.equals(other.trigger) && description.equals(other.description) && badgeUrl.equals(other.badgeUrl) && key.equals(other.key) && streakLength.equals(other.streakLength) && metricId.equals(other.metricId) && metricValue.equals(other.metricValue) && metricName.equals(other.metricName) && achievedAt.equals(other.achievedAt);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.name, this.trigger, this.description, this.badgeUrl, this.key, this.streakLength, this.metricId, this.metricValue, this.metricName);
+    return Objects.hash(this.id, this.name, this.trigger, this.description, this.badgeUrl, this.key, this.streakLength, this.metricId, this.metricValue, this.metricName, this.achievedAt);
   }
 
   @java.lang.Override
@@ -190,7 +203,7 @@ public final class AchievementResponse implements IAchievementResponse {
   public interface IdStage {
     NameStage id(@NotNull String id);
 
-    Builder from(AchievementResponse other);
+    Builder from(CompletedAchievementResponse other);
   }
 
   public interface NameStage {
@@ -202,7 +215,7 @@ public final class AchievementResponse implements IAchievementResponse {
   }
 
   public interface _FinalStage {
-    AchievementResponse build();
+    CompletedAchievementResponse build();
 
     _FinalStage description(Optional<String> description);
 
@@ -231,6 +244,10 @@ public final class AchievementResponse implements IAchievementResponse {
     _FinalStage metricName(Optional<String> metricName);
 
     _FinalStage metricName(String metricName);
+
+    _FinalStage achievedAt(Optional<OffsetDateTime> achievedAt);
+
+    _FinalStage achievedAt(OffsetDateTime achievedAt);
   }
 
   @JsonIgnoreProperties(
@@ -242,6 +259,8 @@ public final class AchievementResponse implements IAchievementResponse {
     private String name;
 
     private String trigger;
+
+    private Optional<OffsetDateTime> achievedAt = Optional.empty();
 
     private Optional<String> metricName = Optional.empty();
 
@@ -264,7 +283,7 @@ public final class AchievementResponse implements IAchievementResponse {
     }
 
     @java.lang.Override
-    public Builder from(AchievementResponse other) {
+    public Builder from(CompletedAchievementResponse other) {
       id(other.getId());
       name(other.getName());
       trigger(other.getTrigger());
@@ -275,6 +294,7 @@ public final class AchievementResponse implements IAchievementResponse {
       metricId(other.getMetricId());
       metricValue(other.getMetricValue());
       metricName(other.getMetricName());
+      achievedAt(other.getAchievedAt());
       return this;
     }
 
@@ -308,6 +328,26 @@ public final class AchievementResponse implements IAchievementResponse {
     @JsonSetter("trigger")
     public _FinalStage trigger(@NotNull String trigger) {
       this.trigger = Objects.requireNonNull(trigger, "trigger must not be null");
+      return this;
+    }
+
+    /**
+     * <p>The date and time the achievement was completed, in ISO 8601 format.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage achievedAt(OffsetDateTime achievedAt) {
+      this.achievedAt = Optional.ofNullable(achievedAt);
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter(
+        value = "achievedAt",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage achievedAt(Optional<OffsetDateTime> achievedAt) {
+      this.achievedAt = achievedAt;
       return this;
     }
 
@@ -452,8 +492,8 @@ public final class AchievementResponse implements IAchievementResponse {
     }
 
     @java.lang.Override
-    public AchievementResponse build() {
-      return new AchievementResponse(id, name, trigger, description, badgeUrl, key, streakLength, metricId, metricValue, metricName, additionalProperties);
+    public CompletedAchievementResponse build() {
+      return new CompletedAchievementResponse(id, name, trigger, description, badgeUrl, key, streakLength, metricId, metricValue, metricName, achievedAt, additionalProperties);
     }
   }
 }
