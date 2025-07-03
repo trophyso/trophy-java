@@ -15,7 +15,7 @@ public interface IAchievementResponse {
 
   String getName();
 
-  String getTrigger();
+  AchievementResponseTrigger getTrigger();
 
   Optional<String> getDescription();
 
@@ -30,4 +30,6 @@ public interface IAchievementResponse {
   Optional<Double> getMetricValue();
 
   Optional<String> getMetricName();
+
+  Optional<MetricEventStreakResponse> getCurrentStreak();
 }

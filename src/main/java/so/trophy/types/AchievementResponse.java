@@ -33,7 +33,7 @@ public final class AchievementResponse implements IAchievementResponse {
 
   private final String name;
 
-  private final String trigger;
+  private final AchievementResponseTrigger trigger;
 
   private final Optional<String> description;
 
@@ -49,11 +49,14 @@ public final class AchievementResponse implements IAchievementResponse {
 
   private final Optional<String> metricName;
 
+  private final Optional<MetricEventStreakResponse> currentStreak;
+
   private final Map<String, Object> additionalProperties;
 
-  private AchievementResponse(String id, String name, String trigger, Optional<String> description,
-      Optional<String> badgeUrl, Optional<String> key, Optional<Integer> streakLength,
-      Optional<String> metricId, Optional<Double> metricValue, Optional<String> metricName,
+  private AchievementResponse(String id, String name, AchievementResponseTrigger trigger,
+      Optional<String> description, Optional<String> badgeUrl, Optional<String> key,
+      Optional<Integer> streakLength, Optional<String> metricId, Optional<Double> metricValue,
+      Optional<String> metricName, Optional<MetricEventStreakResponse> currentStreak,
       Map<String, Object> additionalProperties) {
     this.id = id;
     this.name = name;
@@ -65,6 +68,7 @@ public final class AchievementResponse implements IAchievementResponse {
     this.metricId = metricId;
     this.metricValue = metricValue;
     this.metricName = metricName;
+    this.currentStreak = currentStreak;
     this.additionalProperties = additionalProperties;
   }
 
@@ -87,11 +91,10 @@ public final class AchievementResponse implements IAchievementResponse {
   }
 
   /**
-   * @return The trigger of the achievement, either 'metric', 'streak', or 'api'.
+   * @return The trigger of the achievement.
    */
   @JsonProperty("trigger")
-  @java.lang.Override
-  public String getTrigger() {
+  public AchievementResponseTrigger getTrigger() {
     return trigger;
   }
 
@@ -158,6 +161,15 @@ public final class AchievementResponse implements IAchievementResponse {
     return metricName;
   }
 
+  /**
+   * @return The user's current streak for the metric, if the metric has streaks enabled.
+   */
+  @JsonProperty("currentStreak")
+  @java.lang.Override
+  public Optional<MetricEventStreakResponse> getCurrentStreak() {
+    return currentStreak;
+  }
+
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
@@ -170,12 +182,12 @@ public final class AchievementResponse implements IAchievementResponse {
   }
 
   private boolean equalTo(AchievementResponse other) {
-    return id.equals(other.id) && name.equals(other.name) && trigger.equals(other.trigger) && description.equals(other.description) && badgeUrl.equals(other.badgeUrl) && key.equals(other.key) && streakLength.equals(other.streakLength) && metricId.equals(other.metricId) && metricValue.equals(other.metricValue) && metricName.equals(other.metricName);
+    return id.equals(other.id) && name.equals(other.name) && trigger.equals(other.trigger) && description.equals(other.description) && badgeUrl.equals(other.badgeUrl) && key.equals(other.key) && streakLength.equals(other.streakLength) && metricId.equals(other.metricId) && metricValue.equals(other.metricValue) && metricName.equals(other.metricName) && currentStreak.equals(other.currentStreak);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.name, this.trigger, this.description, this.badgeUrl, this.key, this.streakLength, this.metricId, this.metricValue, this.metricName);
+    return Objects.hash(this.id, this.name, this.trigger, this.description, this.badgeUrl, this.key, this.streakLength, this.metricId, this.metricValue, this.metricName, this.currentStreak);
   }
 
   @java.lang.Override
@@ -198,7 +210,7 @@ public final class AchievementResponse implements IAchievementResponse {
   }
 
   public interface TriggerStage {
-    _FinalStage trigger(@NotNull String trigger);
+    _FinalStage trigger(@NotNull AchievementResponseTrigger trigger);
   }
 
   public interface _FinalStage {
@@ -231,6 +243,10 @@ public final class AchievementResponse implements IAchievementResponse {
     _FinalStage metricName(Optional<String> metricName);
 
     _FinalStage metricName(String metricName);
+
+    _FinalStage currentStreak(Optional<MetricEventStreakResponse> currentStreak);
+
+    _FinalStage currentStreak(MetricEventStreakResponse currentStreak);
   }
 
   @JsonIgnoreProperties(
@@ -241,7 +257,9 @@ public final class AchievementResponse implements IAchievementResponse {
 
     private String name;
 
-    private String trigger;
+    private AchievementResponseTrigger trigger;
+
+    private Optional<MetricEventStreakResponse> currentStreak = Optional.empty();
 
     private Optional<String> metricName = Optional.empty();
 
@@ -275,6 +293,7 @@ public final class AchievementResponse implements IAchievementResponse {
       metricId(other.getMetricId());
       metricValue(other.getMetricValue());
       metricName(other.getMetricName());
+      currentStreak(other.getCurrentStreak());
       return this;
     }
 
@@ -301,13 +320,33 @@ public final class AchievementResponse implements IAchievementResponse {
     }
 
     /**
-     * <p>The trigger of the achievement, either 'metric', 'streak', or 'api'.</p>
+     * <p>The trigger of the achievement.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
     @JsonSetter("trigger")
-    public _FinalStage trigger(@NotNull String trigger) {
+    public _FinalStage trigger(@NotNull AchievementResponseTrigger trigger) {
       this.trigger = Objects.requireNonNull(trigger, "trigger must not be null");
+      return this;
+    }
+
+    /**
+     * <p>The user's current streak for the metric, if the metric has streaks enabled.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage currentStreak(MetricEventStreakResponse currentStreak) {
+      this.currentStreak = Optional.ofNullable(currentStreak);
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter(
+        value = "currentStreak",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage currentStreak(Optional<MetricEventStreakResponse> currentStreak) {
+      this.currentStreak = currentStreak;
       return this;
     }
 
@@ -453,7 +492,7 @@ public final class AchievementResponse implements IAchievementResponse {
 
     @java.lang.Override
     public AchievementResponse build() {
-      return new AchievementResponse(id, name, trigger, description, badgeUrl, key, streakLength, metricId, metricValue, metricName, additionalProperties);
+      return new AchievementResponse(id, name, trigger, description, badgeUrl, key, streakLength, metricId, metricValue, metricName, currentStreak, additionalProperties);
     }
   }
 }

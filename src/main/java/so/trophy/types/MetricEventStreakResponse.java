@@ -25,9 +25,9 @@ import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(
-    builder = IncrementMetricStreakResponse.Builder.class
+    builder = MetricEventStreakResponse.Builder.class
 )
-public final class IncrementMetricStreakResponse implements IBaseStreakResponse {
+public final class MetricEventStreakResponse implements IBaseStreakResponse {
   private final int length;
 
   private final StreakFrequency frequency;
@@ -44,10 +44,9 @@ public final class IncrementMetricStreakResponse implements IBaseStreakResponse 
 
   private final Map<String, Object> additionalProperties;
 
-  private IncrementMetricStreakResponse(int length, StreakFrequency frequency,
-      Optional<String> started, Optional<String> periodStart, Optional<String> periodEnd,
-      Optional<String> expires, Optional<Boolean> extended,
-      Map<String, Object> additionalProperties) {
+  private MetricEventStreakResponse(int length, StreakFrequency frequency, Optional<String> started,
+      Optional<String> periodStart, Optional<String> periodEnd, Optional<String> expires,
+      Optional<Boolean> extended, Map<String, Object> additionalProperties) {
     this.length = length;
     this.frequency = frequency;
     this.started = started;
@@ -123,7 +122,7 @@ public final class IncrementMetricStreakResponse implements IBaseStreakResponse 
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
-    return other instanceof IncrementMetricStreakResponse && equalTo((IncrementMetricStreakResponse) other);
+    return other instanceof MetricEventStreakResponse && equalTo((MetricEventStreakResponse) other);
   }
 
   @JsonAnyGetter
@@ -131,7 +130,7 @@ public final class IncrementMetricStreakResponse implements IBaseStreakResponse 
     return this.additionalProperties;
   }
 
-  private boolean equalTo(IncrementMetricStreakResponse other) {
+  private boolean equalTo(MetricEventStreakResponse other) {
     return length == other.length && frequency.equals(other.frequency) && started.equals(other.started) && periodStart.equals(other.periodStart) && periodEnd.equals(other.periodEnd) && expires.equals(other.expires) && extended.equals(other.extended);
   }
 
@@ -152,7 +151,7 @@ public final class IncrementMetricStreakResponse implements IBaseStreakResponse 
   public interface LengthStage {
     FrequencyStage length(int length);
 
-    Builder from(IncrementMetricStreakResponse other);
+    Builder from(MetricEventStreakResponse other);
   }
 
   public interface FrequencyStage {
@@ -160,7 +159,7 @@ public final class IncrementMetricStreakResponse implements IBaseStreakResponse 
   }
 
   public interface _FinalStage {
-    IncrementMetricStreakResponse build();
+    MetricEventStreakResponse build();
 
     _FinalStage started(Optional<String> started);
 
@@ -208,7 +207,7 @@ public final class IncrementMetricStreakResponse implements IBaseStreakResponse 
     }
 
     @java.lang.Override
-    public Builder from(IncrementMetricStreakResponse other) {
+    public Builder from(MetricEventStreakResponse other) {
       length(other.getLength());
       frequency(other.getFrequency());
       started(other.getStarted());
@@ -342,8 +341,8 @@ public final class IncrementMetricStreakResponse implements IBaseStreakResponse 
     }
 
     @java.lang.Override
-    public IncrementMetricStreakResponse build() {
-      return new IncrementMetricStreakResponse(length, frequency, started, periodStart, periodEnd, expires, extended, additionalProperties);
+    public MetricEventStreakResponse build() {
+      return new MetricEventStreakResponse(length, frequency, started, periodStart, periodEnd, expires, extended, additionalProperties);
     }
   }
 }
