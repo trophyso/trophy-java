@@ -31,14 +31,21 @@ public final class PointsAward {
 
   private final Optional<Double> awarded;
 
+  private final Optional<String> date;
+
+  private final Optional<Double> total;
+
   private final Optional<PointsTrigger> trigger;
 
   private final Map<String, Object> additionalProperties;
 
-  private PointsAward(Optional<String> id, Optional<Double> awarded,
-      Optional<PointsTrigger> trigger, Map<String, Object> additionalProperties) {
+  private PointsAward(Optional<String> id, Optional<Double> awarded, Optional<String> date,
+      Optional<Double> total, Optional<PointsTrigger> trigger,
+      Map<String, Object> additionalProperties) {
     this.id = id;
     this.awarded = awarded;
+    this.date = date;
+    this.total = total;
     this.trigger = trigger;
     this.additionalProperties = additionalProperties;
   }
@@ -59,6 +66,22 @@ public final class PointsAward {
     return awarded;
   }
 
+  /**
+   * @return The date these points were awarded, in ISO 8601 format.
+   */
+  @JsonProperty("date")
+  public Optional<String> getDate() {
+    return date;
+  }
+
+  /**
+   * @return The user's total points after this award occurred.
+   */
+  @JsonProperty("total")
+  public Optional<Double> getTotal() {
+    return total;
+  }
+
   @JsonProperty("trigger")
   public Optional<PointsTrigger> getTrigger() {
     return trigger;
@@ -76,12 +99,12 @@ public final class PointsAward {
   }
 
   private boolean equalTo(PointsAward other) {
-    return id.equals(other.id) && awarded.equals(other.awarded) && trigger.equals(other.trigger);
+    return id.equals(other.id) && awarded.equals(other.awarded) && date.equals(other.date) && total.equals(other.total) && trigger.equals(other.trigger);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.awarded, this.trigger);
+    return Objects.hash(this.id, this.awarded, this.date, this.total, this.trigger);
   }
 
   @java.lang.Override
@@ -101,6 +124,10 @@ public final class PointsAward {
 
     private Optional<Double> awarded = Optional.empty();
 
+    private Optional<String> date = Optional.empty();
+
+    private Optional<Double> total = Optional.empty();
+
     private Optional<PointsTrigger> trigger = Optional.empty();
 
     @JsonAnySetter
@@ -112,6 +139,8 @@ public final class PointsAward {
     public Builder from(PointsAward other) {
       id(other.getId());
       awarded(other.getAwarded());
+      date(other.getDate());
+      total(other.getTotal());
       trigger(other.getTrigger());
       return this;
     }
@@ -145,6 +174,34 @@ public final class PointsAward {
     }
 
     @JsonSetter(
+        value = "date",
+        nulls = Nulls.SKIP
+    )
+    public Builder date(Optional<String> date) {
+      this.date = date;
+      return this;
+    }
+
+    public Builder date(String date) {
+      this.date = Optional.ofNullable(date);
+      return this;
+    }
+
+    @JsonSetter(
+        value = "total",
+        nulls = Nulls.SKIP
+    )
+    public Builder total(Optional<Double> total) {
+      this.total = total;
+      return this;
+    }
+
+    public Builder total(Double total) {
+      this.total = Optional.ofNullable(total);
+      return this;
+    }
+
+    @JsonSetter(
         value = "trigger",
         nulls = Nulls.SKIP
     )
@@ -159,7 +216,7 @@ public final class PointsAward {
     }
 
     public PointsAward build() {
-      return new PointsAward(id, awarded, trigger, additionalProperties);
+      return new PointsAward(id, awarded, date, total, trigger, additionalProperties);
     }
   }
 }

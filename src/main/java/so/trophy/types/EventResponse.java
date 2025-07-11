@@ -38,13 +38,13 @@ public final class EventResponse {
 
   private final Optional<MetricEventStreakResponse> currentStreak;
 
-  private final Optional<PointsAward> points;
+  private final Optional<MetricEventPointsResponse> points;
 
   private final Map<String, Object> additionalProperties;
 
   private EventResponse(String eventId, String metricId, double total,
       Optional<List<CompletedAchievementResponse>> achievements,
-      Optional<MetricEventStreakResponse> currentStreak, Optional<PointsAward> points,
+      Optional<MetricEventStreakResponse> currentStreak, Optional<MetricEventPointsResponse> points,
       Map<String, Object> additionalProperties) {
     this.eventId = eventId;
     this.metricId = metricId;
@@ -99,7 +99,7 @@ public final class EventResponse {
    * @return The points added by this event, and a breakdown of the points awards that added points.
    */
   @JsonProperty("points")
-  public Optional<PointsAward> getPoints() {
+  public Optional<MetricEventPointsResponse> getPoints() {
     return points;
   }
 
@@ -157,9 +157,9 @@ public final class EventResponse {
 
     _FinalStage currentStreak(MetricEventStreakResponse currentStreak);
 
-    _FinalStage points(Optional<PointsAward> points);
+    _FinalStage points(Optional<MetricEventPointsResponse> points);
 
-    _FinalStage points(PointsAward points);
+    _FinalStage points(MetricEventPointsResponse points);
   }
 
   @JsonIgnoreProperties(
@@ -172,7 +172,7 @@ public final class EventResponse {
 
     private double total;
 
-    private Optional<PointsAward> points = Optional.empty();
+    private Optional<MetricEventPointsResponse> points = Optional.empty();
 
     private Optional<MetricEventStreakResponse> currentStreak = Optional.empty();
 
@@ -233,7 +233,7 @@ public final class EventResponse {
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage points(PointsAward points) {
+    public _FinalStage points(MetricEventPointsResponse points) {
       this.points = Optional.ofNullable(points);
       return this;
     }
@@ -243,7 +243,7 @@ public final class EventResponse {
         value = "points",
         nulls = Nulls.SKIP
     )
-    public _FinalStage points(Optional<PointsAward> points) {
+    public _FinalStage points(Optional<MetricEventPointsResponse> points) {
       this.points = points;
       return this;
     }
