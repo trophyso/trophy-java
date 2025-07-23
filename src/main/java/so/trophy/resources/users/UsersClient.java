@@ -51,14 +51,14 @@ public class UsersClient {
   }
 
   /**
-   * Identify a new user.
+   * Create a new user.
    */
   public User create(UpsertedUser request) {
     return create(request,null);
   }
 
   /**
-   * Identify a new user.
+   * Create a new user.
    */
   public User create(UpsertedUser request, RequestOptions requestOptions) {
     HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
@@ -157,23 +157,23 @@ public class UsersClient {
   }
 
   /**
-   * Upsert a user (create or update).
+   * Identify a user.
    */
-  public User upsert(String id) {
-    return upsert(id,UpdatedUser.builder().build());
+  public User identify(String id) {
+    return identify(id,UpdatedUser.builder().build());
   }
 
   /**
-   * Upsert a user (create or update).
+   * Identify a user.
    */
-  public User upsert(String id, UpdatedUser request) {
-    return upsert(id,request,null);
+  public User identify(String id, UpdatedUser request) {
+    return identify(id,request,null);
   }
 
   /**
-   * Upsert a user (create or update).
+   * Identify a user.
    */
-  public User upsert(String id, UpdatedUser request, RequestOptions requestOptions) {
+  public User identify(String id, UpdatedUser request, RequestOptions requestOptions) {
     HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
 
       .addPathSegments("users")
