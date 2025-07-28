@@ -18,6 +18,7 @@ import java.lang.Boolean;
 import java.lang.Object;
 import java.lang.String;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -36,17 +37,20 @@ public final class UpsertedUser implements IUpsertedUser, IUpdatedUser {
 
   private final Optional<String> tz;
 
+  private final Optional<List<String>> deviceTokens;
+
   private final Optional<Boolean> subscribeToEmails;
 
   private final Map<String, Object> additionalProperties;
 
   private UpsertedUser(String id, Optional<String> email, Optional<String> name,
-      Optional<String> tz, Optional<Boolean> subscribeToEmails,
+      Optional<String> tz, Optional<List<String>> deviceTokens, Optional<Boolean> subscribeToEmails,
       Map<String, Object> additionalProperties) {
     this.id = id;
     this.email = email;
     this.name = name;
     this.tz = tz;
+    this.deviceTokens = deviceTokens;
     this.subscribeToEmails = subscribeToEmails;
     this.additionalProperties = additionalProperties;
   }
@@ -88,6 +92,15 @@ public final class UpsertedUser implements IUpsertedUser, IUpdatedUser {
   }
 
   /**
+   * @return The user's device tokens, used for push notifications.
+   */
+  @JsonProperty("deviceTokens")
+  @java.lang.Override
+  public Optional<List<String>> getDeviceTokens() {
+    return deviceTokens;
+  }
+
+  /**
    * @return Whether the user should receive Trophy-powered emails. Cannot be false if an email is provided.
    */
   @JsonProperty("subscribeToEmails")
@@ -108,12 +121,12 @@ public final class UpsertedUser implements IUpsertedUser, IUpdatedUser {
   }
 
   private boolean equalTo(UpsertedUser other) {
-    return id.equals(other.id) && email.equals(other.email) && name.equals(other.name) && tz.equals(other.tz) && subscribeToEmails.equals(other.subscribeToEmails);
+    return id.equals(other.id) && email.equals(other.email) && name.equals(other.name) && tz.equals(other.tz) && deviceTokens.equals(other.deviceTokens) && subscribeToEmails.equals(other.subscribeToEmails);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.email, this.name, this.tz, this.subscribeToEmails);
+    return Objects.hash(this.id, this.email, this.name, this.tz, this.deviceTokens, this.subscribeToEmails);
   }
 
   @java.lang.Override
@@ -146,6 +159,10 @@ public final class UpsertedUser implements IUpsertedUser, IUpdatedUser {
 
     _FinalStage tz(String tz);
 
+    _FinalStage deviceTokens(Optional<List<String>> deviceTokens);
+
+    _FinalStage deviceTokens(List<String> deviceTokens);
+
     _FinalStage subscribeToEmails(Optional<Boolean> subscribeToEmails);
 
     _FinalStage subscribeToEmails(Boolean subscribeToEmails);
@@ -158,6 +175,8 @@ public final class UpsertedUser implements IUpsertedUser, IUpdatedUser {
     private String id;
 
     private Optional<Boolean> subscribeToEmails = Optional.empty();
+
+    private Optional<List<String>> deviceTokens = Optional.empty();
 
     private Optional<String> tz = Optional.empty();
 
@@ -177,6 +196,7 @@ public final class UpsertedUser implements IUpsertedUser, IUpdatedUser {
       email(other.getEmail());
       name(other.getName());
       tz(other.getTz());
+      deviceTokens(other.getDeviceTokens());
       subscribeToEmails(other.getSubscribeToEmails());
       return this;
     }
@@ -209,6 +229,26 @@ public final class UpsertedUser implements IUpsertedUser, IUpdatedUser {
     )
     public _FinalStage subscribeToEmails(Optional<Boolean> subscribeToEmails) {
       this.subscribeToEmails = subscribeToEmails;
+      return this;
+    }
+
+    /**
+     * <p>The user's device tokens, used for push notifications.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage deviceTokens(List<String> deviceTokens) {
+      this.deviceTokens = Optional.ofNullable(deviceTokens);
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter(
+        value = "deviceTokens",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage deviceTokens(Optional<List<String>> deviceTokens) {
+      this.deviceTokens = deviceTokens;
       return this;
     }
 
@@ -274,7 +314,7 @@ public final class UpsertedUser implements IUpsertedUser, IUpdatedUser {
 
     @java.lang.Override
     public UpsertedUser build() {
-      return new UpsertedUser(id, email, name, tz, subscribeToEmails, additionalProperties);
+      return new UpsertedUser(id, email, name, tz, deviceTokens, subscribeToEmails, additionalProperties);
     }
   }
 }

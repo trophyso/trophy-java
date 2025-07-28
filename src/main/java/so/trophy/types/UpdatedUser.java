@@ -18,6 +18,7 @@ import java.lang.Boolean;
 import java.lang.Object;
 import java.lang.String;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -33,15 +34,19 @@ public final class UpdatedUser implements IUpdatedUser {
 
   private final Optional<String> tz;
 
+  private final Optional<List<String>> deviceTokens;
+
   private final Optional<Boolean> subscribeToEmails;
 
   private final Map<String, Object> additionalProperties;
 
   private UpdatedUser(Optional<String> email, Optional<String> name, Optional<String> tz,
-      Optional<Boolean> subscribeToEmails, Map<String, Object> additionalProperties) {
+      Optional<List<String>> deviceTokens, Optional<Boolean> subscribeToEmails,
+      Map<String, Object> additionalProperties) {
     this.email = email;
     this.name = name;
     this.tz = tz;
+    this.deviceTokens = deviceTokens;
     this.subscribeToEmails = subscribeToEmails;
     this.additionalProperties = additionalProperties;
   }
@@ -74,6 +79,15 @@ public final class UpdatedUser implements IUpdatedUser {
   }
 
   /**
+   * @return The user's device tokens, used for push notifications.
+   */
+  @JsonProperty("deviceTokens")
+  @java.lang.Override
+  public Optional<List<String>> getDeviceTokens() {
+    return deviceTokens;
+  }
+
+  /**
    * @return Whether the user should receive Trophy-powered emails. Cannot be false if an email is provided.
    */
   @JsonProperty("subscribeToEmails")
@@ -94,12 +108,12 @@ public final class UpdatedUser implements IUpdatedUser {
   }
 
   private boolean equalTo(UpdatedUser other) {
-    return email.equals(other.email) && name.equals(other.name) && tz.equals(other.tz) && subscribeToEmails.equals(other.subscribeToEmails);
+    return email.equals(other.email) && name.equals(other.name) && tz.equals(other.tz) && deviceTokens.equals(other.deviceTokens) && subscribeToEmails.equals(other.subscribeToEmails);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.email, this.name, this.tz, this.subscribeToEmails);
+    return Objects.hash(this.email, this.name, this.tz, this.deviceTokens, this.subscribeToEmails);
   }
 
   @java.lang.Override
@@ -121,6 +135,8 @@ public final class UpdatedUser implements IUpdatedUser {
 
     private Optional<String> tz = Optional.empty();
 
+    private Optional<List<String>> deviceTokens = Optional.empty();
+
     private Optional<Boolean> subscribeToEmails = Optional.empty();
 
     @JsonAnySetter
@@ -133,6 +149,7 @@ public final class UpdatedUser implements IUpdatedUser {
       email(other.getEmail());
       name(other.getName());
       tz(other.getTz());
+      deviceTokens(other.getDeviceTokens());
       subscribeToEmails(other.getSubscribeToEmails());
       return this;
     }
@@ -180,6 +197,20 @@ public final class UpdatedUser implements IUpdatedUser {
     }
 
     @JsonSetter(
+        value = "deviceTokens",
+        nulls = Nulls.SKIP
+    )
+    public Builder deviceTokens(Optional<List<String>> deviceTokens) {
+      this.deviceTokens = deviceTokens;
+      return this;
+    }
+
+    public Builder deviceTokens(List<String> deviceTokens) {
+      this.deviceTokens = Optional.ofNullable(deviceTokens);
+      return this;
+    }
+
+    @JsonSetter(
         value = "subscribeToEmails",
         nulls = Nulls.SKIP
     )
@@ -194,7 +225,7 @@ public final class UpdatedUser implements IUpdatedUser {
     }
 
     public UpdatedUser build() {
-      return new UpdatedUser(email, name, tz, subscribeToEmails, additionalProperties);
+      return new UpdatedUser(email, name, tz, deviceTokens, subscribeToEmails, additionalProperties);
     }
   }
 }

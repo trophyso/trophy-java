@@ -7,6 +7,7 @@ package so.trophy.types;
 
 import java.lang.Boolean;
 import java.lang.String;
+import java.util.List;
 import java.util.Optional;
 
 public interface IUpdatedUser {
@@ -15,6 +16,8 @@ public interface IUpdatedUser {
   Optional<String> getName();
 
   Optional<String> getTz();
+
+  Optional<List<String>> getDeviceTokens();
 
   Optional<Boolean> getSubscribeToEmails();
 }
