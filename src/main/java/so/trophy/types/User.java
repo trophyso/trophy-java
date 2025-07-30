@@ -112,7 +112,7 @@ public final class User implements IUpsertedUser, IUpdatedUser {
   }
 
   /**
-   * @return Whether the user should receive Trophy-powered emails. Cannot be false if an email is provided.
+   * @return Whether the user should receive Trophy-powered emails. If false, Trophy will not store the user's email address.
    */
   @JsonProperty("subscribeToEmails")
   @java.lang.Override
@@ -329,7 +329,7 @@ public final class User implements IUpsertedUser, IUpdatedUser {
     }
 
     /**
-     * <p>Whether the user should receive Trophy-powered emails. Cannot be false if an email is provided.</p>
+     * <p>Whether the user should receive Trophy-powered emails. If false, Trophy will not store the user's email address.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override

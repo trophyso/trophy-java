@@ -88,7 +88,7 @@ public final class UpdatedUser implements IUpdatedUser {
   }
 
   /**
-   * @return Whether the user should receive Trophy-powered emails. Cannot be false if an email is provided.
+   * @return Whether the user should receive Trophy-powered emails. If false, Trophy will not store the user's email address.
    */
   @JsonProperty("subscribeToEmails")
   @java.lang.Override
