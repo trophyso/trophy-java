@@ -26,9 +26,9 @@ import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(
-    builder = GetUserPointsResponse.Builder.class
+    builder = PointsSystemResponse.Builder.class
 )
-public final class GetUserPointsResponse implements IGetUserPointsResponse {
+public final class PointsSystemResponse {
   private final String id;
 
   private final String name;
@@ -37,82 +37,65 @@ public final class GetUserPointsResponse implements IGetUserPointsResponse {
 
   private final Optional<String> badgeUrl;
 
-  private final double total;
-
-  private final List<PointsAward> awards;
+  private final List<PointsTriggerResponse> triggers;
 
   private final Map<String, Object> additionalProperties;
 
-  private GetUserPointsResponse(String id, String name, Optional<String> description,
-      Optional<String> badgeUrl, double total, List<PointsAward> awards,
+  private PointsSystemResponse(String id, String name, Optional<String> description,
+      Optional<String> badgeUrl, List<PointsTriggerResponse> triggers,
       Map<String, Object> additionalProperties) {
     this.id = id;
     this.name = name;
     this.description = description;
     this.badgeUrl = badgeUrl;
-    this.total = total;
-    this.awards = awards;
+    this.triggers = triggers;
     this.additionalProperties = additionalProperties;
   }
 
   /**
-   * @return The ID of the points system
+   * @return The unique ID of the points system.
    */
   @JsonProperty("id")
-  @java.lang.Override
   public String getId() {
     return id;
   }
 
   /**
-   * @return The name of the points system
+   * @return The name of the points system.
    */
   @JsonProperty("name")
-  @java.lang.Override
   public String getName() {
     return name;
   }
 
   /**
-   * @return The description of the points system
+   * @return The description of the points system.
    */
   @JsonProperty("description")
-  @java.lang.Override
   public Optional<String> getDescription() {
     return description;
   }
 
   /**
-   * @return The URL of the badge image for the points system
+   * @return The URL of the badge image for the points system, if one has been uploaded.
    */
   @JsonProperty("badgeUrl")
-  @java.lang.Override
   public Optional<String> getBadgeUrl() {
     return badgeUrl;
   }
 
   /**
-   * @return The user's total points
+   * @return Array of active triggers for this points system.
    */
-  @JsonProperty("total")
-  @java.lang.Override
-  public double getTotal() {
-    return total;
-  }
-
-  /**
-   * @return Array of trigger awards that added points.
-   */
-  @JsonProperty("awards")
-  @java.lang.Override
-  public List<PointsAward> getAwards() {
-    return awards;
+  @JsonProperty("triggers")
+  public List<PointsTriggerResponse> getTriggers() {
+    return triggers;
   }
 
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
-    return other instanceof GetUserPointsResponse && equalTo((GetUserPointsResponse) other);
+    return other instanceof PointsSystemResponse && equalTo((PointsSystemResponse) other);
   }
 
   @JsonAnyGetter
@@ -120,13 +103,13 @@ public final class GetUserPointsResponse implements IGetUserPointsResponse {
     return this.additionalProperties;
   }
 
-  private boolean equalTo(GetUserPointsResponse other) {
-    return id.equals(other.id) && name.equals(other.name) && description.equals(other.description) && badgeUrl.equals(other.badgeUrl) && total == other.total && awards.equals(other.awards);
+  private boolean equalTo(PointsSystemResponse other) {
+    return id.equals(other.id) && name.equals(other.name) && description.equals(other.description) && badgeUrl.equals(other.badgeUrl) && triggers.equals(other.triggers);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.name, this.description, this.badgeUrl, this.total, this.awards);
+    return Objects.hash(this.id, this.name, this.description, this.badgeUrl, this.triggers);
   }
 
   @java.lang.Override
@@ -141,19 +124,15 @@ public final class GetUserPointsResponse implements IGetUserPointsResponse {
   public interface IdStage {
     NameStage id(@NotNull String id);
 
-    Builder from(GetUserPointsResponse other);
+    Builder from(PointsSystemResponse other);
   }
 
   public interface NameStage {
-    TotalStage name(@NotNull String name);
-  }
-
-  public interface TotalStage {
-    _FinalStage total(double total);
+    _FinalStage name(@NotNull String name);
   }
 
   public interface _FinalStage {
-    GetUserPointsResponse build();
+    PointsSystemResponse build();
 
     _FinalStage description(Optional<String> description);
 
@@ -163,24 +142,22 @@ public final class GetUserPointsResponse implements IGetUserPointsResponse {
 
     _FinalStage badgeUrl(String badgeUrl);
 
-    _FinalStage awards(List<PointsAward> awards);
+    _FinalStage triggers(List<PointsTriggerResponse> triggers);
 
-    _FinalStage addAwards(PointsAward awards);
+    _FinalStage addTriggers(PointsTriggerResponse triggers);
 
-    _FinalStage addAllAwards(List<PointsAward> awards);
+    _FinalStage addAllTriggers(List<PointsTriggerResponse> triggers);
   }
 
   @JsonIgnoreProperties(
       ignoreUnknown = true
   )
-  public static final class Builder implements IdStage, NameStage, TotalStage, _FinalStage {
+  public static final class Builder implements IdStage, NameStage, _FinalStage {
     private String id;
 
     private String name;
 
-    private double total;
-
-    private List<PointsAward> awards = new ArrayList<>();
+    private List<PointsTriggerResponse> triggers = new ArrayList<>();
 
     private Optional<String> badgeUrl = Optional.empty();
 
@@ -193,18 +170,17 @@ public final class GetUserPointsResponse implements IGetUserPointsResponse {
     }
 
     @java.lang.Override
-    public Builder from(GetUserPointsResponse other) {
+    public Builder from(PointsSystemResponse other) {
       id(other.getId());
       name(other.getName());
       description(other.getDescription());
       badgeUrl(other.getBadgeUrl());
-      total(other.getTotal());
-      awards(other.getAwards());
+      triggers(other.getTriggers());
       return this;
     }
 
     /**
-     * <p>The ID of the points system</p>
+     * <p>The unique ID of the points system.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -215,60 +191,49 @@ public final class GetUserPointsResponse implements IGetUserPointsResponse {
     }
 
     /**
-     * <p>The name of the points system</p>
+     * <p>The name of the points system.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
     @JsonSetter("name")
-    public TotalStage name(@NotNull String name) {
+    public _FinalStage name(@NotNull String name) {
       this.name = Objects.requireNonNull(name, "name must not be null");
       return this;
     }
 
     /**
-     * <p>The user's total points</p>
+     * <p>Array of active triggers for this points system.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    @JsonSetter("total")
-    public _FinalStage total(double total) {
-      this.total = total;
+    public _FinalStage addAllTriggers(List<PointsTriggerResponse> triggers) {
+      this.triggers.addAll(triggers);
       return this;
     }
 
     /**
-     * <p>Array of trigger awards that added points.</p>
+     * <p>Array of active triggers for this points system.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage addAllAwards(List<PointsAward> awards) {
-      this.awards.addAll(awards);
-      return this;
-    }
-
-    /**
-     * <p>Array of trigger awards that added points.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    public _FinalStage addAwards(PointsAward awards) {
-      this.awards.add(awards);
+    public _FinalStage addTriggers(PointsTriggerResponse triggers) {
+      this.triggers.add(triggers);
       return this;
     }
 
     @java.lang.Override
     @JsonSetter(
-        value = "awards",
+        value = "triggers",
         nulls = Nulls.SKIP
     )
-    public _FinalStage awards(List<PointsAward> awards) {
-      this.awards.clear();
-      this.awards.addAll(awards);
+    public _FinalStage triggers(List<PointsTriggerResponse> triggers) {
+      this.triggers.clear();
+      this.triggers.addAll(triggers);
       return this;
     }
 
     /**
-     * <p>The URL of the badge image for the points system</p>
+     * <p>The URL of the badge image for the points system, if one has been uploaded.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -288,7 +253,7 @@ public final class GetUserPointsResponse implements IGetUserPointsResponse {
     }
 
     /**
-     * <p>The description of the points system</p>
+     * <p>The description of the points system.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -308,8 +273,8 @@ public final class GetUserPointsResponse implements IGetUserPointsResponse {
     }
 
     @java.lang.Override
-    public GetUserPointsResponse build() {
-      return new GetUserPointsResponse(id, name, description, badgeUrl, total, awards, additionalProperties);
+    public PointsSystemResponse build() {
+      return new PointsSystemResponse(id, name, description, badgeUrl, triggers, additionalProperties);
     }
   }
 }

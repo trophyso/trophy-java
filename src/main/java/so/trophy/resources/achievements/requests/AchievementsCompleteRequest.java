@@ -19,18 +19,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
-import so.trophy.types.UpdatedUser;
+import so.trophy.types.UpsertedUser;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(
     builder = AchievementsCompleteRequest.Builder.class
 )
 public final class AchievementsCompleteRequest {
-  private final UpdatedUser user;
+  private final UpsertedUser user;
 
   private final Map<String, Object> additionalProperties;
 
-  private AchievementsCompleteRequest(UpdatedUser user, Map<String, Object> additionalProperties) {
+  private AchievementsCompleteRequest(UpsertedUser user, Map<String, Object> additionalProperties) {
     this.user = user;
     this.additionalProperties = additionalProperties;
   }
@@ -39,7 +39,7 @@ public final class AchievementsCompleteRequest {
    * @return The user that completed the achievement.
    */
   @JsonProperty("user")
-  public UpdatedUser getUser() {
+  public UpsertedUser getUser() {
     return user;
   }
 
@@ -73,7 +73,7 @@ public final class AchievementsCompleteRequest {
   }
 
   public interface UserStage {
-    _FinalStage user(@NotNull UpdatedUser user);
+    _FinalStage user(@NotNull UpsertedUser user);
 
     Builder from(AchievementsCompleteRequest other);
   }
@@ -86,7 +86,7 @@ public final class AchievementsCompleteRequest {
       ignoreUnknown = true
   )
   public static final class Builder implements UserStage, _FinalStage {
-    private UpdatedUser user;
+    private UpsertedUser user;
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -106,7 +106,7 @@ public final class AchievementsCompleteRequest {
      */
     @java.lang.Override
     @JsonSetter("user")
-    public _FinalStage user(@NotNull UpdatedUser user) {
+    public _FinalStage user(@NotNull UpsertedUser user) {
       this.user = Objects.requireNonNull(user, "user must not be null");
       return this;
     }

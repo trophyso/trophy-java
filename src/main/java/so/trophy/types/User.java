@@ -42,6 +42,8 @@ public final class User implements IUpsertedUser, IUpdatedUser {
 
   private final Optional<Boolean> subscribeToEmails;
 
+  private final Optional<Map<String, String>> attributes;
+
   private final Optional<Boolean> control;
 
   private final Optional<OffsetDateTime> created;
@@ -52,7 +54,8 @@ public final class User implements IUpsertedUser, IUpdatedUser {
 
   private User(String id, Optional<String> email, Optional<String> name, Optional<String> tz,
       Optional<List<String>> deviceTokens, Optional<Boolean> subscribeToEmails,
-      Optional<Boolean> control, Optional<OffsetDateTime> created, Optional<OffsetDateTime> updated,
+      Optional<Map<String, String>> attributes, Optional<Boolean> control,
+      Optional<OffsetDateTime> created, Optional<OffsetDateTime> updated,
       Map<String, Object> additionalProperties) {
     this.id = id;
     this.email = email;
@@ -60,6 +63,7 @@ public final class User implements IUpsertedUser, IUpdatedUser {
     this.tz = tz;
     this.deviceTokens = deviceTokens;
     this.subscribeToEmails = subscribeToEmails;
+    this.attributes = attributes;
     this.control = control;
     this.created = created;
     this.updated = updated;
@@ -121,6 +125,15 @@ public final class User implements IUpsertedUser, IUpdatedUser {
   }
 
   /**
+   * @return User attributes as key-value pairs. Keys must match existing user attributes set up in the Trophy dashboard.
+   */
+  @JsonProperty("attributes")
+  @java.lang.Override
+  public Optional<Map<String, String>> getAttributes() {
+    return attributes;
+  }
+
+  /**
    * @return Whether the user is in the control group, meaning they do not receive emails or other communications from Trophy.
    */
   @JsonProperty("control")
@@ -156,12 +169,12 @@ public final class User implements IUpsertedUser, IUpdatedUser {
   }
 
   private boolean equalTo(User other) {
-    return id.equals(other.id) && email.equals(other.email) && name.equals(other.name) && tz.equals(other.tz) && deviceTokens.equals(other.deviceTokens) && subscribeToEmails.equals(other.subscribeToEmails) && control.equals(other.control) && created.equals(other.created) && updated.equals(other.updated);
+    return id.equals(other.id) && email.equals(other.email) && name.equals(other.name) && tz.equals(other.tz) && deviceTokens.equals(other.deviceTokens) && subscribeToEmails.equals(other.subscribeToEmails) && attributes.equals(other.attributes) && control.equals(other.control) && created.equals(other.created) && updated.equals(other.updated);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.email, this.name, this.tz, this.deviceTokens, this.subscribeToEmails, this.control, this.created, this.updated);
+    return Objects.hash(this.id, this.email, this.name, this.tz, this.deviceTokens, this.subscribeToEmails, this.attributes, this.control, this.created, this.updated);
   }
 
   @java.lang.Override
@@ -202,6 +215,10 @@ public final class User implements IUpsertedUser, IUpdatedUser {
 
     _FinalStage subscribeToEmails(Boolean subscribeToEmails);
 
+    _FinalStage attributes(Optional<Map<String, String>> attributes);
+
+    _FinalStage attributes(Map<String, String> attributes);
+
     _FinalStage control(Optional<Boolean> control);
 
     _FinalStage control(Boolean control);
@@ -227,6 +244,8 @@ public final class User implements IUpsertedUser, IUpdatedUser {
 
     private Optional<Boolean> control = Optional.empty();
 
+    private Optional<Map<String, String>> attributes = Optional.empty();
+
     private Optional<Boolean> subscribeToEmails = Optional.empty();
 
     private Optional<List<String>> deviceTokens = Optional.empty();
@@ -251,6 +270,7 @@ public final class User implements IUpsertedUser, IUpdatedUser {
       tz(other.getTz());
       deviceTokens(other.getDeviceTokens());
       subscribeToEmails(other.getSubscribeToEmails());
+      attributes(other.getAttributes());
       control(other.getControl());
       created(other.getCreated());
       updated(other.getUpdated());
@@ -325,6 +345,26 @@ public final class User implements IUpsertedUser, IUpdatedUser {
     )
     public _FinalStage control(Optional<Boolean> control) {
       this.control = control;
+      return this;
+    }
+
+    /**
+     * <p>User attributes as key-value pairs. Keys must match existing user attributes set up in the Trophy dashboard.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage attributes(Map<String, String> attributes) {
+      this.attributes = Optional.ofNullable(attributes);
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter(
+        value = "attributes",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage attributes(Optional<Map<String, String>> attributes) {
+      this.attributes = attributes;
       return this;
     }
 
@@ -430,7 +470,7 @@ public final class User implements IUpsertedUser, IUpdatedUser {
 
     @java.lang.Override
     public User build() {
-      return new User(id, email, name, tz, deviceTokens, subscribeToEmails, control, created, updated, additionalProperties);
+      return new User(id, email, name, tz, deviceTokens, subscribeToEmails, attributes, control, created, updated, additionalProperties);
     }
   }
 }

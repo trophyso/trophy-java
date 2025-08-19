@@ -5,12 +5,20 @@ package so.trophy.types;
  */
 
 
-import java.lang.Double;
+import java.lang.String;
 import java.util.List;
 import java.util.Optional;
 
 public interface IGetUserPointsResponse {
-  Optional<Double> getTotal();
+  String getId();
 
-  Optional<List<PointsAward>> getAwards();
+  String getName();
+
+  Optional<String> getDescription();
+
+  Optional<String> getBadgeUrl();
+
+  double getTotal();
+
+  List<PointsAward> getAwards();
 }

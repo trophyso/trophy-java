@@ -38,13 +38,14 @@ public final class EventResponse {
 
   private final Optional<MetricEventStreakResponse> currentStreak;
 
-  private final Optional<MetricEventPointsResponse> points;
+  private final Optional<Map<String, MetricEventPointsResponse>> points;
 
   private final Map<String, Object> additionalProperties;
 
   private EventResponse(String eventId, String metricId, double total,
       Optional<List<CompletedAchievementResponse>> achievements,
-      Optional<MetricEventStreakResponse> currentStreak, Optional<MetricEventPointsResponse> points,
+      Optional<MetricEventStreakResponse> currentStreak,
+      Optional<Map<String, MetricEventPointsResponse>> points,
       Map<String, Object> additionalProperties) {
     this.eventId = eventId;
     this.metricId = metricId;
@@ -96,10 +97,10 @@ public final class EventResponse {
   }
 
   /**
-   * @return The points added by this event, and a breakdown of the points awards that added points.
+   * @return A map of points systems by key that were affected by this event.
    */
   @JsonProperty("points")
-  public Optional<MetricEventPointsResponse> getPoints() {
+  public Optional<Map<String, MetricEventPointsResponse>> getPoints() {
     return points;
   }
 
@@ -157,9 +158,9 @@ public final class EventResponse {
 
     _FinalStage currentStreak(MetricEventStreakResponse currentStreak);
 
-    _FinalStage points(Optional<MetricEventPointsResponse> points);
+    _FinalStage points(Optional<Map<String, MetricEventPointsResponse>> points);
 
-    _FinalStage points(MetricEventPointsResponse points);
+    _FinalStage points(Map<String, MetricEventPointsResponse> points);
   }
 
   @JsonIgnoreProperties(
@@ -172,7 +173,7 @@ public final class EventResponse {
 
     private double total;
 
-    private Optional<MetricEventPointsResponse> points = Optional.empty();
+    private Optional<Map<String, MetricEventPointsResponse>> points = Optional.empty();
 
     private Optional<MetricEventStreakResponse> currentStreak = Optional.empty();
 
@@ -229,11 +230,11 @@ public final class EventResponse {
     }
 
     /**
-     * <p>The points added by this event, and a breakdown of the points awards that added points.</p>
+     * <p>A map of points systems by key that were affected by this event.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage points(MetricEventPointsResponse points) {
+    public _FinalStage points(Map<String, MetricEventPointsResponse> points) {
       this.points = Optional.ofNullable(points);
       return this;
     }
@@ -243,7 +244,7 @@ public final class EventResponse {
         value = "points",
         nulls = Nulls.SKIP
     )
-    public _FinalStage points(Optional<MetricEventPointsResponse> points) {
+    public _FinalStage points(Optional<Map<String, MetricEventPointsResponse>> points) {
       this.points = points;
       return this;
     }

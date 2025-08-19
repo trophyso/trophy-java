@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import so.trophy.core.ObjectMappers;
 import java.lang.Object;
@@ -18,6 +19,7 @@ import java.lang.String;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import so.trophy.types.UpsertedUser;
 
@@ -30,12 +32,15 @@ public final class MetricsEventRequest {
 
   private final double value;
 
+  private final Optional<Map<String, String>> attributes;
+
   private final Map<String, Object> additionalProperties;
 
   private MetricsEventRequest(UpsertedUser user, double value,
-      Map<String, Object> additionalProperties) {
+      Optional<Map<String, String>> attributes, Map<String, Object> additionalProperties) {
     this.user = user;
     this.value = value;
+    this.attributes = attributes;
     this.additionalProperties = additionalProperties;
   }
 
@@ -55,6 +60,14 @@ public final class MetricsEventRequest {
     return value;
   }
 
+  /**
+   * @return Event attributes as key-value pairs. Keys must match existing event attributes set up in the Trophy dashboard.
+   */
+  @JsonProperty("attributes")
+  public Optional<Map<String, String>> getAttributes() {
+    return attributes;
+  }
+
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
@@ -67,12 +80,12 @@ public final class MetricsEventRequest {
   }
 
   private boolean equalTo(MetricsEventRequest other) {
-    return user.equals(other.user) && value == other.value;
+    return user.equals(other.user) && value == other.value && attributes.equals(other.attributes);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.user, this.value);
+    return Objects.hash(this.user, this.value, this.attributes);
   }
 
   @java.lang.Override
@@ -96,6 +109,10 @@ public final class MetricsEventRequest {
 
   public interface _FinalStage {
     MetricsEventRequest build();
+
+    _FinalStage attributes(Optional<Map<String, String>> attributes);
+
+    _FinalStage attributes(Map<String, String> attributes);
   }
 
   @JsonIgnoreProperties(
@@ -105,6 +122,8 @@ public final class MetricsEventRequest {
     private UpsertedUser user;
 
     private double value;
+
+    private Optional<Map<String, String>> attributes = Optional.empty();
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -116,6 +135,7 @@ public final class MetricsEventRequest {
     public Builder from(MetricsEventRequest other) {
       user(other.getUser());
       value(other.getValue());
+      attributes(other.getAttributes());
       return this;
     }
 
@@ -141,9 +161,29 @@ public final class MetricsEventRequest {
       return this;
     }
 
+    /**
+     * <p>Event attributes as key-value pairs. Keys must match existing event attributes set up in the Trophy dashboard.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage attributes(Map<String, String> attributes) {
+      this.attributes = Optional.ofNullable(attributes);
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter(
+        value = "attributes",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage attributes(Optional<Map<String, String>> attributes) {
+      this.attributes = attributes;
+      return this;
+    }
+
     @java.lang.Override
     public MetricsEventRequest build() {
-      return new MetricsEventRequest(user, value, additionalProperties);
+      return new MetricsEventRequest(user, value, attributes, additionalProperties);
     }
   }
 }

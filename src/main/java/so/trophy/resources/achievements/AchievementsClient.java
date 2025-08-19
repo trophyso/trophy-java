@@ -74,7 +74,6 @@ public class AchievementsClient {
       try {
         switch (response.code()) {
           case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-          case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
           case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
         }
       }

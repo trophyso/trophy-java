@@ -28,6 +28,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import so.trophy.resources.users.requests.UsersAchievementsRequest;
 import so.trophy.resources.users.requests.UsersMetricEventSummaryRequest;
 import so.trophy.resources.users.requests.UsersPointsEventSummaryRequest;
 import so.trophy.resources.users.requests.UsersPointsRequest;
@@ -444,82 +445,31 @@ public class UsersClient {
     }
 
     /**
-     * Get all of a user's completed achievements.
+     * Get a user's achievements.
      */
-    public List<CompletedAchievementResponse> allAchievements(String id) {
-      return allAchievements(id,null);
+    public List<CompletedAchievementResponse> achievements(String id) {
+      return achievements(id,UsersAchievementsRequest.builder().build());
     }
 
     /**
-     * Get all of a user's completed achievements.
+     * Get a user's achievements.
      */
-    public List<CompletedAchievementResponse> allAchievements(String id,
-        RequestOptions requestOptions) {
-      HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
-
-        .addPathSegments("users")
-        .addPathSegment(id)
-        .addPathSegments("achievements")
-        .build();
-      Request okhttpRequest = new Request.Builder()
-        .url(httpUrl)
-        .method("GET", null)
-        .headers(Headers.of(clientOptions.headers(requestOptions)))
-        .addHeader("Content-Type", "application/json")
-        .addHeader("Accept", "application/json")
-        .build();
-      OkHttpClient client = clientOptions.httpClient();
-      if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-        client = clientOptions.httpClientWithTimeout(requestOptions);
-      }
-      try (Response response = client.newCall(okhttpRequest).execute()) {
-        ResponseBody responseBody = response.body();
-        if (response.isSuccessful()) {
-          return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<CompletedAchievementResponse>>() {});
-        }
-        String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-        try {
-          switch (response.code()) {
-            case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-            case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-            case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-          }
-        }
-        catch (JsonProcessingException ignored) {
-          // unable to map error response, throwing generic error
-        }
-        throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-      }
-      catch (IOException e) {
-        throw new TrophyApiException("Network error executing HTTP request", e);
-      }
+    public List<CompletedAchievementResponse> achievements(String id,
+        UsersAchievementsRequest request) {
+      return achievements(id,request,null);
     }
 
     /**
-     * Get a user's streak data.
+     * Get a user's achievements.
      */
-    public StreakResponse streak(String id) {
-      return streak(id,UsersStreakRequest.builder().build());
-    }
-
-    /**
-     * Get a user's streak data.
-     */
-    public StreakResponse streak(String id, UsersStreakRequest request) {
-      return streak(id,request,null);
-    }
-
-    /**
-     * Get a user's streak data.
-     */
-    public StreakResponse streak(String id, UsersStreakRequest request,
-        RequestOptions requestOptions) {
+    public List<CompletedAchievementResponse> achievements(String id,
+        UsersAchievementsRequest request, RequestOptions requestOptions) {
       HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
 
         .addPathSegments("users")
         .addPathSegment(id)
-        .addPathSegments("streak");if (request.getHistoryPeriods().isPresent()) {
-          httpUrl.addQueryParameter("historyPeriods", request.getHistoryPeriods().get().toString());
+        .addPathSegments("achievements");if (request.getIncludeIncomplete().isPresent()) {
+          httpUrl.addQueryParameter("includeIncomplete", request.getIncludeIncomplete().get());
         }
         Request.Builder _requestBuilder = new Request.Builder()
           .url(httpUrl.build())
@@ -534,7 +484,7 @@ public class UsersClient {
         try (Response response = client.newCall(okhttpRequest).execute()) {
           ResponseBody responseBody = response.body();
           if (response.isSuccessful()) {
-            return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), StreakResponse.class);
+            return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<CompletedAchievementResponse>>() {});
           }
           String responseBodyString = responseBody != null ? responseBody.string() : "{}";
           try {
@@ -555,30 +505,30 @@ public class UsersClient {
       }
 
       /**
-       * Get a user's points.
+       * Get a user's streak data.
        */
-      public GetUserPointsResponse points(String id) {
-        return points(id,UsersPointsRequest.builder().build());
+      public StreakResponse streak(String id) {
+        return streak(id,UsersStreakRequest.builder().build());
       }
 
       /**
-       * Get a user's points.
+       * Get a user's streak data.
        */
-      public GetUserPointsResponse points(String id, UsersPointsRequest request) {
-        return points(id,request,null);
+      public StreakResponse streak(String id, UsersStreakRequest request) {
+        return streak(id,request,null);
       }
 
       /**
-       * Get a user's points.
+       * Get a user's streak data.
        */
-      public GetUserPointsResponse points(String id, UsersPointsRequest request,
+      public StreakResponse streak(String id, UsersStreakRequest request,
           RequestOptions requestOptions) {
         HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
 
           .addPathSegments("users")
           .addPathSegment(id)
-          .addPathSegments("points");if (request.getAwards().isPresent()) {
-            httpUrl.addQueryParameter("awards", request.getAwards().get().toString());
+          .addPathSegments("streak");if (request.getHistoryPeriods().isPresent()) {
+            httpUrl.addQueryParameter("historyPeriods", request.getHistoryPeriods().get().toString());
           }
           Request.Builder _requestBuilder = new Request.Builder()
             .url(httpUrl.build())
@@ -593,7 +543,7 @@ public class UsersClient {
           try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
             if (response.isSuccessful()) {
-              return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), GetUserPointsResponse.class);
+              return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), StreakResponse.class);
             }
             String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
@@ -614,25 +564,32 @@ public class UsersClient {
         }
 
         /**
-         * Get a summary of points awards over time for a user.
+         * Get a user's points for a specific points system.
          */
-        public List<UsersPointsEventSummaryResponseItem> pointsEventSummary(String id,
-            UsersPointsEventSummaryRequest request) {
-          return pointsEventSummary(id,request,null);
+        public GetUserPointsResponse points(String id, String key) {
+          return points(id,key,UsersPointsRequest.builder().build());
         }
 
         /**
-         * Get a summary of points awards over time for a user.
+         * Get a user's points for a specific points system.
          */
-        public List<UsersPointsEventSummaryResponseItem> pointsEventSummary(String id,
-            UsersPointsEventSummaryRequest request, RequestOptions requestOptions) {
+        public GetUserPointsResponse points(String id, String key, UsersPointsRequest request) {
+          return points(id,key,request,null);
+        }
+
+        /**
+         * Get a user's points for a specific points system.
+         */
+        public GetUserPointsResponse points(String id, String key, UsersPointsRequest request,
+            RequestOptions requestOptions) {
           HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
 
             .addPathSegments("users")
             .addPathSegment(id)
-            .addPathSegments("points/event-summary");httpUrl.addQueryParameter("aggregation", request.getAggregation().toString());
-            httpUrl.addQueryParameter("startDate", request.getStartDate());
-            httpUrl.addQueryParameter("endDate", request.getEndDate());
+            .addPathSegments("points")
+            .addPathSegment(key);if (request.getAwards().isPresent()) {
+              httpUrl.addQueryParameter("awards", request.getAwards().get().toString());
+            }
             Request.Builder _requestBuilder = new Request.Builder()
               .url(httpUrl.build())
               .method("GET", null)
@@ -646,7 +603,7 @@ public class UsersClient {
             try (Response response = client.newCall(okhttpRequest).execute()) {
               ResponseBody responseBody = response.body();
               if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<UsersPointsEventSummaryResponseItem>>() {});
+                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), GetUserPointsResponse.class);
               }
               String responseBodyString = responseBody != null ? responseBody.string() : "{}";
               try {
@@ -665,4 +622,59 @@ public class UsersClient {
               throw new TrophyApiException("Network error executing HTTP request", e);
             }
           }
-        }
+
+          /**
+           * Get a summary of points awards over time for a user for a specific points system.
+           */
+          public List<UsersPointsEventSummaryResponseItem> pointsEventSummary(String id, String key,
+              UsersPointsEventSummaryRequest request) {
+            return pointsEventSummary(id,key,request,null);
+          }
+
+          /**
+           * Get a summary of points awards over time for a user for a specific points system.
+           */
+          public List<UsersPointsEventSummaryResponseItem> pointsEventSummary(String id, String key,
+              UsersPointsEventSummaryRequest request, RequestOptions requestOptions) {
+            HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
+
+              .addPathSegments("users")
+              .addPathSegment(id)
+              .addPathSegments("points")
+              .addPathSegment(key)
+              .addPathSegments("event-summary");httpUrl.addQueryParameter("aggregation", request.getAggregation().toString());
+              httpUrl.addQueryParameter("startDate", request.getStartDate());
+              httpUrl.addQueryParameter("endDate", request.getEndDate());
+              Request.Builder _requestBuilder = new Request.Builder()
+                .url(httpUrl.build())
+                .method("GET", null)
+                .headers(Headers.of(clientOptions.headers(requestOptions)))
+                .addHeader("Content-Type", "application/json").addHeader("Accept", "application/json");
+              Request okhttpRequest = _requestBuilder.build();
+              OkHttpClient client = clientOptions.httpClient();
+              if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
+                client = clientOptions.httpClientWithTimeout(requestOptions);
+              }
+              try (Response response = client.newCall(okhttpRequest).execute()) {
+                ResponseBody responseBody = response.body();
+                if (response.isSuccessful()) {
+                  return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<UsersPointsEventSummaryResponseItem>>() {});
+                }
+                String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+                try {
+                  switch (response.code()) {
+                    case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
+                    case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
+                    case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
+                  }
+                }
+                catch (JsonProcessingException ignored) {
+                  // unable to map error response, throwing generic error
+                }
+                throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
+              }
+              catch (IOException e) {
+                throw new TrophyApiException("Network error executing HTTP request", e);
+              }
+            }
+          }

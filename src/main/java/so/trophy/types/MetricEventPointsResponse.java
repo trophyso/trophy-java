@@ -17,27 +17,42 @@ import so.trophy.core.ObjectMappers;
 import java.lang.Double;
 import java.lang.Object;
 import java.lang.String;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(
     builder = MetricEventPointsResponse.Builder.class
 )
 public final class MetricEventPointsResponse implements IGetUserPointsResponse {
-  private final Optional<Double> total;
+  private final String id;
 
-  private final Optional<List<PointsAward>> awards;
+  private final String name;
+
+  private final Optional<String> description;
+
+  private final Optional<String> badgeUrl;
+
+  private final double total;
+
+  private final List<PointsAward> awards;
 
   private final Optional<Double> added;
 
   private final Map<String, Object> additionalProperties;
 
-  private MetricEventPointsResponse(Optional<Double> total, Optional<List<PointsAward>> awards,
-      Optional<Double> added, Map<String, Object> additionalProperties) {
+  private MetricEventPointsResponse(String id, String name, Optional<String> description,
+      Optional<String> badgeUrl, double total, List<PointsAward> awards, Optional<Double> added,
+      Map<String, Object> additionalProperties) {
+    this.id = id;
+    this.name = name;
+    this.description = description;
+    this.badgeUrl = badgeUrl;
     this.total = total;
     this.awards = awards;
     this.added = added;
@@ -45,11 +60,47 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
   }
 
   /**
+   * @return The ID of the points system
+   */
+  @JsonProperty("id")
+  @java.lang.Override
+  public String getId() {
+    return id;
+  }
+
+  /**
+   * @return The name of the points system
+   */
+  @JsonProperty("name")
+  @java.lang.Override
+  public String getName() {
+    return name;
+  }
+
+  /**
+   * @return The description of the points system
+   */
+  @JsonProperty("description")
+  @java.lang.Override
+  public Optional<String> getDescription() {
+    return description;
+  }
+
+  /**
+   * @return The URL of the badge image for the points system
+   */
+  @JsonProperty("badgeUrl")
+  @java.lang.Override
+  public Optional<String> getBadgeUrl() {
+    return badgeUrl;
+  }
+
+  /**
    * @return The user's total points
    */
   @JsonProperty("total")
   @java.lang.Override
-  public Optional<Double> getTotal() {
+  public double getTotal() {
     return total;
   }
 
@@ -58,7 +109,7 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
    */
   @JsonProperty("awards")
   @java.lang.Override
-  public Optional<List<PointsAward>> getAwards() {
+  public List<PointsAward> getAwards() {
     return awards;
   }
 
@@ -82,12 +133,12 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
   }
 
   private boolean equalTo(MetricEventPointsResponse other) {
-    return total.equals(other.total) && awards.equals(other.awards) && added.equals(other.added);
+    return id.equals(other.id) && name.equals(other.name) && description.equals(other.description) && badgeUrl.equals(other.badgeUrl) && total == other.total && awards.equals(other.awards) && added.equals(other.added);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.total, this.awards, this.added);
+    return Objects.hash(this.id, this.name, this.description, this.badgeUrl, this.total, this.awards, this.added);
   }
 
   @java.lang.Override
@@ -95,19 +146,63 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
     return ObjectMappers.stringify(this);
   }
 
-  public static Builder builder() {
+  public static IdStage builder() {
     return new Builder();
+  }
+
+  public interface IdStage {
+    NameStage id(@NotNull String id);
+
+    Builder from(MetricEventPointsResponse other);
+  }
+
+  public interface NameStage {
+    TotalStage name(@NotNull String name);
+  }
+
+  public interface TotalStage {
+    _FinalStage total(double total);
+  }
+
+  public interface _FinalStage {
+    MetricEventPointsResponse build();
+
+    _FinalStage description(Optional<String> description);
+
+    _FinalStage description(String description);
+
+    _FinalStage badgeUrl(Optional<String> badgeUrl);
+
+    _FinalStage badgeUrl(String badgeUrl);
+
+    _FinalStage awards(List<PointsAward> awards);
+
+    _FinalStage addAwards(PointsAward awards);
+
+    _FinalStage addAllAwards(List<PointsAward> awards);
+
+    _FinalStage added(Optional<Double> added);
+
+    _FinalStage added(Double added);
   }
 
   @JsonIgnoreProperties(
       ignoreUnknown = true
   )
-  public static final class Builder {
-    private Optional<Double> total = Optional.empty();
+  public static final class Builder implements IdStage, NameStage, TotalStage, _FinalStage {
+    private String id;
 
-    private Optional<List<PointsAward>> awards = Optional.empty();
+    private String name;
+
+    private double total;
 
     private Optional<Double> added = Optional.empty();
+
+    private List<PointsAward> awards = new ArrayList<>();
+
+    private Optional<String> badgeUrl = Optional.empty();
+
+    private Optional<String> description = Optional.empty();
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -115,57 +210,145 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
     private Builder() {
     }
 
+    @java.lang.Override
     public Builder from(MetricEventPointsResponse other) {
+      id(other.getId());
+      name(other.getName());
+      description(other.getDescription());
+      badgeUrl(other.getBadgeUrl());
       total(other.getTotal());
       awards(other.getAwards());
       added(other.getAdded());
       return this;
     }
 
-    @JsonSetter(
-        value = "total",
-        nulls = Nulls.SKIP
-    )
-    public Builder total(Optional<Double> total) {
+    /**
+     * <p>The ID of the points system</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    @JsonSetter("id")
+    public NameStage id(@NotNull String id) {
+      this.id = Objects.requireNonNull(id, "id must not be null");
+      return this;
+    }
+
+    /**
+     * <p>The name of the points system</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    @JsonSetter("name")
+    public TotalStage name(@NotNull String name) {
+      this.name = Objects.requireNonNull(name, "name must not be null");
+      return this;
+    }
+
+    /**
+     * <p>The user's total points</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    @JsonSetter("total")
+    public _FinalStage total(double total) {
       this.total = total;
       return this;
     }
 
-    public Builder total(Double total) {
-      this.total = Optional.ofNullable(total);
-      return this;
-    }
-
-    @JsonSetter(
-        value = "awards",
-        nulls = Nulls.SKIP
-    )
-    public Builder awards(Optional<List<PointsAward>> awards) {
-      this.awards = awards;
-      return this;
-    }
-
-    public Builder awards(List<PointsAward> awards) {
-      this.awards = Optional.ofNullable(awards);
-      return this;
-    }
-
-    @JsonSetter(
-        value = "added",
-        nulls = Nulls.SKIP
-    )
-    public Builder added(Optional<Double> added) {
-      this.added = added;
-      return this;
-    }
-
-    public Builder added(Double added) {
+    /**
+     * <p>The points added by this event.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage added(Double added) {
       this.added = Optional.ofNullable(added);
       return this;
     }
 
+    @java.lang.Override
+    @JsonSetter(
+        value = "added",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage added(Optional<Double> added) {
+      this.added = added;
+      return this;
+    }
+
+    /**
+     * <p>Array of trigger awards that added points.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage addAllAwards(List<PointsAward> awards) {
+      this.awards.addAll(awards);
+      return this;
+    }
+
+    /**
+     * <p>Array of trigger awards that added points.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage addAwards(PointsAward awards) {
+      this.awards.add(awards);
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter(
+        value = "awards",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage awards(List<PointsAward> awards) {
+      this.awards.clear();
+      this.awards.addAll(awards);
+      return this;
+    }
+
+    /**
+     * <p>The URL of the badge image for the points system</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage badgeUrl(String badgeUrl) {
+      this.badgeUrl = Optional.ofNullable(badgeUrl);
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter(
+        value = "badgeUrl",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage badgeUrl(Optional<String> badgeUrl) {
+      this.badgeUrl = badgeUrl;
+      return this;
+    }
+
+    /**
+     * <p>The description of the points system</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage description(String description) {
+      this.description = Optional.ofNullable(description);
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter(
+        value = "description",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage description(Optional<String> description) {
+      this.description = description;
+      return this;
+    }
+
+    @java.lang.Override
     public MetricEventPointsResponse build() {
-      return new MetricEventPointsResponse(total, awards, added, additionalProperties);
+      return new MetricEventPointsResponse(id, name, description, badgeUrl, total, awards, added, additionalProperties);
     }
   }
 }

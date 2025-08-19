@@ -19,6 +19,7 @@ import java.lang.Object;
 import java.lang.String;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -48,6 +49,10 @@ public final class PointsTriggerResponse {
 
   private final Optional<String> achievementName;
 
+  private final Optional<List<PointsTriggerResponseUserAttributesItem>> userAttributes;
+
+  private final Optional<PointsTriggerResponseEventAttribute> eventAttribute;
+
   private final Optional<OffsetDateTime> created;
 
   private final Optional<OffsetDateTime> updated;
@@ -58,8 +63,11 @@ public final class PointsTriggerResponse {
       Optional<Double> points, Optional<PointsTriggerResponseStatus> status,
       Optional<String> achievementId, Optional<String> metricId, Optional<Double> metricThreshold,
       Optional<Double> streakLengthThreshold, Optional<String> metricName,
-      Optional<String> achievementName, Optional<OffsetDateTime> created,
-      Optional<OffsetDateTime> updated, Map<String, Object> additionalProperties) {
+      Optional<String> achievementName,
+      Optional<List<PointsTriggerResponseUserAttributesItem>> userAttributes,
+      Optional<PointsTriggerResponseEventAttribute> eventAttribute,
+      Optional<OffsetDateTime> created, Optional<OffsetDateTime> updated,
+      Map<String, Object> additionalProperties) {
     this.id = id;
     this.type = type;
     this.points = points;
@@ -70,6 +78,8 @@ public final class PointsTriggerResponse {
     this.streakLengthThreshold = streakLengthThreshold;
     this.metricName = metricName;
     this.achievementName = achievementName;
+    this.userAttributes = userAttributes;
+    this.eventAttribute = eventAttribute;
     this.created = created;
     this.updated = updated;
     this.additionalProperties = additionalProperties;
@@ -156,6 +166,22 @@ public final class PointsTriggerResponse {
   }
 
   /**
+   * @return User attribute filters that must be met for this trigger to activate. Only present if the trigger has user attribute filters configured.
+   */
+  @JsonProperty("userAttributes")
+  public Optional<List<PointsTriggerResponseUserAttributesItem>> getUserAttributes() {
+    return userAttributes;
+  }
+
+  /**
+   * @return Event attribute filter that must be met for this trigger to activate. Only present if the trigger has an event filter configured.
+   */
+  @JsonProperty("eventAttribute")
+  public Optional<PointsTriggerResponseEventAttribute> getEventAttribute() {
+    return eventAttribute;
+  }
+
+  /**
    * @return The date and time the trigger was created, in ISO 8601 format.
    */
   @JsonProperty("created")
@@ -183,12 +209,12 @@ public final class PointsTriggerResponse {
   }
 
   private boolean equalTo(PointsTriggerResponse other) {
-    return id.equals(other.id) && type.equals(other.type) && points.equals(other.points) && status.equals(other.status) && achievementId.equals(other.achievementId) && metricId.equals(other.metricId) && metricThreshold.equals(other.metricThreshold) && streakLengthThreshold.equals(other.streakLengthThreshold) && metricName.equals(other.metricName) && achievementName.equals(other.achievementName) && created.equals(other.created) && updated.equals(other.updated);
+    return id.equals(other.id) && type.equals(other.type) && points.equals(other.points) && status.equals(other.status) && achievementId.equals(other.achievementId) && metricId.equals(other.metricId) && metricThreshold.equals(other.metricThreshold) && streakLengthThreshold.equals(other.streakLengthThreshold) && metricName.equals(other.metricName) && achievementName.equals(other.achievementName) && userAttributes.equals(other.userAttributes) && eventAttribute.equals(other.eventAttribute) && created.equals(other.created) && updated.equals(other.updated);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.type, this.points, this.status, this.achievementId, this.metricId, this.metricThreshold, this.streakLengthThreshold, this.metricName, this.achievementName, this.created, this.updated);
+    return Objects.hash(this.id, this.type, this.points, this.status, this.achievementId, this.metricId, this.metricThreshold, this.streakLengthThreshold, this.metricName, this.achievementName, this.userAttributes, this.eventAttribute, this.created, this.updated);
   }
 
   @java.lang.Override
@@ -224,6 +250,10 @@ public final class PointsTriggerResponse {
 
     private Optional<String> achievementName = Optional.empty();
 
+    private Optional<List<PointsTriggerResponseUserAttributesItem>> userAttributes = Optional.empty();
+
+    private Optional<PointsTriggerResponseEventAttribute> eventAttribute = Optional.empty();
+
     private Optional<OffsetDateTime> created = Optional.empty();
 
     private Optional<OffsetDateTime> updated = Optional.empty();
@@ -245,6 +275,8 @@ public final class PointsTriggerResponse {
       streakLengthThreshold(other.getStreakLengthThreshold());
       metricName(other.getMetricName());
       achievementName(other.getAchievementName());
+      userAttributes(other.getUserAttributes());
+      eventAttribute(other.getEventAttribute());
       created(other.getCreated());
       updated(other.getUpdated());
       return this;
@@ -391,6 +423,35 @@ public final class PointsTriggerResponse {
     }
 
     @JsonSetter(
+        value = "userAttributes",
+        nulls = Nulls.SKIP
+    )
+    public Builder userAttributes(
+        Optional<List<PointsTriggerResponseUserAttributesItem>> userAttributes) {
+      this.userAttributes = userAttributes;
+      return this;
+    }
+
+    public Builder userAttributes(List<PointsTriggerResponseUserAttributesItem> userAttributes) {
+      this.userAttributes = Optional.ofNullable(userAttributes);
+      return this;
+    }
+
+    @JsonSetter(
+        value = "eventAttribute",
+        nulls = Nulls.SKIP
+    )
+    public Builder eventAttribute(Optional<PointsTriggerResponseEventAttribute> eventAttribute) {
+      this.eventAttribute = eventAttribute;
+      return this;
+    }
+
+    public Builder eventAttribute(PointsTriggerResponseEventAttribute eventAttribute) {
+      this.eventAttribute = Optional.ofNullable(eventAttribute);
+      return this;
+    }
+
+    @JsonSetter(
         value = "created",
         nulls = Nulls.SKIP
     )
@@ -419,7 +480,7 @@ public final class PointsTriggerResponse {
     }
 
     public PointsTriggerResponse build() {
-      return new PointsTriggerResponse(id, type, points, status, achievementId, metricId, metricThreshold, streakLengthThreshold, metricName, achievementName, created, updated, additionalProperties);
+      return new PointsTriggerResponse(id, type, points, status, achievementId, metricId, metricThreshold, streakLengthThreshold, metricName, achievementName, userAttributes, eventAttribute, created, updated, additionalProperties);
     }
   }
 }

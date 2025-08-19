@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import so.trophy.core.ObjectMappers;
 import java.lang.Object;
@@ -18,6 +19,7 @@ import java.lang.String;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
@@ -29,12 +31,17 @@ public final class AchievementCompletionResponse {
 
   private final CompletedAchievementResponse achievement;
 
+  private final Optional<Map<String, MetricEventPointsResponse>> points;
+
   private final Map<String, Object> additionalProperties;
 
   private AchievementCompletionResponse(String completionId,
-      CompletedAchievementResponse achievement, Map<String, Object> additionalProperties) {
+      CompletedAchievementResponse achievement,
+      Optional<Map<String, MetricEventPointsResponse>> points,
+      Map<String, Object> additionalProperties) {
     this.completionId = completionId;
     this.achievement = achievement;
+    this.points = points;
     this.additionalProperties = additionalProperties;
   }
 
@@ -51,6 +58,14 @@ public final class AchievementCompletionResponse {
     return achievement;
   }
 
+  /**
+   * @return A map of points systems by key that were affected by this achievement completion.
+   */
+  @JsonProperty("points")
+  public Optional<Map<String, MetricEventPointsResponse>> getPoints() {
+    return points;
+  }
+
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
@@ -63,12 +78,12 @@ public final class AchievementCompletionResponse {
   }
 
   private boolean equalTo(AchievementCompletionResponse other) {
-    return completionId.equals(other.completionId) && achievement.equals(other.achievement);
+    return completionId.equals(other.completionId) && achievement.equals(other.achievement) && points.equals(other.points);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.completionId, this.achievement);
+    return Objects.hash(this.completionId, this.achievement, this.points);
   }
 
   @java.lang.Override
@@ -92,6 +107,10 @@ public final class AchievementCompletionResponse {
 
   public interface _FinalStage {
     AchievementCompletionResponse build();
+
+    _FinalStage points(Optional<Map<String, MetricEventPointsResponse>> points);
+
+    _FinalStage points(Map<String, MetricEventPointsResponse> points);
   }
 
   @JsonIgnoreProperties(
@@ -101,6 +120,8 @@ public final class AchievementCompletionResponse {
     private String completionId;
 
     private CompletedAchievementResponse achievement;
+
+    private Optional<Map<String, MetricEventPointsResponse>> points = Optional.empty();
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -112,6 +133,7 @@ public final class AchievementCompletionResponse {
     public Builder from(AchievementCompletionResponse other) {
       completionId(other.getCompletionId());
       achievement(other.getAchievement());
+      points(other.getPoints());
       return this;
     }
 
@@ -133,9 +155,29 @@ public final class AchievementCompletionResponse {
       return this;
     }
 
+    /**
+     * <p>A map of points systems by key that were affected by this achievement completion.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage points(Map<String, MetricEventPointsResponse> points) {
+      this.points = Optional.ofNullable(points);
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter(
+        value = "points",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage points(Optional<Map<String, MetricEventPointsResponse>> points) {
+      this.points = points;
+      return this;
+    }
+
     @java.lang.Override
     public AchievementCompletionResponse build() {
-      return new AchievementCompletionResponse(completionId, achievement, additionalProperties);
+      return new AchievementCompletionResponse(completionId, achievement, points, additionalProperties);
     }
   }
 }

@@ -41,17 +41,20 @@ public final class UpsertedUser implements IUpsertedUser, IUpdatedUser {
 
   private final Optional<Boolean> subscribeToEmails;
 
+  private final Optional<Map<String, String>> attributes;
+
   private final Map<String, Object> additionalProperties;
 
   private UpsertedUser(String id, Optional<String> email, Optional<String> name,
       Optional<String> tz, Optional<List<String>> deviceTokens, Optional<Boolean> subscribeToEmails,
-      Map<String, Object> additionalProperties) {
+      Optional<Map<String, String>> attributes, Map<String, Object> additionalProperties) {
     this.id = id;
     this.email = email;
     this.name = name;
     this.tz = tz;
     this.deviceTokens = deviceTokens;
     this.subscribeToEmails = subscribeToEmails;
+    this.attributes = attributes;
     this.additionalProperties = additionalProperties;
   }
 
@@ -109,6 +112,15 @@ public final class UpsertedUser implements IUpsertedUser, IUpdatedUser {
     return subscribeToEmails;
   }
 
+  /**
+   * @return User attributes as key-value pairs. Keys must match existing user attributes set up in the Trophy dashboard.
+   */
+  @JsonProperty("attributes")
+  @java.lang.Override
+  public Optional<Map<String, String>> getAttributes() {
+    return attributes;
+  }
+
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
@@ -121,12 +133,12 @@ public final class UpsertedUser implements IUpsertedUser, IUpdatedUser {
   }
 
   private boolean equalTo(UpsertedUser other) {
-    return id.equals(other.id) && email.equals(other.email) && name.equals(other.name) && tz.equals(other.tz) && deviceTokens.equals(other.deviceTokens) && subscribeToEmails.equals(other.subscribeToEmails);
+    return id.equals(other.id) && email.equals(other.email) && name.equals(other.name) && tz.equals(other.tz) && deviceTokens.equals(other.deviceTokens) && subscribeToEmails.equals(other.subscribeToEmails) && attributes.equals(other.attributes);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.email, this.name, this.tz, this.deviceTokens, this.subscribeToEmails);
+    return Objects.hash(this.id, this.email, this.name, this.tz, this.deviceTokens, this.subscribeToEmails, this.attributes);
   }
 
   @java.lang.Override
@@ -166,6 +178,10 @@ public final class UpsertedUser implements IUpsertedUser, IUpdatedUser {
     _FinalStage subscribeToEmails(Optional<Boolean> subscribeToEmails);
 
     _FinalStage subscribeToEmails(Boolean subscribeToEmails);
+
+    _FinalStage attributes(Optional<Map<String, String>> attributes);
+
+    _FinalStage attributes(Map<String, String> attributes);
   }
 
   @JsonIgnoreProperties(
@@ -173,6 +189,8 @@ public final class UpsertedUser implements IUpsertedUser, IUpdatedUser {
   )
   public static final class Builder implements IdStage, _FinalStage {
     private String id;
+
+    private Optional<Map<String, String>> attributes = Optional.empty();
 
     private Optional<Boolean> subscribeToEmails = Optional.empty();
 
@@ -198,6 +216,7 @@ public final class UpsertedUser implements IUpsertedUser, IUpdatedUser {
       tz(other.getTz());
       deviceTokens(other.getDeviceTokens());
       subscribeToEmails(other.getSubscribeToEmails());
+      attributes(other.getAttributes());
       return this;
     }
 
@@ -209,6 +228,26 @@ public final class UpsertedUser implements IUpsertedUser, IUpdatedUser {
     @JsonSetter("id")
     public _FinalStage id(@NotNull String id) {
       this.id = Objects.requireNonNull(id, "id must not be null");
+      return this;
+    }
+
+    /**
+     * <p>User attributes as key-value pairs. Keys must match existing user attributes set up in the Trophy dashboard.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage attributes(Map<String, String> attributes) {
+      this.attributes = Optional.ofNullable(attributes);
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter(
+        value = "attributes",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage attributes(Optional<Map<String, String>> attributes) {
+      this.attributes = attributes;
       return this;
     }
 
@@ -314,7 +353,7 @@ public final class UpsertedUser implements IUpsertedUser, IUpdatedUser {
 
     @java.lang.Override
     public UpsertedUser build() {
-      return new UpsertedUser(id, email, name, tz, deviceTokens, subscribeToEmails, additionalProperties);
+      return new UpsertedUser(id, email, name, tz, deviceTokens, subscribeToEmails, attributes, additionalProperties);
     }
   }
 }
