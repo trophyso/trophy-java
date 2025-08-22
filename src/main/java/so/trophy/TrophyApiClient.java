@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 import so.trophy.resources.achievements.AchievementsClient;
 import so.trophy.resources.metrics.MetricsClient;
 import so.trophy.resources.points.PointsClient;
+import so.trophy.resources.streaks.StreaksClient;
 import so.trophy.resources.users.UsersClient;
 
 public class TrophyApiClient {
@@ -21,6 +22,8 @@ public class TrophyApiClient {
 
   protected final Supplier<UsersClient> usersClient;
 
+  protected final Supplier<StreaksClient> streaksClient;
+
   protected final Supplier<PointsClient> pointsClient;
 
   public TrophyApiClient(ClientOptions clientOptions) {
@@ -28,6 +31,7 @@ public class TrophyApiClient {
     this.achievementsClient = Suppliers.memoize(() -> new AchievementsClient(clientOptions));
     this.metricsClient = Suppliers.memoize(() -> new MetricsClient(clientOptions));
     this.usersClient = Suppliers.memoize(() -> new UsersClient(clientOptions));
+    this.streaksClient = Suppliers.memoize(() -> new StreaksClient(clientOptions));
     this.pointsClient = Suppliers.memoize(() -> new PointsClient(clientOptions));
   }
 
@@ -41,6 +45,10 @@ public class TrophyApiClient {
 
   public UsersClient users() {
     return this.usersClient.get();
+  }
+
+  public StreaksClient streaks() {
+    return this.streaksClient.get();
   }
 
   public PointsClient points() {
