@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import so.trophy.core.ObjectMappers;
+import java.lang.Integer;
 import java.lang.Object;
 import java.lang.String;
 import java.util.HashMap;
@@ -42,11 +43,13 @@ public final class StreakResponse implements IBaseStreakResponse {
 
   private final Optional<List<StreakResponseStreakHistoryItem>> streakHistory;
 
+  private final Optional<Integer> rank;
+
   private final Map<String, Object> additionalProperties;
 
   private StreakResponse(int length, StreakFrequency frequency, Optional<String> started,
       Optional<String> periodStart, Optional<String> periodEnd, Optional<String> expires,
-      Optional<List<StreakResponseStreakHistoryItem>> streakHistory,
+      Optional<List<StreakResponseStreakHistoryItem>> streakHistory, Optional<Integer> rank,
       Map<String, Object> additionalProperties) {
     this.length = length;
     this.frequency = frequency;
@@ -55,6 +58,7 @@ public final class StreakResponse implements IBaseStreakResponse {
     this.periodEnd = periodEnd;
     this.expires = expires;
     this.streakHistory = streakHistory;
+    this.rank = rank;
     this.additionalProperties = additionalProperties;
   }
 
@@ -120,6 +124,14 @@ public final class StreakResponse implements IBaseStreakResponse {
     return streakHistory;
   }
 
+  /**
+   * @return The user's rank across all users. Null if the user has no active streak.
+   */
+  @JsonProperty("rank")
+  public Optional<Integer> getRank() {
+    return rank;
+  }
+
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
@@ -132,12 +144,12 @@ public final class StreakResponse implements IBaseStreakResponse {
   }
 
   private boolean equalTo(StreakResponse other) {
-    return length == other.length && frequency.equals(other.frequency) && started.equals(other.started) && periodStart.equals(other.periodStart) && periodEnd.equals(other.periodEnd) && expires.equals(other.expires) && streakHistory.equals(other.streakHistory);
+    return length == other.length && frequency.equals(other.frequency) && started.equals(other.started) && periodStart.equals(other.periodStart) && periodEnd.equals(other.periodEnd) && expires.equals(other.expires) && streakHistory.equals(other.streakHistory) && rank.equals(other.rank);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.length, this.frequency, this.started, this.periodStart, this.periodEnd, this.expires, this.streakHistory);
+    return Objects.hash(this.length, this.frequency, this.started, this.periodStart, this.periodEnd, this.expires, this.streakHistory, this.rank);
   }
 
   @java.lang.Override
@@ -181,6 +193,10 @@ public final class StreakResponse implements IBaseStreakResponse {
     _FinalStage streakHistory(Optional<List<StreakResponseStreakHistoryItem>> streakHistory);
 
     _FinalStage streakHistory(List<StreakResponseStreakHistoryItem> streakHistory);
+
+    _FinalStage rank(Optional<Integer> rank);
+
+    _FinalStage rank(Integer rank);
   }
 
   @JsonIgnoreProperties(
@@ -190,6 +206,8 @@ public final class StreakResponse implements IBaseStreakResponse {
     private int length;
 
     private StreakFrequency frequency;
+
+    private Optional<Integer> rank = Optional.empty();
 
     private Optional<List<StreakResponseStreakHistoryItem>> streakHistory = Optional.empty();
 
@@ -216,6 +234,7 @@ public final class StreakResponse implements IBaseStreakResponse {
       periodEnd(other.getPeriodEnd());
       expires(other.getExpires());
       streakHistory(other.getStreakHistory());
+      rank(other.getRank());
       return this;
     }
 
@@ -238,6 +257,26 @@ public final class StreakResponse implements IBaseStreakResponse {
     @JsonSetter("frequency")
     public _FinalStage frequency(@NotNull StreakFrequency frequency) {
       this.frequency = Objects.requireNonNull(frequency, "frequency must not be null");
+      return this;
+    }
+
+    /**
+     * <p>The user's rank across all users. Null if the user has no active streak.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage rank(Integer rank) {
+      this.rank = Optional.ofNullable(rank);
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter(
+        value = "rank",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage rank(Optional<Integer> rank) {
+      this.rank = rank;
       return this;
     }
 
@@ -344,7 +383,7 @@ public final class StreakResponse implements IBaseStreakResponse {
 
     @java.lang.Override
     public StreakResponse build() {
-      return new StreakResponse(length, frequency, started, periodStart, periodEnd, expires, streakHistory, additionalProperties);
+      return new StreakResponse(length, frequency, started, periodStart, periodEnd, expires, streakHistory, rank, additionalProperties);
     }
   }
 }
