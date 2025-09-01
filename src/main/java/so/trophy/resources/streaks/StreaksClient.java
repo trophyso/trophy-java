@@ -24,7 +24,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import so.trophy.resources.streaks.requests.StreaksListRequest;
 import so.trophy.resources.streaks.requests.StreaksRankingsRequest;
+import so.trophy.types.BulkStreakResponseItem;
 import so.trophy.types.ErrorBody;
 import so.trophy.types.StreakRankingUser;
 
@@ -36,31 +38,28 @@ public class StreaksClient {
   }
 
   /**
-   * Get the top users by streak length (active or longest).
+   * Get the streak lengths of a list of users, ranked by streak length from longest to shortest.
    */
-  public List<StreakRankingUser> rankings() {
-    return rankings(StreaksRankingsRequest.builder().build());
+  public List<BulkStreakResponseItem> list() {
+    return list(StreaksListRequest.builder().build());
   }
 
   /**
-   * Get the top users by streak length (active or longest).
+   * Get the streak lengths of a list of users, ranked by streak length from longest to shortest.
    */
-  public List<StreakRankingUser> rankings(StreaksRankingsRequest request) {
-    return rankings(request,null);
+  public List<BulkStreakResponseItem> list(StreaksListRequest request) {
+    return list(request,null);
   }
 
   /**
-   * Get the top users by streak length (active or longest).
+   * Get the streak lengths of a list of users, ranked by streak length from longest to shortest.
    */
-  public List<StreakRankingUser> rankings(StreaksRankingsRequest request,
+  public List<BulkStreakResponseItem> list(StreaksListRequest request,
       RequestOptions requestOptions) {
     HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
 
-      .addPathSegments("streaks/rankings");if (request.getLimit().isPresent()) {
-        httpUrl.addQueryParameter("limit", request.getLimit().get().toString());
-      }
-      if (request.getType().isPresent()) {
-        httpUrl.addQueryParameter("type", request.getType().get().toString());
+      .addPathSegments("streaks");if (request.getUserIds().isPresent()) {
+        httpUrl.addQueryParameter("userIds", request.getUserIds().get());
       }
       Request.Builder _requestBuilder = new Request.Builder()
         .url(httpUrl.build())
@@ -75,7 +74,7 @@ public class StreaksClient {
       try (Response response = client.newCall(okhttpRequest).execute()) {
         ResponseBody responseBody = response.body();
         if (response.isSuccessful()) {
-          return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<StreakRankingUser>>() {});
+          return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<BulkStreakResponseItem>>() {});
         }
         String responseBodyString = responseBody != null ? responseBody.string() : "{}";
         try {
@@ -93,4 +92,63 @@ public class StreaksClient {
         throw new TrophyApiException("Network error executing HTTP request", e);
       }
     }
-  }
+
+    /**
+     * Get the top users by streak length (active or longest).
+     */
+    public List<StreakRankingUser> rankings() {
+      return rankings(StreaksRankingsRequest.builder().build());
+    }
+
+    /**
+     * Get the top users by streak length (active or longest).
+     */
+    public List<StreakRankingUser> rankings(StreaksRankingsRequest request) {
+      return rankings(request,null);
+    }
+
+    /**
+     * Get the top users by streak length (active or longest).
+     */
+    public List<StreakRankingUser> rankings(StreaksRankingsRequest request,
+        RequestOptions requestOptions) {
+      HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
+
+        .addPathSegments("streaks/rankings");if (request.getLimit().isPresent()) {
+          httpUrl.addQueryParameter("limit", request.getLimit().get().toString());
+        }
+        if (request.getType().isPresent()) {
+          httpUrl.addQueryParameter("type", request.getType().get().toString());
+        }
+        Request.Builder _requestBuilder = new Request.Builder()
+          .url(httpUrl.build())
+          .method("GET", null)
+          .headers(Headers.of(clientOptions.headers(requestOptions)))
+          .addHeader("Content-Type", "application/json").addHeader("Accept", "application/json");
+        Request okhttpRequest = _requestBuilder.build();
+        OkHttpClient client = clientOptions.httpClient();
+        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
+          client = clientOptions.httpClientWithTimeout(requestOptions);
+        }
+        try (Response response = client.newCall(okhttpRequest).execute()) {
+          ResponseBody responseBody = response.body();
+          if (response.isSuccessful()) {
+            return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<StreakRankingUser>>() {});
+          }
+          String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+          try {
+            switch (response.code()) {
+              case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
+              case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
+            }
+          }
+          catch (JsonProcessingException ignored) {
+            // unable to map error response, throwing generic error
+          }
+          throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
+        }
+        catch (IOException e) {
+          throw new TrophyApiException("Network error executing HTTP request", e);
+        }
+      }
+    }
