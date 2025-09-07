@@ -28,6 +28,8 @@ import so.trophy.types.UpsertedUser;
     builder = MetricsEventRequest.Builder.class
 )
 public final class MetricsEventRequest {
+  private final Optional<String> idempotencyKey;
+
   private final UpsertedUser user;
 
   private final double value;
@@ -36,12 +38,21 @@ public final class MetricsEventRequest {
 
   private final Map<String, Object> additionalProperties;
 
-  private MetricsEventRequest(UpsertedUser user, double value,
+  private MetricsEventRequest(Optional<String> idempotencyKey, UpsertedUser user, double value,
       Optional<Map<String, String>> attributes, Map<String, Object> additionalProperties) {
+    this.idempotencyKey = idempotencyKey;
     this.user = user;
     this.value = value;
     this.attributes = attributes;
     this.additionalProperties = additionalProperties;
+  }
+
+  /**
+   * @return The idempotency key for the event.
+   */
+  @JsonProperty("Idempotency-Key")
+  public Optional<String> getIdempotencyKey() {
+    return idempotencyKey;
   }
 
   /**
@@ -80,12 +91,12 @@ public final class MetricsEventRequest {
   }
 
   private boolean equalTo(MetricsEventRequest other) {
-    return user.equals(other.user) && value == other.value && attributes.equals(other.attributes);
+    return idempotencyKey.equals(other.idempotencyKey) && user.equals(other.user) && value == other.value && attributes.equals(other.attributes);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.user, this.value, this.attributes);
+    return Objects.hash(this.idempotencyKey, this.user, this.value, this.attributes);
   }
 
   @java.lang.Override
@@ -110,6 +121,10 @@ public final class MetricsEventRequest {
   public interface _FinalStage {
     MetricsEventRequest build();
 
+    _FinalStage idempotencyKey(Optional<String> idempotencyKey);
+
+    _FinalStage idempotencyKey(String idempotencyKey);
+
     _FinalStage attributes(Optional<Map<String, String>> attributes);
 
     _FinalStage attributes(Map<String, String> attributes);
@@ -125,6 +140,8 @@ public final class MetricsEventRequest {
 
     private Optional<Map<String, String>> attributes = Optional.empty();
 
+    private Optional<String> idempotencyKey = Optional.empty();
+
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
 
@@ -133,6 +150,7 @@ public final class MetricsEventRequest {
 
     @java.lang.Override
     public Builder from(MetricsEventRequest other) {
+      idempotencyKey(other.getIdempotencyKey());
       user(other.getUser());
       value(other.getValue());
       attributes(other.getAttributes());
@@ -181,9 +199,29 @@ public final class MetricsEventRequest {
       return this;
     }
 
+    /**
+     * <p>The idempotency key for the event.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage idempotencyKey(String idempotencyKey) {
+      this.idempotencyKey = Optional.ofNullable(idempotencyKey);
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter(
+        value = "Idempotency-Key",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage idempotencyKey(Optional<String> idempotencyKey) {
+      this.idempotencyKey = idempotencyKey;
+      return this;
+    }
+
     @java.lang.Override
     public MetricsEventRequest build() {
-      return new MetricsEventRequest(user, value, attributes, additionalProperties);
+      return new MetricsEventRequest(idempotencyKey, user, value, attributes, additionalProperties);
     }
   }
 }

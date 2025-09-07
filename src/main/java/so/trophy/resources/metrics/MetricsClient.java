@@ -16,8 +16,12 @@ import so.trophy.errors.BadRequestError;
 import so.trophy.errors.UnauthorizedError;
 import so.trophy.errors.UnprocessableEntityError;
 import java.io.IOException;
+import java.lang.Exception;
 import java.lang.Object;
+import java.lang.RuntimeException;
 import java.lang.String;
+import java.util.HashMap;
+import java.util.Map;
 import okhttp3.Headers;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
@@ -54,20 +58,28 @@ public class MetricsClient {
       .addPathSegment(key)
       .addPathSegments("event")
       .build();
+    Map<String, Object> properties = new HashMap<>();
+    properties.put("user", request.getUser());
+    properties.put("value", request.getValue());
+    if (request.getAttributes().isPresent()) {
+      properties.put("attributes", request.getAttributes());
+    }
     RequestBody body;
     try {
-      body = RequestBody.create(ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
+      body = RequestBody.create(ObjectMappers.JSON_MAPPER.writeValueAsBytes(properties), MediaTypes.APPLICATION_JSON);
     }
-    catch(JsonProcessingException e) {
-      throw new TrophyApiException("Failed to serialize request", e);
+    catch(Exception e) {
+      throw new RuntimeException(e);
     }
-    Request okhttpRequest = new Request.Builder()
+    Request.Builder _requestBuilder = new Request.Builder()
       .url(httpUrl)
       .method("POST", body)
       .headers(Headers.of(clientOptions.headers(requestOptions)))
-      .addHeader("Content-Type", "application/json")
-      .addHeader("Accept", "application/json")
-      .build();
+      .addHeader("Content-Type", "application/json").addHeader("Accept", "application/json");
+    if (request.getIdempotencyKey().isPresent()) {
+      _requestBuilder.addHeader("Idempotency-Key", request.getIdempotencyKey().get());
+    }
+    Request okhttpRequest = _requestBuilder.build();
     OkHttpClient client = clientOptions.httpClient();
     if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
       client = clientOptions.httpClientWithTimeout(requestOptions);
