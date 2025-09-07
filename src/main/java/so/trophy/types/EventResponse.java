@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import so.trophy.core.ObjectMappers;
+import java.lang.Boolean;
 import java.lang.Object;
 import java.lang.String;
 import java.util.HashMap;
@@ -40,19 +41,25 @@ public final class EventResponse {
 
   private final Optional<Map<String, MetricEventPointsResponse>> points;
 
+  private final Optional<String> idempotencyKey;
+
+  private final Optional<Boolean> idempotentReplayed;
+
   private final Map<String, Object> additionalProperties;
 
   private EventResponse(String eventId, String metricId, double total,
       Optional<List<CompletedAchievementResponse>> achievements,
       Optional<MetricEventStreakResponse> currentStreak,
-      Optional<Map<String, MetricEventPointsResponse>> points,
-      Map<String, Object> additionalProperties) {
+      Optional<Map<String, MetricEventPointsResponse>> points, Optional<String> idempotencyKey,
+      Optional<Boolean> idempotentReplayed, Map<String, Object> additionalProperties) {
     this.eventId = eventId;
     this.metricId = metricId;
     this.total = total;
     this.achievements = achievements;
     this.currentStreak = currentStreak;
     this.points = points;
+    this.idempotencyKey = idempotencyKey;
+    this.idempotentReplayed = idempotentReplayed;
     this.additionalProperties = additionalProperties;
   }
 
@@ -104,6 +111,22 @@ public final class EventResponse {
     return points;
   }
 
+  /**
+   * @return The idempotency key used for the event, if one was provided.
+   */
+  @JsonProperty("idempotencyKey")
+  public Optional<String> getIdempotencyKey() {
+    return idempotencyKey;
+  }
+
+  /**
+   * @return Whether the event was replayed due to idempotency.
+   */
+  @JsonProperty("idempotentReplayed")
+  public Optional<Boolean> getIdempotentReplayed() {
+    return idempotentReplayed;
+  }
+
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
@@ -116,12 +139,12 @@ public final class EventResponse {
   }
 
   private boolean equalTo(EventResponse other) {
-    return eventId.equals(other.eventId) && metricId.equals(other.metricId) && total == other.total && achievements.equals(other.achievements) && currentStreak.equals(other.currentStreak) && points.equals(other.points);
+    return eventId.equals(other.eventId) && metricId.equals(other.metricId) && total == other.total && achievements.equals(other.achievements) && currentStreak.equals(other.currentStreak) && points.equals(other.points) && idempotencyKey.equals(other.idempotencyKey) && idempotentReplayed.equals(other.idempotentReplayed);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.eventId, this.metricId, this.total, this.achievements, this.currentStreak, this.points);
+    return Objects.hash(this.eventId, this.metricId, this.total, this.achievements, this.currentStreak, this.points, this.idempotencyKey, this.idempotentReplayed);
   }
 
   @java.lang.Override
@@ -161,6 +184,14 @@ public final class EventResponse {
     _FinalStage points(Optional<Map<String, MetricEventPointsResponse>> points);
 
     _FinalStage points(Map<String, MetricEventPointsResponse> points);
+
+    _FinalStage idempotencyKey(Optional<String> idempotencyKey);
+
+    _FinalStage idempotencyKey(String idempotencyKey);
+
+    _FinalStage idempotentReplayed(Optional<Boolean> idempotentReplayed);
+
+    _FinalStage idempotentReplayed(Boolean idempotentReplayed);
   }
 
   @JsonIgnoreProperties(
@@ -172,6 +203,10 @@ public final class EventResponse {
     private String metricId;
 
     private double total;
+
+    private Optional<Boolean> idempotentReplayed = Optional.empty();
+
+    private Optional<String> idempotencyKey = Optional.empty();
 
     private Optional<Map<String, MetricEventPointsResponse>> points = Optional.empty();
 
@@ -193,6 +228,8 @@ public final class EventResponse {
       achievements(other.getAchievements());
       currentStreak(other.getCurrentStreak());
       points(other.getPoints());
+      idempotencyKey(other.getIdempotencyKey());
+      idempotentReplayed(other.getIdempotentReplayed());
       return this;
     }
 
@@ -226,6 +263,46 @@ public final class EventResponse {
     @JsonSetter("total")
     public _FinalStage total(double total) {
       this.total = total;
+      return this;
+    }
+
+    /**
+     * <p>Whether the event was replayed due to idempotency.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage idempotentReplayed(Boolean idempotentReplayed) {
+      this.idempotentReplayed = Optional.ofNullable(idempotentReplayed);
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter(
+        value = "idempotentReplayed",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage idempotentReplayed(Optional<Boolean> idempotentReplayed) {
+      this.idempotentReplayed = idempotentReplayed;
+      return this;
+    }
+
+    /**
+     * <p>The idempotency key used for the event, if one was provided.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage idempotencyKey(String idempotencyKey) {
+      this.idempotencyKey = Optional.ofNullable(idempotencyKey);
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter(
+        value = "idempotencyKey",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage idempotencyKey(Optional<String> idempotencyKey) {
+      this.idempotencyKey = idempotencyKey;
       return this;
     }
 
@@ -291,7 +368,7 @@ public final class EventResponse {
 
     @java.lang.Override
     public EventResponse build() {
-      return new EventResponse(eventId, metricId, total, achievements, currentStreak, points, additionalProperties);
+      return new EventResponse(eventId, metricId, total, achievements, currentStreak, points, idempotencyKey, idempotentReplayed, additionalProperties);
     }
   }
 }
