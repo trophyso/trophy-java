@@ -41,6 +41,8 @@ public final class EventResponse {
 
   private final Optional<Map<String, MetricEventPointsResponse>> points;
 
+  private final Optional<Map<String, MetricEventLeaderboardResponse>> leaderboards;
+
   private final Optional<String> idempotencyKey;
 
   private final Optional<Boolean> idempotentReplayed;
@@ -50,14 +52,17 @@ public final class EventResponse {
   private EventResponse(String eventId, String metricId, double total,
       Optional<List<CompletedAchievementResponse>> achievements,
       Optional<MetricEventStreakResponse> currentStreak,
-      Optional<Map<String, MetricEventPointsResponse>> points, Optional<String> idempotencyKey,
-      Optional<Boolean> idempotentReplayed, Map<String, Object> additionalProperties) {
+      Optional<Map<String, MetricEventPointsResponse>> points,
+      Optional<Map<String, MetricEventLeaderboardResponse>> leaderboards,
+      Optional<String> idempotencyKey, Optional<Boolean> idempotentReplayed,
+      Map<String, Object> additionalProperties) {
     this.eventId = eventId;
     this.metricId = metricId;
     this.total = total;
     this.achievements = achievements;
     this.currentStreak = currentStreak;
     this.points = points;
+    this.leaderboards = leaderboards;
     this.idempotencyKey = idempotencyKey;
     this.idempotentReplayed = idempotentReplayed;
     this.additionalProperties = additionalProperties;
@@ -96,7 +101,7 @@ public final class EventResponse {
   }
 
   /**
-   * @return The user's current streak for the metric, if the metric has streaks enabled.
+   * @return The user's current streak.
    */
   @JsonProperty("currentStreak")
   public Optional<MetricEventStreakResponse> getCurrentStreak() {
@@ -104,11 +109,19 @@ public final class EventResponse {
   }
 
   /**
-   * @return A map of points systems by key that were affected by this event.
+   * @return A map of points systems by key.
    */
   @JsonProperty("points")
   public Optional<Map<String, MetricEventPointsResponse>> getPoints() {
     return points;
+  }
+
+  /**
+   * @return A map of leaderboards by key.
+   */
+  @JsonProperty("leaderboards")
+  public Optional<Map<String, MetricEventLeaderboardResponse>> getLeaderboards() {
+    return leaderboards;
   }
 
   /**
@@ -139,12 +152,12 @@ public final class EventResponse {
   }
 
   private boolean equalTo(EventResponse other) {
-    return eventId.equals(other.eventId) && metricId.equals(other.metricId) && total == other.total && achievements.equals(other.achievements) && currentStreak.equals(other.currentStreak) && points.equals(other.points) && idempotencyKey.equals(other.idempotencyKey) && idempotentReplayed.equals(other.idempotentReplayed);
+    return eventId.equals(other.eventId) && metricId.equals(other.metricId) && total == other.total && achievements.equals(other.achievements) && currentStreak.equals(other.currentStreak) && points.equals(other.points) && leaderboards.equals(other.leaderboards) && idempotencyKey.equals(other.idempotencyKey) && idempotentReplayed.equals(other.idempotentReplayed);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.eventId, this.metricId, this.total, this.achievements, this.currentStreak, this.points, this.idempotencyKey, this.idempotentReplayed);
+    return Objects.hash(this.eventId, this.metricId, this.total, this.achievements, this.currentStreak, this.points, this.leaderboards, this.idempotencyKey, this.idempotentReplayed);
   }
 
   @java.lang.Override
@@ -185,6 +198,10 @@ public final class EventResponse {
 
     _FinalStage points(Map<String, MetricEventPointsResponse> points);
 
+    _FinalStage leaderboards(Optional<Map<String, MetricEventLeaderboardResponse>> leaderboards);
+
+    _FinalStage leaderboards(Map<String, MetricEventLeaderboardResponse> leaderboards);
+
     _FinalStage idempotencyKey(Optional<String> idempotencyKey);
 
     _FinalStage idempotencyKey(String idempotencyKey);
@@ -208,6 +225,8 @@ public final class EventResponse {
 
     private Optional<String> idempotencyKey = Optional.empty();
 
+    private Optional<Map<String, MetricEventLeaderboardResponse>> leaderboards = Optional.empty();
+
     private Optional<Map<String, MetricEventPointsResponse>> points = Optional.empty();
 
     private Optional<MetricEventStreakResponse> currentStreak = Optional.empty();
@@ -228,6 +247,7 @@ public final class EventResponse {
       achievements(other.getAchievements());
       currentStreak(other.getCurrentStreak());
       points(other.getPoints());
+      leaderboards(other.getLeaderboards());
       idempotencyKey(other.getIdempotencyKey());
       idempotentReplayed(other.getIdempotentReplayed());
       return this;
@@ -307,7 +327,28 @@ public final class EventResponse {
     }
 
     /**
-     * <p>A map of points systems by key that were affected by this event.</p>
+     * <p>A map of leaderboards by key.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage leaderboards(Map<String, MetricEventLeaderboardResponse> leaderboards) {
+      this.leaderboards = Optional.ofNullable(leaderboards);
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter(
+        value = "leaderboards",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage leaderboards(
+        Optional<Map<String, MetricEventLeaderboardResponse>> leaderboards) {
+      this.leaderboards = leaderboards;
+      return this;
+    }
+
+    /**
+     * <p>A map of points systems by key.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -327,7 +368,7 @@ public final class EventResponse {
     }
 
     /**
-     * <p>The user's current streak for the metric, if the metric has streaks enabled.</p>
+     * <p>The user's current streak.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -368,7 +409,7 @@ public final class EventResponse {
 
     @java.lang.Override
     public EventResponse build() {
-      return new EventResponse(eventId, metricId, total, achievements, currentStreak, points, idempotencyKey, idempotentReplayed, additionalProperties);
+      return new EventResponse(eventId, metricId, total, achievements, currentStreak, points, leaderboards, idempotencyKey, idempotentReplayed, additionalProperties);
     }
   }
 }
