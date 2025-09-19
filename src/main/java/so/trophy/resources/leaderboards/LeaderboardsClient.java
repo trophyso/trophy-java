@@ -26,11 +26,9 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import so.trophy.resources.leaderboards.requests.LeaderboardsGetRequest;
-import so.trophy.resources.leaderboards.requests.UsersLeaderboardsRequest;
 import so.trophy.types.ErrorBody;
 import so.trophy.types.LeaderboardResponse;
 import so.trophy.types.LeaderboardResponseWithRankings;
-import so.trophy.types.UserLeaderboardResponse;
 
 public class LeaderboardsClient {
   protected final ClientOptions clientOptions;
@@ -153,65 +151,4 @@ public class LeaderboardsClient {
         throw new TrophyApiException("Network error executing HTTP request", e);
       }
     }
-
-    /**
-     * Get a user's rank, value, and history for a specific leaderboard.
-     */
-    public UserLeaderboardResponse usersLeaderboards(String userId, String key) {
-      return usersLeaderboards(userId,key,UsersLeaderboardsRequest.builder().build());
-    }
-
-    /**
-     * Get a user's rank, value, and history for a specific leaderboard.
-     */
-    public UserLeaderboardResponse usersLeaderboards(String userId, String key,
-        UsersLeaderboardsRequest request) {
-      return usersLeaderboards(userId,key,request,null);
-    }
-
-    /**
-     * Get a user's rank, value, and history for a specific leaderboard.
-     */
-    public UserLeaderboardResponse usersLeaderboards(String userId, String key,
-        UsersLeaderboardsRequest request, RequestOptions requestOptions) {
-      HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
-
-        .addPathSegments("users")
-        .addPathSegment(userId)
-        .addPathSegments("leaderboards")
-        .addPathSegment(key);if (request.getRun().isPresent()) {
-          httpUrl.addQueryParameter("run", request.getRun().get());
-        }
-        Request.Builder _requestBuilder = new Request.Builder()
-          .url(httpUrl.build())
-          .method("GET", null)
-          .headers(Headers.of(clientOptions.headers(requestOptions)))
-          .addHeader("Content-Type", "application/json").addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-          client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-          ResponseBody responseBody = response.body();
-          if (response.isSuccessful()) {
-            return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), UserLeaderboardResponse.class);
-          }
-          String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-          try {
-            switch (response.code()) {
-              case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-              case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-              case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-            }
-          }
-          catch (JsonProcessingException ignored) {
-            // unable to map error response, throwing generic error
-          }
-          throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        }
-        catch (IOException e) {
-          throw new TrophyApiException("Network error executing HTTP request", e);
-        }
-      }
-    }
+  }
