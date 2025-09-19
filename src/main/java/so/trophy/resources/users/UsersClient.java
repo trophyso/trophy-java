@@ -29,7 +29,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import so.trophy.resources.users.requests.UsersAchievementsRequest;
-import so.trophy.resources.users.requests.UsersLeaderboardsRequest;
+import so.trophy.resources.users.requests.UsersLeaderboardRequest;
 import so.trophy.resources.users.requests.UsersMetricEventSummaryRequest;
 import so.trophy.resources.users.requests.UsersPointsEventSummaryRequest;
 import so.trophy.resources.users.requests.UsersPointsRequest;
@@ -683,23 +683,23 @@ public class UsersClient {
             /**
              * Get a user's rank, value, and history for a specific leaderboard.
              */
-            public UserLeaderboardResponse leaderboards(String id, String key) {
-              return leaderboards(id,key,UsersLeaderboardsRequest.builder().build());
+            public UserLeaderboardResponse leaderboard(String id, String key) {
+              return leaderboard(id,key,UsersLeaderboardRequest.builder().build());
             }
 
             /**
              * Get a user's rank, value, and history for a specific leaderboard.
              */
-            public UserLeaderboardResponse leaderboards(String id, String key,
-                UsersLeaderboardsRequest request) {
-              return leaderboards(id,key,request,null);
+            public UserLeaderboardResponse leaderboard(String id, String key,
+                UsersLeaderboardRequest request) {
+              return leaderboard(id,key,request,null);
             }
 
             /**
              * Get a user's rank, value, and history for a specific leaderboard.
              */
-            public UserLeaderboardResponse leaderboards(String id, String key,
-                UsersLeaderboardsRequest request, RequestOptions requestOptions) {
+            public UserLeaderboardResponse leaderboard(String id, String key,
+                UsersLeaderboardRequest request, RequestOptions requestOptions) {
               HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
 
                 .addPathSegments("users")

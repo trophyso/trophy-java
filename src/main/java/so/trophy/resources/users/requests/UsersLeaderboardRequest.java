@@ -23,14 +23,14 @@ import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(
-    builder = UsersLeaderboardsRequest.Builder.class
+    builder = UsersLeaderboardRequest.Builder.class
 )
-public final class UsersLeaderboardsRequest {
+public final class UsersLeaderboardRequest {
   private final Optional<String> run;
 
   private final Map<String, Object> additionalProperties;
 
-  private UsersLeaderboardsRequest(Optional<String> run, Map<String, Object> additionalProperties) {
+  private UsersLeaderboardRequest(Optional<String> run, Map<String, Object> additionalProperties) {
     this.run = run;
     this.additionalProperties = additionalProperties;
   }
@@ -46,7 +46,7 @@ public final class UsersLeaderboardsRequest {
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
-    return other instanceof UsersLeaderboardsRequest && equalTo((UsersLeaderboardsRequest) other);
+    return other instanceof UsersLeaderboardRequest && equalTo((UsersLeaderboardRequest) other);
   }
 
   @JsonAnyGetter
@@ -54,7 +54,7 @@ public final class UsersLeaderboardsRequest {
     return this.additionalProperties;
   }
 
-  private boolean equalTo(UsersLeaderboardsRequest other) {
+  private boolean equalTo(UsersLeaderboardRequest other) {
     return run.equals(other.run);
   }
 
@@ -84,7 +84,7 @@ public final class UsersLeaderboardsRequest {
     private Builder() {
     }
 
-    public Builder from(UsersLeaderboardsRequest other) {
+    public Builder from(UsersLeaderboardRequest other) {
       run(other.getRun());
       return this;
     }
@@ -103,8 +103,8 @@ public final class UsersLeaderboardsRequest {
       return this;
     }
 
-    public UsersLeaderboardsRequest build() {
-      return new UsersLeaderboardsRequest(run, additionalProperties);
+    public UsersLeaderboardRequest build() {
+      return new UsersLeaderboardRequest(run, additionalProperties);
     }
   }
 }
