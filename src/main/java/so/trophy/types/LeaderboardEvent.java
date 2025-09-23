@@ -22,14 +22,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(
     builder = LeaderboardEvent.Builder.class
 )
 public final class LeaderboardEvent {
-  private final OffsetDateTime time;
+  private final Optional<OffsetDateTime> timestamp;
 
   private final Optional<Integer> previousRank;
 
@@ -41,10 +40,10 @@ public final class LeaderboardEvent {
 
   private final Map<String, Object> additionalProperties;
 
-  private LeaderboardEvent(OffsetDateTime time, Optional<Integer> previousRank,
+  private LeaderboardEvent(Optional<OffsetDateTime> timestamp, Optional<Integer> previousRank,
       Optional<Integer> rank, Optional<Integer> previousValue, Optional<Integer> value,
       Map<String, Object> additionalProperties) {
-    this.time = time;
+    this.timestamp = timestamp;
     this.previousRank = previousRank;
     this.rank = rank;
     this.previousValue = previousValue;
@@ -55,9 +54,9 @@ public final class LeaderboardEvent {
   /**
    * @return The timestamp when the event occurred.
    */
-  @JsonProperty("time")
-  public OffsetDateTime getTime() {
-    return time;
+  @JsonProperty("timestamp")
+  public Optional<OffsetDateTime> getTimestamp() {
+    return timestamp;
   }
 
   /**
@@ -104,12 +103,12 @@ public final class LeaderboardEvent {
   }
 
   private boolean equalTo(LeaderboardEvent other) {
-    return time.equals(other.time) && previousRank.equals(other.previousRank) && rank.equals(other.rank) && previousValue.equals(other.previousValue) && value.equals(other.value);
+    return timestamp.equals(other.timestamp) && previousRank.equals(other.previousRank) && rank.equals(other.rank) && previousValue.equals(other.previousValue) && value.equals(other.value);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.time, this.previousRank, this.rank, this.previousValue, this.value);
+    return Objects.hash(this.timestamp, this.previousRank, this.rank, this.previousValue, this.value);
   }
 
   @java.lang.Override
@@ -117,49 +116,23 @@ public final class LeaderboardEvent {
     return ObjectMappers.stringify(this);
   }
 
-  public static TimeStage builder() {
+  public static Builder builder() {
     return new Builder();
-  }
-
-  public interface TimeStage {
-    _FinalStage time(@NotNull OffsetDateTime time);
-
-    Builder from(LeaderboardEvent other);
-  }
-
-  public interface _FinalStage {
-    LeaderboardEvent build();
-
-    _FinalStage previousRank(Optional<Integer> previousRank);
-
-    _FinalStage previousRank(Integer previousRank);
-
-    _FinalStage rank(Optional<Integer> rank);
-
-    _FinalStage rank(Integer rank);
-
-    _FinalStage previousValue(Optional<Integer> previousValue);
-
-    _FinalStage previousValue(Integer previousValue);
-
-    _FinalStage value(Optional<Integer> value);
-
-    _FinalStage value(Integer value);
   }
 
   @JsonIgnoreProperties(
       ignoreUnknown = true
   )
-  public static final class Builder implements TimeStage, _FinalStage {
-    private OffsetDateTime time;
+  public static final class Builder {
+    private Optional<OffsetDateTime> timestamp = Optional.empty();
 
-    private Optional<Integer> value = Optional.empty();
-
-    private Optional<Integer> previousValue = Optional.empty();
+    private Optional<Integer> previousRank = Optional.empty();
 
     private Optional<Integer> rank = Optional.empty();
 
-    private Optional<Integer> previousRank = Optional.empty();
+    private Optional<Integer> previousValue = Optional.empty();
+
+    private Optional<Integer> value = Optional.empty();
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -167,9 +140,8 @@ public final class LeaderboardEvent {
     private Builder() {
     }
 
-    @java.lang.Override
     public Builder from(LeaderboardEvent other) {
-      time(other.getTime());
+      timestamp(other.getTimestamp());
       previousRank(other.getPreviousRank());
       rank(other.getRank());
       previousValue(other.getPreviousValue());
@@ -177,100 +149,78 @@ public final class LeaderboardEvent {
       return this;
     }
 
-    /**
-     * <p>The timestamp when the event occurred.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    @JsonSetter("time")
-    public _FinalStage time(@NotNull OffsetDateTime time) {
-      this.time = Objects.requireNonNull(time, "time must not be null");
-      return this;
-    }
-
-    /**
-     * <p>The user's value after this event, or null if they are no longer on the leaderboard.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    public _FinalStage value(Integer value) {
-      this.value = Optional.ofNullable(value);
-      return this;
-    }
-
-    @java.lang.Override
     @JsonSetter(
-        value = "value",
+        value = "timestamp",
         nulls = Nulls.SKIP
     )
-    public _FinalStage value(Optional<Integer> value) {
-      this.value = value;
+    public Builder timestamp(Optional<OffsetDateTime> timestamp) {
+      this.timestamp = timestamp;
       return this;
     }
 
-    /**
-     * <p>The user's value before this event, or null if they were not on the leaderboard.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    public _FinalStage previousValue(Integer previousValue) {
-      this.previousValue = Optional.ofNullable(previousValue);
+    public Builder timestamp(OffsetDateTime timestamp) {
+      this.timestamp = Optional.ofNullable(timestamp);
       return this;
     }
 
-    @java.lang.Override
-    @JsonSetter(
-        value = "previousValue",
-        nulls = Nulls.SKIP
-    )
-    public _FinalStage previousValue(Optional<Integer> previousValue) {
-      this.previousValue = previousValue;
-      return this;
-    }
-
-    /**
-     * <p>The user's rank after this event, or null if they are no longer on the leaderboard.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    public _FinalStage rank(Integer rank) {
-      this.rank = Optional.ofNullable(rank);
-      return this;
-    }
-
-    @java.lang.Override
-    @JsonSetter(
-        value = "rank",
-        nulls = Nulls.SKIP
-    )
-    public _FinalStage rank(Optional<Integer> rank) {
-      this.rank = rank;
-      return this;
-    }
-
-    /**
-     * <p>The user's rank before this event, or null if they were not on the leaderboard.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    public _FinalStage previousRank(Integer previousRank) {
-      this.previousRank = Optional.ofNullable(previousRank);
-      return this;
-    }
-
-    @java.lang.Override
     @JsonSetter(
         value = "previousRank",
         nulls = Nulls.SKIP
     )
-    public _FinalStage previousRank(Optional<Integer> previousRank) {
+    public Builder previousRank(Optional<Integer> previousRank) {
       this.previousRank = previousRank;
       return this;
     }
 
-    @java.lang.Override
+    public Builder previousRank(Integer previousRank) {
+      this.previousRank = Optional.ofNullable(previousRank);
+      return this;
+    }
+
+    @JsonSetter(
+        value = "rank",
+        nulls = Nulls.SKIP
+    )
+    public Builder rank(Optional<Integer> rank) {
+      this.rank = rank;
+      return this;
+    }
+
+    public Builder rank(Integer rank) {
+      this.rank = Optional.ofNullable(rank);
+      return this;
+    }
+
+    @JsonSetter(
+        value = "previousValue",
+        nulls = Nulls.SKIP
+    )
+    public Builder previousValue(Optional<Integer> previousValue) {
+      this.previousValue = previousValue;
+      return this;
+    }
+
+    public Builder previousValue(Integer previousValue) {
+      this.previousValue = Optional.ofNullable(previousValue);
+      return this;
+    }
+
+    @JsonSetter(
+        value = "value",
+        nulls = Nulls.SKIP
+    )
+    public Builder value(Optional<Integer> value) {
+      this.value = value;
+      return this;
+    }
+
+    public Builder value(Integer value) {
+      this.value = Optional.ofNullable(value);
+      return this;
+    }
+
     public LeaderboardEvent build() {
-      return new LeaderboardEvent(time, previousRank, rank, previousValue, value, additionalProperties);
+      return new LeaderboardEvent(timestamp, previousRank, rank, previousValue, value, additionalProperties);
     }
   }
 }
