@@ -56,7 +56,7 @@ public class PointsClient {
    */
   public List<PointsRange> summary(String key, PointsSummaryRequest request,
       RequestOptions requestOptions) {
-    HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
+    HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
       .addPathSegments("points")
       .addPathSegment(key)
@@ -107,7 +107,7 @@ public class PointsClient {
      * Get a points system with all its triggers.
      */
     public PointsSystemResponse system(String key, RequestOptions requestOptions) {
-      HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
+      HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
         .addPathSegments("points")
         .addPathSegment(key)

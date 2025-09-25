@@ -56,7 +56,7 @@ public class StreaksClient {
    */
   public List<BulkStreakResponseItem> list(StreaksListRequest request,
       RequestOptions requestOptions) {
-    HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
+    HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
       .addPathSegments("streaks");if (request.getUserIds().isPresent()) {
         httpUrl.addQueryParameter("userIds", request.getUserIds().get());
@@ -112,7 +112,7 @@ public class StreaksClient {
      */
     public List<StreakRankingUser> rankings(StreaksRankingsRequest request,
         RequestOptions requestOptions) {
-      HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
+      HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
         .addPathSegments("streaks/rankings");if (request.getLimit().isPresent()) {
           httpUrl.addQueryParameter("limit", request.getLimit().get().toString());

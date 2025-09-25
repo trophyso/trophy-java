@@ -8,19 +8,22 @@ package so.trophy.core;
 import java.lang.String;
 
 public final class Environment {
-  public static final Environment DEFAULT = new Environment("https://app.trophy.so/api");
+  public static final Environment PRODUCTION = new Environment("api.trophy.so","admin.trophy.so");
 
-  private final String url;
+  private final String api;
 
-  private Environment(String url) {
-    this.url = url;
+  private final String admin;
+
+  Environment(String api, String admin) {
+    this.api = api;
+    this.admin = admin;
   }
 
-  public String getUrl() {
-    return this.url;
+  public String getApiURL() {
+    return this.api;
   }
 
-  public static Environment custom(String url) {
-    return new Environment(url);
+  public String getAdminURL() {
+    return this.admin;
   }
 }

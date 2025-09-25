@@ -11,13 +11,16 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import so.trophy.core.ObjectMappers;
+import java.lang.Boolean;
 import java.lang.Object;
 import java.lang.String;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
@@ -31,13 +34,16 @@ public final class StreakResponseStreakHistoryItem {
 
   private final int length;
 
+  private final Optional<Boolean> usedFreeze;
+
   private final Map<String, Object> additionalProperties;
 
   private StreakResponseStreakHistoryItem(String periodStart, String periodEnd, int length,
-      Map<String, Object> additionalProperties) {
+      Optional<Boolean> usedFreeze, Map<String, Object> additionalProperties) {
     this.periodStart = periodStart;
     this.periodEnd = periodEnd;
     this.length = length;
+    this.usedFreeze = usedFreeze;
     this.additionalProperties = additionalProperties;
   }
 
@@ -65,6 +71,14 @@ public final class StreakResponseStreakHistoryItem {
     return length;
   }
 
+  /**
+   * @return Whether the user used a streak freeze during this period. Only present if the organization has enabled streak freezes.
+   */
+  @JsonProperty("usedFreeze")
+  public Optional<Boolean> getUsedFreeze() {
+    return usedFreeze;
+  }
+
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
@@ -77,12 +91,12 @@ public final class StreakResponseStreakHistoryItem {
   }
 
   private boolean equalTo(StreakResponseStreakHistoryItem other) {
-    return periodStart.equals(other.periodStart) && periodEnd.equals(other.periodEnd) && length == other.length;
+    return periodStart.equals(other.periodStart) && periodEnd.equals(other.periodEnd) && length == other.length && usedFreeze.equals(other.usedFreeze);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.periodStart, this.periodEnd, this.length);
+    return Objects.hash(this.periodStart, this.periodEnd, this.length, this.usedFreeze);
   }
 
   @java.lang.Override
@@ -110,6 +124,10 @@ public final class StreakResponseStreakHistoryItem {
 
   public interface _FinalStage {
     StreakResponseStreakHistoryItem build();
+
+    _FinalStage usedFreeze(Optional<Boolean> usedFreeze);
+
+    _FinalStage usedFreeze(Boolean usedFreeze);
   }
 
   @JsonIgnoreProperties(
@@ -122,6 +140,8 @@ public final class StreakResponseStreakHistoryItem {
 
     private int length;
 
+    private Optional<Boolean> usedFreeze = Optional.empty();
+
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
 
@@ -133,6 +153,7 @@ public final class StreakResponseStreakHistoryItem {
       periodStart(other.getPeriodStart());
       periodEnd(other.getPeriodEnd());
       length(other.getLength());
+      usedFreeze(other.getUsedFreeze());
       return this;
     }
 
@@ -169,9 +190,29 @@ public final class StreakResponseStreakHistoryItem {
       return this;
     }
 
+    /**
+     * <p>Whether the user used a streak freeze during this period. Only present if the organization has enabled streak freezes.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage usedFreeze(Boolean usedFreeze) {
+      this.usedFreeze = Optional.ofNullable(usedFreeze);
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter(
+        value = "usedFreeze",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage usedFreeze(Optional<Boolean> usedFreeze) {
+      this.usedFreeze = usedFreeze;
+      return this;
+    }
+
     @java.lang.Override
     public StreakResponseStreakHistoryItem build() {
-      return new StreakResponseStreakHistoryItem(periodStart, periodEnd, length, additionalProperties);
+      return new StreakResponseStreakHistoryItem(periodStart, periodEnd, length, usedFreeze, additionalProperties);
     }
   }
 }

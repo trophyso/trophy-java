@@ -64,7 +64,7 @@ public class UsersClient {
    * Create a new user.
    */
   public User create(UpsertedUser request, RequestOptions requestOptions) {
-    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
+    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
       .addPathSegments("users")
       .build();
@@ -120,7 +120,7 @@ public class UsersClient {
    * Get a single user.
    */
   public User get(String id, RequestOptions requestOptions) {
-    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
+    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
       .addPathSegments("users")
       .addPathSegment(id)
@@ -177,7 +177,7 @@ public class UsersClient {
    * Identify a user.
    */
   public User identify(String id, UpdatedUser request, RequestOptions requestOptions) {
-    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
+    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
       .addPathSegments("users")
       .addPathSegment(id)
@@ -241,7 +241,7 @@ public class UsersClient {
    * Update a user.
    */
   public User update(String id, UpdatedUser request, RequestOptions requestOptions) {
-    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
+    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
       .addPathSegments("users")
       .addPathSegment(id)
@@ -299,7 +299,7 @@ public class UsersClient {
    * Get a single user's progress against all active metrics.
    */
   public List<MetricResponse> allMetrics(String id, RequestOptions requestOptions) {
-    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
+    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
       .addPathSegments("users")
       .addPathSegment(id)
@@ -350,7 +350,7 @@ public class UsersClient {
    * Get a user's progress against a single active metric.
    */
   public MetricResponse singleMetric(String id, String key, RequestOptions requestOptions) {
-    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
+    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
       .addPathSegments("users")
       .addPathSegment(id)
@@ -404,7 +404,7 @@ public class UsersClient {
    */
   public List<UsersMetricEventSummaryResponseItem> metricEventSummary(String id, String key,
       UsersMetricEventSummaryRequest request, RequestOptions requestOptions) {
-    HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
+    HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
       .addPathSegments("users")
       .addPathSegment(id)
@@ -466,7 +466,7 @@ public class UsersClient {
      */
     public List<CompletedAchievementResponse> achievements(String id,
         UsersAchievementsRequest request, RequestOptions requestOptions) {
-      HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
+      HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
         .addPathSegments("users")
         .addPathSegment(id)
@@ -525,7 +525,7 @@ public class UsersClient {
        */
       public StreakResponse streak(String id, UsersStreakRequest request,
           RequestOptions requestOptions) {
-        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
+        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
           .addPathSegments("users")
           .addPathSegment(id)
@@ -584,7 +584,7 @@ public class UsersClient {
          */
         public GetUserPointsResponse points(String id, String key, UsersPointsRequest request,
             RequestOptions requestOptions) {
-          HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
+          HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
             .addPathSegments("users")
             .addPathSegment(id)
@@ -638,7 +638,7 @@ public class UsersClient {
            */
           public List<UsersPointsEventSummaryResponseItem> pointsEventSummary(String id, String key,
               UsersPointsEventSummaryRequest request, RequestOptions requestOptions) {
-            HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
+            HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
               .addPathSegments("users")
               .addPathSegment(id)
@@ -700,7 +700,7 @@ public class UsersClient {
              */
             public UserLeaderboardResponse leaderboard(String id, String key,
                 UsersLeaderboardRequest request, RequestOptions requestOptions) {
-              HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
+              HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
                 .addPathSegments("users")
                 .addPathSegment(id)

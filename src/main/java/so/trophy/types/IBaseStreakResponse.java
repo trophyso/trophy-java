@@ -5,6 +5,7 @@ package so.trophy.types;
  */
 
 
+import java.lang.Integer;
 import java.lang.String;
 import java.util.Optional;
 
@@ -20,4 +21,12 @@ public interface IBaseStreakResponse {
   Optional<String> getPeriodEnd();
 
   Optional<String> getExpires();
+
+  Optional<Integer> getFreezes();
+
+  Optional<Integer> getMaxFreezes();
+
+  Optional<Integer> getFreezeAutoEarnInterval();
+
+  Optional<Integer> getFreezeAutoEarnAmount();
 }

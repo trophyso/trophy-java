@@ -13,7 +13,7 @@ public final class TrophyApiClientBuilder {
 
   private String apiKey = null;
 
-  private Environment environment = Environment.DEFAULT;
+  private Environment environment = Environment.PRODUCTION;
 
   /**
    * Sets apiKey
@@ -25,11 +25,6 @@ public final class TrophyApiClientBuilder {
 
   public TrophyApiClientBuilder environment(Environment environment) {
     this.environment = environment;
-    return this;
-  }
-
-  public TrophyApiClientBuilder url(String url) {
-    this.environment = Environment.custom(url);
     return this;
   }
 

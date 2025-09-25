@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import so.trophy.core.ObjectMappers;
+import java.lang.Integer;
 import java.lang.Object;
 import java.lang.String;
 import java.util.HashMap;
@@ -39,10 +40,20 @@ public final class BaseStreakResponse implements IBaseStreakResponse {
 
   private final Optional<String> expires;
 
+  private final Optional<Integer> freezes;
+
+  private final Optional<Integer> maxFreezes;
+
+  private final Optional<Integer> freezeAutoEarnInterval;
+
+  private final Optional<Integer> freezeAutoEarnAmount;
+
   private final Map<String, Object> additionalProperties;
 
   private BaseStreakResponse(int length, StreakFrequency frequency, Optional<String> started,
       Optional<String> periodStart, Optional<String> periodEnd, Optional<String> expires,
+      Optional<Integer> freezes, Optional<Integer> maxFreezes,
+      Optional<Integer> freezeAutoEarnInterval, Optional<Integer> freezeAutoEarnAmount,
       Map<String, Object> additionalProperties) {
     this.length = length;
     this.frequency = frequency;
@@ -50,6 +61,10 @@ public final class BaseStreakResponse implements IBaseStreakResponse {
     this.periodStart = periodStart;
     this.periodEnd = periodEnd;
     this.expires = expires;
+    this.freezes = freezes;
+    this.maxFreezes = maxFreezes;
+    this.freezeAutoEarnInterval = freezeAutoEarnInterval;
+    this.freezeAutoEarnAmount = freezeAutoEarnAmount;
     this.additionalProperties = additionalProperties;
   }
 
@@ -107,6 +122,42 @@ public final class BaseStreakResponse implements IBaseStreakResponse {
     return expires;
   }
 
+  /**
+   * @return The number of available streak freezes. Only present if the organization has enabled streak freezes.
+   */
+  @JsonProperty("freezes")
+  @java.lang.Override
+  public Optional<Integer> getFreezes() {
+    return freezes;
+  }
+
+  /**
+   * @return The maximum number of streak freezes a user can have. Only present if the organization has enabled streak freezes.
+   */
+  @JsonProperty("maxFreezes")
+  @java.lang.Override
+  public Optional<Integer> getMaxFreezes() {
+    return maxFreezes;
+  }
+
+  /**
+   * @return The interval at which the user will earn streak freezes, in days. Only present if the organization has enabled streak freeze auto-earn.
+   */
+  @JsonProperty("freezeAutoEarnInterval")
+  @java.lang.Override
+  public Optional<Integer> getFreezeAutoEarnInterval() {
+    return freezeAutoEarnInterval;
+  }
+
+  /**
+   * @return The amount of streak freezes the user will earn per interval. Only present if the organization has enabled streak freeze auto-earn.
+   */
+  @JsonProperty("freezeAutoEarnAmount")
+  @java.lang.Override
+  public Optional<Integer> getFreezeAutoEarnAmount() {
+    return freezeAutoEarnAmount;
+  }
+
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
@@ -119,12 +170,12 @@ public final class BaseStreakResponse implements IBaseStreakResponse {
   }
 
   private boolean equalTo(BaseStreakResponse other) {
-    return length == other.length && frequency.equals(other.frequency) && started.equals(other.started) && periodStart.equals(other.periodStart) && periodEnd.equals(other.periodEnd) && expires.equals(other.expires);
+    return length == other.length && frequency.equals(other.frequency) && started.equals(other.started) && periodStart.equals(other.periodStart) && periodEnd.equals(other.periodEnd) && expires.equals(other.expires) && freezes.equals(other.freezes) && maxFreezes.equals(other.maxFreezes) && freezeAutoEarnInterval.equals(other.freezeAutoEarnInterval) && freezeAutoEarnAmount.equals(other.freezeAutoEarnAmount);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.length, this.frequency, this.started, this.periodStart, this.periodEnd, this.expires);
+    return Objects.hash(this.length, this.frequency, this.started, this.periodStart, this.periodEnd, this.expires, this.freezes, this.maxFreezes, this.freezeAutoEarnInterval, this.freezeAutoEarnAmount);
   }
 
   @java.lang.Override
@@ -164,6 +215,22 @@ public final class BaseStreakResponse implements IBaseStreakResponse {
     _FinalStage expires(Optional<String> expires);
 
     _FinalStage expires(String expires);
+
+    _FinalStage freezes(Optional<Integer> freezes);
+
+    _FinalStage freezes(Integer freezes);
+
+    _FinalStage maxFreezes(Optional<Integer> maxFreezes);
+
+    _FinalStage maxFreezes(Integer maxFreezes);
+
+    _FinalStage freezeAutoEarnInterval(Optional<Integer> freezeAutoEarnInterval);
+
+    _FinalStage freezeAutoEarnInterval(Integer freezeAutoEarnInterval);
+
+    _FinalStage freezeAutoEarnAmount(Optional<Integer> freezeAutoEarnAmount);
+
+    _FinalStage freezeAutoEarnAmount(Integer freezeAutoEarnAmount);
   }
 
   @JsonIgnoreProperties(
@@ -173,6 +240,14 @@ public final class BaseStreakResponse implements IBaseStreakResponse {
     private int length;
 
     private StreakFrequency frequency;
+
+    private Optional<Integer> freezeAutoEarnAmount = Optional.empty();
+
+    private Optional<Integer> freezeAutoEarnInterval = Optional.empty();
+
+    private Optional<Integer> maxFreezes = Optional.empty();
+
+    private Optional<Integer> freezes = Optional.empty();
 
     private Optional<String> expires = Optional.empty();
 
@@ -196,6 +271,10 @@ public final class BaseStreakResponse implements IBaseStreakResponse {
       periodStart(other.getPeriodStart());
       periodEnd(other.getPeriodEnd());
       expires(other.getExpires());
+      freezes(other.getFreezes());
+      maxFreezes(other.getMaxFreezes());
+      freezeAutoEarnInterval(other.getFreezeAutoEarnInterval());
+      freezeAutoEarnAmount(other.getFreezeAutoEarnAmount());
       return this;
     }
 
@@ -218,6 +297,86 @@ public final class BaseStreakResponse implements IBaseStreakResponse {
     @JsonSetter("frequency")
     public _FinalStage frequency(@NotNull StreakFrequency frequency) {
       this.frequency = Objects.requireNonNull(frequency, "frequency must not be null");
+      return this;
+    }
+
+    /**
+     * <p>The amount of streak freezes the user will earn per interval. Only present if the organization has enabled streak freeze auto-earn.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage freezeAutoEarnAmount(Integer freezeAutoEarnAmount) {
+      this.freezeAutoEarnAmount = Optional.ofNullable(freezeAutoEarnAmount);
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter(
+        value = "freezeAutoEarnAmount",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage freezeAutoEarnAmount(Optional<Integer> freezeAutoEarnAmount) {
+      this.freezeAutoEarnAmount = freezeAutoEarnAmount;
+      return this;
+    }
+
+    /**
+     * <p>The interval at which the user will earn streak freezes, in days. Only present if the organization has enabled streak freeze auto-earn.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage freezeAutoEarnInterval(Integer freezeAutoEarnInterval) {
+      this.freezeAutoEarnInterval = Optional.ofNullable(freezeAutoEarnInterval);
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter(
+        value = "freezeAutoEarnInterval",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage freezeAutoEarnInterval(Optional<Integer> freezeAutoEarnInterval) {
+      this.freezeAutoEarnInterval = freezeAutoEarnInterval;
+      return this;
+    }
+
+    /**
+     * <p>The maximum number of streak freezes a user can have. Only present if the organization has enabled streak freezes.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage maxFreezes(Integer maxFreezes) {
+      this.maxFreezes = Optional.ofNullable(maxFreezes);
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter(
+        value = "maxFreezes",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage maxFreezes(Optional<Integer> maxFreezes) {
+      this.maxFreezes = maxFreezes;
+      return this;
+    }
+
+    /**
+     * <p>The number of available streak freezes. Only present if the organization has enabled streak freezes.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage freezes(Integer freezes) {
+      this.freezes = Optional.ofNullable(freezes);
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter(
+        value = "freezes",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage freezes(Optional<Integer> freezes) {
+      this.freezes = freezes;
       return this;
     }
 
@@ -303,7 +462,7 @@ public final class BaseStreakResponse implements IBaseStreakResponse {
 
     @java.lang.Override
     public BaseStreakResponse build() {
-      return new BaseStreakResponse(length, frequency, started, periodStart, periodEnd, expires, additionalProperties);
+      return new BaseStreakResponse(length, frequency, started, periodStart, periodEnd, expires, freezes, maxFreezes, freezeAutoEarnInterval, freezeAutoEarnAmount, additionalProperties);
     }
   }
 }

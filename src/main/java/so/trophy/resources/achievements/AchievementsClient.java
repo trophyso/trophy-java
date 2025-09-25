@@ -50,7 +50,7 @@ public class AchievementsClient {
    * Get all achievements and their completion stats.
    */
   public List<AchievementWithStatsResponse> all(RequestOptions requestOptions) {
-    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
+    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
       .addPathSegments("achievements")
       .build();
@@ -99,7 +99,7 @@ public class AchievementsClient {
    */
   public AchievementCompletionResponse complete(String key, AchievementsCompleteRequest request,
       RequestOptions requestOptions) {
-    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
+    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
       .addPathSegments("achievements")
       .addPathSegment(key)

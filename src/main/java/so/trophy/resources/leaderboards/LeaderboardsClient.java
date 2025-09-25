@@ -48,7 +48,7 @@ public class LeaderboardsClient {
    * Get all active leaderboards for your organization.
    */
   public List<LeaderboardResponse> all(RequestOptions requestOptions) {
-    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
+    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
       .addPathSegments("leaderboards")
       .build();
@@ -104,7 +104,7 @@ public class LeaderboardsClient {
    */
   public LeaderboardResponseWithRankings get(String key, LeaderboardsGetRequest request,
       RequestOptions requestOptions) {
-    HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl()).newBuilder()
+    HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
       .addPathSegments("leaderboards")
       .addPathSegment(key);if (request.getOffset().isPresent()) {
