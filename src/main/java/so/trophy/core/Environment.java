@@ -8,7 +8,7 @@ package so.trophy.core;
 import java.lang.String;
 
 public final class Environment {
-  public static final Environment PRODUCTION = new Environment("api.trophy.so","admin.trophy.so");
+  public static final Environment PRODUCTION = new Environment("https://api.trophy.so/v1","https://admin.trophy.so/v1");
 
   private final String api;
 
