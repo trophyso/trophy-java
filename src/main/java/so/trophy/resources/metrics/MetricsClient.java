@@ -5,46 +5,34 @@ package so.trophy.resources.metrics;
  */
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import so.trophy.core.ClientOptions;
-import so.trophy.core.MediaTypes;
-import so.trophy.core.ObjectMappers;
 import so.trophy.core.RequestOptions;
-import so.trophy.core.TrophyApiApiException;
-import so.trophy.core.TrophyApiException;
-import so.trophy.errors.BadRequestError;
-import so.trophy.errors.UnauthorizedError;
-import so.trophy.errors.UnprocessableEntityError;
-import java.io.IOException;
-import java.lang.Exception;
-import java.lang.Object;
-import java.lang.RuntimeException;
 import java.lang.String;
-import java.util.HashMap;
-import java.util.Map;
-import okhttp3.Headers;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 import so.trophy.resources.metrics.requests.MetricsEventRequest;
-import so.trophy.types.ErrorBody;
 import so.trophy.types.EventResponse;
 
 public class MetricsClient {
   protected final ClientOptions clientOptions;
 
+  private final RawMetricsClient rawClient;
+
   public MetricsClient(ClientOptions clientOptions) {
     this.clientOptions = clientOptions;
+    this.rawClient = new RawMetricsClient(clientOptions);
+  }
+
+  /**
+   * Get responses with HTTP metadata like headers
+   */
+  public RawMetricsClient withRawResponse() {
+    return this.rawClient;
   }
 
   /**
    * Increment or decrement the value of a metric for a user.
    */
   public EventResponse event(String key, MetricsEventRequest request) {
-    return event(key,request,null);
+    return this.rawClient.event(key, request).body();
   }
 
   /**
@@ -52,58 +40,6 @@ public class MetricsClient {
    */
   public EventResponse event(String key, MetricsEventRequest request,
       RequestOptions requestOptions) {
-    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
-
-      .addPathSegments("metrics")
-      .addPathSegment(key)
-      .addPathSegments("event")
-      .build();
-    Map<String, Object> properties = new HashMap<>();
-    properties.put("user", request.getUser());
-    properties.put("value", request.getValue());
-    if (request.getAttributes().isPresent()) {
-      properties.put("attributes", request.getAttributes());
-    }
-    RequestBody body;
-    try {
-      body = RequestBody.create(ObjectMappers.JSON_MAPPER.writeValueAsBytes(properties), MediaTypes.APPLICATION_JSON);
-    }
-    catch(Exception e) {
-      throw new RuntimeException(e);
-    }
-    Request.Builder _requestBuilder = new Request.Builder()
-      .url(httpUrl)
-      .method("POST", body)
-      .headers(Headers.of(clientOptions.headers(requestOptions)))
-      .addHeader("Content-Type", "application/json").addHeader("Accept", "application/json");
-    if (request.getIdempotencyKey().isPresent()) {
-      _requestBuilder.addHeader("Idempotency-Key", request.getIdempotencyKey().get());
-    }
-    Request okhttpRequest = _requestBuilder.build();
-    OkHttpClient client = clientOptions.httpClient();
-    if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-      client = clientOptions.httpClientWithTimeout(requestOptions);
-    }
-    try (Response response = client.newCall(okhttpRequest).execute()) {
-      ResponseBody responseBody = response.body();
-      if (response.isSuccessful()) {
-        return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), EventResponse.class);
-      }
-      String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-      try {
-        switch (response.code()) {
-          case 400:throw new BadRequestError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-          case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-          case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-        }
-      }
-      catch (JsonProcessingException ignored) {
-        // unable to map error response, throwing generic error
-      }
-      throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-    }
-    catch (IOException e) {
-      throw new TrophyApiException("Network error executing HTTP request", e);
-    }
+    return this.rawClient.event(key, request, requestOptions).body();
   }
 }

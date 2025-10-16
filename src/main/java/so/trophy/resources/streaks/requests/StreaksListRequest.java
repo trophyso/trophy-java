@@ -16,7 +16,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import so.trophy.core.ObjectMappers;
 import java.lang.Object;
 import java.lang.String;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -26,11 +28,12 @@ import java.util.Optional;
     builder = StreaksListRequest.Builder.class
 )
 public final class StreaksListRequest {
-  private final Optional<String> userIds;
+  private final Optional<List<String>> userIds;
 
   private final Map<String, Object> additionalProperties;
 
-  private StreaksListRequest(Optional<String> userIds, Map<String, Object> additionalProperties) {
+  private StreaksListRequest(Optional<List<String>> userIds,
+      Map<String, Object> additionalProperties) {
     this.userIds = userIds;
     this.additionalProperties = additionalProperties;
   }
@@ -39,7 +42,7 @@ public final class StreaksListRequest {
    * @return A list of up to 100 user IDs.
    */
   @JsonProperty("userIds")
-  public Optional<String> getUserIds() {
+  public Optional<List<String>> getUserIds() {
     return userIds;
   }
 
@@ -76,7 +79,7 @@ public final class StreaksListRequest {
       ignoreUnknown = true
   )
   public static final class Builder {
-    private Optional<String> userIds = Optional.empty();
+    private Optional<List<String>> userIds = Optional.empty();
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -89,17 +92,25 @@ public final class StreaksListRequest {
       return this;
     }
 
+    /**
+     * <p>A list of up to 100 user IDs.</p>
+     */
     @JsonSetter(
         value = "userIds",
         nulls = Nulls.SKIP
     )
-    public Builder userIds(Optional<String> userIds) {
+    public Builder userIds(Optional<List<String>> userIds) {
       this.userIds = userIds;
       return this;
     }
 
-    public Builder userIds(String userIds) {
+    public Builder userIds(List<String> userIds) {
       this.userIds = Optional.ofNullable(userIds);
+      return this;
+    }
+
+    public Builder userIds(String userIds) {
+      this.userIds = Optional.of(Collections.singletonList(userIds));
       return this;
     }
 

@@ -90,6 +90,9 @@ public final class UsersAchievementsRequest {
       return this;
     }
 
+    /**
+     * <p>When set to 'true', returns both completed and incomplete achievements for the user. When omitted or set to any other value, returns only completed achievements.</p>
+     */
     @JsonSetter(
         value = "includeIncomplete",
         nulls = Nulls.SKIP

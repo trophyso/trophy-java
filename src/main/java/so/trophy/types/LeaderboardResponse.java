@@ -33,8 +33,6 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
 
   private final String key;
 
-  private final Optional<LeaderboardResponseStatus> status;
-
   private final LeaderboardResponseRankBy rankBy;
 
   private final Optional<String> metricKey;
@@ -45,7 +43,7 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
 
   private final Optional<String> pointsSystemName;
 
-  private final Optional<String> description;
+  private final String description;
 
   private final String start;
 
@@ -53,22 +51,20 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
 
   private final int maxParticipants;
 
-  private final Optional<String> runUnit;
+  private final Optional<LeaderboardResponseRunUnit> runUnit;
 
   private final int runInterval;
 
   private final Map<String, Object> additionalProperties;
 
-  private LeaderboardResponse(String id, String name, String key,
-      Optional<LeaderboardResponseStatus> status, LeaderboardResponseRankBy rankBy,
+  private LeaderboardResponse(String id, String name, String key, LeaderboardResponseRankBy rankBy,
       Optional<String> metricKey, Optional<String> metricName, Optional<String> pointsSystemKey,
-      Optional<String> pointsSystemName, Optional<String> description, String start,
-      Optional<String> end, int maxParticipants, Optional<String> runUnit, int runInterval,
+      Optional<String> pointsSystemName, String description, String start, Optional<String> end,
+      int maxParticipants, Optional<LeaderboardResponseRunUnit> runUnit, int runInterval,
       Map<String, Object> additionalProperties) {
     this.id = id;
     this.name = name;
     this.key = key;
-    this.status = status;
     this.rankBy = rankBy;
     this.metricKey = metricKey;
     this.metricName = metricName;
@@ -108,14 +104,6 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
   @java.lang.Override
   public String getKey() {
     return key;
-  }
-
-  /**
-   * @return The status of the leaderboard.
-   */
-  @JsonProperty("status")
-  public Optional<LeaderboardResponseStatus> getStatus() {
-    return status;
   }
 
   /**
@@ -167,7 +155,7 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
    */
   @JsonProperty("description")
   @java.lang.Override
-  public Optional<String> getDescription() {
+  public String getDescription() {
     return description;
   }
 
@@ -202,8 +190,7 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
    * @return The repetition type for recurring leaderboards, or null for one-time leaderboards.
    */
   @JsonProperty("runUnit")
-  @java.lang.Override
-  public Optional<String> getRunUnit() {
+  public Optional<LeaderboardResponseRunUnit> getRunUnit() {
     return runUnit;
   }
 
@@ -228,12 +215,12 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
   }
 
   private boolean equalTo(LeaderboardResponse other) {
-    return id.equals(other.id) && name.equals(other.name) && key.equals(other.key) && status.equals(other.status) && rankBy.equals(other.rankBy) && metricKey.equals(other.metricKey) && metricName.equals(other.metricName) && pointsSystemKey.equals(other.pointsSystemKey) && pointsSystemName.equals(other.pointsSystemName) && description.equals(other.description) && start.equals(other.start) && end.equals(other.end) && maxParticipants == other.maxParticipants && runUnit.equals(other.runUnit) && runInterval == other.runInterval;
+    return id.equals(other.id) && name.equals(other.name) && key.equals(other.key) && rankBy.equals(other.rankBy) && metricKey.equals(other.metricKey) && metricName.equals(other.metricName) && pointsSystemKey.equals(other.pointsSystemKey) && pointsSystemName.equals(other.pointsSystemName) && description.equals(other.description) && start.equals(other.start) && end.equals(other.end) && maxParticipants == other.maxParticipants && runUnit.equals(other.runUnit) && runInterval == other.runInterval;
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.name, this.key, this.status, this.rankBy, this.metricKey, this.metricName, this.pointsSystemKey, this.pointsSystemName, this.description, this.start, this.end, this.maxParticipants, this.runUnit, this.runInterval);
+    return Objects.hash(this.id, this.name, this.key, this.rankBy, this.metricKey, this.metricName, this.pointsSystemKey, this.pointsSystemName, this.description, this.start, this.end, this.maxParticipants, this.runUnit, this.runInterval);
   }
 
   @java.lang.Override
@@ -246,75 +233,113 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
   }
 
   public interface IdStage {
+    /**
+     * <p>The unique ID of the leaderboard.</p>
+     */
     NameStage id(@NotNull String id);
 
     Builder from(LeaderboardResponse other);
   }
 
   public interface NameStage {
+    /**
+     * <p>The user-facing name of the leaderboard.</p>
+     */
     KeyStage name(@NotNull String name);
   }
 
   public interface KeyStage {
+    /**
+     * <p>The unique key used to reference the leaderboard in APIs.</p>
+     */
     RankByStage key(@NotNull String key);
   }
 
   public interface RankByStage {
-    StartStage rankBy(@NotNull LeaderboardResponseRankBy rankBy);
+    /**
+     * <p>What the leaderboard ranks by.</p>
+     */
+    DescriptionStage rankBy(@NotNull LeaderboardResponseRankBy rankBy);
+  }
+
+  public interface DescriptionStage {
+    /**
+     * <p>The user-facing description of the leaderboard.</p>
+     */
+    StartStage description(@NotNull String description);
   }
 
   public interface StartStage {
+    /**
+     * <p>The start date of the leaderboard in YYYY-MM-DD format.</p>
+     */
     MaxParticipantsStage start(@NotNull String start);
   }
 
   public interface MaxParticipantsStage {
+    /**
+     * <p>The maximum number of participants in the leaderboard.</p>
+     */
     RunIntervalStage maxParticipants(int maxParticipants);
   }
 
   public interface RunIntervalStage {
+    /**
+     * <p>The interval between repetitions, relative to the start date and repetition type.</p>
+     */
     _FinalStage runInterval(int runInterval);
   }
 
   public interface _FinalStage {
     LeaderboardResponse build();
 
-    _FinalStage status(Optional<LeaderboardResponseStatus> status);
-
-    _FinalStage status(LeaderboardResponseStatus status);
-
+    /**
+     * <p>The key of the metric to rank by, if rankBy is 'metric'.</p>
+     */
     _FinalStage metricKey(Optional<String> metricKey);
 
     _FinalStage metricKey(String metricKey);
 
+    /**
+     * <p>The name of the metric to rank by, if rankBy is 'metric'.</p>
+     */
     _FinalStage metricName(Optional<String> metricName);
 
     _FinalStage metricName(String metricName);
 
+    /**
+     * <p>The key of the points system to rank by, if rankBy is 'points'.</p>
+     */
     _FinalStage pointsSystemKey(Optional<String> pointsSystemKey);
 
     _FinalStage pointsSystemKey(String pointsSystemKey);
 
+    /**
+     * <p>The name of the points system to rank by, if rankBy is 'points'.</p>
+     */
     _FinalStage pointsSystemName(Optional<String> pointsSystemName);
 
     _FinalStage pointsSystemName(String pointsSystemName);
 
-    _FinalStage description(Optional<String> description);
-
-    _FinalStage description(String description);
-
+    /**
+     * <p>The end date of the leaderboard in YYYY-MM-DD format, or null if it runs forever.</p>
+     */
     _FinalStage end(Optional<String> end);
 
     _FinalStage end(String end);
 
-    _FinalStage runUnit(Optional<String> runUnit);
+    /**
+     * <p>The repetition type for recurring leaderboards, or null for one-time leaderboards.</p>
+     */
+    _FinalStage runUnit(Optional<LeaderboardResponseRunUnit> runUnit);
 
-    _FinalStage runUnit(String runUnit);
+    _FinalStage runUnit(LeaderboardResponseRunUnit runUnit);
   }
 
   @JsonIgnoreProperties(
       ignoreUnknown = true
   )
-  public static final class Builder implements IdStage, NameStage, KeyStage, RankByStage, StartStage, MaxParticipantsStage, RunIntervalStage, _FinalStage {
+  public static final class Builder implements IdStage, NameStage, KeyStage, RankByStage, DescriptionStage, StartStage, MaxParticipantsStage, RunIntervalStage, _FinalStage {
     private String id;
 
     private String name;
@@ -323,17 +348,17 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
 
     private LeaderboardResponseRankBy rankBy;
 
+    private String description;
+
     private String start;
 
     private int maxParticipants;
 
     private int runInterval;
 
-    private Optional<String> runUnit = Optional.empty();
+    private Optional<LeaderboardResponseRunUnit> runUnit = Optional.empty();
 
     private Optional<String> end = Optional.empty();
-
-    private Optional<String> description = Optional.empty();
 
     private Optional<String> pointsSystemName = Optional.empty();
 
@@ -342,8 +367,6 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
     private Optional<String> metricName = Optional.empty();
 
     private Optional<String> metricKey = Optional.empty();
-
-    private Optional<LeaderboardResponseStatus> status = Optional.empty();
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -356,7 +379,6 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
       id(other.getId());
       name(other.getName());
       key(other.getKey());
-      status(other.getStatus());
       rankBy(other.getRankBy());
       metricKey(other.getMetricKey());
       metricName(other.getMetricName());
@@ -373,6 +395,7 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
 
     /**
      * <p>The unique ID of the leaderboard.</p>
+     * <p>The unique ID of the leaderboard.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -383,6 +406,7 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
     }
 
     /**
+     * <p>The user-facing name of the leaderboard.</p>
      * <p>The user-facing name of the leaderboard.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
@@ -395,6 +419,7 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
 
     /**
      * <p>The unique key used to reference the leaderboard in APIs.</p>
+     * <p>The unique key used to reference the leaderboard in APIs.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -406,16 +431,30 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
 
     /**
      * <p>What the leaderboard ranks by.</p>
+     * <p>What the leaderboard ranks by.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
     @JsonSetter("rankBy")
-    public StartStage rankBy(@NotNull LeaderboardResponseRankBy rankBy) {
+    public DescriptionStage rankBy(@NotNull LeaderboardResponseRankBy rankBy) {
       this.rankBy = Objects.requireNonNull(rankBy, "rankBy must not be null");
       return this;
     }
 
     /**
+     * <p>The user-facing description of the leaderboard.</p>
+     * <p>The user-facing description of the leaderboard.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    @JsonSetter("description")
+    public StartStage description(@NotNull String description) {
+      this.description = Objects.requireNonNull(description, "description must not be null");
+      return this;
+    }
+
+    /**
+     * <p>The start date of the leaderboard in YYYY-MM-DD format.</p>
      * <p>The start date of the leaderboard in YYYY-MM-DD format.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
@@ -428,6 +467,7 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
 
     /**
      * <p>The maximum number of participants in the leaderboard.</p>
+     * <p>The maximum number of participants in the leaderboard.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -438,6 +478,7 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
     }
 
     /**
+     * <p>The interval between repetitions, relative to the start date and repetition type.</p>
      * <p>The interval between repetitions, relative to the start date and repetition type.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
@@ -453,17 +494,20 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage runUnit(String runUnit) {
+    public _FinalStage runUnit(LeaderboardResponseRunUnit runUnit) {
       this.runUnit = Optional.ofNullable(runUnit);
       return this;
     }
 
+    /**
+     * <p>The repetition type for recurring leaderboards, or null for one-time leaderboards.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "runUnit",
         nulls = Nulls.SKIP
     )
-    public _FinalStage runUnit(Optional<String> runUnit) {
+    public _FinalStage runUnit(Optional<LeaderboardResponseRunUnit> runUnit) {
       this.runUnit = runUnit;
       return this;
     }
@@ -478,6 +522,9 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
       return this;
     }
 
+    /**
+     * <p>The end date of the leaderboard in YYYY-MM-DD format, or null if it runs forever.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "end",
@@ -485,26 +532,6 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
     )
     public _FinalStage end(Optional<String> end) {
       this.end = end;
-      return this;
-    }
-
-    /**
-     * <p>The user-facing description of the leaderboard.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    public _FinalStage description(String description) {
-      this.description = Optional.ofNullable(description);
-      return this;
-    }
-
-    @java.lang.Override
-    @JsonSetter(
-        value = "description",
-        nulls = Nulls.SKIP
-    )
-    public _FinalStage description(Optional<String> description) {
-      this.description = description;
       return this;
     }
 
@@ -518,6 +545,9 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
       return this;
     }
 
+    /**
+     * <p>The name of the points system to rank by, if rankBy is 'points'.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "pointsSystemName",
@@ -538,6 +568,9 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
       return this;
     }
 
+    /**
+     * <p>The key of the points system to rank by, if rankBy is 'points'.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "pointsSystemKey",
@@ -558,6 +591,9 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
       return this;
     }
 
+    /**
+     * <p>The name of the metric to rank by, if rankBy is 'metric'.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "metricName",
@@ -578,6 +614,9 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
       return this;
     }
 
+    /**
+     * <p>The key of the metric to rank by, if rankBy is 'metric'.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "metricKey",
@@ -588,29 +627,9 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
       return this;
     }
 
-    /**
-     * <p>The status of the leaderboard.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    public _FinalStage status(LeaderboardResponseStatus status) {
-      this.status = Optional.ofNullable(status);
-      return this;
-    }
-
-    @java.lang.Override
-    @JsonSetter(
-        value = "status",
-        nulls = Nulls.SKIP
-    )
-    public _FinalStage status(Optional<LeaderboardResponseStatus> status) {
-      this.status = status;
-      return this;
-    }
-
     @java.lang.Override
     public LeaderboardResponse build() {
-      return new LeaderboardResponse(id, name, key, status, rankBy, metricKey, metricName, pointsSystemKey, pointsSystemName, description, start, end, maxParticipants, runUnit, runInterval, additionalProperties);
+      return new LeaderboardResponse(id, name, key, rankBy, metricKey, metricName, pointsSystemKey, pointsSystemName, description, start, end, maxParticipants, runUnit, runInterval, additionalProperties);
     }
   }
 }

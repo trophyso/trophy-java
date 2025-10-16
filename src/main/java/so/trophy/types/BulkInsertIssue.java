@@ -95,16 +95,25 @@ public final class BulkInsertIssue {
   }
 
   public interface UserIdStage {
+    /**
+     * <p>The ID of the user the issue relates to.</p>
+     */
     LevelStage userId(@NotNull String userId);
 
     Builder from(BulkInsertIssue other);
   }
 
   public interface LevelStage {
+    /**
+     * <p>The severity level of the issue.</p>
+     */
     ReasonStage level(@NotNull BulkInsertIssueLevel level);
   }
 
   public interface ReasonStage {
+    /**
+     * <p>A human-readable description of the issue.</p>
+     */
     _FinalStage reason(@NotNull String reason);
   }
 
@@ -138,6 +147,7 @@ public final class BulkInsertIssue {
 
     /**
      * <p>The ID of the user the issue relates to.</p>
+     * <p>The ID of the user the issue relates to.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -149,6 +159,7 @@ public final class BulkInsertIssue {
 
     /**
      * <p>The severity level of the issue.</p>
+     * <p>The severity level of the issue.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -159,6 +170,7 @@ public final class BulkInsertIssue {
     }
 
     /**
+     * <p>A human-readable description of the issue.</p>
      * <p>A human-readable description of the issue.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */

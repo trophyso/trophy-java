@@ -149,6 +149,9 @@ public final class LeaderboardEvent {
       return this;
     }
 
+    /**
+     * <p>The timestamp when the event occurred.</p>
+     */
     @JsonSetter(
         value = "timestamp",
         nulls = Nulls.SKIP
@@ -163,6 +166,9 @@ public final class LeaderboardEvent {
       return this;
     }
 
+    /**
+     * <p>The user's rank before this event, or null if they were not on the leaderboard.</p>
+     */
     @JsonSetter(
         value = "previousRank",
         nulls = Nulls.SKIP
@@ -177,6 +183,9 @@ public final class LeaderboardEvent {
       return this;
     }
 
+    /**
+     * <p>The user's rank after this event, or null if they are no longer on the leaderboard.</p>
+     */
     @JsonSetter(
         value = "rank",
         nulls = Nulls.SKIP
@@ -191,6 +200,9 @@ public final class LeaderboardEvent {
       return this;
     }
 
+    /**
+     * <p>The user's value before this event, or null if they were not on the leaderboard.</p>
+     */
     @JsonSetter(
         value = "previousValue",
         nulls = Nulls.SKIP
@@ -205,6 +217,9 @@ public final class LeaderboardEvent {
       return this;
     }
 
+    /**
+     * <p>The user's value after this event, or null if they are no longer on the leaderboard.</p>
+     */
     @JsonSetter(
         value = "value",
         nulls = Nulls.SKIP

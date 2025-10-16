@@ -8,16 +8,14 @@ package so.trophy.types;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.lang.String;
 
-public enum LeaderboardResponseStatus {
-  ACTIVE("active"),
+public enum PointsTriggerResponseTimeUnit {
+  HOUR("hour"),
 
-  SCHEDULED("scheduled"),
-
-  FINISHED("finished");
+  DAY("day");
 
   private final String value;
 
-  LeaderboardResponseStatus(String value) {
+  PointsTriggerResponseTimeUnit(String value) {
     this.value = value;
   }
 

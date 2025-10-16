@@ -91,6 +91,9 @@ public final class UsersStreakRequest {
       return this;
     }
 
+    /**
+     * <p>The number of past streak periods to include in the streakHistory field of the  response.</p>
+     */
     @JsonSetter(
         value = "historyPeriods",
         nulls = Nulls.SKIP

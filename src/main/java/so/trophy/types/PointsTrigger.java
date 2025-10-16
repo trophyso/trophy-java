@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import so.trophy.core.ObjectMappers;
-import java.lang.Double;
+import java.lang.Integer;
 import java.lang.Object;
 import java.lang.String;
 import java.util.HashMap;
@@ -31,21 +31,26 @@ public final class PointsTrigger {
 
   private final Optional<PointsTriggerType> type;
 
-  private final Optional<Double> points;
+  private final Optional<Integer> points;
 
   private final Optional<String> metricName;
 
-  private final Optional<Double> metricThreshold;
+  private final Optional<Integer> metricThreshold;
 
-  private final Optional<Double> streakLengthThreshold;
+  private final Optional<Integer> streakLengthThreshold;
 
   private final Optional<String> achievementName;
+
+  private final Optional<PointsTriggerTimeUnit> timeUnit;
+
+  private final Optional<Integer> timeInterval;
 
   private final Map<String, Object> additionalProperties;
 
   private PointsTrigger(Optional<String> id, Optional<PointsTriggerType> type,
-      Optional<Double> points, Optional<String> metricName, Optional<Double> metricThreshold,
-      Optional<Double> streakLengthThreshold, Optional<String> achievementName,
+      Optional<Integer> points, Optional<String> metricName, Optional<Integer> metricThreshold,
+      Optional<Integer> streakLengthThreshold, Optional<String> achievementName,
+      Optional<PointsTriggerTimeUnit> timeUnit, Optional<Integer> timeInterval,
       Map<String, Object> additionalProperties) {
     this.id = id;
     this.type = type;
@@ -54,6 +59,8 @@ public final class PointsTrigger {
     this.metricThreshold = metricThreshold;
     this.streakLengthThreshold = streakLengthThreshold;
     this.achievementName = achievementName;
+    this.timeUnit = timeUnit;
+    this.timeInterval = timeInterval;
     this.additionalProperties = additionalProperties;
   }
 
@@ -77,7 +84,7 @@ public final class PointsTrigger {
    * @return The points awarded by this trigger.
    */
   @JsonProperty("points")
-  public Optional<Double> getPoints() {
+  public Optional<Integer> getPoints() {
     return points;
   }
 
@@ -93,7 +100,7 @@ public final class PointsTrigger {
    * @return If the trigger has type 'metric', the threshold of the metric that triggers the points
    */
   @JsonProperty("metricThreshold")
-  public Optional<Double> getMetricThreshold() {
+  public Optional<Integer> getMetricThreshold() {
     return metricThreshold;
   }
 
@@ -101,7 +108,7 @@ public final class PointsTrigger {
    * @return If the trigger has type 'streak', the threshold of the streak that triggers the points
    */
   @JsonProperty("streakLengthThreshold")
-  public Optional<Double> getStreakLengthThreshold() {
+  public Optional<Integer> getStreakLengthThreshold() {
     return streakLengthThreshold;
   }
 
@@ -111,6 +118,22 @@ public final class PointsTrigger {
   @JsonProperty("achievementName")
   public Optional<String> getAchievementName() {
     return achievementName;
+  }
+
+  /**
+   * @return If the trigger has type 'time', the unit of time after which to award points
+   */
+  @JsonProperty("timeUnit")
+  public Optional<PointsTriggerTimeUnit> getTimeUnit() {
+    return timeUnit;
+  }
+
+  /**
+   * @return If the trigger has type 'time', the numer of units of timeUnit after which to award points
+   */
+  @JsonProperty("timeInterval")
+  public Optional<Integer> getTimeInterval() {
+    return timeInterval;
   }
 
   @java.lang.Override
@@ -125,12 +148,12 @@ public final class PointsTrigger {
   }
 
   private boolean equalTo(PointsTrigger other) {
-    return id.equals(other.id) && type.equals(other.type) && points.equals(other.points) && metricName.equals(other.metricName) && metricThreshold.equals(other.metricThreshold) && streakLengthThreshold.equals(other.streakLengthThreshold) && achievementName.equals(other.achievementName);
+    return id.equals(other.id) && type.equals(other.type) && points.equals(other.points) && metricName.equals(other.metricName) && metricThreshold.equals(other.metricThreshold) && streakLengthThreshold.equals(other.streakLengthThreshold) && achievementName.equals(other.achievementName) && timeUnit.equals(other.timeUnit) && timeInterval.equals(other.timeInterval);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.type, this.points, this.metricName, this.metricThreshold, this.streakLengthThreshold, this.achievementName);
+    return Objects.hash(this.id, this.type, this.points, this.metricName, this.metricThreshold, this.streakLengthThreshold, this.achievementName, this.timeUnit, this.timeInterval);
   }
 
   @java.lang.Override
@@ -150,15 +173,19 @@ public final class PointsTrigger {
 
     private Optional<PointsTriggerType> type = Optional.empty();
 
-    private Optional<Double> points = Optional.empty();
+    private Optional<Integer> points = Optional.empty();
 
     private Optional<String> metricName = Optional.empty();
 
-    private Optional<Double> metricThreshold = Optional.empty();
+    private Optional<Integer> metricThreshold = Optional.empty();
 
-    private Optional<Double> streakLengthThreshold = Optional.empty();
+    private Optional<Integer> streakLengthThreshold = Optional.empty();
 
     private Optional<String> achievementName = Optional.empty();
+
+    private Optional<PointsTriggerTimeUnit> timeUnit = Optional.empty();
+
+    private Optional<Integer> timeInterval = Optional.empty();
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -174,9 +201,14 @@ public final class PointsTrigger {
       metricThreshold(other.getMetricThreshold());
       streakLengthThreshold(other.getStreakLengthThreshold());
       achievementName(other.getAchievementName());
+      timeUnit(other.getTimeUnit());
+      timeInterval(other.getTimeInterval());
       return this;
     }
 
+    /**
+     * <p>The ID of the trigger</p>
+     */
     @JsonSetter(
         value = "id",
         nulls = Nulls.SKIP
@@ -191,6 +223,9 @@ public final class PointsTrigger {
       return this;
     }
 
+    /**
+     * <p>The type of trigger</p>
+     */
     @JsonSetter(
         value = "type",
         nulls = Nulls.SKIP
@@ -205,20 +240,26 @@ public final class PointsTrigger {
       return this;
     }
 
+    /**
+     * <p>The points awarded by this trigger.</p>
+     */
     @JsonSetter(
         value = "points",
         nulls = Nulls.SKIP
     )
-    public Builder points(Optional<Double> points) {
+    public Builder points(Optional<Integer> points) {
       this.points = points;
       return this;
     }
 
-    public Builder points(Double points) {
+    public Builder points(Integer points) {
       this.points = Optional.ofNullable(points);
       return this;
     }
 
+    /**
+     * <p>If the trigger has type 'metric', the name of the metric</p>
+     */
     @JsonSetter(
         value = "metricName",
         nulls = Nulls.SKIP
@@ -233,34 +274,43 @@ public final class PointsTrigger {
       return this;
     }
 
+    /**
+     * <p>If the trigger has type 'metric', the threshold of the metric that triggers the points</p>
+     */
     @JsonSetter(
         value = "metricThreshold",
         nulls = Nulls.SKIP
     )
-    public Builder metricThreshold(Optional<Double> metricThreshold) {
+    public Builder metricThreshold(Optional<Integer> metricThreshold) {
       this.metricThreshold = metricThreshold;
       return this;
     }
 
-    public Builder metricThreshold(Double metricThreshold) {
+    public Builder metricThreshold(Integer metricThreshold) {
       this.metricThreshold = Optional.ofNullable(metricThreshold);
       return this;
     }
 
+    /**
+     * <p>If the trigger has type 'streak', the threshold of the streak that triggers the points</p>
+     */
     @JsonSetter(
         value = "streakLengthThreshold",
         nulls = Nulls.SKIP
     )
-    public Builder streakLengthThreshold(Optional<Double> streakLengthThreshold) {
+    public Builder streakLengthThreshold(Optional<Integer> streakLengthThreshold) {
       this.streakLengthThreshold = streakLengthThreshold;
       return this;
     }
 
-    public Builder streakLengthThreshold(Double streakLengthThreshold) {
+    public Builder streakLengthThreshold(Integer streakLengthThreshold) {
       this.streakLengthThreshold = Optional.ofNullable(streakLengthThreshold);
       return this;
     }
 
+    /**
+     * <p>If the trigger has type 'achievement', the name of the achievement</p>
+     */
     @JsonSetter(
         value = "achievementName",
         nulls = Nulls.SKIP
@@ -275,8 +325,42 @@ public final class PointsTrigger {
       return this;
     }
 
+    /**
+     * <p>If the trigger has type 'time', the unit of time after which to award points</p>
+     */
+    @JsonSetter(
+        value = "timeUnit",
+        nulls = Nulls.SKIP
+    )
+    public Builder timeUnit(Optional<PointsTriggerTimeUnit> timeUnit) {
+      this.timeUnit = timeUnit;
+      return this;
+    }
+
+    public Builder timeUnit(PointsTriggerTimeUnit timeUnit) {
+      this.timeUnit = Optional.ofNullable(timeUnit);
+      return this;
+    }
+
+    /**
+     * <p>If the trigger has type 'time', the numer of units of timeUnit after which to award points</p>
+     */
+    @JsonSetter(
+        value = "timeInterval",
+        nulls = Nulls.SKIP
+    )
+    public Builder timeInterval(Optional<Integer> timeInterval) {
+      this.timeInterval = timeInterval;
+      return this;
+    }
+
+    public Builder timeInterval(Integer timeInterval) {
+      this.timeInterval = Optional.ofNullable(timeInterval);
+      return this;
+    }
+
     public PointsTrigger build() {
-      return new PointsTrigger(id, type, points, metricName, metricThreshold, streakLengthThreshold, achievementName, additionalProperties);
+      return new PointsTrigger(id, type, points, metricName, metricThreshold, streakLengthThreshold, achievementName, timeUnit, timeInterval, additionalProperties);
     }
   }
 }

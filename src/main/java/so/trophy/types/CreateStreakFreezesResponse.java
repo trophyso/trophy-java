@@ -91,6 +91,9 @@ public final class CreateStreakFreezesResponse {
       return this;
     }
 
+    /**
+     * <p>Array of issues encountered during freeze creation.</p>
+     */
     @JsonSetter(
         value = "issues",
         nulls = Nulls.SKIP
@@ -107,7 +110,9 @@ public final class CreateStreakFreezesResponse {
     }
 
     public Builder addAllIssues(List<BulkInsertIssue> issues) {
-      this.issues.addAll(issues);
+      if (issues != null) {
+        this.issues.addAll(issues);
+      }
       return this;
     }
 

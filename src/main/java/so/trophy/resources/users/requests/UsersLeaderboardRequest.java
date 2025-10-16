@@ -89,6 +89,9 @@ public final class UsersLeaderboardRequest {
       return this;
     }
 
+    /**
+     * <p>Specific run date in YYYY-MM-DD format. If not provided, returns the current run.</p>
+     */
     @JsonSetter(
         value = "run",
         nulls = Nulls.SKIP

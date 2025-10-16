@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import so.trophy.core.ObjectMappers;
-import java.lang.Double;
+import java.lang.Integer;
 import java.lang.Object;
 import java.lang.String;
 import java.util.HashMap;
@@ -29,18 +29,18 @@ import java.util.Optional;
 public final class PointsAward {
   private final Optional<String> id;
 
-  private final Optional<Double> awarded;
+  private final Optional<Integer> awarded;
 
   private final Optional<String> date;
 
-  private final Optional<Double> total;
+  private final Optional<Integer> total;
 
   private final Optional<PointsTrigger> trigger;
 
   private final Map<String, Object> additionalProperties;
 
-  private PointsAward(Optional<String> id, Optional<Double> awarded, Optional<String> date,
-      Optional<Double> total, Optional<PointsTrigger> trigger,
+  private PointsAward(Optional<String> id, Optional<Integer> awarded, Optional<String> date,
+      Optional<Integer> total, Optional<PointsTrigger> trigger,
       Map<String, Object> additionalProperties) {
     this.id = id;
     this.awarded = awarded;
@@ -62,7 +62,7 @@ public final class PointsAward {
    * @return The points awarded by this trigger
    */
   @JsonProperty("awarded")
-  public Optional<Double> getAwarded() {
+  public Optional<Integer> getAwarded() {
     return awarded;
   }
 
@@ -78,7 +78,7 @@ public final class PointsAward {
    * @return The user's total points after this award occurred.
    */
   @JsonProperty("total")
-  public Optional<Double> getTotal() {
+  public Optional<Integer> getTotal() {
     return total;
   }
 
@@ -122,11 +122,11 @@ public final class PointsAward {
   public static final class Builder {
     private Optional<String> id = Optional.empty();
 
-    private Optional<Double> awarded = Optional.empty();
+    private Optional<Integer> awarded = Optional.empty();
 
     private Optional<String> date = Optional.empty();
 
-    private Optional<Double> total = Optional.empty();
+    private Optional<Integer> total = Optional.empty();
 
     private Optional<PointsTrigger> trigger = Optional.empty();
 
@@ -145,6 +145,9 @@ public final class PointsAward {
       return this;
     }
 
+    /**
+     * <p>The ID of the trigger award</p>
+     */
     @JsonSetter(
         value = "id",
         nulls = Nulls.SKIP
@@ -159,20 +162,26 @@ public final class PointsAward {
       return this;
     }
 
+    /**
+     * <p>The points awarded by this trigger</p>
+     */
     @JsonSetter(
         value = "awarded",
         nulls = Nulls.SKIP
     )
-    public Builder awarded(Optional<Double> awarded) {
+    public Builder awarded(Optional<Integer> awarded) {
       this.awarded = awarded;
       return this;
     }
 
-    public Builder awarded(Double awarded) {
+    public Builder awarded(Integer awarded) {
       this.awarded = Optional.ofNullable(awarded);
       return this;
     }
 
+    /**
+     * <p>The date these points were awarded, in ISO 8601 format.</p>
+     */
     @JsonSetter(
         value = "date",
         nulls = Nulls.SKIP
@@ -187,16 +196,19 @@ public final class PointsAward {
       return this;
     }
 
+    /**
+     * <p>The user's total points after this award occurred.</p>
+     */
     @JsonSetter(
         value = "total",
         nulls = Nulls.SKIP
     )
-    public Builder total(Optional<Double> total) {
+    public Builder total(Optional<Integer> total) {
       this.total = total;
       return this;
     }
 
-    public Builder total(Double total) {
+    public Builder total(Integer total) {
       this.total = Optional.ofNullable(total);
       return this;
     }

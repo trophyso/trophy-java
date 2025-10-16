@@ -109,22 +109,34 @@ public final class MetricsEventRequest {
   }
 
   public interface UserStage {
+    /**
+     * <p>The user that triggered the event.</p>
+     */
     ValueStage user(@NotNull UpsertedUser user);
 
     Builder from(MetricsEventRequest other);
   }
 
   public interface ValueStage {
+    /**
+     * <p>The value to add to the user's current total for the given metric.</p>
+     */
     _FinalStage value(double value);
   }
 
   public interface _FinalStage {
     MetricsEventRequest build();
 
+    /**
+     * <p>The idempotency key for the event.</p>
+     */
     _FinalStage idempotencyKey(Optional<String> idempotencyKey);
 
     _FinalStage idempotencyKey(String idempotencyKey);
 
+    /**
+     * <p>Event attributes as key-value pairs. Keys must match existing event attributes set up in the Trophy dashboard.</p>
+     */
     _FinalStage attributes(Optional<Map<String, String>> attributes);
 
     _FinalStage attributes(Map<String, String> attributes);
@@ -159,6 +171,7 @@ public final class MetricsEventRequest {
 
     /**
      * <p>The user that triggered the event.</p>
+     * <p>The user that triggered the event.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -169,6 +182,7 @@ public final class MetricsEventRequest {
     }
 
     /**
+     * <p>The value to add to the user's current total for the given metric.</p>
      * <p>The value to add to the user's current total for the given metric.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
@@ -189,6 +203,9 @@ public final class MetricsEventRequest {
       return this;
     }
 
+    /**
+     * <p>Event attributes as key-value pairs. Keys must match existing event attributes set up in the Trophy dashboard.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "attributes",
@@ -209,6 +226,9 @@ public final class MetricsEventRequest {
       return this;
     }
 
+    /**
+     * <p>The idempotency key for the event.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "Idempotency-Key",

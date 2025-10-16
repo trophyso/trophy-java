@@ -21,7 +21,7 @@ public interface IAchievementResponse {
 
   Optional<String> getBadgeUrl();
 
-  Optional<String> getKey();
+  String getKey();
 
   Optional<Integer> getStreakLength();
 
@@ -30,6 +30,4 @@ public interface IAchievementResponse {
   Optional<Double> getMetricValue();
 
   Optional<String> getMetricName();
-
-  Optional<MetricEventStreakResponse> getCurrentStreak();
 }

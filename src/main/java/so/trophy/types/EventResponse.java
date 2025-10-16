@@ -17,7 +17,9 @@ import so.trophy.core.ObjectMappers;
 import java.lang.Boolean;
 import java.lang.Object;
 import java.lang.String;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -35,13 +37,13 @@ public final class EventResponse {
 
   private final double total;
 
-  private final Optional<List<CompletedAchievementResponse>> achievements;
+  private final List<CompletedAchievementResponse> achievements;
 
-  private final Optional<MetricEventStreakResponse> currentStreak;
+  private final MetricEventStreakResponse currentStreak;
 
-  private final Optional<Map<String, MetricEventPointsResponse>> points;
+  private final Map<String, MetricEventPointsResponse> points;
 
-  private final Optional<Map<String, MetricEventLeaderboardResponse>> leaderboards;
+  private final Map<String, MetricEventLeaderboardResponse> leaderboards;
 
   private final Optional<String> idempotencyKey;
 
@@ -50,12 +52,10 @@ public final class EventResponse {
   private final Map<String, Object> additionalProperties;
 
   private EventResponse(String eventId, String metricId, double total,
-      Optional<List<CompletedAchievementResponse>> achievements,
-      Optional<MetricEventStreakResponse> currentStreak,
-      Optional<Map<String, MetricEventPointsResponse>> points,
-      Optional<Map<String, MetricEventLeaderboardResponse>> leaderboards,
-      Optional<String> idempotencyKey, Optional<Boolean> idempotentReplayed,
-      Map<String, Object> additionalProperties) {
+      List<CompletedAchievementResponse> achievements, MetricEventStreakResponse currentStreak,
+      Map<String, MetricEventPointsResponse> points,
+      Map<String, MetricEventLeaderboardResponse> leaderboards, Optional<String> idempotencyKey,
+      Optional<Boolean> idempotentReplayed, Map<String, Object> additionalProperties) {
     this.eventId = eventId;
     this.metricId = metricId;
     this.total = total;
@@ -96,7 +96,7 @@ public final class EventResponse {
    * @return Achievements completed as a result of this event.
    */
   @JsonProperty("achievements")
-  public Optional<List<CompletedAchievementResponse>> getAchievements() {
+  public List<CompletedAchievementResponse> getAchievements() {
     return achievements;
   }
 
@@ -104,7 +104,7 @@ public final class EventResponse {
    * @return The user's current streak.
    */
   @JsonProperty("currentStreak")
-  public Optional<MetricEventStreakResponse> getCurrentStreak() {
+  public MetricEventStreakResponse getCurrentStreak() {
     return currentStreak;
   }
 
@@ -112,7 +112,7 @@ public final class EventResponse {
    * @return A map of points systems by key.
    */
   @JsonProperty("points")
-  public Optional<Map<String, MetricEventPointsResponse>> getPoints() {
+  public Map<String, MetricEventPointsResponse> getPoints() {
     return points;
   }
 
@@ -120,7 +120,7 @@ public final class EventResponse {
    * @return A map of leaderboards by key.
    */
   @JsonProperty("leaderboards")
-  public Optional<Map<String, MetricEventLeaderboardResponse>> getLeaderboards() {
+  public Map<String, MetricEventLeaderboardResponse> getLeaderboards() {
     return leaderboards;
   }
 
@@ -170,42 +170,75 @@ public final class EventResponse {
   }
 
   public interface EventIdStage {
+    /**
+     * <p>The unique ID of the event.</p>
+     */
     MetricIdStage eventId(@NotNull String eventId);
 
     Builder from(EventResponse other);
   }
 
   public interface MetricIdStage {
+    /**
+     * <p>The unique ID of the metric that was updated.</p>
+     */
     TotalStage metricId(@NotNull String metricId);
   }
 
   public interface TotalStage {
-    _FinalStage total(double total);
+    /**
+     * <p>The user's new total progress against the metric.</p>
+     */
+    CurrentStreakStage total(double total);
+  }
+
+  public interface CurrentStreakStage {
+    /**
+     * <p>The user's current streak.</p>
+     */
+    _FinalStage currentStreak(@NotNull MetricEventStreakResponse currentStreak);
   }
 
   public interface _FinalStage {
     EventResponse build();
 
-    _FinalStage achievements(Optional<List<CompletedAchievementResponse>> achievements);
-
+    /**
+     * <p>Achievements completed as a result of this event.</p>
+     */
     _FinalStage achievements(List<CompletedAchievementResponse> achievements);
 
-    _FinalStage currentStreak(Optional<MetricEventStreakResponse> currentStreak);
+    _FinalStage addAchievements(CompletedAchievementResponse achievements);
 
-    _FinalStage currentStreak(MetricEventStreakResponse currentStreak);
+    _FinalStage addAllAchievements(List<CompletedAchievementResponse> achievements);
 
-    _FinalStage points(Optional<Map<String, MetricEventPointsResponse>> points);
-
+    /**
+     * <p>A map of points systems by key.</p>
+     */
     _FinalStage points(Map<String, MetricEventPointsResponse> points);
 
-    _FinalStage leaderboards(Optional<Map<String, MetricEventLeaderboardResponse>> leaderboards);
+    _FinalStage putAllPoints(Map<String, MetricEventPointsResponse> points);
 
+    _FinalStage points(String key, MetricEventPointsResponse value);
+
+    /**
+     * <p>A map of leaderboards by key.</p>
+     */
     _FinalStage leaderboards(Map<String, MetricEventLeaderboardResponse> leaderboards);
 
+    _FinalStage putAllLeaderboards(Map<String, MetricEventLeaderboardResponse> leaderboards);
+
+    _FinalStage leaderboards(String key, MetricEventLeaderboardResponse value);
+
+    /**
+     * <p>The idempotency key used for the event, if one was provided.</p>
+     */
     _FinalStage idempotencyKey(Optional<String> idempotencyKey);
 
     _FinalStage idempotencyKey(String idempotencyKey);
 
+    /**
+     * <p>Whether the event was replayed due to idempotency.</p>
+     */
     _FinalStage idempotentReplayed(Optional<Boolean> idempotentReplayed);
 
     _FinalStage idempotentReplayed(Boolean idempotentReplayed);
@@ -214,24 +247,24 @@ public final class EventResponse {
   @JsonIgnoreProperties(
       ignoreUnknown = true
   )
-  public static final class Builder implements EventIdStage, MetricIdStage, TotalStage, _FinalStage {
+  public static final class Builder implements EventIdStage, MetricIdStage, TotalStage, CurrentStreakStage, _FinalStage {
     private String eventId;
 
     private String metricId;
 
     private double total;
 
+    private MetricEventStreakResponse currentStreak;
+
     private Optional<Boolean> idempotentReplayed = Optional.empty();
 
     private Optional<String> idempotencyKey = Optional.empty();
 
-    private Optional<Map<String, MetricEventLeaderboardResponse>> leaderboards = Optional.empty();
+    private Map<String, MetricEventLeaderboardResponse> leaderboards = new LinkedHashMap<>();
 
-    private Optional<Map<String, MetricEventPointsResponse>> points = Optional.empty();
+    private Map<String, MetricEventPointsResponse> points = new LinkedHashMap<>();
 
-    private Optional<MetricEventStreakResponse> currentStreak = Optional.empty();
-
-    private Optional<List<CompletedAchievementResponse>> achievements = Optional.empty();
+    private List<CompletedAchievementResponse> achievements = new ArrayList<>();
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -255,6 +288,7 @@ public final class EventResponse {
 
     /**
      * <p>The unique ID of the event.</p>
+     * <p>The unique ID of the event.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -265,6 +299,7 @@ public final class EventResponse {
     }
 
     /**
+     * <p>The unique ID of the metric that was updated.</p>
      * <p>The unique ID of the metric that was updated.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
@@ -277,12 +312,25 @@ public final class EventResponse {
 
     /**
      * <p>The user's new total progress against the metric.</p>
+     * <p>The user's new total progress against the metric.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
     @JsonSetter("total")
-    public _FinalStage total(double total) {
+    public CurrentStreakStage total(double total) {
       this.total = total;
+      return this;
+    }
+
+    /**
+     * <p>The user's current streak.</p>
+     * <p>The user's current streak.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    @JsonSetter("currentStreak")
+    public _FinalStage currentStreak(@NotNull MetricEventStreakResponse currentStreak) {
+      this.currentStreak = Objects.requireNonNull(currentStreak, "currentStreak must not be null");
       return this;
     }
 
@@ -296,6 +344,9 @@ public final class EventResponse {
       return this;
     }
 
+    /**
+     * <p>Whether the event was replayed due to idempotency.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "idempotentReplayed",
@@ -316,6 +367,9 @@ public final class EventResponse {
       return this;
     }
 
+    /**
+     * <p>The idempotency key used for the event, if one was provided.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "idempotencyKey",
@@ -331,19 +385,35 @@ public final class EventResponse {
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage leaderboards(Map<String, MetricEventLeaderboardResponse> leaderboards) {
-      this.leaderboards = Optional.ofNullable(leaderboards);
+    public _FinalStage leaderboards(String key, MetricEventLeaderboardResponse value) {
+      this.leaderboards.put(key, value);
       return this;
     }
 
+    /**
+     * <p>A map of leaderboards by key.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage putAllLeaderboards(
+        Map<String, MetricEventLeaderboardResponse> leaderboards) {
+      if (leaderboards != null) {
+        this.leaderboards.putAll(leaderboards);
+      }
+      return this;
+    }
+
+    /**
+     * <p>A map of leaderboards by key.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "leaderboards",
         nulls = Nulls.SKIP
     )
-    public _FinalStage leaderboards(
-        Optional<Map<String, MetricEventLeaderboardResponse>> leaderboards) {
-      this.leaderboards = leaderboards;
+    public _FinalStage leaderboards(Map<String, MetricEventLeaderboardResponse> leaderboards) {
+      this.leaderboards.clear();
+      this.leaderboards.putAll(leaderboards);
       return this;
     }
 
@@ -352,38 +422,34 @@ public final class EventResponse {
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage points(Map<String, MetricEventPointsResponse> points) {
-      this.points = Optional.ofNullable(points);
+    public _FinalStage points(String key, MetricEventPointsResponse value) {
+      this.points.put(key, value);
       return this;
     }
 
+    /**
+     * <p>A map of points systems by key.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage putAllPoints(Map<String, MetricEventPointsResponse> points) {
+      if (points != null) {
+        this.points.putAll(points);
+      }
+      return this;
+    }
+
+    /**
+     * <p>A map of points systems by key.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "points",
         nulls = Nulls.SKIP
     )
-    public _FinalStage points(Optional<Map<String, MetricEventPointsResponse>> points) {
-      this.points = points;
-      return this;
-    }
-
-    /**
-     * <p>The user's current streak.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    public _FinalStage currentStreak(MetricEventStreakResponse currentStreak) {
-      this.currentStreak = Optional.ofNullable(currentStreak);
-      return this;
-    }
-
-    @java.lang.Override
-    @JsonSetter(
-        value = "currentStreak",
-        nulls = Nulls.SKIP
-    )
-    public _FinalStage currentStreak(Optional<MetricEventStreakResponse> currentStreak) {
-      this.currentStreak = currentStreak;
+    public _FinalStage points(Map<String, MetricEventPointsResponse> points) {
+      this.points.clear();
+      this.points.putAll(points);
       return this;
     }
 
@@ -392,18 +458,34 @@ public final class EventResponse {
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage achievements(List<CompletedAchievementResponse> achievements) {
-      this.achievements = Optional.ofNullable(achievements);
+    public _FinalStage addAllAchievements(List<CompletedAchievementResponse> achievements) {
+      if (achievements != null) {
+        this.achievements.addAll(achievements);
+      }
       return this;
     }
 
+    /**
+     * <p>Achievements completed as a result of this event.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage addAchievements(CompletedAchievementResponse achievements) {
+      this.achievements.add(achievements);
+      return this;
+    }
+
+    /**
+     * <p>Achievements completed as a result of this event.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "achievements",
         nulls = Nulls.SKIP
     )
-    public _FinalStage achievements(Optional<List<CompletedAchievementResponse>> achievements) {
-      this.achievements = achievements;
+    public _FinalStage achievements(List<CompletedAchievementResponse> achievements) {
+      this.achievements.clear();
+      this.achievements.addAll(achievements);
       return this;
     }
 

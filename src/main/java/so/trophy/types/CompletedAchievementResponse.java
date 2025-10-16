@@ -29,7 +29,9 @@ import org.jetbrains.annotations.NotNull;
 @JsonDeserialize(
     builder = CompletedAchievementResponse.Builder.class
 )
-public final class CompletedAchievementResponse implements IAchievementResponse {
+public final class CompletedAchievementResponse implements ICompletedAchievementResponse, IAchievementResponse {
+  private final OffsetDateTime achievedAt;
+
   private final String id;
 
   private final String name;
@@ -40,7 +42,7 @@ public final class CompletedAchievementResponse implements IAchievementResponse 
 
   private final Optional<String> badgeUrl;
 
-  private final Optional<String> key;
+  private final String key;
 
   private final Optional<Integer> streakLength;
 
@@ -50,17 +52,14 @@ public final class CompletedAchievementResponse implements IAchievementResponse 
 
   private final Optional<String> metricName;
 
-  private final Optional<MetricEventStreakResponse> currentStreak;
-
-  private final Optional<OffsetDateTime> achievedAt;
-
   private final Map<String, Object> additionalProperties;
 
-  private CompletedAchievementResponse(String id, String name, AchievementResponseTrigger trigger,
-      Optional<String> description, Optional<String> badgeUrl, Optional<String> key,
-      Optional<Integer> streakLength, Optional<String> metricId, Optional<Double> metricValue,
-      Optional<String> metricName, Optional<MetricEventStreakResponse> currentStreak,
-      Optional<OffsetDateTime> achievedAt, Map<String, Object> additionalProperties) {
+  private CompletedAchievementResponse(OffsetDateTime achievedAt, String id, String name,
+      AchievementResponseTrigger trigger, Optional<String> description, Optional<String> badgeUrl,
+      String key, Optional<Integer> streakLength, Optional<String> metricId,
+      Optional<Double> metricValue, Optional<String> metricName,
+      Map<String, Object> additionalProperties) {
+    this.achievedAt = achievedAt;
     this.id = id;
     this.name = name;
     this.trigger = trigger;
@@ -71,9 +70,16 @@ public final class CompletedAchievementResponse implements IAchievementResponse 
     this.metricId = metricId;
     this.metricValue = metricValue;
     this.metricName = metricName;
-    this.currentStreak = currentStreak;
-    this.achievedAt = achievedAt;
     this.additionalProperties = additionalProperties;
+  }
+
+  /**
+   * @return The date and time the achievement was completed, in ISO 8601 format.
+   */
+  @JsonProperty("achievedAt")
+  @java.lang.Override
+  public OffsetDateTime getAchievedAt() {
+    return achievedAt;
   }
 
   /**
@@ -125,7 +131,7 @@ public final class CompletedAchievementResponse implements IAchievementResponse 
    */
   @JsonProperty("key")
   @java.lang.Override
-  public Optional<String> getKey() {
+  public String getKey() {
     return key;
   }
 
@@ -165,23 +171,6 @@ public final class CompletedAchievementResponse implements IAchievementResponse 
     return metricName;
   }
 
-  /**
-   * @return The user's current streak for the metric, if the metric has streaks enabled.
-   */
-  @JsonProperty("currentStreak")
-  @java.lang.Override
-  public Optional<MetricEventStreakResponse> getCurrentStreak() {
-    return currentStreak;
-  }
-
-  /**
-   * @return The date and time the achievement was completed, in ISO 8601 format.
-   */
-  @JsonProperty("achievedAt")
-  public Optional<OffsetDateTime> getAchievedAt() {
-    return achievedAt;
-  }
-
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
@@ -194,12 +183,12 @@ public final class CompletedAchievementResponse implements IAchievementResponse 
   }
 
   private boolean equalTo(CompletedAchievementResponse other) {
-    return id.equals(other.id) && name.equals(other.name) && trigger.equals(other.trigger) && description.equals(other.description) && badgeUrl.equals(other.badgeUrl) && key.equals(other.key) && streakLength.equals(other.streakLength) && metricId.equals(other.metricId) && metricValue.equals(other.metricValue) && metricName.equals(other.metricName) && currentStreak.equals(other.currentStreak) && achievedAt.equals(other.achievedAt);
+    return achievedAt.equals(other.achievedAt) && id.equals(other.id) && name.equals(other.name) && trigger.equals(other.trigger) && description.equals(other.description) && badgeUrl.equals(other.badgeUrl) && key.equals(other.key) && streakLength.equals(other.streakLength) && metricId.equals(other.metricId) && metricValue.equals(other.metricValue) && metricName.equals(other.metricName);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.name, this.trigger, this.description, this.badgeUrl, this.key, this.streakLength, this.metricId, this.metricValue, this.metricName, this.currentStreak, this.achievedAt);
+    return Objects.hash(this.achievedAt, this.id, this.name, this.trigger, this.description, this.badgeUrl, this.key, this.streakLength, this.metricId, this.metricValue, this.metricName);
   }
 
   @java.lang.Override
@@ -207,77 +196,106 @@ public final class CompletedAchievementResponse implements IAchievementResponse 
     return ObjectMappers.stringify(this);
   }
 
-  public static IdStage builder() {
+  public static AchievedAtStage builder() {
     return new Builder();
   }
 
-  public interface IdStage {
-    NameStage id(@NotNull String id);
+  public interface AchievedAtStage {
+    /**
+     * <p>The date and time the achievement was completed, in ISO 8601 format.</p>
+     */
+    IdStage achievedAt(@NotNull OffsetDateTime achievedAt);
 
     Builder from(CompletedAchievementResponse other);
   }
 
+  public interface IdStage {
+    /**
+     * <p>The unique ID of the achievement.</p>
+     */
+    NameStage id(@NotNull String id);
+  }
+
   public interface NameStage {
+    /**
+     * <p>The name of this achievement.</p>
+     */
     TriggerStage name(@NotNull String name);
   }
 
   public interface TriggerStage {
-    _FinalStage trigger(@NotNull AchievementResponseTrigger trigger);
+    /**
+     * <p>The trigger of the achievement.</p>
+     */
+    KeyStage trigger(@NotNull AchievementResponseTrigger trigger);
+  }
+
+  public interface KeyStage {
+    /**
+     * <p>The key used to reference this achievement in the API (only applicable if trigger = 'api')</p>
+     */
+    _FinalStage key(@NotNull String key);
   }
 
   public interface _FinalStage {
     CompletedAchievementResponse build();
 
+    /**
+     * <p>The description of this achievement.</p>
+     */
     _FinalStage description(Optional<String> description);
 
     _FinalStage description(String description);
 
+    /**
+     * <p>The URL of the badge image for the achievement, if one has been uploaded.</p>
+     */
     _FinalStage badgeUrl(Optional<String> badgeUrl);
 
     _FinalStage badgeUrl(String badgeUrl);
 
-    _FinalStage key(Optional<String> key);
-
-    _FinalStage key(String key);
-
+    /**
+     * <p>The length of the streak required to complete the achievement (only applicable if trigger = 'streak')</p>
+     */
     _FinalStage streakLength(Optional<Integer> streakLength);
 
     _FinalStage streakLength(Integer streakLength);
 
+    /**
+     * <p>The ID of the metric associated with this achievement (only applicable if trigger = 'metric')</p>
+     */
     _FinalStage metricId(Optional<String> metricId);
 
     _FinalStage metricId(String metricId);
 
+    /**
+     * <p>The value of the metric required to complete the achievement (only applicable if trigger = 'metric')</p>
+     */
     _FinalStage metricValue(Optional<Double> metricValue);
 
     _FinalStage metricValue(Double metricValue);
 
+    /**
+     * <p>The name of the metric associated with this achievement (only applicable if trigger = 'metric')</p>
+     */
     _FinalStage metricName(Optional<String> metricName);
 
     _FinalStage metricName(String metricName);
-
-    _FinalStage currentStreak(Optional<MetricEventStreakResponse> currentStreak);
-
-    _FinalStage currentStreak(MetricEventStreakResponse currentStreak);
-
-    _FinalStage achievedAt(Optional<OffsetDateTime> achievedAt);
-
-    _FinalStage achievedAt(OffsetDateTime achievedAt);
   }
 
   @JsonIgnoreProperties(
       ignoreUnknown = true
   )
-  public static final class Builder implements IdStage, NameStage, TriggerStage, _FinalStage {
+  public static final class Builder implements AchievedAtStage, IdStage, NameStage, TriggerStage, KeyStage, _FinalStage {
+    private OffsetDateTime achievedAt;
+
     private String id;
 
     private String name;
 
     private AchievementResponseTrigger trigger;
 
-    private Optional<OffsetDateTime> achievedAt = Optional.empty();
-
-    private Optional<MetricEventStreakResponse> currentStreak = Optional.empty();
+    private String key;
 
     private Optional<String> metricName = Optional.empty();
 
@@ -286,8 +304,6 @@ public final class CompletedAchievementResponse implements IAchievementResponse 
     private Optional<String> metricId = Optional.empty();
 
     private Optional<Integer> streakLength = Optional.empty();
-
-    private Optional<String> key = Optional.empty();
 
     private Optional<String> badgeUrl = Optional.empty();
 
@@ -301,6 +317,7 @@ public final class CompletedAchievementResponse implements IAchievementResponse 
 
     @java.lang.Override
     public Builder from(CompletedAchievementResponse other) {
+      achievedAt(other.getAchievedAt());
       id(other.getId());
       name(other.getName());
       trigger(other.getTrigger());
@@ -311,12 +328,23 @@ public final class CompletedAchievementResponse implements IAchievementResponse 
       metricId(other.getMetricId());
       metricValue(other.getMetricValue());
       metricName(other.getMetricName());
-      currentStreak(other.getCurrentStreak());
-      achievedAt(other.getAchievedAt());
       return this;
     }
 
     /**
+     * <p>The date and time the achievement was completed, in ISO 8601 format.</p>
+     * <p>The date and time the achievement was completed, in ISO 8601 format.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    @JsonSetter("achievedAt")
+    public IdStage achievedAt(@NotNull OffsetDateTime achievedAt) {
+      this.achievedAt = Objects.requireNonNull(achievedAt, "achievedAt must not be null");
+      return this;
+    }
+
+    /**
+     * <p>The unique ID of the achievement.</p>
      * <p>The unique ID of the achievement.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
@@ -329,6 +357,7 @@ public final class CompletedAchievementResponse implements IAchievementResponse 
 
     /**
      * <p>The name of this achievement.</p>
+     * <p>The name of this achievement.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -340,52 +369,25 @@ public final class CompletedAchievementResponse implements IAchievementResponse 
 
     /**
      * <p>The trigger of the achievement.</p>
+     * <p>The trigger of the achievement.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
     @JsonSetter("trigger")
-    public _FinalStage trigger(@NotNull AchievementResponseTrigger trigger) {
+    public KeyStage trigger(@NotNull AchievementResponseTrigger trigger) {
       this.trigger = Objects.requireNonNull(trigger, "trigger must not be null");
       return this;
     }
 
     /**
-     * <p>The date and time the achievement was completed, in ISO 8601 format.</p>
+     * <p>The key used to reference this achievement in the API (only applicable if trigger = 'api')</p>
+     * <p>The key used to reference this achievement in the API (only applicable if trigger = 'api')</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage achievedAt(OffsetDateTime achievedAt) {
-      this.achievedAt = Optional.ofNullable(achievedAt);
-      return this;
-    }
-
-    @java.lang.Override
-    @JsonSetter(
-        value = "achievedAt",
-        nulls = Nulls.SKIP
-    )
-    public _FinalStage achievedAt(Optional<OffsetDateTime> achievedAt) {
-      this.achievedAt = achievedAt;
-      return this;
-    }
-
-    /**
-     * <p>The user's current streak for the metric, if the metric has streaks enabled.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    public _FinalStage currentStreak(MetricEventStreakResponse currentStreak) {
-      this.currentStreak = Optional.ofNullable(currentStreak);
-      return this;
-    }
-
-    @java.lang.Override
-    @JsonSetter(
-        value = "currentStreak",
-        nulls = Nulls.SKIP
-    )
-    public _FinalStage currentStreak(Optional<MetricEventStreakResponse> currentStreak) {
-      this.currentStreak = currentStreak;
+    @JsonSetter("key")
+    public _FinalStage key(@NotNull String key) {
+      this.key = Objects.requireNonNull(key, "key must not be null");
       return this;
     }
 
@@ -399,6 +401,9 @@ public final class CompletedAchievementResponse implements IAchievementResponse 
       return this;
     }
 
+    /**
+     * <p>The name of the metric associated with this achievement (only applicable if trigger = 'metric')</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "metricName",
@@ -419,6 +424,9 @@ public final class CompletedAchievementResponse implements IAchievementResponse 
       return this;
     }
 
+    /**
+     * <p>The value of the metric required to complete the achievement (only applicable if trigger = 'metric')</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "metricValue",
@@ -439,6 +447,9 @@ public final class CompletedAchievementResponse implements IAchievementResponse 
       return this;
     }
 
+    /**
+     * <p>The ID of the metric associated with this achievement (only applicable if trigger = 'metric')</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "metricId",
@@ -459,6 +470,9 @@ public final class CompletedAchievementResponse implements IAchievementResponse 
       return this;
     }
 
+    /**
+     * <p>The length of the streak required to complete the achievement (only applicable if trigger = 'streak')</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "streakLength",
@@ -466,26 +480,6 @@ public final class CompletedAchievementResponse implements IAchievementResponse 
     )
     public _FinalStage streakLength(Optional<Integer> streakLength) {
       this.streakLength = streakLength;
-      return this;
-    }
-
-    /**
-     * <p>The key used to reference this achievement in the API (only applicable if trigger = 'api')</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    public _FinalStage key(String key) {
-      this.key = Optional.ofNullable(key);
-      return this;
-    }
-
-    @java.lang.Override
-    @JsonSetter(
-        value = "key",
-        nulls = Nulls.SKIP
-    )
-    public _FinalStage key(Optional<String> key) {
-      this.key = key;
       return this;
     }
 
@@ -499,6 +493,9 @@ public final class CompletedAchievementResponse implements IAchievementResponse 
       return this;
     }
 
+    /**
+     * <p>The URL of the badge image for the achievement, if one has been uploaded.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "badgeUrl",
@@ -519,6 +516,9 @@ public final class CompletedAchievementResponse implements IAchievementResponse 
       return this;
     }
 
+    /**
+     * <p>The description of this achievement.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "description",
@@ -531,7 +531,7 @@ public final class CompletedAchievementResponse implements IAchievementResponse 
 
     @java.lang.Override
     public CompletedAchievementResponse build() {
-      return new CompletedAchievementResponse(id, name, trigger, description, badgeUrl, key, streakLength, metricId, metricValue, metricName, currentStreak, achievedAt, additionalProperties);
+      return new CompletedAchievementResponse(achievedAt, id, name, trigger, description, badgeUrl, key, streakLength, metricId, metricValue, metricName, additionalProperties);
     }
   }
 }

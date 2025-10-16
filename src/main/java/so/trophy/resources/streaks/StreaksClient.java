@@ -5,50 +5,43 @@ package so.trophy.resources.streaks;
  */
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import so.trophy.core.ClientOptions;
-import so.trophy.core.ObjectMappers;
 import so.trophy.core.RequestOptions;
-import so.trophy.core.TrophyApiApiException;
-import so.trophy.core.TrophyApiException;
-import so.trophy.errors.UnauthorizedError;
-import so.trophy.errors.UnprocessableEntityError;
-import java.io.IOException;
-import java.lang.Object;
-import java.lang.String;
 import java.util.List;
-import okhttp3.Headers;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 import so.trophy.resources.streaks.requests.StreaksListRequest;
 import so.trophy.resources.streaks.requests.StreaksRankingsRequest;
 import so.trophy.types.BulkStreakResponseItem;
-import so.trophy.types.ErrorBody;
 import so.trophy.types.StreakRankingUser;
 
 public class StreaksClient {
   protected final ClientOptions clientOptions;
 
+  private final RawStreaksClient rawClient;
+
   public StreaksClient(ClientOptions clientOptions) {
     this.clientOptions = clientOptions;
+    this.rawClient = new RawStreaksClient(clientOptions);
+  }
+
+  /**
+   * Get responses with HTTP metadata like headers
+   */
+  public RawStreaksClient withRawResponse() {
+    return this.rawClient;
   }
 
   /**
    * Get the streak lengths of a list of users, ranked by streak length from longest to shortest.
    */
   public List<BulkStreakResponseItem> list() {
-    return list(StreaksListRequest.builder().build());
+    return this.rawClient.list().body();
   }
 
   /**
    * Get the streak lengths of a list of users, ranked by streak length from longest to shortest.
    */
   public List<BulkStreakResponseItem> list(StreaksListRequest request) {
-    return list(request,null);
+    return this.rawClient.list(request).body();
   }
 
   /**
@@ -56,99 +49,28 @@ public class StreaksClient {
    */
   public List<BulkStreakResponseItem> list(StreaksListRequest request,
       RequestOptions requestOptions) {
-    HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
+    return this.rawClient.list(request, requestOptions).body();
+  }
 
-      .addPathSegments("streaks");if (request.getUserIds().isPresent()) {
-        httpUrl.addQueryParameter("userIds", request.getUserIds().get());
-      }
-      Request.Builder _requestBuilder = new Request.Builder()
-        .url(httpUrl.build())
-        .method("GET", null)
-        .headers(Headers.of(clientOptions.headers(requestOptions)))
-        .addHeader("Content-Type", "application/json").addHeader("Accept", "application/json");
-      Request okhttpRequest = _requestBuilder.build();
-      OkHttpClient client = clientOptions.httpClient();
-      if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-        client = clientOptions.httpClientWithTimeout(requestOptions);
-      }
-      try (Response response = client.newCall(okhttpRequest).execute()) {
-        ResponseBody responseBody = response.body();
-        if (response.isSuccessful()) {
-          return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<BulkStreakResponseItem>>() {});
-        }
-        String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-        try {
-          switch (response.code()) {
-            case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-            case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-          }
-        }
-        catch (JsonProcessingException ignored) {
-          // unable to map error response, throwing generic error
-        }
-        throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-      }
-      catch (IOException e) {
-        throw new TrophyApiException("Network error executing HTTP request", e);
-      }
-    }
+  /**
+   * Get the top users by streak length (active or longest).
+   */
+  public List<StreakRankingUser> rankings() {
+    return this.rawClient.rankings().body();
+  }
 
-    /**
-     * Get the top users by streak length (active or longest).
-     */
-    public List<StreakRankingUser> rankings() {
-      return rankings(StreaksRankingsRequest.builder().build());
-    }
+  /**
+   * Get the top users by streak length (active or longest).
+   */
+  public List<StreakRankingUser> rankings(StreaksRankingsRequest request) {
+    return this.rawClient.rankings(request).body();
+  }
 
-    /**
-     * Get the top users by streak length (active or longest).
-     */
-    public List<StreakRankingUser> rankings(StreaksRankingsRequest request) {
-      return rankings(request,null);
-    }
-
-    /**
-     * Get the top users by streak length (active or longest).
-     */
-    public List<StreakRankingUser> rankings(StreaksRankingsRequest request,
-        RequestOptions requestOptions) {
-      HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
-
-        .addPathSegments("streaks/rankings");if (request.getLimit().isPresent()) {
-          httpUrl.addQueryParameter("limit", request.getLimit().get().toString());
-        }
-        if (request.getType().isPresent()) {
-          httpUrl.addQueryParameter("type", request.getType().get().toString());
-        }
-        Request.Builder _requestBuilder = new Request.Builder()
-          .url(httpUrl.build())
-          .method("GET", null)
-          .headers(Headers.of(clientOptions.headers(requestOptions)))
-          .addHeader("Content-Type", "application/json").addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-          client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-          ResponseBody responseBody = response.body();
-          if (response.isSuccessful()) {
-            return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<StreakRankingUser>>() {});
-          }
-          String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-          try {
-            switch (response.code()) {
-              case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-              case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-            }
-          }
-          catch (JsonProcessingException ignored) {
-            // unable to map error response, throwing generic error
-          }
-          throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        }
-        catch (IOException e) {
-          throw new TrophyApiException("Network error executing HTTP request", e);
-        }
-      }
-    }
+  /**
+   * Get the top users by streak length (active or longest).
+   */
+  public List<StreakRankingUser> rankings(StreaksRankingsRequest request,
+      RequestOptions requestOptions) {
+    return this.rawClient.rankings(request, requestOptions).body();
+  }
+}

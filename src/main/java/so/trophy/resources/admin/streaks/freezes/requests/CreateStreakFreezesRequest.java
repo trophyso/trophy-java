@@ -92,6 +92,9 @@ public final class CreateStreakFreezesRequest {
       return this;
     }
 
+    /**
+     * <p>Array of freezes to create. Maximum 1,000 freezes per request.</p>
+     */
     @JsonSetter(
         value = "freezes",
         nulls = Nulls.SKIP
@@ -108,7 +111,9 @@ public final class CreateStreakFreezesRequest {
     }
 
     public Builder addAllFreezes(List<CreateStreakFreezesRequestFreezesItem> freezes) {
-      this.freezes.addAll(freezes);
+      if (freezes != null) {
+        this.freezes.addAll(freezes);
+      }
       return this;
     }
 

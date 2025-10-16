@@ -133,6 +133,9 @@ public final class LeaderboardsGetRequest {
       return this;
     }
 
+    /**
+     * <p>Number of rankings to skip for pagination.</p>
+     */
     @JsonSetter(
         value = "offset",
         nulls = Nulls.SKIP
@@ -147,6 +150,9 @@ public final class LeaderboardsGetRequest {
       return this;
     }
 
+    /**
+     * <p>Maximum number of rankings to return.</p>
+     */
     @JsonSetter(
         value = "limit",
         nulls = Nulls.SKIP
@@ -161,6 +167,9 @@ public final class LeaderboardsGetRequest {
       return this;
     }
 
+    /**
+     * <p>Specific run date in YYYY-MM-DD format. If not provided, returns the current run.</p>
+     */
     @JsonSetter(
         value = "run",
         nulls = Nulls.SKIP
@@ -175,6 +184,9 @@ public final class LeaderboardsGetRequest {
       return this;
     }
 
+    /**
+     * <p>When provided, offset is relative to this user's position on the leaderboard. If the user is not found in the leaderboard, returns empty rankings array.</p>
+     */
     @JsonSetter(
         value = "userId",
         nulls = Nulls.SKIP

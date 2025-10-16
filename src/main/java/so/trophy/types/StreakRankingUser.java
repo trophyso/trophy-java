@@ -97,18 +97,27 @@ public final class StreakRankingUser {
   }
 
   public interface UserIdStage {
+    /**
+     * <p>The ID of the user.</p>
+     */
     StreakLengthStage userId(@NotNull String userId);
 
     Builder from(StreakRankingUser other);
   }
 
   public interface StreakLengthStage {
+    /**
+     * <p>The user's streak length (active or longest depending on query parameter).</p>
+     */
     _FinalStage streakLength(int streakLength);
   }
 
   public interface _FinalStage {
     StreakRankingUser build();
 
+    /**
+     * <p>The name of the user. May be null if no name is set.</p>
+     */
     _FinalStage name(Optional<String> name);
 
     _FinalStage name(String name);
@@ -140,6 +149,7 @@ public final class StreakRankingUser {
 
     /**
      * <p>The ID of the user.</p>
+     * <p>The ID of the user.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -150,6 +160,7 @@ public final class StreakRankingUser {
     }
 
     /**
+     * <p>The user's streak length (active or longest depending on query parameter).</p>
      * <p>The user's streak length (active or longest depending on query parameter).</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
@@ -170,6 +181,9 @@ public final class StreakRankingUser {
       return this;
     }
 
+    /**
+     * <p>The name of the user. May be null if no name is set.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "name",

@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import so.trophy.core.ObjectMappers;
+import java.lang.Double;
 import java.lang.Object;
 import java.lang.String;
 import java.util.ArrayList;
@@ -37,17 +38,20 @@ public final class PointsSystemResponse {
 
   private final Optional<String> badgeUrl;
 
+  private final Optional<Double> maxPoints;
+
   private final List<PointsTriggerResponse> triggers;
 
   private final Map<String, Object> additionalProperties;
 
   private PointsSystemResponse(String id, String name, Optional<String> description,
-      Optional<String> badgeUrl, List<PointsTriggerResponse> triggers,
+      Optional<String> badgeUrl, Optional<Double> maxPoints, List<PointsTriggerResponse> triggers,
       Map<String, Object> additionalProperties) {
     this.id = id;
     this.name = name;
     this.description = description;
     this.badgeUrl = badgeUrl;
+    this.maxPoints = maxPoints;
     this.triggers = triggers;
     this.additionalProperties = additionalProperties;
   }
@@ -85,6 +89,14 @@ public final class PointsSystemResponse {
   }
 
   /**
+   * @return The maximum number of points a user can be awarded in this points system
+   */
+  @JsonProperty("maxPoints")
+  public Optional<Double> getMaxPoints() {
+    return maxPoints;
+  }
+
+  /**
    * @return Array of active triggers for this points system.
    */
   @JsonProperty("triggers")
@@ -104,12 +116,12 @@ public final class PointsSystemResponse {
   }
 
   private boolean equalTo(PointsSystemResponse other) {
-    return id.equals(other.id) && name.equals(other.name) && description.equals(other.description) && badgeUrl.equals(other.badgeUrl) && triggers.equals(other.triggers);
+    return id.equals(other.id) && name.equals(other.name) && description.equals(other.description) && badgeUrl.equals(other.badgeUrl) && maxPoints.equals(other.maxPoints) && triggers.equals(other.triggers);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.name, this.description, this.badgeUrl, this.triggers);
+    return Objects.hash(this.id, this.name, this.description, this.badgeUrl, this.maxPoints, this.triggers);
   }
 
   @java.lang.Override
@@ -122,26 +134,48 @@ public final class PointsSystemResponse {
   }
 
   public interface IdStage {
+    /**
+     * <p>The unique ID of the points system.</p>
+     */
     NameStage id(@NotNull String id);
 
     Builder from(PointsSystemResponse other);
   }
 
   public interface NameStage {
+    /**
+     * <p>The name of the points system.</p>
+     */
     _FinalStage name(@NotNull String name);
   }
 
   public interface _FinalStage {
     PointsSystemResponse build();
 
+    /**
+     * <p>The description of the points system.</p>
+     */
     _FinalStage description(Optional<String> description);
 
     _FinalStage description(String description);
 
+    /**
+     * <p>The URL of the badge image for the points system, if one has been uploaded.</p>
+     */
     _FinalStage badgeUrl(Optional<String> badgeUrl);
 
     _FinalStage badgeUrl(String badgeUrl);
 
+    /**
+     * <p>The maximum number of points a user can be awarded in this points system</p>
+     */
+    _FinalStage maxPoints(Optional<Double> maxPoints);
+
+    _FinalStage maxPoints(Double maxPoints);
+
+    /**
+     * <p>Array of active triggers for this points system.</p>
+     */
     _FinalStage triggers(List<PointsTriggerResponse> triggers);
 
     _FinalStage addTriggers(PointsTriggerResponse triggers);
@@ -159,6 +193,8 @@ public final class PointsSystemResponse {
 
     private List<PointsTriggerResponse> triggers = new ArrayList<>();
 
+    private Optional<Double> maxPoints = Optional.empty();
+
     private Optional<String> badgeUrl = Optional.empty();
 
     private Optional<String> description = Optional.empty();
@@ -175,11 +211,13 @@ public final class PointsSystemResponse {
       name(other.getName());
       description(other.getDescription());
       badgeUrl(other.getBadgeUrl());
+      maxPoints(other.getMaxPoints());
       triggers(other.getTriggers());
       return this;
     }
 
     /**
+     * <p>The unique ID of the points system.</p>
      * <p>The unique ID of the points system.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
@@ -191,6 +229,7 @@ public final class PointsSystemResponse {
     }
 
     /**
+     * <p>The name of the points system.</p>
      * <p>The name of the points system.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
@@ -207,7 +246,9 @@ public final class PointsSystemResponse {
      */
     @java.lang.Override
     public _FinalStage addAllTriggers(List<PointsTriggerResponse> triggers) {
-      this.triggers.addAll(triggers);
+      if (triggers != null) {
+        this.triggers.addAll(triggers);
+      }
       return this;
     }
 
@@ -221,6 +262,9 @@ public final class PointsSystemResponse {
       return this;
     }
 
+    /**
+     * <p>Array of active triggers for this points system.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "triggers",
@@ -229,6 +273,29 @@ public final class PointsSystemResponse {
     public _FinalStage triggers(List<PointsTriggerResponse> triggers) {
       this.triggers.clear();
       this.triggers.addAll(triggers);
+      return this;
+    }
+
+    /**
+     * <p>The maximum number of points a user can be awarded in this points system</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage maxPoints(Double maxPoints) {
+      this.maxPoints = Optional.ofNullable(maxPoints);
+      return this;
+    }
+
+    /**
+     * <p>The maximum number of points a user can be awarded in this points system</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "maxPoints",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage maxPoints(Optional<Double> maxPoints) {
+      this.maxPoints = maxPoints;
       return this;
     }
 
@@ -242,6 +309,9 @@ public final class PointsSystemResponse {
       return this;
     }
 
+    /**
+     * <p>The URL of the badge image for the points system, if one has been uploaded.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "badgeUrl",
@@ -262,6 +332,9 @@ public final class PointsSystemResponse {
       return this;
     }
 
+    /**
+     * <p>The description of the points system.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "description",
@@ -274,7 +347,7 @@ public final class PointsSystemResponse {
 
     @java.lang.Override
     public PointsSystemResponse build() {
-      return new PointsSystemResponse(id, name, description, badgeUrl, triggers, additionalProperties);
+      return new PointsSystemResponse(id, name, description, badgeUrl, maxPoints, triggers, additionalProperties);
     }
   }
 }

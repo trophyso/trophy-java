@@ -6,6 +6,7 @@ package so.trophy.errors;
 
 
 import so.trophy.core.TrophyApiApiException;
+import okhttp3.Response;
 import so.trophy.types.ErrorBody;
 
 public final class UnprocessableEntityError extends TrophyApiApiException {
@@ -16,6 +17,11 @@ public final class UnprocessableEntityError extends TrophyApiApiException {
 
   public UnprocessableEntityError(ErrorBody body) {
     super("UnprocessableEntityError", 422, body);
+    this.body = body;
+  }
+
+  public UnprocessableEntityError(ErrorBody body, Response rawResponse) {
+    super("UnprocessableEntityError", 422, body, rawResponse);
     this.body = body;
   }
 

@@ -90,6 +90,9 @@ public final class PointsSummaryRequest {
       return this;
     }
 
+    /**
+     * <p>Optional colon-delimited user attribute filters in the format attributeKey:value,attributeKey:value. Only users matching ALL specified attributes will be included in the points breakdown.</p>
+     */
     @JsonSetter(
         value = "userAttributes",
         nulls = Nulls.SKIP

@@ -6,6 +6,7 @@ package so.trophy.errors;
 
 
 import so.trophy.core.TrophyApiApiException;
+import okhttp3.Response;
 import so.trophy.types.ErrorBody;
 
 public final class NotFoundError extends TrophyApiApiException {
@@ -16,6 +17,11 @@ public final class NotFoundError extends TrophyApiApiException {
 
   public NotFoundError(ErrorBody body) {
     super("NotFoundError", 404, body);
+    this.body = body;
+  }
+
+  public NotFoundError(ErrorBody body, Response rawResponse) {
+    super("NotFoundError", 404, body, rawResponse);
     this.body = body;
   }
 

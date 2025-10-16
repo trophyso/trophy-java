@@ -109,22 +109,34 @@ public final class StreakResponseStreakHistoryItem {
   }
 
   public interface PeriodStartStage {
+    /**
+     * <p>The date this streak period started.</p>
+     */
     PeriodEndStage periodStart(@NotNull String periodStart);
 
     Builder from(StreakResponseStreakHistoryItem other);
   }
 
   public interface PeriodEndStage {
+    /**
+     * <p>The date this streak period ended.</p>
+     */
     LengthStage periodEnd(@NotNull String periodEnd);
   }
 
   public interface LengthStage {
+    /**
+     * <p>The length of the user's streak during this period.</p>
+     */
     _FinalStage length(int length);
   }
 
   public interface _FinalStage {
     StreakResponseStreakHistoryItem build();
 
+    /**
+     * <p>Whether the user used a streak freeze during this period. Only present if the organization has enabled streak freezes.</p>
+     */
     _FinalStage usedFreeze(Optional<Boolean> usedFreeze);
 
     _FinalStage usedFreeze(Boolean usedFreeze);
@@ -159,6 +171,7 @@ public final class StreakResponseStreakHistoryItem {
 
     /**
      * <p>The date this streak period started.</p>
+     * <p>The date this streak period started.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -170,6 +183,7 @@ public final class StreakResponseStreakHistoryItem {
 
     /**
      * <p>The date this streak period ended.</p>
+     * <p>The date this streak period ended.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -180,6 +194,7 @@ public final class StreakResponseStreakHistoryItem {
     }
 
     /**
+     * <p>The length of the user's streak during this period.</p>
      * <p>The length of the user's streak during this period.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
@@ -200,6 +215,9 @@ public final class StreakResponseStreakHistoryItem {
       return this;
     }
 
+    /**
+     * <p>Whether the user used a streak freeze during this period. Only present if the organization has enabled streak freezes.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "usedFreeze",

@@ -17,9 +17,9 @@ import so.trophy.core.ObjectMappers;
 import java.lang.Object;
 import java.lang.String;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
@@ -29,16 +29,15 @@ import org.jetbrains.annotations.NotNull;
 public final class AchievementCompletionResponse {
   private final String completionId;
 
-  private final CompletedAchievementResponse achievement;
+  private final AchievementCompletionResponseAchievement achievement;
 
-  private final Optional<Map<String, MetricEventPointsResponse>> points;
+  private final Map<String, MetricEventPointsResponse> points;
 
   private final Map<String, Object> additionalProperties;
 
   private AchievementCompletionResponse(String completionId,
-      CompletedAchievementResponse achievement,
-      Optional<Map<String, MetricEventPointsResponse>> points,
-      Map<String, Object> additionalProperties) {
+      AchievementCompletionResponseAchievement achievement,
+      Map<String, MetricEventPointsResponse> points, Map<String, Object> additionalProperties) {
     this.completionId = completionId;
     this.achievement = achievement;
     this.points = points;
@@ -54,7 +53,7 @@ public final class AchievementCompletionResponse {
   }
 
   @JsonProperty("achievement")
-  public CompletedAchievementResponse getAchievement() {
+  public AchievementCompletionResponseAchievement getAchievement() {
     return achievement;
   }
 
@@ -62,7 +61,7 @@ public final class AchievementCompletionResponse {
    * @return A map of points systems by key that were affected by this achievement completion.
    */
   @JsonProperty("points")
-  public Optional<Map<String, MetricEventPointsResponse>> getPoints() {
+  public Map<String, MetricEventPointsResponse> getPoints() {
     return points;
   }
 
@@ -96,21 +95,29 @@ public final class AchievementCompletionResponse {
   }
 
   public interface CompletionIdStage {
+    /**
+     * <p>The unique ID of the completion.</p>
+     */
     AchievementStage completionId(@NotNull String completionId);
 
     Builder from(AchievementCompletionResponse other);
   }
 
   public interface AchievementStage {
-    _FinalStage achievement(@NotNull CompletedAchievementResponse achievement);
+    _FinalStage achievement(@NotNull AchievementCompletionResponseAchievement achievement);
   }
 
   public interface _FinalStage {
     AchievementCompletionResponse build();
 
-    _FinalStage points(Optional<Map<String, MetricEventPointsResponse>> points);
-
+    /**
+     * <p>A map of points systems by key that were affected by this achievement completion.</p>
+     */
     _FinalStage points(Map<String, MetricEventPointsResponse> points);
+
+    _FinalStage putAllPoints(Map<String, MetricEventPointsResponse> points);
+
+    _FinalStage points(String key, MetricEventPointsResponse value);
   }
 
   @JsonIgnoreProperties(
@@ -119,9 +126,9 @@ public final class AchievementCompletionResponse {
   public static final class Builder implements CompletionIdStage, AchievementStage, _FinalStage {
     private String completionId;
 
-    private CompletedAchievementResponse achievement;
+    private AchievementCompletionResponseAchievement achievement;
 
-    private Optional<Map<String, MetricEventPointsResponse>> points = Optional.empty();
+    private Map<String, MetricEventPointsResponse> points = new LinkedHashMap<>();
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -139,6 +146,7 @@ public final class AchievementCompletionResponse {
 
     /**
      * <p>The unique ID of the completion.</p>
+     * <p>The unique ID of the completion.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -150,7 +158,7 @@ public final class AchievementCompletionResponse {
 
     @java.lang.Override
     @JsonSetter("achievement")
-    public _FinalStage achievement(@NotNull CompletedAchievementResponse achievement) {
+    public _FinalStage achievement(@NotNull AchievementCompletionResponseAchievement achievement) {
       this.achievement = Objects.requireNonNull(achievement, "achievement must not be null");
       return this;
     }
@@ -160,18 +168,34 @@ public final class AchievementCompletionResponse {
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage points(Map<String, MetricEventPointsResponse> points) {
-      this.points = Optional.ofNullable(points);
+    public _FinalStage points(String key, MetricEventPointsResponse value) {
+      this.points.put(key, value);
       return this;
     }
 
+    /**
+     * <p>A map of points systems by key that were affected by this achievement completion.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage putAllPoints(Map<String, MetricEventPointsResponse> points) {
+      if (points != null) {
+        this.points.putAll(points);
+      }
+      return this;
+    }
+
+    /**
+     * <p>A map of points systems by key that were affected by this achievement completion.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "points",
         nulls = Nulls.SKIP
     )
-    public _FinalStage points(Optional<Map<String, MetricEventPointsResponse>> points) {
-      this.points = points;
+    public _FinalStage points(Map<String, MetricEventPointsResponse> points) {
+      this.points.clear();
+      this.points.putAll(points);
       return this;
     }
 

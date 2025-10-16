@@ -73,6 +73,9 @@ public final class CreateStreakFreezesRequestFreezesItem {
   }
 
   public interface UserIdStage {
+    /**
+     * <p>The ID of the user to create a freeze for.</p>
+     */
     _FinalStage userId(@NotNull String userId);
 
     Builder from(CreateStreakFreezesRequestFreezesItem other);
@@ -101,6 +104,7 @@ public final class CreateStreakFreezesRequestFreezesItem {
     }
 
     /**
+     * <p>The ID of the user to create a freeze for.</p>
      * <p>The ID of the user to create a freeze for.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */

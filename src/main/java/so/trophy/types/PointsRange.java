@@ -11,32 +11,28 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import so.trophy.core.ObjectMappers;
-import java.lang.Double;
 import java.lang.Object;
 import java.lang.String;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(
     builder = PointsRange.Builder.class
 )
 public final class PointsRange {
-  private final Optional<Double> from;
+  private final int from;
 
-  private final Optional<Double> to;
+  private final int to;
 
-  private final Optional<Double> users;
+  private final int users;
 
   private final Map<String, Object> additionalProperties;
 
-  private PointsRange(Optional<Double> from, Optional<Double> to, Optional<Double> users,
-      Map<String, Object> additionalProperties) {
+  private PointsRange(int from, int to, int users, Map<String, Object> additionalProperties) {
     this.from = from;
     this.to = to;
     this.users = users;
@@ -47,7 +43,7 @@ public final class PointsRange {
    * @return The start of the points range. Inclusive.
    */
   @JsonProperty("from")
-  public Optional<Double> getFrom() {
+  public int getFrom() {
     return from;
   }
 
@@ -55,7 +51,7 @@ public final class PointsRange {
    * @return The end of the points range. Inclusive.
    */
   @JsonProperty("to")
-  public Optional<Double> getTo() {
+  public int getTo() {
     return to;
   }
 
@@ -63,7 +59,7 @@ public final class PointsRange {
    * @return The number of users in this points range.
    */
   @JsonProperty("users")
-  public Optional<Double> getUsers() {
+  public int getUsers() {
     return users;
   }
 
@@ -79,7 +75,7 @@ public final class PointsRange {
   }
 
   private boolean equalTo(PointsRange other) {
-    return from.equals(other.from) && to.equals(other.to) && users.equals(other.users);
+    return from == other.from && to == other.to && users == other.users;
   }
 
   @java.lang.Override
@@ -92,19 +88,46 @@ public final class PointsRange {
     return ObjectMappers.stringify(this);
   }
 
-  public static Builder builder() {
+  public static FromStage builder() {
     return new Builder();
+  }
+
+  public interface FromStage {
+    /**
+     * <p>The start of the points range. Inclusive.</p>
+     */
+    ToStage from(int from);
+
+    Builder from(PointsRange other);
+  }
+
+  public interface ToStage {
+    /**
+     * <p>The end of the points range. Inclusive.</p>
+     */
+    UsersStage to(int to);
+  }
+
+  public interface UsersStage {
+    /**
+     * <p>The number of users in this points range.</p>
+     */
+    _FinalStage users(int users);
+  }
+
+  public interface _FinalStage {
+    PointsRange build();
   }
 
   @JsonIgnoreProperties(
       ignoreUnknown = true
   )
-  public static final class Builder {
-    private Optional<Double> from = Optional.empty();
+  public static final class Builder implements FromStage, ToStage, UsersStage, _FinalStage {
+    private int from;
 
-    private Optional<Double> to = Optional.empty();
+    private int to;
 
-    private Optional<Double> users = Optional.empty();
+    private int users;
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -112,6 +135,7 @@ public final class PointsRange {
     private Builder() {
     }
 
+    @java.lang.Override
     public Builder from(PointsRange other) {
       from(other.getFrom());
       to(other.getTo());
@@ -119,48 +143,43 @@ public final class PointsRange {
       return this;
     }
 
-    @JsonSetter(
-        value = "from",
-        nulls = Nulls.SKIP
-    )
-    public Builder from(Optional<Double> from) {
+    /**
+     * <p>The start of the points range. Inclusive.</p>
+     * <p>The start of the points range. Inclusive.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    @JsonSetter("from")
+    public ToStage from(int from) {
       this.from = from;
       return this;
     }
 
-    public Builder from(Double from) {
-      this.from = Optional.ofNullable(from);
-      return this;
-    }
-
-    @JsonSetter(
-        value = "to",
-        nulls = Nulls.SKIP
-    )
-    public Builder to(Optional<Double> to) {
+    /**
+     * <p>The end of the points range. Inclusive.</p>
+     * <p>The end of the points range. Inclusive.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    @JsonSetter("to")
+    public UsersStage to(int to) {
       this.to = to;
       return this;
     }
 
-    public Builder to(Double to) {
-      this.to = Optional.ofNullable(to);
-      return this;
-    }
-
-    @JsonSetter(
-        value = "users",
-        nulls = Nulls.SKIP
-    )
-    public Builder users(Optional<Double> users) {
+    /**
+     * <p>The number of users in this points range.</p>
+     * <p>The number of users in this points range.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    @JsonSetter("users")
+    public _FinalStage users(int users) {
       this.users = users;
       return this;
     }
 
-    public Builder users(Double users) {
-      this.users = Optional.ofNullable(users);
-      return this;
-    }
-
+    @java.lang.Override
     public PointsRange build() {
       return new PointsRange(from, to, users, additionalProperties);
     }

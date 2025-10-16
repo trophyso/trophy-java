@@ -13,7 +13,11 @@ public enum PointsTriggerType {
 
   ACHIEVEMENT("achievement"),
 
-  STREAK("streak");
+  STREAK("streak"),
+
+  TIME("time"),
+
+  USER_CREATION("user_creation");
 
   private final String value;
 

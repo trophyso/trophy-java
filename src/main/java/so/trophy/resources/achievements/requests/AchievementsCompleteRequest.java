@@ -73,6 +73,9 @@ public final class AchievementsCompleteRequest {
   }
 
   public interface UserStage {
+    /**
+     * <p>The user that completed the achievement.</p>
+     */
     _FinalStage user(@NotNull UpsertedUser user);
 
     Builder from(AchievementsCompleteRequest other);
@@ -101,6 +104,7 @@ public final class AchievementsCompleteRequest {
     }
 
     /**
+     * <p>The user that completed the achievement.</p>
      * <p>The user that completed the achievement.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */

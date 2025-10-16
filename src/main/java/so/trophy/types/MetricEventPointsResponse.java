@@ -32,27 +32,33 @@ import org.jetbrains.annotations.NotNull;
 public final class MetricEventPointsResponse implements IGetUserPointsResponse {
   private final String id;
 
+  private final String key;
+
   private final String name;
 
   private final Optional<String> description;
 
   private final Optional<String> badgeUrl;
 
-  private final double total;
+  private final Optional<Double> maxPoints;
+
+  private final int total;
 
   private final List<PointsAward> awards;
 
-  private final Optional<Double> added;
+  private final int added;
 
   private final Map<String, Object> additionalProperties;
 
-  private MetricEventPointsResponse(String id, String name, Optional<String> description,
-      Optional<String> badgeUrl, double total, List<PointsAward> awards, Optional<Double> added,
-      Map<String, Object> additionalProperties) {
+  private MetricEventPointsResponse(String id, String key, String name,
+      Optional<String> description, Optional<String> badgeUrl, Optional<Double> maxPoints,
+      int total, List<PointsAward> awards, int added, Map<String, Object> additionalProperties) {
     this.id = id;
+    this.key = key;
     this.name = name;
     this.description = description;
     this.badgeUrl = badgeUrl;
+    this.maxPoints = maxPoints;
     this.total = total;
     this.awards = awards;
     this.added = added;
@@ -66,6 +72,15 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
   @java.lang.Override
   public String getId() {
     return id;
+  }
+
+  /**
+   * @return The key of the points system
+   */
+  @JsonProperty("key")
+  @java.lang.Override
+  public String getKey() {
+    return key;
   }
 
   /**
@@ -96,11 +111,20 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
   }
 
   /**
+   * @return The maximum number of points a user can be awarded in this points system
+   */
+  @JsonProperty("maxPoints")
+  @java.lang.Override
+  public Optional<Double> getMaxPoints() {
+    return maxPoints;
+  }
+
+  /**
    * @return The user's total points
    */
   @JsonProperty("total")
   @java.lang.Override
-  public double getTotal() {
+  public int getTotal() {
     return total;
   }
 
@@ -117,7 +141,7 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
    * @return The points added by this event.
    */
   @JsonProperty("added")
-  public Optional<Double> getAdded() {
+  public int getAdded() {
     return added;
   }
 
@@ -133,12 +157,12 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
   }
 
   private boolean equalTo(MetricEventPointsResponse other) {
-    return id.equals(other.id) && name.equals(other.name) && description.equals(other.description) && badgeUrl.equals(other.badgeUrl) && total == other.total && awards.equals(other.awards) && added.equals(other.added);
+    return id.equals(other.id) && key.equals(other.key) && name.equals(other.name) && description.equals(other.description) && badgeUrl.equals(other.badgeUrl) && maxPoints.equals(other.maxPoints) && total == other.total && awards.equals(other.awards) && added == other.added;
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.name, this.description, this.badgeUrl, this.total, this.awards, this.added);
+    return Objects.hash(this.id, this.key, this.name, this.description, this.badgeUrl, this.maxPoints, this.total, this.awards, this.added);
   }
 
   @java.lang.Override
@@ -151,54 +175,93 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
   }
 
   public interface IdStage {
-    NameStage id(@NotNull String id);
+    /**
+     * <p>The ID of the points system</p>
+     */
+    KeyStage id(@NotNull String id);
 
     Builder from(MetricEventPointsResponse other);
   }
 
+  public interface KeyStage {
+    /**
+     * <p>The key of the points system</p>
+     */
+    NameStage key(@NotNull String key);
+  }
+
   public interface NameStage {
+    /**
+     * <p>The name of the points system</p>
+     */
     TotalStage name(@NotNull String name);
   }
 
   public interface TotalStage {
-    _FinalStage total(double total);
+    /**
+     * <p>The user's total points</p>
+     */
+    AddedStage total(int total);
+  }
+
+  public interface AddedStage {
+    /**
+     * <p>The points added by this event.</p>
+     */
+    _FinalStage added(int added);
   }
 
   public interface _FinalStage {
     MetricEventPointsResponse build();
 
+    /**
+     * <p>The description of the points system</p>
+     */
     _FinalStage description(Optional<String> description);
 
     _FinalStage description(String description);
 
+    /**
+     * <p>The URL of the badge image for the points system</p>
+     */
     _FinalStage badgeUrl(Optional<String> badgeUrl);
 
     _FinalStage badgeUrl(String badgeUrl);
 
+    /**
+     * <p>The maximum number of points a user can be awarded in this points system</p>
+     */
+    _FinalStage maxPoints(Optional<Double> maxPoints);
+
+    _FinalStage maxPoints(Double maxPoints);
+
+    /**
+     * <p>Array of trigger awards that added points.</p>
+     */
     _FinalStage awards(List<PointsAward> awards);
 
     _FinalStage addAwards(PointsAward awards);
 
     _FinalStage addAllAwards(List<PointsAward> awards);
-
-    _FinalStage added(Optional<Double> added);
-
-    _FinalStage added(Double added);
   }
 
   @JsonIgnoreProperties(
       ignoreUnknown = true
   )
-  public static final class Builder implements IdStage, NameStage, TotalStage, _FinalStage {
+  public static final class Builder implements IdStage, KeyStage, NameStage, TotalStage, AddedStage, _FinalStage {
     private String id;
+
+    private String key;
 
     private String name;
 
-    private double total;
+    private int total;
 
-    private Optional<Double> added = Optional.empty();
+    private int added;
 
     private List<PointsAward> awards = new ArrayList<>();
+
+    private Optional<Double> maxPoints = Optional.empty();
 
     private Optional<String> badgeUrl = Optional.empty();
 
@@ -213,9 +276,11 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
     @java.lang.Override
     public Builder from(MetricEventPointsResponse other) {
       id(other.getId());
+      key(other.getKey());
       name(other.getName());
       description(other.getDescription());
       badgeUrl(other.getBadgeUrl());
+      maxPoints(other.getMaxPoints());
       total(other.getTotal());
       awards(other.getAwards());
       added(other.getAdded());
@@ -224,16 +289,30 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
 
     /**
      * <p>The ID of the points system</p>
+     * <p>The ID of the points system</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
     @JsonSetter("id")
-    public NameStage id(@NotNull String id) {
+    public KeyStage id(@NotNull String id) {
       this.id = Objects.requireNonNull(id, "id must not be null");
       return this;
     }
 
     /**
+     * <p>The key of the points system</p>
+     * <p>The key of the points system</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    @JsonSetter("key")
+    public NameStage key(@NotNull String key) {
+      this.key = Objects.requireNonNull(key, "key must not be null");
+      return this;
+    }
+
+    /**
+     * <p>The name of the points system</p>
      * <p>The name of the points system</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
@@ -246,31 +325,24 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
 
     /**
      * <p>The user's total points</p>
+     * <p>The user's total points</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
     @JsonSetter("total")
-    public _FinalStage total(double total) {
+    public AddedStage total(int total) {
       this.total = total;
       return this;
     }
 
     /**
      * <p>The points added by this event.</p>
+     * <p>The points added by this event.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage added(Double added) {
-      this.added = Optional.ofNullable(added);
-      return this;
-    }
-
-    @java.lang.Override
-    @JsonSetter(
-        value = "added",
-        nulls = Nulls.SKIP
-    )
-    public _FinalStage added(Optional<Double> added) {
+    @JsonSetter("added")
+    public _FinalStage added(int added) {
       this.added = added;
       return this;
     }
@@ -281,7 +353,9 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
      */
     @java.lang.Override
     public _FinalStage addAllAwards(List<PointsAward> awards) {
-      this.awards.addAll(awards);
+      if (awards != null) {
+        this.awards.addAll(awards);
+      }
       return this;
     }
 
@@ -295,6 +369,9 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
       return this;
     }
 
+    /**
+     * <p>Array of trigger awards that added points.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "awards",
@@ -303,6 +380,29 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
     public _FinalStage awards(List<PointsAward> awards) {
       this.awards.clear();
       this.awards.addAll(awards);
+      return this;
+    }
+
+    /**
+     * <p>The maximum number of points a user can be awarded in this points system</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage maxPoints(Double maxPoints) {
+      this.maxPoints = Optional.ofNullable(maxPoints);
+      return this;
+    }
+
+    /**
+     * <p>The maximum number of points a user can be awarded in this points system</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "maxPoints",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage maxPoints(Optional<Double> maxPoints) {
+      this.maxPoints = maxPoints;
       return this;
     }
 
@@ -316,6 +416,9 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
       return this;
     }
 
+    /**
+     * <p>The URL of the badge image for the points system</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "badgeUrl",
@@ -336,6 +439,9 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
       return this;
     }
 
+    /**
+     * <p>The description of the points system</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "description",
@@ -348,7 +454,7 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
 
     @java.lang.Override
     public MetricEventPointsResponse build() {
-      return new MetricEventPointsResponse(id, name, description, badgeUrl, total, awards, added, additionalProperties);
+      return new MetricEventPointsResponse(id, key, name, description, badgeUrl, maxPoints, total, awards, added, additionalProperties);
     }
   }
 }

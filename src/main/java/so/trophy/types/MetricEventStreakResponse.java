@@ -14,7 +14,6 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import so.trophy.core.ObjectMappers;
-import java.lang.Boolean;
 import java.lang.Integer;
 import java.lang.Object;
 import java.lang.String;
@@ -49,7 +48,7 @@ public final class MetricEventStreakResponse implements IBaseStreakResponse {
 
   private final Optional<Integer> freezeAutoEarnAmount;
 
-  private final Optional<Boolean> extended;
+  private final boolean extended;
 
   private final Map<String, Object> additionalProperties;
 
@@ -57,7 +56,7 @@ public final class MetricEventStreakResponse implements IBaseStreakResponse {
       Optional<String> periodStart, Optional<String> periodEnd, Optional<String> expires,
       Optional<Integer> freezes, Optional<Integer> maxFreezes,
       Optional<Integer> freezeAutoEarnInterval, Optional<Integer> freezeAutoEarnAmount,
-      Optional<Boolean> extended, Map<String, Object> additionalProperties) {
+      boolean extended, Map<String, Object> additionalProperties) {
     this.length = length;
     this.frequency = frequency;
     this.started = started;
@@ -166,7 +165,7 @@ public final class MetricEventStreakResponse implements IBaseStreakResponse {
    * @return Whether this metric event increased the user's streak length.
    */
   @JsonProperty("extended")
-  public Optional<Boolean> getExtended() {
+  public boolean getExtended() {
     return extended;
   }
 
@@ -182,7 +181,7 @@ public final class MetricEventStreakResponse implements IBaseStreakResponse {
   }
 
   private boolean equalTo(MetricEventStreakResponse other) {
-    return length == other.length && frequency.equals(other.frequency) && started.equals(other.started) && periodStart.equals(other.periodStart) && periodEnd.equals(other.periodEnd) && expires.equals(other.expires) && freezes.equals(other.freezes) && maxFreezes.equals(other.maxFreezes) && freezeAutoEarnInterval.equals(other.freezeAutoEarnInterval) && freezeAutoEarnAmount.equals(other.freezeAutoEarnAmount) && extended.equals(other.extended);
+    return length == other.length && frequency.equals(other.frequency) && started.equals(other.started) && periodStart.equals(other.periodStart) && periodEnd.equals(other.periodEnd) && expires.equals(other.expires) && freezes.equals(other.freezes) && maxFreezes.equals(other.maxFreezes) && freezeAutoEarnInterval.equals(other.freezeAutoEarnInterval) && freezeAutoEarnAmount.equals(other.freezeAutoEarnAmount) && extended == other.extended;
   }
 
   @java.lang.Override
@@ -200,64 +199,97 @@ public final class MetricEventStreakResponse implements IBaseStreakResponse {
   }
 
   public interface LengthStage {
+    /**
+     * <p>The length of the user's current streak.</p>
+     */
     FrequencyStage length(int length);
 
     Builder from(MetricEventStreakResponse other);
   }
 
   public interface FrequencyStage {
-    _FinalStage frequency(@NotNull StreakFrequency frequency);
+    /**
+     * <p>The frequency of the streak.</p>
+     */
+    ExtendedStage frequency(@NotNull StreakFrequency frequency);
+  }
+
+  public interface ExtendedStage {
+    /**
+     * <p>Whether this metric event increased the user's streak length.</p>
+     */
+    _FinalStage extended(boolean extended);
   }
 
   public interface _FinalStage {
     MetricEventStreakResponse build();
 
+    /**
+     * <p>The date the streak started.</p>
+     */
     _FinalStage started(Optional<String> started);
 
     _FinalStage started(String started);
 
+    /**
+     * <p>The start date of the current streak period.</p>
+     */
     _FinalStage periodStart(Optional<String> periodStart);
 
     _FinalStage periodStart(String periodStart);
 
+    /**
+     * <p>The end date of the current streak period.</p>
+     */
     _FinalStage periodEnd(Optional<String> periodEnd);
 
     _FinalStage periodEnd(String periodEnd);
 
+    /**
+     * <p>The date the streak will expire if the user does not increment a metric.</p>
+     */
     _FinalStage expires(Optional<String> expires);
 
     _FinalStage expires(String expires);
 
+    /**
+     * <p>The number of available streak freezes. Only present if the organization has enabled streak freezes.</p>
+     */
     _FinalStage freezes(Optional<Integer> freezes);
 
     _FinalStage freezes(Integer freezes);
 
+    /**
+     * <p>The maximum number of streak freezes a user can have. Only present if the organization has enabled streak freezes.</p>
+     */
     _FinalStage maxFreezes(Optional<Integer> maxFreezes);
 
     _FinalStage maxFreezes(Integer maxFreezes);
 
+    /**
+     * <p>The interval at which the user will earn streak freezes, in days. Only present if the organization has enabled streak freeze auto-earn.</p>
+     */
     _FinalStage freezeAutoEarnInterval(Optional<Integer> freezeAutoEarnInterval);
 
     _FinalStage freezeAutoEarnInterval(Integer freezeAutoEarnInterval);
 
+    /**
+     * <p>The amount of streak freezes the user will earn per interval. Only present if the organization has enabled streak freeze auto-earn.</p>
+     */
     _FinalStage freezeAutoEarnAmount(Optional<Integer> freezeAutoEarnAmount);
 
     _FinalStage freezeAutoEarnAmount(Integer freezeAutoEarnAmount);
-
-    _FinalStage extended(Optional<Boolean> extended);
-
-    _FinalStage extended(Boolean extended);
   }
 
   @JsonIgnoreProperties(
       ignoreUnknown = true
   )
-  public static final class Builder implements LengthStage, FrequencyStage, _FinalStage {
+  public static final class Builder implements LengthStage, FrequencyStage, ExtendedStage, _FinalStage {
     private int length;
 
     private StreakFrequency frequency;
 
-    private Optional<Boolean> extended = Optional.empty();
+    private boolean extended;
 
     private Optional<Integer> freezeAutoEarnAmount = Optional.empty();
 
@@ -299,6 +331,7 @@ public final class MetricEventStreakResponse implements IBaseStreakResponse {
 
     /**
      * <p>The length of the user's current streak.</p>
+     * <p>The length of the user's current streak.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -310,31 +343,24 @@ public final class MetricEventStreakResponse implements IBaseStreakResponse {
 
     /**
      * <p>The frequency of the streak.</p>
+     * <p>The frequency of the streak.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
     @JsonSetter("frequency")
-    public _FinalStage frequency(@NotNull StreakFrequency frequency) {
+    public ExtendedStage frequency(@NotNull StreakFrequency frequency) {
       this.frequency = Objects.requireNonNull(frequency, "frequency must not be null");
       return this;
     }
 
     /**
      * <p>Whether this metric event increased the user's streak length.</p>
+     * <p>Whether this metric event increased the user's streak length.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage extended(Boolean extended) {
-      this.extended = Optional.ofNullable(extended);
-      return this;
-    }
-
-    @java.lang.Override
-    @JsonSetter(
-        value = "extended",
-        nulls = Nulls.SKIP
-    )
-    public _FinalStage extended(Optional<Boolean> extended) {
+    @JsonSetter("extended")
+    public _FinalStage extended(boolean extended) {
       this.extended = extended;
       return this;
     }
@@ -349,6 +375,9 @@ public final class MetricEventStreakResponse implements IBaseStreakResponse {
       return this;
     }
 
+    /**
+     * <p>The amount of streak freezes the user will earn per interval. Only present if the organization has enabled streak freeze auto-earn.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "freezeAutoEarnAmount",
@@ -369,6 +398,9 @@ public final class MetricEventStreakResponse implements IBaseStreakResponse {
       return this;
     }
 
+    /**
+     * <p>The interval at which the user will earn streak freezes, in days. Only present if the organization has enabled streak freeze auto-earn.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "freezeAutoEarnInterval",
@@ -389,6 +421,9 @@ public final class MetricEventStreakResponse implements IBaseStreakResponse {
       return this;
     }
 
+    /**
+     * <p>The maximum number of streak freezes a user can have. Only present if the organization has enabled streak freezes.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "maxFreezes",
@@ -409,6 +444,9 @@ public final class MetricEventStreakResponse implements IBaseStreakResponse {
       return this;
     }
 
+    /**
+     * <p>The number of available streak freezes. Only present if the organization has enabled streak freezes.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "freezes",
@@ -429,6 +467,9 @@ public final class MetricEventStreakResponse implements IBaseStreakResponse {
       return this;
     }
 
+    /**
+     * <p>The date the streak will expire if the user does not increment a metric.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "expires",
@@ -449,6 +490,9 @@ public final class MetricEventStreakResponse implements IBaseStreakResponse {
       return this;
     }
 
+    /**
+     * <p>The end date of the current streak period.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "periodEnd",
@@ -469,6 +513,9 @@ public final class MetricEventStreakResponse implements IBaseStreakResponse {
       return this;
     }
 
+    /**
+     * <p>The start date of the current streak period.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "periodStart",
@@ -489,6 +536,9 @@ public final class MetricEventStreakResponse implements IBaseStreakResponse {
       return this;
     }
 
+    /**
+     * <p>The date the streak started.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "started",

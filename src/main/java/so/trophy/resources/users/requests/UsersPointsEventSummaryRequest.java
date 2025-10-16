@@ -96,16 +96,25 @@ public final class UsersPointsEventSummaryRequest {
   }
 
   public interface AggregationStage {
+    /**
+     * <p>The time period over which to aggregate the event data.</p>
+     */
     StartDateStage aggregation(@NotNull UsersPointsEventSummaryRequestAggregation aggregation);
 
     Builder from(UsersPointsEventSummaryRequest other);
   }
 
   public interface StartDateStage {
+    /**
+     * <p>The start date for the data range in YYYY-MM-DD format. The startDate must be before the endDate, and the date range must not exceed 400 days.</p>
+     */
     EndDateStage startDate(@NotNull String startDate);
   }
 
   public interface EndDateStage {
+    /**
+     * <p>The end date for the data range in YYYY-MM-DD format. The endDate must be after the startDate, and the date range must not exceed 400 days.</p>
+     */
     _FinalStage endDate(@NotNull String endDate);
   }
 
@@ -139,6 +148,7 @@ public final class UsersPointsEventSummaryRequest {
 
     /**
      * <p>The time period over which to aggregate the event data.</p>
+     * <p>The time period over which to aggregate the event data.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -151,6 +161,7 @@ public final class UsersPointsEventSummaryRequest {
 
     /**
      * <p>The start date for the data range in YYYY-MM-DD format. The startDate must be before the endDate, and the date range must not exceed 400 days.</p>
+     * <p>The start date for the data range in YYYY-MM-DD format. The startDate must be before the endDate, and the date range must not exceed 400 days.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -161,6 +172,7 @@ public final class UsersPointsEventSummaryRequest {
     }
 
     /**
+     * <p>The end date for the data range in YYYY-MM-DD format. The endDate must be after the startDate, and the date range must not exceed 400 days.</p>
      * <p>The end date for the data range in YYYY-MM-DD format. The endDate must be after the startDate, and the date range must not exceed 400 days.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */

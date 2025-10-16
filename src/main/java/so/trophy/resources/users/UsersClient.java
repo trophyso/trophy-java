@@ -5,29 +5,10 @@ package so.trophy.resources.users;
  */
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import so.trophy.core.ClientOptions;
-import so.trophy.core.MediaTypes;
-import so.trophy.core.ObjectMappers;
 import so.trophy.core.RequestOptions;
-import so.trophy.core.TrophyApiApiException;
-import so.trophy.core.TrophyApiException;
-import so.trophy.errors.BadRequestError;
-import so.trophy.errors.NotFoundError;
-import so.trophy.errors.UnauthorizedError;
-import so.trophy.errors.UnprocessableEntityError;
-import java.io.IOException;
-import java.lang.Object;
 import java.lang.String;
 import java.util.List;
-import okhttp3.Headers;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 import so.trophy.resources.users.requests.UsersAchievementsRequest;
 import so.trophy.resources.users.requests.UsersLeaderboardRequest;
 import so.trophy.resources.users.requests.UsersMetricEventSummaryRequest;
@@ -37,358 +18,113 @@ import so.trophy.resources.users.requests.UsersStreakRequest;
 import so.trophy.resources.users.types.UsersMetricEventSummaryResponseItem;
 import so.trophy.resources.users.types.UsersPointsEventSummaryResponseItem;
 import so.trophy.types.CompletedAchievementResponse;
-import so.trophy.types.ErrorBody;
 import so.trophy.types.GetUserPointsResponse;
 import so.trophy.types.MetricResponse;
 import so.trophy.types.StreakResponse;
 import so.trophy.types.UpdatedUser;
 import so.trophy.types.UpsertedUser;
 import so.trophy.types.User;
-import so.trophy.types.UserLeaderboardResponse;
+import so.trophy.types.UserLeaderboardResponseWithHistory;
 
 public class UsersClient {
   protected final ClientOptions clientOptions;
 
+  private final RawUsersClient rawClient;
+
   public UsersClient(ClientOptions clientOptions) {
     this.clientOptions = clientOptions;
+    this.rawClient = new RawUsersClient(clientOptions);
+  }
+
+  /**
+   * Get responses with HTTP metadata like headers
+   */
+  public RawUsersClient withRawResponse() {
+    return this.rawClient;
   }
 
   /**
    * Create a new user.
    */
   public User create(UpsertedUser request) {
-    return create(request,null);
+    return this.rawClient.create(request).body();
   }
 
   /**
    * Create a new user.
    */
   public User create(UpsertedUser request, RequestOptions requestOptions) {
-    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
-
-      .addPathSegments("users")
-      .build();
-    RequestBody body;
-    try {
-      body = RequestBody.create(ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-    }
-    catch(JsonProcessingException e) {
-      throw new TrophyApiException("Failed to serialize request", e);
-    }
-    Request okhttpRequest = new Request.Builder()
-      .url(httpUrl)
-      .method("POST", body)
-      .headers(Headers.of(clientOptions.headers(requestOptions)))
-      .addHeader("Content-Type", "application/json")
-      .addHeader("Accept", "application/json")
-      .build();
-    OkHttpClient client = clientOptions.httpClient();
-    if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-      client = clientOptions.httpClientWithTimeout(requestOptions);
-    }
-    try (Response response = client.newCall(okhttpRequest).execute()) {
-      ResponseBody responseBody = response.body();
-      if (response.isSuccessful()) {
-        return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), User.class);
-      }
-      String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-      try {
-        switch (response.code()) {
-          case 400:throw new BadRequestError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-          case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-          case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-        }
-      }
-      catch (JsonProcessingException ignored) {
-        // unable to map error response, throwing generic error
-      }
-      throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-    }
-    catch (IOException e) {
-      throw new TrophyApiException("Network error executing HTTP request", e);
-    }
+    return this.rawClient.create(request, requestOptions).body();
   }
 
   /**
    * Get a single user.
    */
   public User get(String id) {
-    return get(id,null);
+    return this.rawClient.get(id).body();
   }
 
   /**
    * Get a single user.
    */
   public User get(String id, RequestOptions requestOptions) {
-    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
-
-      .addPathSegments("users")
-      .addPathSegment(id)
-      .build();
-    Request okhttpRequest = new Request.Builder()
-      .url(httpUrl)
-      .method("GET", null)
-      .headers(Headers.of(clientOptions.headers(requestOptions)))
-      .addHeader("Content-Type", "application/json")
-      .addHeader("Accept", "application/json")
-      .build();
-    OkHttpClient client = clientOptions.httpClient();
-    if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-      client = clientOptions.httpClientWithTimeout(requestOptions);
-    }
-    try (Response response = client.newCall(okhttpRequest).execute()) {
-      ResponseBody responseBody = response.body();
-      if (response.isSuccessful()) {
-        return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), User.class);
-      }
-      String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-      try {
-        switch (response.code()) {
-          case 400:throw new BadRequestError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-          case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-          case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-        }
-      }
-      catch (JsonProcessingException ignored) {
-        // unable to map error response, throwing generic error
-      }
-      throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-    }
-    catch (IOException e) {
-      throw new TrophyApiException("Network error executing HTTP request", e);
-    }
-  }
-
-  /**
-   * Identify a user.
-   */
-  public User identify(String id) {
-    return identify(id,UpdatedUser.builder().build());
+    return this.rawClient.get(id, requestOptions).body();
   }
 
   /**
    * Identify a user.
    */
   public User identify(String id, UpdatedUser request) {
-    return identify(id,request,null);
+    return this.rawClient.identify(id, request).body();
   }
 
   /**
    * Identify a user.
    */
   public User identify(String id, UpdatedUser request, RequestOptions requestOptions) {
-    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
-
-      .addPathSegments("users")
-      .addPathSegment(id)
-      .build();
-    RequestBody body;
-    try {
-      body = RequestBody.create(ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-    }
-    catch(JsonProcessingException e) {
-      throw new TrophyApiException("Failed to serialize request", e);
-    }
-    Request okhttpRequest = new Request.Builder()
-      .url(httpUrl)
-      .method("PUT", body)
-      .headers(Headers.of(clientOptions.headers(requestOptions)))
-      .addHeader("Content-Type", "application/json")
-      .addHeader("Accept", "application/json")
-      .build();
-    OkHttpClient client = clientOptions.httpClient();
-    if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-      client = clientOptions.httpClientWithTimeout(requestOptions);
-    }
-    try (Response response = client.newCall(okhttpRequest).execute()) {
-      ResponseBody responseBody = response.body();
-      if (response.isSuccessful()) {
-        return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), User.class);
-      }
-      String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-      try {
-        switch (response.code()) {
-          case 400:throw new BadRequestError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-          case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-          case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-        }
-      }
-      catch (JsonProcessingException ignored) {
-        // unable to map error response, throwing generic error
-      }
-      throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-    }
-    catch (IOException e) {
-      throw new TrophyApiException("Network error executing HTTP request", e);
-    }
-  }
-
-  /**
-   * Update a user.
-   */
-  public User update(String id) {
-    return update(id,UpdatedUser.builder().build());
+    return this.rawClient.identify(id, request, requestOptions).body();
   }
 
   /**
    * Update a user.
    */
   public User update(String id, UpdatedUser request) {
-    return update(id,request,null);
+    return this.rawClient.update(id, request).body();
   }
 
   /**
    * Update a user.
    */
   public User update(String id, UpdatedUser request, RequestOptions requestOptions) {
-    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
-
-      .addPathSegments("users")
-      .addPathSegment(id)
-      .build();
-    RequestBody body;
-    try {
-      body = RequestBody.create(ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-    }
-    catch(JsonProcessingException e) {
-      throw new TrophyApiException("Failed to serialize request", e);
-    }
-    Request okhttpRequest = new Request.Builder()
-      .url(httpUrl)
-      .method("PATCH", body)
-      .headers(Headers.of(clientOptions.headers(requestOptions)))
-      .addHeader("Content-Type", "application/json")
-      .addHeader("Accept", "application/json")
-      .build();
-    OkHttpClient client = clientOptions.httpClient();
-    if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-      client = clientOptions.httpClientWithTimeout(requestOptions);
-    }
-    try (Response response = client.newCall(okhttpRequest).execute()) {
-      ResponseBody responseBody = response.body();
-      if (response.isSuccessful()) {
-        return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), User.class);
-      }
-      String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-      try {
-        switch (response.code()) {
-          case 400:throw new BadRequestError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-          case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-          case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-          case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-        }
-      }
-      catch (JsonProcessingException ignored) {
-        // unable to map error response, throwing generic error
-      }
-      throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-    }
-    catch (IOException e) {
-      throw new TrophyApiException("Network error executing HTTP request", e);
-    }
+    return this.rawClient.update(id, request, requestOptions).body();
   }
 
   /**
    * Get a single user's progress against all active metrics.
    */
   public List<MetricResponse> allMetrics(String id) {
-    return allMetrics(id,null);
+    return this.rawClient.allMetrics(id).body();
   }
 
   /**
    * Get a single user's progress against all active metrics.
    */
   public List<MetricResponse> allMetrics(String id, RequestOptions requestOptions) {
-    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
-
-      .addPathSegments("users")
-      .addPathSegment(id)
-      .addPathSegments("metrics")
-      .build();
-    Request okhttpRequest = new Request.Builder()
-      .url(httpUrl)
-      .method("GET", null)
-      .headers(Headers.of(clientOptions.headers(requestOptions)))
-      .addHeader("Content-Type", "application/json")
-      .addHeader("Accept", "application/json")
-      .build();
-    OkHttpClient client = clientOptions.httpClient();
-    if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-      client = clientOptions.httpClientWithTimeout(requestOptions);
-    }
-    try (Response response = client.newCall(okhttpRequest).execute()) {
-      ResponseBody responseBody = response.body();
-      if (response.isSuccessful()) {
-        return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<MetricResponse>>() {});
-      }
-      String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-      try {
-        switch (response.code()) {
-          case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-          case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-          case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-        }
-      }
-      catch (JsonProcessingException ignored) {
-        // unable to map error response, throwing generic error
-      }
-      throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-    }
-    catch (IOException e) {
-      throw new TrophyApiException("Network error executing HTTP request", e);
-    }
+    return this.rawClient.allMetrics(id, requestOptions).body();
   }
 
   /**
    * Get a user's progress against a single active metric.
    */
   public MetricResponse singleMetric(String id, String key) {
-    return singleMetric(id,key,null);
+    return this.rawClient.singleMetric(id, key).body();
   }
 
   /**
    * Get a user's progress against a single active metric.
    */
   public MetricResponse singleMetric(String id, String key, RequestOptions requestOptions) {
-    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
-
-      .addPathSegments("users")
-      .addPathSegment(id)
-      .addPathSegments("metrics")
-      .addPathSegment(key)
-      .build();
-    Request okhttpRequest = new Request.Builder()
-      .url(httpUrl)
-      .method("GET", null)
-      .headers(Headers.of(clientOptions.headers(requestOptions)))
-      .addHeader("Content-Type", "application/json")
-      .addHeader("Accept", "application/json")
-      .build();
-    OkHttpClient client = clientOptions.httpClient();
-    if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-      client = clientOptions.httpClientWithTimeout(requestOptions);
-    }
-    try (Response response = client.newCall(okhttpRequest).execute()) {
-      ResponseBody responseBody = response.body();
-      if (response.isSuccessful()) {
-        return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), MetricResponse.class);
-      }
-      String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-      try {
-        switch (response.code()) {
-          case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-          case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-          case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-        }
-      }
-      catch (JsonProcessingException ignored) {
-        // unable to map error response, throwing generic error
-      }
-      throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-    }
-    catch (IOException e) {
-      throw new TrophyApiException("Network error executing HTTP request", e);
-    }
+    return this.rawClient.singleMetric(id, key, requestOptions).body();
   }
 
   /**
@@ -396,7 +132,7 @@ public class UsersClient {
    */
   public List<UsersMetricEventSummaryResponseItem> metricEventSummary(String id, String key,
       UsersMetricEventSummaryRequest request) {
-    return metricEventSummary(id,key,request,null);
+    return this.rawClient.metricEventSummary(id, key, request).body();
   }
 
   /**
@@ -404,340 +140,112 @@ public class UsersClient {
    */
   public List<UsersMetricEventSummaryResponseItem> metricEventSummary(String id, String key,
       UsersMetricEventSummaryRequest request, RequestOptions requestOptions) {
-    HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
+    return this.rawClient.metricEventSummary(id, key, request, requestOptions).body();
+  }
 
-      .addPathSegments("users")
-      .addPathSegment(id)
-      .addPathSegments("metrics")
-      .addPathSegment(key)
-      .addPathSegments("event-summary");httpUrl.addQueryParameter("aggregation", request.getAggregation().toString());
-      httpUrl.addQueryParameter("startDate", request.getStartDate());
-      httpUrl.addQueryParameter("endDate", request.getEndDate());
-      Request.Builder _requestBuilder = new Request.Builder()
-        .url(httpUrl.build())
-        .method("GET", null)
-        .headers(Headers.of(clientOptions.headers(requestOptions)))
-        .addHeader("Content-Type", "application/json").addHeader("Accept", "application/json");
-      Request okhttpRequest = _requestBuilder.build();
-      OkHttpClient client = clientOptions.httpClient();
-      if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-        client = clientOptions.httpClientWithTimeout(requestOptions);
-      }
-      try (Response response = client.newCall(okhttpRequest).execute()) {
-        ResponseBody responseBody = response.body();
-        if (response.isSuccessful()) {
-          return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<UsersMetricEventSummaryResponseItem>>() {});
-        }
-        String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-        try {
-          switch (response.code()) {
-            case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-            case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-            case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-          }
-        }
-        catch (JsonProcessingException ignored) {
-          // unable to map error response, throwing generic error
-        }
-        throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-      }
-      catch (IOException e) {
-        throw new TrophyApiException("Network error executing HTTP request", e);
-      }
-    }
+  /**
+   * Get a user's achievements.
+   */
+  public List<CompletedAchievementResponse> achievements(String id) {
+    return this.rawClient.achievements(id).body();
+  }
 
-    /**
-     * Get a user's achievements.
-     */
-    public List<CompletedAchievementResponse> achievements(String id) {
-      return achievements(id,UsersAchievementsRequest.builder().build());
-    }
+  /**
+   * Get a user's achievements.
+   */
+  public List<CompletedAchievementResponse> achievements(String id,
+      UsersAchievementsRequest request) {
+    return this.rawClient.achievements(id, request).body();
+  }
 
-    /**
-     * Get a user's achievements.
-     */
-    public List<CompletedAchievementResponse> achievements(String id,
-        UsersAchievementsRequest request) {
-      return achievements(id,request,null);
-    }
+  /**
+   * Get a user's achievements.
+   */
+  public List<CompletedAchievementResponse> achievements(String id,
+      UsersAchievementsRequest request, RequestOptions requestOptions) {
+    return this.rawClient.achievements(id, request, requestOptions).body();
+  }
 
-    /**
-     * Get a user's achievements.
-     */
-    public List<CompletedAchievementResponse> achievements(String id,
-        UsersAchievementsRequest request, RequestOptions requestOptions) {
-      HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
+  /**
+   * Get a user's streak data.
+   */
+  public StreakResponse streak(String id) {
+    return this.rawClient.streak(id).body();
+  }
 
-        .addPathSegments("users")
-        .addPathSegment(id)
-        .addPathSegments("achievements");if (request.getIncludeIncomplete().isPresent()) {
-          httpUrl.addQueryParameter("includeIncomplete", request.getIncludeIncomplete().get());
-        }
-        Request.Builder _requestBuilder = new Request.Builder()
-          .url(httpUrl.build())
-          .method("GET", null)
-          .headers(Headers.of(clientOptions.headers(requestOptions)))
-          .addHeader("Content-Type", "application/json").addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-          client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-          ResponseBody responseBody = response.body();
-          if (response.isSuccessful()) {
-            return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<CompletedAchievementResponse>>() {});
-          }
-          String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-          try {
-            switch (response.code()) {
-              case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-              case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-              case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-            }
-          }
-          catch (JsonProcessingException ignored) {
-            // unable to map error response, throwing generic error
-          }
-          throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        }
-        catch (IOException e) {
-          throw new TrophyApiException("Network error executing HTTP request", e);
-        }
-      }
+  /**
+   * Get a user's streak data.
+   */
+  public StreakResponse streak(String id, UsersStreakRequest request) {
+    return this.rawClient.streak(id, request).body();
+  }
 
-      /**
-       * Get a user's streak data.
-       */
-      public StreakResponse streak(String id) {
-        return streak(id,UsersStreakRequest.builder().build());
-      }
+  /**
+   * Get a user's streak data.
+   */
+  public StreakResponse streak(String id, UsersStreakRequest request,
+      RequestOptions requestOptions) {
+    return this.rawClient.streak(id, request, requestOptions).body();
+  }
 
-      /**
-       * Get a user's streak data.
-       */
-      public StreakResponse streak(String id, UsersStreakRequest request) {
-        return streak(id,request,null);
-      }
+  /**
+   * Get a user's points for a specific points system.
+   */
+  public GetUserPointsResponse points(String id, String key) {
+    return this.rawClient.points(id, key).body();
+  }
 
-      /**
-       * Get a user's streak data.
-       */
-      public StreakResponse streak(String id, UsersStreakRequest request,
-          RequestOptions requestOptions) {
-        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
+  /**
+   * Get a user's points for a specific points system.
+   */
+  public GetUserPointsResponse points(String id, String key, UsersPointsRequest request) {
+    return this.rawClient.points(id, key, request).body();
+  }
 
-          .addPathSegments("users")
-          .addPathSegment(id)
-          .addPathSegments("streak");if (request.getHistoryPeriods().isPresent()) {
-            httpUrl.addQueryParameter("historyPeriods", request.getHistoryPeriods().get().toString());
-          }
-          Request.Builder _requestBuilder = new Request.Builder()
-            .url(httpUrl.build())
-            .method("GET", null)
-            .headers(Headers.of(clientOptions.headers(requestOptions)))
-            .addHeader("Content-Type", "application/json").addHeader("Accept", "application/json");
-          Request okhttpRequest = _requestBuilder.build();
-          OkHttpClient client = clientOptions.httpClient();
-          if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-          }
-          try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-              return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), StreakResponse.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-              switch (response.code()) {
-                case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-                case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-                case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-              }
-            }
-            catch (JsonProcessingException ignored) {
-              // unable to map error response, throwing generic error
-            }
-            throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-          }
-          catch (IOException e) {
-            throw new TrophyApiException("Network error executing HTTP request", e);
-          }
-        }
+  /**
+   * Get a user's points for a specific points system.
+   */
+  public GetUserPointsResponse points(String id, String key, UsersPointsRequest request,
+      RequestOptions requestOptions) {
+    return this.rawClient.points(id, key, request, requestOptions).body();
+  }
 
-        /**
-         * Get a user's points for a specific points system.
-         */
-        public GetUserPointsResponse points(String id, String key) {
-          return points(id,key,UsersPointsRequest.builder().build());
-        }
+  /**
+   * Get a summary of points awards over time for a user for a specific points system.
+   */
+  public List<UsersPointsEventSummaryResponseItem> pointsEventSummary(String id, String key,
+      UsersPointsEventSummaryRequest request) {
+    return this.rawClient.pointsEventSummary(id, key, request).body();
+  }
 
-        /**
-         * Get a user's points for a specific points system.
-         */
-        public GetUserPointsResponse points(String id, String key, UsersPointsRequest request) {
-          return points(id,key,request,null);
-        }
+  /**
+   * Get a summary of points awards over time for a user for a specific points system.
+   */
+  public List<UsersPointsEventSummaryResponseItem> pointsEventSummary(String id, String key,
+      UsersPointsEventSummaryRequest request, RequestOptions requestOptions) {
+    return this.rawClient.pointsEventSummary(id, key, request, requestOptions).body();
+  }
 
-        /**
-         * Get a user's points for a specific points system.
-         */
-        public GetUserPointsResponse points(String id, String key, UsersPointsRequest request,
-            RequestOptions requestOptions) {
-          HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
+  /**
+   * Get a user's rank, value, and history for a specific leaderboard.
+   */
+  public UserLeaderboardResponseWithHistory leaderboard(String id, String key) {
+    return this.rawClient.leaderboard(id, key).body();
+  }
 
-            .addPathSegments("users")
-            .addPathSegment(id)
-            .addPathSegments("points")
-            .addPathSegment(key);if (request.getAwards().isPresent()) {
-              httpUrl.addQueryParameter("awards", request.getAwards().get().toString());
-            }
-            Request.Builder _requestBuilder = new Request.Builder()
-              .url(httpUrl.build())
-              .method("GET", null)
-              .headers(Headers.of(clientOptions.headers(requestOptions)))
-              .addHeader("Content-Type", "application/json").addHeader("Accept", "application/json");
-            Request okhttpRequest = _requestBuilder.build();
-            OkHttpClient client = clientOptions.httpClient();
-            if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-              client = clientOptions.httpClientWithTimeout(requestOptions);
-            }
-            try (Response response = client.newCall(okhttpRequest).execute()) {
-              ResponseBody responseBody = response.body();
-              if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), GetUserPointsResponse.class);
-              }
-              String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-              try {
-                switch (response.code()) {
-                  case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-                  case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-                  case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-                }
-              }
-              catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-              }
-              throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-            }
-            catch (IOException e) {
-              throw new TrophyApiException("Network error executing HTTP request", e);
-            }
-          }
+  /**
+   * Get a user's rank, value, and history for a specific leaderboard.
+   */
+  public UserLeaderboardResponseWithHistory leaderboard(String id, String key,
+      UsersLeaderboardRequest request) {
+    return this.rawClient.leaderboard(id, key, request).body();
+  }
 
-          /**
-           * Get a summary of points awards over time for a user for a specific points system.
-           */
-          public List<UsersPointsEventSummaryResponseItem> pointsEventSummary(String id, String key,
-              UsersPointsEventSummaryRequest request) {
-            return pointsEventSummary(id,key,request,null);
-          }
-
-          /**
-           * Get a summary of points awards over time for a user for a specific points system.
-           */
-          public List<UsersPointsEventSummaryResponseItem> pointsEventSummary(String id, String key,
-              UsersPointsEventSummaryRequest request, RequestOptions requestOptions) {
-            HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
-
-              .addPathSegments("users")
-              .addPathSegment(id)
-              .addPathSegments("points")
-              .addPathSegment(key)
-              .addPathSegments("event-summary");httpUrl.addQueryParameter("aggregation", request.getAggregation().toString());
-              httpUrl.addQueryParameter("startDate", request.getStartDate());
-              httpUrl.addQueryParameter("endDate", request.getEndDate());
-              Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl.build())
-                .method("GET", null)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json").addHeader("Accept", "application/json");
-              Request okhttpRequest = _requestBuilder.build();
-              OkHttpClient client = clientOptions.httpClient();
-              if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-                client = clientOptions.httpClientWithTimeout(requestOptions);
-              }
-              try (Response response = client.newCall(okhttpRequest).execute()) {
-                ResponseBody responseBody = response.body();
-                if (response.isSuccessful()) {
-                  return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<UsersPointsEventSummaryResponseItem>>() {});
-                }
-                String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                try {
-                  switch (response.code()) {
-                    case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-                    case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-                    case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-                  }
-                }
-                catch (JsonProcessingException ignored) {
-                  // unable to map error response, throwing generic error
-                }
-                throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-              }
-              catch (IOException e) {
-                throw new TrophyApiException("Network error executing HTTP request", e);
-              }
-            }
-
-            /**
-             * Get a user's rank, value, and history for a specific leaderboard.
-             */
-            public UserLeaderboardResponse leaderboard(String id, String key) {
-              return leaderboard(id,key,UsersLeaderboardRequest.builder().build());
-            }
-
-            /**
-             * Get a user's rank, value, and history for a specific leaderboard.
-             */
-            public UserLeaderboardResponse leaderboard(String id, String key,
-                UsersLeaderboardRequest request) {
-              return leaderboard(id,key,request,null);
-            }
-
-            /**
-             * Get a user's rank, value, and history for a specific leaderboard.
-             */
-            public UserLeaderboardResponse leaderboard(String id, String key,
-                UsersLeaderboardRequest request, RequestOptions requestOptions) {
-              HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
-
-                .addPathSegments("users")
-                .addPathSegment(id)
-                .addPathSegments("leaderboards")
-                .addPathSegment(key);if (request.getRun().isPresent()) {
-                  httpUrl.addQueryParameter("run", request.getRun().get());
-                }
-                Request.Builder _requestBuilder = new Request.Builder()
-                  .url(httpUrl.build())
-                  .method("GET", null)
-                  .headers(Headers.of(clientOptions.headers(requestOptions)))
-                  .addHeader("Content-Type", "application/json").addHeader("Accept", "application/json");
-                Request okhttpRequest = _requestBuilder.build();
-                OkHttpClient client = clientOptions.httpClient();
-                if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-                  client = clientOptions.httpClientWithTimeout(requestOptions);
-                }
-                try (Response response = client.newCall(okhttpRequest).execute()) {
-                  ResponseBody responseBody = response.body();
-                  if (response.isSuccessful()) {
-                    return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), UserLeaderboardResponse.class);
-                  }
-                  String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                  try {
-                    switch (response.code()) {
-                      case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-                      case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-                      case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-                    }
-                  }
-                  catch (JsonProcessingException ignored) {
-                    // unable to map error response, throwing generic error
-                  }
-                  throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-                }
-                catch (IOException e) {
-                  throw new TrophyApiException("Network error executing HTTP request", e);
-                }
-              }
-            }
+  /**
+   * Get a user's rank, value, and history for a specific leaderboard.
+   */
+  public UserLeaderboardResponseWithHistory leaderboard(String id, String key,
+      UsersLeaderboardRequest request, RequestOptions requestOptions) {
+    return this.rawClient.leaderboard(id, key, request, requestOptions).body();
+  }
+}

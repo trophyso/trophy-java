@@ -90,6 +90,9 @@ public final class UsersPointsRequest {
       return this;
     }
 
+    /**
+     * <p>The number of recent point awards to return.</p>
+     */
     @JsonSetter(
         value = "awards",
         nulls = Nulls.SKIP

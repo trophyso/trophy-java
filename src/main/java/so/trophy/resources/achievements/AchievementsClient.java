@@ -5,93 +5,50 @@ package so.trophy.resources.achievements;
  */
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import so.trophy.core.ClientOptions;
-import so.trophy.core.MediaTypes;
-import so.trophy.core.ObjectMappers;
 import so.trophy.core.RequestOptions;
-import so.trophy.core.TrophyApiApiException;
-import so.trophy.core.TrophyApiException;
-import so.trophy.errors.NotFoundError;
-import so.trophy.errors.UnauthorizedError;
-import so.trophy.errors.UnprocessableEntityError;
-import java.io.IOException;
-import java.lang.Object;
 import java.lang.String;
 import java.util.List;
-import okhttp3.Headers;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 import so.trophy.resources.achievements.requests.AchievementsCompleteRequest;
 import so.trophy.types.AchievementCompletionResponse;
 import so.trophy.types.AchievementWithStatsResponse;
-import so.trophy.types.ErrorBody;
 
 public class AchievementsClient {
   protected final ClientOptions clientOptions;
 
+  private final RawAchievementsClient rawClient;
+
   public AchievementsClient(ClientOptions clientOptions) {
     this.clientOptions = clientOptions;
+    this.rawClient = new RawAchievementsClient(clientOptions);
+  }
+
+  /**
+   * Get responses with HTTP metadata like headers
+   */
+  public RawAchievementsClient withRawResponse() {
+    return this.rawClient;
   }
 
   /**
    * Get all achievements and their completion stats.
    */
   public List<AchievementWithStatsResponse> all() {
-    return all(null);
+    return this.rawClient.all().body();
   }
 
   /**
    * Get all achievements and their completion stats.
    */
   public List<AchievementWithStatsResponse> all(RequestOptions requestOptions) {
-    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
-
-      .addPathSegments("achievements")
-      .build();
-    Request okhttpRequest = new Request.Builder()
-      .url(httpUrl)
-      .method("GET", null)
-      .headers(Headers.of(clientOptions.headers(requestOptions)))
-      .addHeader("Content-Type", "application/json")
-      .addHeader("Accept", "application/json")
-      .build();
-    OkHttpClient client = clientOptions.httpClient();
-    if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-      client = clientOptions.httpClientWithTimeout(requestOptions);
-    }
-    try (Response response = client.newCall(okhttpRequest).execute()) {
-      ResponseBody responseBody = response.body();
-      if (response.isSuccessful()) {
-        return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<AchievementWithStatsResponse>>() {});
-      }
-      String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-      try {
-        switch (response.code()) {
-          case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-          case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-        }
-      }
-      catch (JsonProcessingException ignored) {
-        // unable to map error response, throwing generic error
-      }
-      throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-    }
-    catch (IOException e) {
-      throw new TrophyApiException("Network error executing HTTP request", e);
-    }
+    return this.rawClient.all(requestOptions).body();
   }
 
   /**
    * Mark an achievement as completed for a user.
    */
   public AchievementCompletionResponse complete(String key, AchievementsCompleteRequest request) {
-    return complete(key,request,null);
+    return this.rawClient.complete(key, request).body();
   }
 
   /**
@@ -99,50 +56,6 @@ public class AchievementsClient {
    */
   public AchievementCompletionResponse complete(String key, AchievementsCompleteRequest request,
       RequestOptions requestOptions) {
-    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
-
-      .addPathSegments("achievements")
-      .addPathSegment(key)
-      .addPathSegments("complete")
-      .build();
-    RequestBody body;
-    try {
-      body = RequestBody.create(ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-    }
-    catch(JsonProcessingException e) {
-      throw new TrophyApiException("Failed to serialize request", e);
-    }
-    Request okhttpRequest = new Request.Builder()
-      .url(httpUrl)
-      .method("POST", body)
-      .headers(Headers.of(clientOptions.headers(requestOptions)))
-      .addHeader("Content-Type", "application/json")
-      .addHeader("Accept", "application/json")
-      .build();
-    OkHttpClient client = clientOptions.httpClient();
-    if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-      client = clientOptions.httpClientWithTimeout(requestOptions);
-    }
-    try (Response response = client.newCall(okhttpRequest).execute()) {
-      ResponseBody responseBody = response.body();
-      if (response.isSuccessful()) {
-        return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), AchievementCompletionResponse.class);
-      }
-      String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-      try {
-        switch (response.code()) {
-          case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-          case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-          case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class));
-        }
-      }
-      catch (JsonProcessingException ignored) {
-        // unable to map error response, throwing generic error
-      }
-      throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-    }
-    catch (IOException e) {
-      throw new TrophyApiException("Network error executing HTTP request", e);
-    }
+    return this.rawClient.complete(key, request, requestOptions).body();
   }
 }

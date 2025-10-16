@@ -6,6 +6,7 @@ package so.trophy.errors;
 
 
 import so.trophy.core.TrophyApiApiException;
+import okhttp3.Response;
 import so.trophy.types.ErrorBody;
 
 public final class UnauthorizedError extends TrophyApiApiException {
@@ -16,6 +17,11 @@ public final class UnauthorizedError extends TrophyApiApiException {
 
   public UnauthorizedError(ErrorBody body) {
     super("UnauthorizedError", 401, body);
+    this.body = body;
+  }
+
+  public UnauthorizedError(ErrorBody body, Response rawResponse) {
+    super("UnauthorizedError", 401, body, rawResponse);
     this.body = body;
   }
 

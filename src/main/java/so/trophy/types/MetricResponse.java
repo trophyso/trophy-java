@@ -131,30 +131,48 @@ public final class MetricResponse {
   }
 
   public interface IdStage {
+    /**
+     * <p>The unique ID of the metric.</p>
+     */
     KeyStage id(@NotNull String id);
 
     Builder from(MetricResponse other);
   }
 
   public interface KeyStage {
+    /**
+     * <p>The unique key of the metric.</p>
+     */
     NameStage key(@NotNull String key);
   }
 
   public interface NameStage {
+    /**
+     * <p>The name of the metric.</p>
+     */
     StatusStage name(@NotNull String name);
   }
 
   public interface StatusStage {
+    /**
+     * <p>The status of the metric.</p>
+     */
     CurrentStage status(@NotNull MetricStatus status);
   }
 
   public interface CurrentStage {
+    /**
+     * <p>The user's current total for the metric.</p>
+     */
     _FinalStage current(double current);
   }
 
   public interface _FinalStage {
     MetricResponse build();
 
+    /**
+     * <p>A list of the metric's achievements and the user's progress towards each.</p>
+     */
     _FinalStage achievements(List<CompletedAchievementResponse> achievements);
 
     _FinalStage addAchievements(CompletedAchievementResponse achievements);
@@ -197,6 +215,7 @@ public final class MetricResponse {
 
     /**
      * <p>The unique ID of the metric.</p>
+     * <p>The unique ID of the metric.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -207,6 +226,7 @@ public final class MetricResponse {
     }
 
     /**
+     * <p>The unique key of the metric.</p>
      * <p>The unique key of the metric.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
@@ -219,6 +239,7 @@ public final class MetricResponse {
 
     /**
      * <p>The name of the metric.</p>
+     * <p>The name of the metric.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -230,6 +251,7 @@ public final class MetricResponse {
 
     /**
      * <p>The status of the metric.</p>
+     * <p>The status of the metric.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -240,6 +262,7 @@ public final class MetricResponse {
     }
 
     /**
+     * <p>The user's current total for the metric.</p>
      * <p>The user's current total for the metric.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
@@ -256,7 +279,9 @@ public final class MetricResponse {
      */
     @java.lang.Override
     public _FinalStage addAllAchievements(List<CompletedAchievementResponse> achievements) {
-      this.achievements.addAll(achievements);
+      if (achievements != null) {
+        this.achievements.addAll(achievements);
+      }
       return this;
     }
 
@@ -270,6 +295,9 @@ public final class MetricResponse {
       return this;
     }
 
+    /**
+     * <p>A list of the metric's achievements and the user's progress towards each.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "achievements",

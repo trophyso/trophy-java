@@ -95,16 +95,25 @@ public final class UsersPointsEventSummaryResponseItem {
   }
 
   public interface DateStage {
+    /**
+     * <p>The date of the data point. For weekly or monthly aggregations, this is the first date of the period.</p>
+     */
     TotalStage date(@NotNull String date);
 
     Builder from(UsersPointsEventSummaryResponseItem other);
   }
 
   public interface TotalStage {
+    /**
+     * <p>The user's total points at the end of this date.</p>
+     */
     ChangeStage total(double total);
   }
 
   public interface ChangeStage {
+    /**
+     * <p>The change in the user's total points during this period.</p>
+     */
     _FinalStage change(double change);
   }
 
@@ -138,6 +147,7 @@ public final class UsersPointsEventSummaryResponseItem {
 
     /**
      * <p>The date of the data point. For weekly or monthly aggregations, this is the first date of the period.</p>
+     * <p>The date of the data point. For weekly or monthly aggregations, this is the first date of the period.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -149,6 +159,7 @@ public final class UsersPointsEventSummaryResponseItem {
 
     /**
      * <p>The user's total points at the end of this date.</p>
+     * <p>The user's total points at the end of this date.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -159,6 +170,7 @@ public final class UsersPointsEventSummaryResponseItem {
     }
 
     /**
+     * <p>The change in the user's total points during this period.</p>
      * <p>The change in the user's total points during this period.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */

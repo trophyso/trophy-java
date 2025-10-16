@@ -84,12 +84,18 @@ public final class PointsTriggerResponseUserAttributesItem {
   }
 
   public interface KeyStage {
+    /**
+     * <p>The key of the user attribute.</p>
+     */
     ValueStage key(@NotNull String key);
 
     Builder from(PointsTriggerResponseUserAttributesItem other);
   }
 
   public interface ValueStage {
+    /**
+     * <p>The value of the user attribute.</p>
+     */
     _FinalStage value(@NotNull String value);
   }
 
@@ -120,6 +126,7 @@ public final class PointsTriggerResponseUserAttributesItem {
 
     /**
      * <p>The key of the user attribute.</p>
+     * <p>The key of the user attribute.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -130,6 +137,7 @@ public final class PointsTriggerResponseUserAttributesItem {
     }
 
     /**
+     * <p>The value of the user attribute.</p>
      * <p>The value of the user attribute.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */

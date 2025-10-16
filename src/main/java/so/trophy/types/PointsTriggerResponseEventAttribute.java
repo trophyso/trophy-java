@@ -84,12 +84,18 @@ public final class PointsTriggerResponseEventAttribute {
   }
 
   public interface KeyStage {
+    /**
+     * <p>The key of the event attribute.</p>
+     */
     ValueStage key(@NotNull String key);
 
     Builder from(PointsTriggerResponseEventAttribute other);
   }
 
   public interface ValueStage {
+    /**
+     * <p>The required value of the event attribute.</p>
+     */
     _FinalStage value(@NotNull String value);
   }
 
@@ -120,6 +126,7 @@ public final class PointsTriggerResponseEventAttribute {
 
     /**
      * <p>The key of the event attribute.</p>
+     * <p>The key of the event attribute.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -130,6 +137,7 @@ public final class PointsTriggerResponseEventAttribute {
     }
 
     /**
+     * <p>The required value of the event attribute.</p>
      * <p>The required value of the event attribute.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */

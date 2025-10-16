@@ -108,22 +108,34 @@ public final class LeaderboardRanking {
   }
 
   public interface UserIdStage {
+    /**
+     * <p>The ID of the user.</p>
+     */
     RankStage userId(@NotNull String userId);
 
     Builder from(LeaderboardRanking other);
   }
 
   public interface RankStage {
+    /**
+     * <p>The user's rank in the leaderboard.</p>
+     */
     ValueStage rank(int rank);
   }
 
   public interface ValueStage {
+    /**
+     * <p>The user's value for this leaderboard (points, metric value, etc.).</p>
+     */
     _FinalStage value(int value);
   }
 
   public interface _FinalStage {
     LeaderboardRanking build();
 
+    /**
+     * <p>The name of the user. May be null if no name is set.</p>
+     */
     _FinalStage userName(Optional<String> userName);
 
     _FinalStage userName(String userName);
@@ -158,6 +170,7 @@ public final class LeaderboardRanking {
 
     /**
      * <p>The ID of the user.</p>
+     * <p>The ID of the user.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -169,6 +182,7 @@ public final class LeaderboardRanking {
 
     /**
      * <p>The user's rank in the leaderboard.</p>
+     * <p>The user's rank in the leaderboard.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -179,6 +193,7 @@ public final class LeaderboardRanking {
     }
 
     /**
+     * <p>The user's value for this leaderboard (points, metric value, etc.).</p>
      * <p>The user's value for this leaderboard (points, metric value, etc.).</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
@@ -199,6 +214,9 @@ public final class LeaderboardRanking {
       return this;
     }
 
+    /**
+     * <p>The name of the user. May be null if no name is set.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "userName",

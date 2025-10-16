@@ -106,6 +106,9 @@ public final class StreaksRankingsRequest {
       return this;
     }
 
+    /**
+     * <p>Number of users to return. Must be between 1 and 100.</p>
+     */
     @JsonSetter(
         value = "limit",
         nulls = Nulls.SKIP
@@ -120,6 +123,9 @@ public final class StreaksRankingsRequest {
       return this;
     }
 
+    /**
+     * <p>Whether to rank users by active streaks or longest streaks ever achieved.</p>
+     */
     @JsonSetter(
         value = "type",
         nulls = Nulls.SKIP

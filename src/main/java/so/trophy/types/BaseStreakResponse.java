@@ -188,46 +188,76 @@ public final class BaseStreakResponse implements IBaseStreakResponse {
   }
 
   public interface LengthStage {
+    /**
+     * <p>The length of the user's current streak.</p>
+     */
     FrequencyStage length(int length);
 
     Builder from(BaseStreakResponse other);
   }
 
   public interface FrequencyStage {
+    /**
+     * <p>The frequency of the streak.</p>
+     */
     _FinalStage frequency(@NotNull StreakFrequency frequency);
   }
 
   public interface _FinalStage {
     BaseStreakResponse build();
 
+    /**
+     * <p>The date the streak started.</p>
+     */
     _FinalStage started(Optional<String> started);
 
     _FinalStage started(String started);
 
+    /**
+     * <p>The start date of the current streak period.</p>
+     */
     _FinalStage periodStart(Optional<String> periodStart);
 
     _FinalStage periodStart(String periodStart);
 
+    /**
+     * <p>The end date of the current streak period.</p>
+     */
     _FinalStage periodEnd(Optional<String> periodEnd);
 
     _FinalStage periodEnd(String periodEnd);
 
+    /**
+     * <p>The date the streak will expire if the user does not increment a metric.</p>
+     */
     _FinalStage expires(Optional<String> expires);
 
     _FinalStage expires(String expires);
 
+    /**
+     * <p>The number of available streak freezes. Only present if the organization has enabled streak freezes.</p>
+     */
     _FinalStage freezes(Optional<Integer> freezes);
 
     _FinalStage freezes(Integer freezes);
 
+    /**
+     * <p>The maximum number of streak freezes a user can have. Only present if the organization has enabled streak freezes.</p>
+     */
     _FinalStage maxFreezes(Optional<Integer> maxFreezes);
 
     _FinalStage maxFreezes(Integer maxFreezes);
 
+    /**
+     * <p>The interval at which the user will earn streak freezes, in days. Only present if the organization has enabled streak freeze auto-earn.</p>
+     */
     _FinalStage freezeAutoEarnInterval(Optional<Integer> freezeAutoEarnInterval);
 
     _FinalStage freezeAutoEarnInterval(Integer freezeAutoEarnInterval);
 
+    /**
+     * <p>The amount of streak freezes the user will earn per interval. Only present if the organization has enabled streak freeze auto-earn.</p>
+     */
     _FinalStage freezeAutoEarnAmount(Optional<Integer> freezeAutoEarnAmount);
 
     _FinalStage freezeAutoEarnAmount(Integer freezeAutoEarnAmount);
@@ -280,6 +310,7 @@ public final class BaseStreakResponse implements IBaseStreakResponse {
 
     /**
      * <p>The length of the user's current streak.</p>
+     * <p>The length of the user's current streak.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -290,6 +321,7 @@ public final class BaseStreakResponse implements IBaseStreakResponse {
     }
 
     /**
+     * <p>The frequency of the streak.</p>
      * <p>The frequency of the streak.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
@@ -310,6 +342,9 @@ public final class BaseStreakResponse implements IBaseStreakResponse {
       return this;
     }
 
+    /**
+     * <p>The amount of streak freezes the user will earn per interval. Only present if the organization has enabled streak freeze auto-earn.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "freezeAutoEarnAmount",
@@ -330,6 +365,9 @@ public final class BaseStreakResponse implements IBaseStreakResponse {
       return this;
     }
 
+    /**
+     * <p>The interval at which the user will earn streak freezes, in days. Only present if the organization has enabled streak freeze auto-earn.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "freezeAutoEarnInterval",
@@ -350,6 +388,9 @@ public final class BaseStreakResponse implements IBaseStreakResponse {
       return this;
     }
 
+    /**
+     * <p>The maximum number of streak freezes a user can have. Only present if the organization has enabled streak freezes.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "maxFreezes",
@@ -370,6 +411,9 @@ public final class BaseStreakResponse implements IBaseStreakResponse {
       return this;
     }
 
+    /**
+     * <p>The number of available streak freezes. Only present if the organization has enabled streak freezes.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "freezes",
@@ -390,6 +434,9 @@ public final class BaseStreakResponse implements IBaseStreakResponse {
       return this;
     }
 
+    /**
+     * <p>The date the streak will expire if the user does not increment a metric.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "expires",
@@ -410,6 +457,9 @@ public final class BaseStreakResponse implements IBaseStreakResponse {
       return this;
     }
 
+    /**
+     * <p>The end date of the current streak period.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "periodEnd",
@@ -430,6 +480,9 @@ public final class BaseStreakResponse implements IBaseStreakResponse {
       return this;
     }
 
+    /**
+     * <p>The start date of the current streak period.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "periodStart",
@@ -450,6 +503,9 @@ public final class BaseStreakResponse implements IBaseStreakResponse {
       return this;
     }
 
+    /**
+     * <p>The date the streak started.</p>
+     */
     @java.lang.Override
     @JsonSetter(
         value = "started",

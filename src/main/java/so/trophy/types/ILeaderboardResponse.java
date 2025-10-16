@@ -15,8 +15,6 @@ public interface ILeaderboardResponse {
 
   String getKey();
 
-  Optional<LeaderboardResponseStatus> getStatus();
-
   LeaderboardResponseRankBy getRankBy();
 
   Optional<String> getMetricKey();
@@ -27,7 +25,7 @@ public interface ILeaderboardResponse {
 
   Optional<String> getPointsSystemName();
 
-  Optional<String> getDescription();
+  String getDescription();
 
   String getStart();
 
@@ -35,7 +33,7 @@ public interface ILeaderboardResponse {
 
   int getMaxParticipants();
 
-  Optional<String> getRunUnit();
+  Optional<LeaderboardResponseRunUnit> getRunUnit();
 
   int getRunInterval();
 }

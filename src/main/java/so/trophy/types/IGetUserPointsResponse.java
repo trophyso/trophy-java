@@ -5,6 +5,7 @@ package so.trophy.types;
  */
 
 
+import java.lang.Double;
 import java.lang.String;
 import java.util.List;
 import java.util.Optional;
@@ -12,13 +13,17 @@ import java.util.Optional;
 public interface IGetUserPointsResponse {
   String getId();
 
+  String getKey();
+
   String getName();
 
   Optional<String> getDescription();
 
   Optional<String> getBadgeUrl();
 
-  double getTotal();
+  Optional<Double> getMaxPoints();
+
+  int getTotal();
 
   List<PointsAward> getAwards();
 }

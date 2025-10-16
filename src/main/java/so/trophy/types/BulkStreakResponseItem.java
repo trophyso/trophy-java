@@ -11,7 +11,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import so.trophy.core.ObjectMappers;
 import java.lang.Object;
@@ -19,7 +18,6 @@ import java.lang.String;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
@@ -31,11 +29,11 @@ public final class BulkStreakResponseItem {
 
   private final int streakLength;
 
-  private final Optional<String> extended;
+  private final String extended;
 
   private final Map<String, Object> additionalProperties;
 
-  private BulkStreakResponseItem(String userId, int streakLength, Optional<String> extended,
+  private BulkStreakResponseItem(String userId, int streakLength, String extended,
       Map<String, Object> additionalProperties) {
     this.userId = userId;
     this.streakLength = streakLength;
@@ -63,7 +61,7 @@ public final class BulkStreakResponseItem {
    * @return The timestamp the streak was extended, as a string.
    */
   @JsonProperty("extended")
-  public Optional<String> getExtended() {
+  public String getExtended() {
     return extended;
   }
 
@@ -97,32 +95,41 @@ public final class BulkStreakResponseItem {
   }
 
   public interface UserIdStage {
+    /**
+     * <p>The ID of the user.</p>
+     */
     StreakLengthStage userId(@NotNull String userId);
 
     Builder from(BulkStreakResponseItem other);
   }
 
   public interface StreakLengthStage {
-    _FinalStage streakLength(int streakLength);
+    /**
+     * <p>The length of the user's streak.</p>
+     */
+    ExtendedStage streakLength(int streakLength);
+  }
+
+  public interface ExtendedStage {
+    /**
+     * <p>The timestamp the streak was extended, as a string.</p>
+     */
+    _FinalStage extended(@NotNull String extended);
   }
 
   public interface _FinalStage {
     BulkStreakResponseItem build();
-
-    _FinalStage extended(Optional<String> extended);
-
-    _FinalStage extended(String extended);
   }
 
   @JsonIgnoreProperties(
       ignoreUnknown = true
   )
-  public static final class Builder implements UserIdStage, StreakLengthStage, _FinalStage {
+  public static final class Builder implements UserIdStage, StreakLengthStage, ExtendedStage, _FinalStage {
     private String userId;
 
     private int streakLength;
 
-    private Optional<String> extended = Optional.empty();
+    private String extended;
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -140,6 +147,7 @@ public final class BulkStreakResponseItem {
 
     /**
      * <p>The ID of the user.</p>
+     * <p>The ID of the user.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -151,32 +159,25 @@ public final class BulkStreakResponseItem {
 
     /**
      * <p>The length of the user's streak.</p>
+     * <p>The length of the user's streak.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
     @JsonSetter("streakLength")
-    public _FinalStage streakLength(int streakLength) {
+    public ExtendedStage streakLength(int streakLength) {
       this.streakLength = streakLength;
       return this;
     }
 
     /**
      * <p>The timestamp the streak was extended, as a string.</p>
+     * <p>The timestamp the streak was extended, as a string.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage extended(String extended) {
-      this.extended = Optional.ofNullable(extended);
-      return this;
-    }
-
-    @java.lang.Override
-    @JsonSetter(
-        value = "extended",
-        nulls = Nulls.SKIP
-    )
-    public _FinalStage extended(Optional<String> extended) {
-      this.extended = extended;
+    @JsonSetter("extended")
+    public _FinalStage extended(@NotNull String extended) {
+      this.extended = Objects.requireNonNull(extended, "extended must not be null");
       return this;
     }
 
