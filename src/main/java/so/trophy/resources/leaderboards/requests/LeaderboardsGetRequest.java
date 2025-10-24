@@ -35,14 +35,18 @@ public final class LeaderboardsGetRequest {
 
   private final Optional<String> userId;
 
+  private final Optional<String> userAttributes;
+
   private final Map<String, Object> additionalProperties;
 
   private LeaderboardsGetRequest(Optional<Integer> offset, Optional<Integer> limit,
-      Optional<String> run, Optional<String> userId, Map<String, Object> additionalProperties) {
+      Optional<String> run, Optional<String> userId, Optional<String> userAttributes,
+      Map<String, Object> additionalProperties) {
     this.offset = offset;
     this.limit = limit;
     this.run = run;
     this.userId = userId;
+    this.userAttributes = userAttributes;
     this.additionalProperties = additionalProperties;
   }
 
@@ -78,6 +82,14 @@ public final class LeaderboardsGetRequest {
     return userId;
   }
 
+  /**
+   * @return Attribute key and value to filter the rankings by, separated by a colon. This parameter is required, and only valid for leaderboards with a breakdown attribute.
+   */
+  @JsonProperty("userAttributes")
+  public Optional<String> getUserAttributes() {
+    return userAttributes;
+  }
+
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
@@ -90,12 +102,12 @@ public final class LeaderboardsGetRequest {
   }
 
   private boolean equalTo(LeaderboardsGetRequest other) {
-    return offset.equals(other.offset) && limit.equals(other.limit) && run.equals(other.run) && userId.equals(other.userId);
+    return offset.equals(other.offset) && limit.equals(other.limit) && run.equals(other.run) && userId.equals(other.userId) && userAttributes.equals(other.userAttributes);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.offset, this.limit, this.run, this.userId);
+    return Objects.hash(this.offset, this.limit, this.run, this.userId, this.userAttributes);
   }
 
   @java.lang.Override
@@ -119,6 +131,8 @@ public final class LeaderboardsGetRequest {
 
     private Optional<String> userId = Optional.empty();
 
+    private Optional<String> userAttributes = Optional.empty();
+
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
 
@@ -130,6 +144,7 @@ public final class LeaderboardsGetRequest {
       limit(other.getLimit());
       run(other.getRun());
       userId(other.getUserId());
+      userAttributes(other.getUserAttributes());
       return this;
     }
 
@@ -201,8 +216,25 @@ public final class LeaderboardsGetRequest {
       return this;
     }
 
+    /**
+     * <p>Attribute key and value to filter the rankings by, separated by a colon. This parameter is required, and only valid for leaderboards with a breakdown attribute.</p>
+     */
+    @JsonSetter(
+        value = "userAttributes",
+        nulls = Nulls.SKIP
+    )
+    public Builder userAttributes(Optional<String> userAttributes) {
+      this.userAttributes = userAttributes;
+      return this;
+    }
+
+    public Builder userAttributes(String userAttributes) {
+      this.userAttributes = Optional.ofNullable(userAttributes);
+      return this;
+    }
+
     public LeaderboardsGetRequest build() {
-      return new LeaderboardsGetRequest(offset, limit, run, userId, additionalProperties);
+      return new LeaderboardsGetRequest(offset, limit, run, userId, userAttributes, additionalProperties);
     }
   }
 }

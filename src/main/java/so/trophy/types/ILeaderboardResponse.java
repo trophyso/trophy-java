@@ -17,6 +17,8 @@ public interface ILeaderboardResponse {
 
   LeaderboardResponseRankBy getRankBy();
 
+  Optional<String> getBreakdownAttribute();
+
   Optional<String> getMetricKey();
 
   Optional<String> getMetricName();

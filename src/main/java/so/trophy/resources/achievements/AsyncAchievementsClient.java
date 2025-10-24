@@ -10,6 +10,7 @@ import so.trophy.core.RequestOptions;
 import java.lang.String;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import so.trophy.resources.achievements.requests.AchievementsAllRequest;
 import so.trophy.resources.achievements.requests.AchievementsCompleteRequest;
 import so.trophy.types.AchievementCompletionResponse;
 import so.trophy.types.AchievementWithStatsResponse;
@@ -41,8 +42,16 @@ public class AsyncAchievementsClient {
   /**
    * Get all achievements and their completion stats.
    */
-  public CompletableFuture<List<AchievementWithStatsResponse>> all(RequestOptions requestOptions) {
-    return this.rawClient.all(requestOptions).thenApply(response -> response.body());
+  public CompletableFuture<List<AchievementWithStatsResponse>> all(AchievementsAllRequest request) {
+    return this.rawClient.all(request).thenApply(response -> response.body());
+  }
+
+  /**
+   * Get all achievements and their completion stats.
+   */
+  public CompletableFuture<List<AchievementWithStatsResponse>> all(AchievementsAllRequest request,
+      RequestOptions requestOptions) {
+    return this.rawClient.all(request, requestOptions).thenApply(response -> response.body());
   }
 
   /**

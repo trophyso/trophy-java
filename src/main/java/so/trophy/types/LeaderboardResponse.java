@@ -35,6 +35,8 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
 
   private final LeaderboardResponseRankBy rankBy;
 
+  private final Optional<String> breakdownAttribute;
+
   private final Optional<String> metricKey;
 
   private final Optional<String> metricName;
@@ -58,14 +60,16 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
   private final Map<String, Object> additionalProperties;
 
   private LeaderboardResponse(String id, String name, String key, LeaderboardResponseRankBy rankBy,
-      Optional<String> metricKey, Optional<String> metricName, Optional<String> pointsSystemKey,
-      Optional<String> pointsSystemName, String description, String start, Optional<String> end,
-      int maxParticipants, Optional<LeaderboardResponseRunUnit> runUnit, int runInterval,
+      Optional<String> breakdownAttribute, Optional<String> metricKey, Optional<String> metricName,
+      Optional<String> pointsSystemKey, Optional<String> pointsSystemName, String description,
+      String start, Optional<String> end, int maxParticipants,
+      Optional<LeaderboardResponseRunUnit> runUnit, int runInterval,
       Map<String, Object> additionalProperties) {
     this.id = id;
     this.name = name;
     this.key = key;
     this.rankBy = rankBy;
+    this.breakdownAttribute = breakdownAttribute;
     this.metricKey = metricKey;
     this.metricName = metricName;
     this.pointsSystemKey = pointsSystemKey;
@@ -112,6 +116,15 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
   @JsonProperty("rankBy")
   public LeaderboardResponseRankBy getRankBy() {
     return rankBy;
+  }
+
+  /**
+   * @return The key of the attribute to break down this leaderboard by.
+   */
+  @JsonProperty("breakdownAttribute")
+  @java.lang.Override
+  public Optional<String> getBreakdownAttribute() {
+    return breakdownAttribute;
   }
 
   /**
@@ -215,12 +228,12 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
   }
 
   private boolean equalTo(LeaderboardResponse other) {
-    return id.equals(other.id) && name.equals(other.name) && key.equals(other.key) && rankBy.equals(other.rankBy) && metricKey.equals(other.metricKey) && metricName.equals(other.metricName) && pointsSystemKey.equals(other.pointsSystemKey) && pointsSystemName.equals(other.pointsSystemName) && description.equals(other.description) && start.equals(other.start) && end.equals(other.end) && maxParticipants == other.maxParticipants && runUnit.equals(other.runUnit) && runInterval == other.runInterval;
+    return id.equals(other.id) && name.equals(other.name) && key.equals(other.key) && rankBy.equals(other.rankBy) && breakdownAttribute.equals(other.breakdownAttribute) && metricKey.equals(other.metricKey) && metricName.equals(other.metricName) && pointsSystemKey.equals(other.pointsSystemKey) && pointsSystemName.equals(other.pointsSystemName) && description.equals(other.description) && start.equals(other.start) && end.equals(other.end) && maxParticipants == other.maxParticipants && runUnit.equals(other.runUnit) && runInterval == other.runInterval;
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.name, this.key, this.rankBy, this.metricKey, this.metricName, this.pointsSystemKey, this.pointsSystemName, this.description, this.start, this.end, this.maxParticipants, this.runUnit, this.runInterval);
+    return Objects.hash(this.id, this.name, this.key, this.rankBy, this.breakdownAttribute, this.metricKey, this.metricName, this.pointsSystemKey, this.pointsSystemName, this.description, this.start, this.end, this.maxParticipants, this.runUnit, this.runInterval);
   }
 
   @java.lang.Override
@@ -292,6 +305,13 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
 
   public interface _FinalStage {
     LeaderboardResponse build();
+
+    /**
+     * <p>The key of the attribute to break down this leaderboard by.</p>
+     */
+    _FinalStage breakdownAttribute(Optional<String> breakdownAttribute);
+
+    _FinalStage breakdownAttribute(String breakdownAttribute);
 
     /**
      * <p>The key of the metric to rank by, if rankBy is 'metric'.</p>
@@ -368,6 +388,8 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
 
     private Optional<String> metricKey = Optional.empty();
 
+    private Optional<String> breakdownAttribute = Optional.empty();
+
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
 
@@ -380,6 +402,7 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
       name(other.getName());
       key(other.getKey());
       rankBy(other.getRankBy());
+      breakdownAttribute(other.getBreakdownAttribute());
       metricKey(other.getMetricKey());
       metricName(other.getMetricName());
       pointsSystemKey(other.getPointsSystemKey());
@@ -627,9 +650,32 @@ public final class LeaderboardResponse implements ILeaderboardResponse {
       return this;
     }
 
+    /**
+     * <p>The key of the attribute to break down this leaderboard by.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage breakdownAttribute(String breakdownAttribute) {
+      this.breakdownAttribute = Optional.ofNullable(breakdownAttribute);
+      return this;
+    }
+
+    /**
+     * <p>The key of the attribute to break down this leaderboard by.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "breakdownAttribute",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage breakdownAttribute(Optional<String> breakdownAttribute) {
+      this.breakdownAttribute = breakdownAttribute;
+      return this;
+    }
+
     @java.lang.Override
     public LeaderboardResponse build() {
-      return new LeaderboardResponse(id, name, key, rankBy, metricKey, metricName, pointsSystemKey, pointsSystemName, description, start, end, maxParticipants, runUnit, runInterval, additionalProperties);
+      return new LeaderboardResponse(id, name, key, rankBy, breakdownAttribute, metricKey, metricName, pointsSystemKey, pointsSystemName, description, start, end, maxParticipants, runUnit, runInterval, additionalProperties);
     }
   }
 }

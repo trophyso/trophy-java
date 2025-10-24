@@ -9,6 +9,7 @@ import so.trophy.core.ClientOptions;
 import so.trophy.core.RequestOptions;
 import java.lang.String;
 import java.util.List;
+import so.trophy.resources.achievements.requests.AchievementsAllRequest;
 import so.trophy.resources.achievements.requests.AchievementsCompleteRequest;
 import so.trophy.types.AchievementCompletionResponse;
 import so.trophy.types.AchievementWithStatsResponse;
@@ -40,8 +41,16 @@ public class AchievementsClient {
   /**
    * Get all achievements and their completion stats.
    */
-  public List<AchievementWithStatsResponse> all(RequestOptions requestOptions) {
-    return this.rawClient.all(requestOptions).body();
+  public List<AchievementWithStatsResponse> all(AchievementsAllRequest request) {
+    return this.rawClient.all(request).body();
+  }
+
+  /**
+   * Get all achievements and their completion stats.
+   */
+  public List<AchievementWithStatsResponse> all(AchievementsAllRequest request,
+      RequestOptions requestOptions) {
+    return this.rawClient.all(request, requestOptions).body();
   }
 
   /**

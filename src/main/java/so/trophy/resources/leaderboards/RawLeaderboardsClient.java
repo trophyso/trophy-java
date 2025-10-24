@@ -122,6 +122,9 @@ public class RawLeaderboardsClient {
       if (request.getUserId().isPresent()) {
         QueryStringMapper.addQueryParameter(httpUrl, "userId", request.getUserId().get(), false);
       }
+      if (request.getUserAttributes().isPresent()) {
+        QueryStringMapper.addQueryParameter(httpUrl, "userAttributes", request.getUserAttributes().get(), false);
+      }
       Request.Builder _requestBuilder = new Request.Builder()
         .url(httpUrl.build())
         .method("GET", null)
