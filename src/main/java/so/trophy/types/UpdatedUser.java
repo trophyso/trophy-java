@@ -14,39 +14,37 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import so.trophy.core.ObjectMappers;
+import java.lang.Boolean;
 import java.lang.Object;
 import java.lang.String;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(
     builder = UpdatedUser.Builder.class
 )
 public final class UpdatedUser implements IUpdatedUser {
-  private final String email;
+  private final Optional<String> email;
 
-  private final String name;
+  private final Optional<String> name;
 
   private final Optional<String> tz;
 
-  private final List<String> deviceTokens;
+  private final Optional<List<String>> deviceTokens;
 
-  private final boolean subscribeToEmails;
+  private final Optional<Boolean> subscribeToEmails;
 
-  private final Map<String, String> attributes;
+  private final Optional<Map<String, String>> attributes;
 
   private final Map<String, Object> additionalProperties;
 
-  private UpdatedUser(String email, String name, Optional<String> tz, List<String> deviceTokens,
-      boolean subscribeToEmails, Map<String, String> attributes,
-      Map<String, Object> additionalProperties) {
+  private UpdatedUser(Optional<String> email, Optional<String> name, Optional<String> tz,
+      Optional<List<String>> deviceTokens, Optional<Boolean> subscribeToEmails,
+      Optional<Map<String, String>> attributes, Map<String, Object> additionalProperties) {
     this.email = email;
     this.name = name;
     this.tz = tz;
@@ -61,7 +59,7 @@ public final class UpdatedUser implements IUpdatedUser {
    */
   @JsonProperty("email")
   @java.lang.Override
-  public String getEmail() {
+  public Optional<String> getEmail() {
     return email;
   }
 
@@ -70,7 +68,7 @@ public final class UpdatedUser implements IUpdatedUser {
    */
   @JsonProperty("name")
   @java.lang.Override
-  public String getName() {
+  public Optional<String> getName() {
     return name;
   }
 
@@ -88,7 +86,7 @@ public final class UpdatedUser implements IUpdatedUser {
    */
   @JsonProperty("deviceTokens")
   @java.lang.Override
-  public List<String> getDeviceTokens() {
+  public Optional<List<String>> getDeviceTokens() {
     return deviceTokens;
   }
 
@@ -97,7 +95,7 @@ public final class UpdatedUser implements IUpdatedUser {
    */
   @JsonProperty("subscribeToEmails")
   @java.lang.Override
-  public boolean getSubscribeToEmails() {
+  public Optional<Boolean> getSubscribeToEmails() {
     return subscribeToEmails;
   }
 
@@ -106,7 +104,7 @@ public final class UpdatedUser implements IUpdatedUser {
    */
   @JsonProperty("attributes")
   @java.lang.Override
-  public Map<String, String> getAttributes() {
+  public Optional<Map<String, String>> getAttributes() {
     return attributes;
   }
 
@@ -122,7 +120,7 @@ public final class UpdatedUser implements IUpdatedUser {
   }
 
   private boolean equalTo(UpdatedUser other) {
-    return email.equals(other.email) && name.equals(other.name) && tz.equals(other.tz) && deviceTokens.equals(other.deviceTokens) && subscribeToEmails == other.subscribeToEmails && attributes.equals(other.attributes);
+    return email.equals(other.email) && name.equals(other.name) && tz.equals(other.tz) && deviceTokens.equals(other.deviceTokens) && subscribeToEmails.equals(other.subscribeToEmails) && attributes.equals(other.attributes);
   }
 
   @java.lang.Override
@@ -135,77 +133,25 @@ public final class UpdatedUser implements IUpdatedUser {
     return ObjectMappers.stringify(this);
   }
 
-  public static EmailStage builder() {
+  public static Builder builder() {
     return new Builder();
-  }
-
-  public interface EmailStage {
-    /**
-     * <p>The user's email address. Required if subscribeToEmails is true.</p>
-     */
-    NameStage email(@NotNull String email);
-
-    Builder from(UpdatedUser other);
-  }
-
-  public interface NameStage {
-    /**
-     * <p>The name to refer to the user by in emails.</p>
-     */
-    SubscribeToEmailsStage name(@NotNull String name);
-  }
-
-  public interface SubscribeToEmailsStage {
-    /**
-     * <p>Whether the user should receive Trophy-powered emails. If false, Trophy will not store the user's email address.</p>
-     */
-    _FinalStage subscribeToEmails(boolean subscribeToEmails);
-  }
-
-  public interface _FinalStage {
-    UpdatedUser build();
-
-    /**
-     * <p>The user's timezone (used for email scheduling).</p>
-     */
-    _FinalStage tz(Optional<String> tz);
-
-    _FinalStage tz(String tz);
-
-    /**
-     * <p>The user's device tokens, used for push notifications.</p>
-     */
-    _FinalStage deviceTokens(List<String> deviceTokens);
-
-    _FinalStage addDeviceTokens(String deviceTokens);
-
-    _FinalStage addAllDeviceTokens(List<String> deviceTokens);
-
-    /**
-     * <p>User attributes as key-value pairs. Keys must match existing user attributes set up in the Trophy dashboard.</p>
-     */
-    _FinalStage attributes(Map<String, String> attributes);
-
-    _FinalStage putAllAttributes(Map<String, String> attributes);
-
-    _FinalStage attributes(String key, String value);
   }
 
   @JsonIgnoreProperties(
       ignoreUnknown = true
   )
-  public static final class Builder implements EmailStage, NameStage, SubscribeToEmailsStage, _FinalStage {
-    private String email;
+  public static final class Builder {
+    private Optional<String> email = Optional.empty();
 
-    private String name;
-
-    private boolean subscribeToEmails;
-
-    private Map<String, String> attributes = new LinkedHashMap<>();
-
-    private List<String> deviceTokens = new ArrayList<>();
+    private Optional<String> name = Optional.empty();
 
     private Optional<String> tz = Optional.empty();
+
+    private Optional<List<String>> deviceTokens = Optional.empty();
+
+    private Optional<Boolean> subscribeToEmails = Optional.empty();
+
+    private Optional<Map<String, String>> attributes = Optional.empty();
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -213,7 +159,6 @@ public final class UpdatedUser implements IUpdatedUser {
     private Builder() {
     }
 
-    @java.lang.Override
     public Builder from(UpdatedUser other) {
       email(other.getEmail());
       name(other.getName());
@@ -226,136 +171,106 @@ public final class UpdatedUser implements IUpdatedUser {
 
     /**
      * <p>The user's email address. Required if subscribeToEmails is true.</p>
-     * <p>The user's email address. Required if subscribeToEmails is true.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
      */
-    @java.lang.Override
-    @JsonSetter("email")
-    public NameStage email(@NotNull String email) {
-      this.email = Objects.requireNonNull(email, "email must not be null");
+    @JsonSetter(
+        value = "email",
+        nulls = Nulls.SKIP
+    )
+    public Builder email(Optional<String> email) {
+      this.email = email;
+      return this;
+    }
+
+    public Builder email(String email) {
+      this.email = Optional.ofNullable(email);
       return this;
     }
 
     /**
      * <p>The name to refer to the user by in emails.</p>
-     * <p>The name to refer to the user by in emails.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
      */
-    @java.lang.Override
-    @JsonSetter("name")
-    public SubscribeToEmailsStage name(@NotNull String name) {
-      this.name = Objects.requireNonNull(name, "name must not be null");
-      return this;
-    }
-
-    /**
-     * <p>Whether the user should receive Trophy-powered emails. If false, Trophy will not store the user's email address.</p>
-     * <p>Whether the user should receive Trophy-powered emails. If false, Trophy will not store the user's email address.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    @JsonSetter("subscribeToEmails")
-    public _FinalStage subscribeToEmails(boolean subscribeToEmails) {
-      this.subscribeToEmails = subscribeToEmails;
-      return this;
-    }
-
-    /**
-     * <p>User attributes as key-value pairs. Keys must match existing user attributes set up in the Trophy dashboard.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    public _FinalStage attributes(String key, String value) {
-      this.attributes.put(key, value);
-      return this;
-    }
-
-    /**
-     * <p>User attributes as key-value pairs. Keys must match existing user attributes set up in the Trophy dashboard.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    public _FinalStage putAllAttributes(Map<String, String> attributes) {
-      if (attributes != null) {
-        this.attributes.putAll(attributes);
-      }
-      return this;
-    }
-
-    /**
-     * <p>User attributes as key-value pairs. Keys must match existing user attributes set up in the Trophy dashboard.</p>
-     */
-    @java.lang.Override
     @JsonSetter(
-        value = "attributes",
+        value = "name",
         nulls = Nulls.SKIP
     )
-    public _FinalStage attributes(Map<String, String> attributes) {
-      this.attributes.clear();
-      this.attributes.putAll(attributes);
+    public Builder name(Optional<String> name) {
+      this.name = name;
       return this;
     }
 
-    /**
-     * <p>The user's device tokens, used for push notifications.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    public _FinalStage addAllDeviceTokens(List<String> deviceTokens) {
-      if (deviceTokens != null) {
-        this.deviceTokens.addAll(deviceTokens);
-      }
-      return this;
-    }
-
-    /**
-     * <p>The user's device tokens, used for push notifications.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    public _FinalStage addDeviceTokens(String deviceTokens) {
-      this.deviceTokens.add(deviceTokens);
-      return this;
-    }
-
-    /**
-     * <p>The user's device tokens, used for push notifications.</p>
-     */
-    @java.lang.Override
-    @JsonSetter(
-        value = "deviceTokens",
-        nulls = Nulls.SKIP
-    )
-    public _FinalStage deviceTokens(List<String> deviceTokens) {
-      this.deviceTokens.clear();
-      this.deviceTokens.addAll(deviceTokens);
+    public Builder name(String name) {
+      this.name = Optional.ofNullable(name);
       return this;
     }
 
     /**
      * <p>The user's timezone (used for email scheduling).</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
      */
-    @java.lang.Override
-    public _FinalStage tz(String tz) {
+    @JsonSetter(
+        value = "tz",
+        nulls = Nulls.SKIP
+    )
+    public Builder tz(Optional<String> tz) {
+      this.tz = tz;
+      return this;
+    }
+
+    public Builder tz(String tz) {
       this.tz = Optional.ofNullable(tz);
       return this;
     }
 
     /**
-     * <p>The user's timezone (used for email scheduling).</p>
+     * <p>The user's device tokens, used for push notifications.</p>
      */
-    @java.lang.Override
     @JsonSetter(
-        value = "tz",
+        value = "deviceTokens",
         nulls = Nulls.SKIP
     )
-    public _FinalStage tz(Optional<String> tz) {
-      this.tz = tz;
+    public Builder deviceTokens(Optional<List<String>> deviceTokens) {
+      this.deviceTokens = deviceTokens;
       return this;
     }
 
-    @java.lang.Override
+    public Builder deviceTokens(List<String> deviceTokens) {
+      this.deviceTokens = Optional.ofNullable(deviceTokens);
+      return this;
+    }
+
+    /**
+     * <p>Whether the user should receive Trophy-powered emails. If false, Trophy will not store the user's email address.</p>
+     */
+    @JsonSetter(
+        value = "subscribeToEmails",
+        nulls = Nulls.SKIP
+    )
+    public Builder subscribeToEmails(Optional<Boolean> subscribeToEmails) {
+      this.subscribeToEmails = subscribeToEmails;
+      return this;
+    }
+
+    public Builder subscribeToEmails(Boolean subscribeToEmails) {
+      this.subscribeToEmails = Optional.ofNullable(subscribeToEmails);
+      return this;
+    }
+
+    /**
+     * <p>User attributes as key-value pairs. Keys must match existing user attributes set up in the Trophy dashboard.</p>
+     */
+    @JsonSetter(
+        value = "attributes",
+        nulls = Nulls.SKIP
+    )
+    public Builder attributes(Optional<Map<String, String>> attributes) {
+      this.attributes = attributes;
+      return this;
+    }
+
+    public Builder attributes(Map<String, String> attributes) {
+      this.attributes = Optional.ofNullable(attributes);
+      return this;
+    }
+
     public UpdatedUser build() {
       return new UpdatedUser(email, name, tz, deviceTokens, subscribeToEmails, attributes, additionalProperties);
     }

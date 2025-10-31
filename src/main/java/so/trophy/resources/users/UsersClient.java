@@ -74,6 +74,13 @@ public class UsersClient {
   /**
    * Identify a user.
    */
+  public User identify(String id) {
+    return this.rawClient.identify(id).body();
+  }
+
+  /**
+   * Identify a user.
+   */
   public User identify(String id, UpdatedUser request) {
     return this.rawClient.identify(id, request).body();
   }
@@ -83,6 +90,13 @@ public class UsersClient {
    */
   public User identify(String id, UpdatedUser request, RequestOptions requestOptions) {
     return this.rawClient.identify(id, request, requestOptions).body();
+  }
+
+  /**
+   * Update a user.
+   */
+  public User update(String id) {
+    return this.rawClient.update(id).body();
   }
 
   /**

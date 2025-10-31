@@ -59,7 +59,7 @@ public final class LeaderboardsGetRequest {
   }
 
   /**
-   * @return Maximum number of rankings to return.
+   * @return Maximum number of rankings to return. Cannot be greater than the size of the leaderboard.
    */
   @JsonProperty("limit")
   public Optional<Integer> getLimit() {
@@ -83,7 +83,7 @@ public final class LeaderboardsGetRequest {
   }
 
   /**
-   * @return Attribute key and value to filter the rankings by, separated by a colon. This parameter is required, and only valid for leaderboards with a breakdown attribute.
+   * @return Attribute key and value to filter the rankings by, separated by a colon. For example, <code>city:London</code>. This parameter is required, and only valid for leaderboards with a breakdown attribute.
    */
   @JsonProperty("userAttributes")
   public Optional<String> getUserAttributes() {
@@ -166,7 +166,7 @@ public final class LeaderboardsGetRequest {
     }
 
     /**
-     * <p>Maximum number of rankings to return.</p>
+     * <p>Maximum number of rankings to return. Cannot be greater than the size of the leaderboard.</p>
      */
     @JsonSetter(
         value = "limit",
@@ -217,7 +217,7 @@ public final class LeaderboardsGetRequest {
     }
 
     /**
-     * <p>Attribute key and value to filter the rankings by, separated by a colon. This parameter is required, and only valid for leaderboards with a breakdown attribute.</p>
+     * <p>Attribute key and value to filter the rankings by, separated by a colon. For example, <code>city:London</code>. This parameter is required, and only valid for leaderboards with a breakdown attribute.</p>
      */
     @JsonSetter(
         value = "userAttributes",

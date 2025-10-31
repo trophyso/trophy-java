@@ -75,6 +75,13 @@ public class AsyncUsersClient {
   /**
    * Identify a user.
    */
+  public CompletableFuture<User> identify(String id) {
+    return this.rawClient.identify(id).thenApply(response -> response.body());
+  }
+
+  /**
+   * Identify a user.
+   */
   public CompletableFuture<User> identify(String id, UpdatedUser request) {
     return this.rawClient.identify(id, request).thenApply(response -> response.body());
   }
@@ -85,6 +92,13 @@ public class AsyncUsersClient {
   public CompletableFuture<User> identify(String id, UpdatedUser request,
       RequestOptions requestOptions) {
     return this.rawClient.identify(id, request, requestOptions).thenApply(response -> response.body());
+  }
+
+  /**
+   * Update a user.
+   */
+  public CompletableFuture<User> update(String id) {
+    return this.rawClient.update(id).thenApply(response -> response.body());
   }
 
   /**

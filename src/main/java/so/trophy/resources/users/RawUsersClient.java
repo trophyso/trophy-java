@@ -163,6 +163,13 @@ public class RawUsersClient {
   /**
    * Identify a user.
    */
+  public TrophyApiHttpResponse<User> identify(String id) {
+    return identify(id,UpdatedUser.builder().build());
+  }
+
+  /**
+   * Identify a user.
+   */
   public TrophyApiHttpResponse<User> identify(String id, UpdatedUser request) {
     return identify(id,request,null);
   }
@@ -216,6 +223,13 @@ public class RawUsersClient {
     catch (IOException e) {
       throw new TrophyApiException("Network error executing HTTP request", e);
     }
+  }
+
+  /**
+   * Update a user.
+   */
+  public TrophyApiHttpResponse<User> update(String id) {
+    return update(id,UpdatedUser.builder().build());
   }
 
   /**

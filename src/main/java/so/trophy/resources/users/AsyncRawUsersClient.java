@@ -202,6 +202,13 @@ public class AsyncRawUsersClient {
   /**
    * Identify a user.
    */
+  public CompletableFuture<TrophyApiHttpResponse<User>> identify(String id) {
+    return identify(id,UpdatedUser.builder().build());
+  }
+
+  /**
+   * Identify a user.
+   */
   public CompletableFuture<TrophyApiHttpResponse<User>> identify(String id, UpdatedUser request) {
     return identify(id,request,null);
   }
@@ -271,6 +278,13 @@ public class AsyncRawUsersClient {
       }
     });
     return future;
+  }
+
+  /**
+   * Update a user.
+   */
+  public CompletableFuture<TrophyApiHttpResponse<User>> update(String id) {
+    return update(id,UpdatedUser.builder().build());
   }
 
   /**

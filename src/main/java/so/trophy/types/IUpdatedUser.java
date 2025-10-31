@@ -5,21 +5,22 @@ package so.trophy.types;
  */
 
 
+import java.lang.Boolean;
 import java.lang.String;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 public interface IUpdatedUser {
-  String getEmail();
+  Optional<String> getEmail();
 
-  String getName();
+  Optional<String> getName();
 
   Optional<String> getTz();
 
-  List<String> getDeviceTokens();
+  Optional<List<String>> getDeviceTokens();
 
-  boolean getSubscribeToEmails();
+  Optional<Boolean> getSubscribeToEmails();
 
-  Map<String, String> getAttributes();
+  Optional<Map<String, String>> getAttributes();
 }

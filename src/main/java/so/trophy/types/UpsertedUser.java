@@ -14,11 +14,10 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import so.trophy.core.ObjectMappers;
+import java.lang.Boolean;
 import java.lang.Object;
 import java.lang.String;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -29,43 +28,35 @@ import org.jetbrains.annotations.NotNull;
 @JsonDeserialize(
     builder = UpsertedUser.Builder.class
 )
-public final class UpsertedUser implements IUpsertedUser, IUpdatedUser {
-  private final String id;
+public final class UpsertedUser implements IUpdatedUser {
+  private final Optional<String> email;
 
-  private final String email;
-
-  private final String name;
+  private final Optional<String> name;
 
   private final Optional<String> tz;
 
-  private final List<String> deviceTokens;
+  private final Optional<List<String>> deviceTokens;
 
-  private final boolean subscribeToEmails;
+  private final Optional<Boolean> subscribeToEmails;
 
-  private final Map<String, String> attributes;
+  private final Optional<Map<String, String>> attributes;
+
+  private final String id;
 
   private final Map<String, Object> additionalProperties;
 
-  private UpsertedUser(String id, String email, String name, Optional<String> tz,
-      List<String> deviceTokens, boolean subscribeToEmails, Map<String, String> attributes,
+  private UpsertedUser(Optional<String> email, Optional<String> name, Optional<String> tz,
+      Optional<List<String>> deviceTokens, Optional<Boolean> subscribeToEmails,
+      Optional<Map<String, String>> attributes, String id,
       Map<String, Object> additionalProperties) {
-    this.id = id;
     this.email = email;
     this.name = name;
     this.tz = tz;
     this.deviceTokens = deviceTokens;
     this.subscribeToEmails = subscribeToEmails;
     this.attributes = attributes;
+    this.id = id;
     this.additionalProperties = additionalProperties;
-  }
-
-  /**
-   * @return The ID of the user in your database. Must be a string.
-   */
-  @JsonProperty("id")
-  @java.lang.Override
-  public String getId() {
-    return id;
   }
 
   /**
@@ -73,7 +64,7 @@ public final class UpsertedUser implements IUpsertedUser, IUpdatedUser {
    */
   @JsonProperty("email")
   @java.lang.Override
-  public String getEmail() {
+  public Optional<String> getEmail() {
     return email;
   }
 
@@ -82,7 +73,7 @@ public final class UpsertedUser implements IUpsertedUser, IUpdatedUser {
    */
   @JsonProperty("name")
   @java.lang.Override
-  public String getName() {
+  public Optional<String> getName() {
     return name;
   }
 
@@ -100,7 +91,7 @@ public final class UpsertedUser implements IUpsertedUser, IUpdatedUser {
    */
   @JsonProperty("deviceTokens")
   @java.lang.Override
-  public List<String> getDeviceTokens() {
+  public Optional<List<String>> getDeviceTokens() {
     return deviceTokens;
   }
 
@@ -109,7 +100,7 @@ public final class UpsertedUser implements IUpsertedUser, IUpdatedUser {
    */
   @JsonProperty("subscribeToEmails")
   @java.lang.Override
-  public boolean getSubscribeToEmails() {
+  public Optional<Boolean> getSubscribeToEmails() {
     return subscribeToEmails;
   }
 
@@ -118,8 +109,16 @@ public final class UpsertedUser implements IUpsertedUser, IUpdatedUser {
    */
   @JsonProperty("attributes")
   @java.lang.Override
-  public Map<String, String> getAttributes() {
+  public Optional<Map<String, String>> getAttributes() {
     return attributes;
+  }
+
+  /**
+   * @return The ID of the user in your database. Must be a string.
+   */
+  @JsonProperty("id")
+  public String getId() {
+    return id;
   }
 
   @java.lang.Override
@@ -134,12 +133,12 @@ public final class UpsertedUser implements IUpsertedUser, IUpdatedUser {
   }
 
   private boolean equalTo(UpsertedUser other) {
-    return id.equals(other.id) && email.equals(other.email) && name.equals(other.name) && tz.equals(other.tz) && deviceTokens.equals(other.deviceTokens) && subscribeToEmails == other.subscribeToEmails && attributes.equals(other.attributes);
+    return email.equals(other.email) && name.equals(other.name) && tz.equals(other.tz) && deviceTokens.equals(other.deviceTokens) && subscribeToEmails.equals(other.subscribeToEmails) && attributes.equals(other.attributes) && id.equals(other.id);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.email, this.name, this.tz, this.deviceTokens, this.subscribeToEmails, this.attributes);
+    return Objects.hash(this.email, this.name, this.tz, this.deviceTokens, this.subscribeToEmails, this.attributes, this.id);
   }
 
   @java.lang.Override
@@ -155,34 +154,27 @@ public final class UpsertedUser implements IUpsertedUser, IUpdatedUser {
     /**
      * <p>The ID of the user in your database. Must be a string.</p>
      */
-    EmailStage id(@NotNull String id);
+    _FinalStage id(@NotNull String id);
 
     Builder from(UpsertedUser other);
   }
 
-  public interface EmailStage {
+  public interface _FinalStage {
+    UpsertedUser build();
+
     /**
      * <p>The user's email address. Required if subscribeToEmails is true.</p>
      */
-    NameStage email(@NotNull String email);
-  }
+    _FinalStage email(Optional<String> email);
 
-  public interface NameStage {
+    _FinalStage email(String email);
+
     /**
      * <p>The name to refer to the user by in emails.</p>
      */
-    SubscribeToEmailsStage name(@NotNull String name);
-  }
+    _FinalStage name(Optional<String> name);
 
-  public interface SubscribeToEmailsStage {
-    /**
-     * <p>Whether the user should receive Trophy-powered emails. If false, Trophy will not store the user's email address.</p>
-     */
-    _FinalStage subscribeToEmails(boolean subscribeToEmails);
-  }
-
-  public interface _FinalStage {
-    UpsertedUser build();
+    _FinalStage name(String name);
 
     /**
      * <p>The user's timezone (used for email scheduling).</p>
@@ -194,39 +186,42 @@ public final class UpsertedUser implements IUpsertedUser, IUpdatedUser {
     /**
      * <p>The user's device tokens, used for push notifications.</p>
      */
+    _FinalStage deviceTokens(Optional<List<String>> deviceTokens);
+
     _FinalStage deviceTokens(List<String> deviceTokens);
 
-    _FinalStage addDeviceTokens(String deviceTokens);
+    /**
+     * <p>Whether the user should receive Trophy-powered emails. If false, Trophy will not store the user's email address.</p>
+     */
+    _FinalStage subscribeToEmails(Optional<Boolean> subscribeToEmails);
 
-    _FinalStage addAllDeviceTokens(List<String> deviceTokens);
+    _FinalStage subscribeToEmails(Boolean subscribeToEmails);
 
     /**
      * <p>User attributes as key-value pairs. Keys must match existing user attributes set up in the Trophy dashboard.</p>
      */
+    _FinalStage attributes(Optional<Map<String, String>> attributes);
+
     _FinalStage attributes(Map<String, String> attributes);
-
-    _FinalStage putAllAttributes(Map<String, String> attributes);
-
-    _FinalStage attributes(String key, String value);
   }
 
   @JsonIgnoreProperties(
       ignoreUnknown = true
   )
-  public static final class Builder implements IdStage, EmailStage, NameStage, SubscribeToEmailsStage, _FinalStage {
+  public static final class Builder implements IdStage, _FinalStage {
     private String id;
 
-    private String email;
+    private Optional<Map<String, String>> attributes = Optional.empty();
 
-    private String name;
+    private Optional<Boolean> subscribeToEmails = Optional.empty();
 
-    private boolean subscribeToEmails;
-
-    private Map<String, String> attributes = new LinkedHashMap<>();
-
-    private List<String> deviceTokens = new ArrayList<>();
+    private Optional<List<String>> deviceTokens = Optional.empty();
 
     private Optional<String> tz = Optional.empty();
+
+    private Optional<String> name = Optional.empty();
+
+    private Optional<String> email = Optional.empty();
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -236,13 +231,13 @@ public final class UpsertedUser implements IUpsertedUser, IUpdatedUser {
 
     @java.lang.Override
     public Builder from(UpsertedUser other) {
-      id(other.getId());
       email(other.getEmail());
       name(other.getName());
       tz(other.getTz());
       deviceTokens(other.getDeviceTokens());
       subscribeToEmails(other.getSubscribeToEmails());
       attributes(other.getAttributes());
+      id(other.getId());
       return this;
     }
 
@@ -253,66 +248,18 @@ public final class UpsertedUser implements IUpsertedUser, IUpdatedUser {
      */
     @java.lang.Override
     @JsonSetter("id")
-    public EmailStage id(@NotNull String id) {
+    public _FinalStage id(@NotNull String id) {
       this.id = Objects.requireNonNull(id, "id must not be null");
       return this;
     }
 
     /**
-     * <p>The user's email address. Required if subscribeToEmails is true.</p>
-     * <p>The user's email address. Required if subscribeToEmails is true.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    @JsonSetter("email")
-    public NameStage email(@NotNull String email) {
-      this.email = Objects.requireNonNull(email, "email must not be null");
-      return this;
-    }
-
-    /**
-     * <p>The name to refer to the user by in emails.</p>
-     * <p>The name to refer to the user by in emails.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    @JsonSetter("name")
-    public SubscribeToEmailsStage name(@NotNull String name) {
-      this.name = Objects.requireNonNull(name, "name must not be null");
-      return this;
-    }
-
-    /**
-     * <p>Whether the user should receive Trophy-powered emails. If false, Trophy will not store the user's email address.</p>
-     * <p>Whether the user should receive Trophy-powered emails. If false, Trophy will not store the user's email address.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    @JsonSetter("subscribeToEmails")
-    public _FinalStage subscribeToEmails(boolean subscribeToEmails) {
-      this.subscribeToEmails = subscribeToEmails;
-      return this;
-    }
-
-    /**
      * <p>User attributes as key-value pairs. Keys must match existing user attributes set up in the Trophy dashboard.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage attributes(String key, String value) {
-      this.attributes.put(key, value);
-      return this;
-    }
-
-    /**
-     * <p>User attributes as key-value pairs. Keys must match existing user attributes set up in the Trophy dashboard.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    public _FinalStage putAllAttributes(Map<String, String> attributes) {
-      if (attributes != null) {
-        this.attributes.putAll(attributes);
-      }
+    public _FinalStage attributes(Map<String, String> attributes) {
+      this.attributes = Optional.ofNullable(attributes);
       return this;
     }
 
@@ -324,9 +271,31 @@ public final class UpsertedUser implements IUpsertedUser, IUpdatedUser {
         value = "attributes",
         nulls = Nulls.SKIP
     )
-    public _FinalStage attributes(Map<String, String> attributes) {
-      this.attributes.clear();
-      this.attributes.putAll(attributes);
+    public _FinalStage attributes(Optional<Map<String, String>> attributes) {
+      this.attributes = attributes;
+      return this;
+    }
+
+    /**
+     * <p>Whether the user should receive Trophy-powered emails. If false, Trophy will not store the user's email address.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage subscribeToEmails(Boolean subscribeToEmails) {
+      this.subscribeToEmails = Optional.ofNullable(subscribeToEmails);
+      return this;
+    }
+
+    /**
+     * <p>Whether the user should receive Trophy-powered emails. If false, Trophy will not store the user's email address.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "subscribeToEmails",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage subscribeToEmails(Optional<Boolean> subscribeToEmails) {
+      this.subscribeToEmails = subscribeToEmails;
       return this;
     }
 
@@ -335,20 +304,8 @@ public final class UpsertedUser implements IUpsertedUser, IUpdatedUser {
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage addAllDeviceTokens(List<String> deviceTokens) {
-      if (deviceTokens != null) {
-        this.deviceTokens.addAll(deviceTokens);
-      }
-      return this;
-    }
-
-    /**
-     * <p>The user's device tokens, used for push notifications.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    public _FinalStage addDeviceTokens(String deviceTokens) {
-      this.deviceTokens.add(deviceTokens);
+    public _FinalStage deviceTokens(List<String> deviceTokens) {
+      this.deviceTokens = Optional.ofNullable(deviceTokens);
       return this;
     }
 
@@ -360,9 +317,8 @@ public final class UpsertedUser implements IUpsertedUser, IUpdatedUser {
         value = "deviceTokens",
         nulls = Nulls.SKIP
     )
-    public _FinalStage deviceTokens(List<String> deviceTokens) {
-      this.deviceTokens.clear();
-      this.deviceTokens.addAll(deviceTokens);
+    public _FinalStage deviceTokens(Optional<List<String>> deviceTokens) {
+      this.deviceTokens = deviceTokens;
       return this;
     }
 
@@ -389,9 +345,55 @@ public final class UpsertedUser implements IUpsertedUser, IUpdatedUser {
       return this;
     }
 
+    /**
+     * <p>The name to refer to the user by in emails.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage name(String name) {
+      this.name = Optional.ofNullable(name);
+      return this;
+    }
+
+    /**
+     * <p>The name to refer to the user by in emails.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "name",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage name(Optional<String> name) {
+      this.name = name;
+      return this;
+    }
+
+    /**
+     * <p>The user's email address. Required if subscribeToEmails is true.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage email(String email) {
+      this.email = Optional.ofNullable(email);
+      return this;
+    }
+
+    /**
+     * <p>The user's email address. Required if subscribeToEmails is true.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "email",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage email(Optional<String> email) {
+      this.email = email;
+      return this;
+    }
+
     @java.lang.Override
     public UpsertedUser build() {
-      return new UpsertedUser(id, email, name, tz, deviceTokens, subscribeToEmails, attributes, additionalProperties);
+      return new UpsertedUser(email, name, tz, deviceTokens, subscribeToEmails, attributes, id, additionalProperties);
     }
   }
 }
