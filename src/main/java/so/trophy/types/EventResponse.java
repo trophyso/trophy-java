@@ -109,7 +109,7 @@ public final class EventResponse {
   }
 
   /**
-   * @return A map of points systems by key.
+   * @return A map of points systems by key. Only contains points systems that were affected by the event.
    */
   @JsonProperty("points")
   public Map<String, MetricEventPointsResponse> getPoints() {
@@ -117,7 +117,7 @@ public final class EventResponse {
   }
 
   /**
-   * @return A map of leaderboards by key.
+   * @return A map of leaderboards by key. Only contains leaderboards that were affected by the event.
    */
   @JsonProperty("leaderboards")
   public Map<String, MetricEventLeaderboardResponse> getLeaderboards() {
@@ -212,7 +212,7 @@ public final class EventResponse {
     _FinalStage addAllAchievements(List<CompletedAchievementResponse> achievements);
 
     /**
-     * <p>A map of points systems by key.</p>
+     * <p>A map of points systems by key. Only contains points systems that were affected by the event.</p>
      */
     _FinalStage points(Map<String, MetricEventPointsResponse> points);
 
@@ -221,7 +221,7 @@ public final class EventResponse {
     _FinalStage points(String key, MetricEventPointsResponse value);
 
     /**
-     * <p>A map of leaderboards by key.</p>
+     * <p>A map of leaderboards by key. Only contains leaderboards that were affected by the event.</p>
      */
     _FinalStage leaderboards(Map<String, MetricEventLeaderboardResponse> leaderboards);
 
@@ -381,7 +381,7 @@ public final class EventResponse {
     }
 
     /**
-     * <p>A map of leaderboards by key.</p>
+     * <p>A map of leaderboards by key. Only contains leaderboards that were affected by the event.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -391,7 +391,7 @@ public final class EventResponse {
     }
 
     /**
-     * <p>A map of leaderboards by key.</p>
+     * <p>A map of leaderboards by key. Only contains leaderboards that were affected by the event.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -404,7 +404,7 @@ public final class EventResponse {
     }
 
     /**
-     * <p>A map of leaderboards by key.</p>
+     * <p>A map of leaderboards by key. Only contains leaderboards that were affected by the event.</p>
      */
     @java.lang.Override
     @JsonSetter(
@@ -418,7 +418,7 @@ public final class EventResponse {
     }
 
     /**
-     * <p>A map of points systems by key.</p>
+     * <p>A map of points systems by key. Only contains points systems that were affected by the event.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -428,7 +428,7 @@ public final class EventResponse {
     }
 
     /**
-     * <p>A map of points systems by key.</p>
+     * <p>A map of points systems by key. Only contains points systems that were affected by the event.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -440,7 +440,7 @@ public final class EventResponse {
     }
 
     /**
-     * <p>A map of points systems by key.</p>
+     * <p>A map of points systems by key. Only contains points systems that were affected by the event.</p>
      */
     @java.lang.Override
     @JsonSetter(

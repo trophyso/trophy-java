@@ -13,9 +13,7 @@ public enum StreakFrequency {
 
   WEEKLY("weekly"),
 
-  MONTHLY("monthly"),
-
-  YEARLY("yearly");
+  MONTHLY("monthly");
 
   private final String value;
 
