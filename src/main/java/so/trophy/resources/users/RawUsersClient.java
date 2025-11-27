@@ -715,6 +715,9 @@ public class RawUsersClient {
                 .addPathSegment(key);if (request.getRun().isPresent()) {
                   QueryStringMapper.addQueryParameter(httpUrl, "run", request.getRun().get(), false);
                 }
+                if (request.getNumEvents().isPresent()) {
+                  QueryStringMapper.addQueryParameter(httpUrl, "numEvents", request.getNumEvents().get(), false);
+                }
                 Request.Builder _requestBuilder = new Request.Builder()
                   .url(httpUrl.build())
                   .method("GET", null)

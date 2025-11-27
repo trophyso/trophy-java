@@ -5,6 +5,7 @@ package so.trophy.types;
  */
 
 
+import java.lang.Integer;
 import java.lang.String;
 import java.util.Optional;
 
@@ -27,7 +28,7 @@ public interface ILeaderboardResponse {
 
   Optional<String> getPointsSystemName();
 
-  String getDescription();
+  Optional<String> getDescription();
 
   String getStart();
 
@@ -37,5 +38,5 @@ public interface ILeaderboardResponse {
 
   Optional<LeaderboardResponseRunUnit> getRunUnit();
 
-  int getRunInterval();
+  Optional<Integer> getRunInterval();
 }

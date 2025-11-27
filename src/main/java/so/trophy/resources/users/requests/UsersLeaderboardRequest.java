@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import so.trophy.core.ObjectMappers;
+import java.lang.Integer;
 import java.lang.Object;
 import java.lang.String;
 import java.util.HashMap;
@@ -28,10 +29,14 @@ import java.util.Optional;
 public final class UsersLeaderboardRequest {
   private final Optional<String> run;
 
+  private final Optional<Integer> numEvents;
+
   private final Map<String, Object> additionalProperties;
 
-  private UsersLeaderboardRequest(Optional<String> run, Map<String, Object> additionalProperties) {
+  private UsersLeaderboardRequest(Optional<String> run, Optional<Integer> numEvents,
+      Map<String, Object> additionalProperties) {
     this.run = run;
+    this.numEvents = numEvents;
     this.additionalProperties = additionalProperties;
   }
 
@@ -41,6 +46,14 @@ public final class UsersLeaderboardRequest {
   @JsonProperty("run")
   public Optional<String> getRun() {
     return run;
+  }
+
+  /**
+   * @return The number of events to return in the history array.
+   */
+  @JsonProperty("numEvents")
+  public Optional<Integer> getNumEvents() {
+    return numEvents;
   }
 
   @java.lang.Override
@@ -55,12 +68,12 @@ public final class UsersLeaderboardRequest {
   }
 
   private boolean equalTo(UsersLeaderboardRequest other) {
-    return run.equals(other.run);
+    return run.equals(other.run) && numEvents.equals(other.numEvents);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.run);
+    return Objects.hash(this.run, this.numEvents);
   }
 
   @java.lang.Override
@@ -78,6 +91,8 @@ public final class UsersLeaderboardRequest {
   public static final class Builder {
     private Optional<String> run = Optional.empty();
 
+    private Optional<Integer> numEvents = Optional.empty();
+
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
 
@@ -86,6 +101,7 @@ public final class UsersLeaderboardRequest {
 
     public Builder from(UsersLeaderboardRequest other) {
       run(other.getRun());
+      numEvents(other.getNumEvents());
       return this;
     }
 
@@ -106,8 +122,25 @@ public final class UsersLeaderboardRequest {
       return this;
     }
 
+    /**
+     * <p>The number of events to return in the history array.</p>
+     */
+    @JsonSetter(
+        value = "numEvents",
+        nulls = Nulls.SKIP
+    )
+    public Builder numEvents(Optional<Integer> numEvents) {
+      this.numEvents = numEvents;
+      return this;
+    }
+
+    public Builder numEvents(Integer numEvents) {
+      this.numEvents = Optional.ofNullable(numEvents);
+      return this;
+    }
+
     public UsersLeaderboardRequest build() {
-      return new UsersLeaderboardRequest(run, additionalProperties);
+      return new UsersLeaderboardRequest(run, numEvents, additionalProperties);
     }
   }
 }

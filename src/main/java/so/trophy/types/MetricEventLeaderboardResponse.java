@@ -56,7 +56,7 @@ public final class MetricEventLeaderboardResponse {
 
   private final Optional<String> pointsSystemName;
 
-  private final String description;
+  private final Optional<String> description;
 
   private final String start;
 
@@ -64,7 +64,7 @@ public final class MetricEventLeaderboardResponse {
 
   private final Optional<LeaderboardResponseRunUnit> runUnit;
 
-  private final int runInterval;
+  private final Optional<Integer> runInterval;
 
   private final Map<String, Object> additionalProperties;
 
@@ -72,9 +72,10 @@ public final class MetricEventLeaderboardResponse {
       Optional<Integer> previousRank, int threshold, Optional<String> breakdownAttributeValue,
       String id, String name, String key, LeaderboardResponseRankBy rankBy,
       Optional<String> breakdownAttribute, Optional<String> metricKey, Optional<String> metricName,
-      Optional<String> pointsSystemKey, Optional<String> pointsSystemName, String description,
-      String start, int maxParticipants, Optional<LeaderboardResponseRunUnit> runUnit,
-      int runInterval, Map<String, Object> additionalProperties) {
+      Optional<String> pointsSystemKey, Optional<String> pointsSystemName,
+      Optional<String> description, String start, int maxParticipants,
+      Optional<LeaderboardResponseRunUnit> runUnit, Optional<Integer> runInterval,
+      Map<String, Object> additionalProperties) {
     this.end = end;
     this.rank = rank;
     this.previousRank = previousRank;
@@ -213,7 +214,7 @@ public final class MetricEventLeaderboardResponse {
    * @return The user-facing description of the leaderboard.
    */
   @JsonProperty("description")
-  public String getDescription() {
+  public Optional<String> getDescription() {
     return description;
   }
 
@@ -242,10 +243,10 @@ public final class MetricEventLeaderboardResponse {
   }
 
   /**
-   * @return The interval between repetitions, relative to the start date and repetition type.
+   * @return The interval between repetitions, relative to the start date and repetition type. Null for one-time leaderboards.
    */
   @JsonProperty("runInterval")
-  public int getRunInterval() {
+  public Optional<Integer> getRunInterval() {
     return runInterval;
   }
 
@@ -261,7 +262,7 @@ public final class MetricEventLeaderboardResponse {
   }
 
   private boolean equalTo(MetricEventLeaderboardResponse other) {
-    return end.equals(other.end) && rank.equals(other.rank) && previousRank.equals(other.previousRank) && threshold == other.threshold && breakdownAttributeValue.equals(other.breakdownAttributeValue) && id.equals(other.id) && name.equals(other.name) && key.equals(other.key) && rankBy.equals(other.rankBy) && breakdownAttribute.equals(other.breakdownAttribute) && metricKey.equals(other.metricKey) && metricName.equals(other.metricName) && pointsSystemKey.equals(other.pointsSystemKey) && pointsSystemName.equals(other.pointsSystemName) && description.equals(other.description) && start.equals(other.start) && maxParticipants == other.maxParticipants && runUnit.equals(other.runUnit) && runInterval == other.runInterval;
+    return end.equals(other.end) && rank.equals(other.rank) && previousRank.equals(other.previousRank) && threshold == other.threshold && breakdownAttributeValue.equals(other.breakdownAttributeValue) && id.equals(other.id) && name.equals(other.name) && key.equals(other.key) && rankBy.equals(other.rankBy) && breakdownAttribute.equals(other.breakdownAttribute) && metricKey.equals(other.metricKey) && metricName.equals(other.metricName) && pointsSystemKey.equals(other.pointsSystemKey) && pointsSystemName.equals(other.pointsSystemName) && description.equals(other.description) && start.equals(other.start) && maxParticipants == other.maxParticipants && runUnit.equals(other.runUnit) && runInterval.equals(other.runInterval);
   }
 
   @java.lang.Override
@@ -312,14 +313,7 @@ public final class MetricEventLeaderboardResponse {
     /**
      * <p>What the leaderboard ranks by.</p>
      */
-    DescriptionStage rankBy(@NotNull LeaderboardResponseRankBy rankBy);
-  }
-
-  public interface DescriptionStage {
-    /**
-     * <p>The user-facing description of the leaderboard.</p>
-     */
-    StartStage description(@NotNull String description);
+    StartStage rankBy(@NotNull LeaderboardResponseRankBy rankBy);
   }
 
   public interface StartStage {
@@ -333,14 +327,7 @@ public final class MetricEventLeaderboardResponse {
     /**
      * <p>The maximum number of participants in the leaderboard.</p>
      */
-    RunIntervalStage maxParticipants(int maxParticipants);
-  }
-
-  public interface RunIntervalStage {
-    /**
-     * <p>The interval between repetitions, relative to the start date and repetition type.</p>
-     */
-    _FinalStage runInterval(int runInterval);
+    _FinalStage maxParticipants(int maxParticipants);
   }
 
   public interface _FinalStage {
@@ -410,17 +397,31 @@ public final class MetricEventLeaderboardResponse {
     _FinalStage pointsSystemName(String pointsSystemName);
 
     /**
+     * <p>The user-facing description of the leaderboard.</p>
+     */
+    _FinalStage description(Optional<String> description);
+
+    _FinalStage description(String description);
+
+    /**
      * <p>The repetition type for recurring leaderboards, or null for one-time leaderboards.</p>
      */
     _FinalStage runUnit(Optional<LeaderboardResponseRunUnit> runUnit);
 
     _FinalStage runUnit(LeaderboardResponseRunUnit runUnit);
+
+    /**
+     * <p>The interval between repetitions, relative to the start date and repetition type. Null for one-time leaderboards.</p>
+     */
+    _FinalStage runInterval(Optional<Integer> runInterval);
+
+    _FinalStage runInterval(Integer runInterval);
   }
 
   @JsonIgnoreProperties(
       ignoreUnknown = true
   )
-  public static final class Builder implements ThresholdStage, IdStage, NameStage, KeyStage, RankByStage, DescriptionStage, StartStage, MaxParticipantsStage, RunIntervalStage, _FinalStage {
+  public static final class Builder implements ThresholdStage, IdStage, NameStage, KeyStage, RankByStage, StartStage, MaxParticipantsStage, _FinalStage {
     private int threshold;
 
     private String id;
@@ -431,15 +432,15 @@ public final class MetricEventLeaderboardResponse {
 
     private LeaderboardResponseRankBy rankBy;
 
-    private String description;
-
     private String start;
 
     private int maxParticipants;
 
-    private int runInterval;
+    private Optional<Integer> runInterval = Optional.empty();
 
     private Optional<LeaderboardResponseRunUnit> runUnit = Optional.empty();
+
+    private Optional<String> description = Optional.empty();
 
     private Optional<String> pointsSystemName = Optional.empty();
 
@@ -544,20 +545,8 @@ public final class MetricEventLeaderboardResponse {
      */
     @java.lang.Override
     @JsonSetter("rankBy")
-    public DescriptionStage rankBy(@NotNull LeaderboardResponseRankBy rankBy) {
+    public StartStage rankBy(@NotNull LeaderboardResponseRankBy rankBy) {
       this.rankBy = Objects.requireNonNull(rankBy, "rankBy must not be null");
-      return this;
-    }
-
-    /**
-     * <p>The user-facing description of the leaderboard.</p>
-     * <p>The user-facing description of the leaderboard.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    @JsonSetter("description")
-    public StartStage description(@NotNull String description) {
-      this.description = Objects.requireNonNull(description, "description must not be null");
       return this;
     }
 
@@ -580,19 +569,30 @@ public final class MetricEventLeaderboardResponse {
      */
     @java.lang.Override
     @JsonSetter("maxParticipants")
-    public RunIntervalStage maxParticipants(int maxParticipants) {
+    public _FinalStage maxParticipants(int maxParticipants) {
       this.maxParticipants = maxParticipants;
       return this;
     }
 
     /**
-     * <p>The interval between repetitions, relative to the start date and repetition type.</p>
-     * <p>The interval between repetitions, relative to the start date and repetition type.</p>
+     * <p>The interval between repetitions, relative to the start date and repetition type. Null for one-time leaderboards.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    @JsonSetter("runInterval")
-    public _FinalStage runInterval(int runInterval) {
+    public _FinalStage runInterval(Integer runInterval) {
+      this.runInterval = Optional.ofNullable(runInterval);
+      return this;
+    }
+
+    /**
+     * <p>The interval between repetitions, relative to the start date and repetition type. Null for one-time leaderboards.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "runInterval",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage runInterval(Optional<Integer> runInterval) {
       this.runInterval = runInterval;
       return this;
     }
@@ -617,6 +617,29 @@ public final class MetricEventLeaderboardResponse {
     )
     public _FinalStage runUnit(Optional<LeaderboardResponseRunUnit> runUnit) {
       this.runUnit = runUnit;
+      return this;
+    }
+
+    /**
+     * <p>The user-facing description of the leaderboard.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage description(String description) {
+      this.description = Optional.ofNullable(description);
+      return this;
+    }
+
+    /**
+     * <p>The user-facing description of the leaderboard.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "description",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage description(Optional<String> description) {
+      this.description = description;
       return this;
     }
 
