@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
     builder = AchievementCompletionResponseAchievement.Builder.class
 )
 public final class AchievementCompletionResponseAchievement implements ICompletedAchievementResponse, IAchievementResponse {
-  private final OffsetDateTime achievedAt;
+  private final Optional<OffsetDateTime> achievedAt;
 
   private final String id;
 
@@ -56,7 +56,7 @@ public final class AchievementCompletionResponseAchievement implements IComplete
 
   private final Map<String, Object> additionalProperties;
 
-  private AchievementCompletionResponseAchievement(OffsetDateTime achievedAt, String id,
+  private AchievementCompletionResponseAchievement(Optional<OffsetDateTime> achievedAt, String id,
       String name, AchievementResponseTrigger trigger, Optional<String> description,
       Optional<String> badgeUrl, String key, Optional<Integer> streakLength,
       Optional<String> metricId, Optional<Double> metricValue, Optional<String> metricName,
@@ -77,11 +77,11 @@ public final class AchievementCompletionResponseAchievement implements IComplete
   }
 
   /**
-   * @return The date and time the achievement was completed, in ISO 8601 format.
+   * @return The date and time the achievement was completed, in ISO 8601 format. Null if the achievement has not been completed.
    */
   @JsonProperty("achievedAt")
   @java.lang.Override
-  public OffsetDateTime getAchievedAt() {
+  public Optional<OffsetDateTime> getAchievedAt() {
     return achievedAt;
   }
 
@@ -207,17 +207,8 @@ public final class AchievementCompletionResponseAchievement implements IComplete
     return ObjectMappers.stringify(this);
   }
 
-  public static AchievedAtStage builder() {
+  public static IdStage builder() {
     return new Builder();
-  }
-
-  public interface AchievedAtStage {
-    /**
-     * <p>The date and time the achievement was completed, in ISO 8601 format.</p>
-     */
-    IdStage achievedAt(@NotNull OffsetDateTime achievedAt);
-
-    Builder from(AchievementCompletionResponseAchievement other);
   }
 
   public interface IdStage {
@@ -225,6 +216,8 @@ public final class AchievementCompletionResponseAchievement implements IComplete
      * <p>The unique ID of the achievement.</p>
      */
     NameStage id(@NotNull String id);
+
+    Builder from(AchievementCompletionResponseAchievement other);
   }
 
   public interface NameStage {
@@ -250,6 +243,13 @@ public final class AchievementCompletionResponseAchievement implements IComplete
 
   public interface _FinalStage {
     AchievementCompletionResponseAchievement build();
+
+    /**
+     * <p>The date and time the achievement was completed, in ISO 8601 format. Null if the achievement has not been completed.</p>
+     */
+    _FinalStage achievedAt(Optional<OffsetDateTime> achievedAt);
+
+    _FinalStage achievedAt(OffsetDateTime achievedAt);
 
     /**
      * <p>The description of this achievement.</p>
@@ -304,9 +304,7 @@ public final class AchievementCompletionResponseAchievement implements IComplete
   @JsonIgnoreProperties(
       ignoreUnknown = true
   )
-  public static final class Builder implements AchievedAtStage, IdStage, NameStage, TriggerStage, KeyStage, _FinalStage {
-    private OffsetDateTime achievedAt;
-
+  public static final class Builder implements IdStage, NameStage, TriggerStage, KeyStage, _FinalStage {
     private String id;
 
     private String name;
@@ -329,6 +327,8 @@ public final class AchievementCompletionResponseAchievement implements IComplete
 
     private Optional<String> description = Optional.empty();
 
+    private Optional<OffsetDateTime> achievedAt = Optional.empty();
+
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
 
@@ -349,18 +349,6 @@ public final class AchievementCompletionResponseAchievement implements IComplete
       metricValue(other.getMetricValue());
       metricName(other.getMetricName());
       currentStreak(other.getCurrentStreak());
-      return this;
-    }
-
-    /**
-     * <p>The date and time the achievement was completed, in ISO 8601 format.</p>
-     * <p>The date and time the achievement was completed, in ISO 8601 format.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    @JsonSetter("achievedAt")
-    public IdStage achievedAt(@NotNull OffsetDateTime achievedAt) {
-      this.achievedAt = Objects.requireNonNull(achievedAt, "achievedAt must not be null");
       return this;
     }
 
@@ -570,6 +558,29 @@ public final class AchievementCompletionResponseAchievement implements IComplete
     )
     public _FinalStage description(Optional<String> description) {
       this.description = description;
+      return this;
+    }
+
+    /**
+     * <p>The date and time the achievement was completed, in ISO 8601 format. Null if the achievement has not been completed.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage achievedAt(OffsetDateTime achievedAt) {
+      this.achievedAt = Optional.ofNullable(achievedAt);
+      return this;
+    }
+
+    /**
+     * <p>The date and time the achievement was completed, in ISO 8601 format. Null if the achievement has not been completed.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "achievedAt",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage achievedAt(Optional<OffsetDateTime> achievedAt) {
+      this.achievedAt = achievedAt;
       return this;
     }
 

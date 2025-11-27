@@ -6,7 +6,8 @@ package so.trophy.types;
 
 
 import java.time.OffsetDateTime;
+import java.util.Optional;
 
 public interface ICompletedAchievementResponse extends IAchievementResponse {
-  OffsetDateTime getAchievedAt();
+  Optional<OffsetDateTime> getAchievedAt();
 }
