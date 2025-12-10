@@ -6,18 +6,46 @@ package so.trophy.resources.admin.streaks;
 
 
 import so.trophy.core.ClientOptions;
+import so.trophy.core.RequestOptions;
 import so.trophy.core.Suppliers;
 import java.util.function.Supplier;
 import so.trophy.resources.admin.streaks.freezes.FreezesClient;
+import so.trophy.resources.admin.streaks.requests.RestoreStreaksRequest;
+import so.trophy.types.RestoreStreaksResponse;
 
 public class StreaksClient {
   protected final ClientOptions clientOptions;
+
+  private final RawStreaksClient rawClient;
 
   protected final Supplier<FreezesClient> freezesClient;
 
   public StreaksClient(ClientOptions clientOptions) {
     this.clientOptions = clientOptions;
+    this.rawClient = new RawStreaksClient(clientOptions);
     this.freezesClient = Suppliers.memoize(() -> new FreezesClient(clientOptions));
+  }
+
+  /**
+   * Get responses with HTTP metadata like headers
+   */
+  public RawStreaksClient withRawResponse() {
+    return this.rawClient;
+  }
+
+  /**
+   * Restore streaks for multiple users to the maximum length in the last 90 days (in the case of daily streaks), one year (in the case of weekly streaks), or two years (in the case of monthly streaks).
+   */
+  public RestoreStreaksResponse restore(RestoreStreaksRequest request) {
+    return this.rawClient.restore(request).body();
+  }
+
+  /**
+   * Restore streaks for multiple users to the maximum length in the last 90 days (in the case of daily streaks), one year (in the case of weekly streaks), or two years (in the case of monthly streaks).
+   */
+  public RestoreStreaksResponse restore(RestoreStreaksRequest request,
+      RequestOptions requestOptions) {
+    return this.rawClient.restore(request, requestOptions).body();
   }
 
   public FreezesClient freezes() {

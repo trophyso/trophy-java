@@ -16,6 +16,7 @@ import so.trophy.resources.users.requests.UsersMetricEventSummaryRequest;
 import so.trophy.resources.users.requests.UsersPointsEventSummaryRequest;
 import so.trophy.resources.users.requests.UsersPointsRequest;
 import so.trophy.resources.users.requests.UsersStreakRequest;
+import so.trophy.resources.users.requests.UsersWrappedRequest;
 import so.trophy.resources.users.types.UsersMetricEventSummaryResponseItem;
 import so.trophy.resources.users.types.UsersPointsEventSummaryResponseItem;
 import so.trophy.types.CompletedAchievementResponse;
@@ -26,6 +27,7 @@ import so.trophy.types.UpdatedUser;
 import so.trophy.types.UpsertedUser;
 import so.trophy.types.User;
 import so.trophy.types.UserLeaderboardResponseWithHistory;
+import so.trophy.types.WrappedResponse;
 
 public class AsyncUsersClient {
   protected final ClientOptions clientOptions;
@@ -267,5 +269,27 @@ public class AsyncUsersClient {
   public CompletableFuture<UserLeaderboardResponseWithHistory> leaderboard(String id, String key,
       UsersLeaderboardRequest request, RequestOptions requestOptions) {
     return this.rawClient.leaderboard(id, key, request, requestOptions).thenApply(response -> response.body());
+  }
+
+  /**
+   * Get a user's year-in-review wrapped data.
+   */
+  public CompletableFuture<WrappedResponse> wrapped(String id) {
+    return this.rawClient.wrapped(id).thenApply(response -> response.body());
+  }
+
+  /**
+   * Get a user's year-in-review wrapped data.
+   */
+  public CompletableFuture<WrappedResponse> wrapped(String id, UsersWrappedRequest request) {
+    return this.rawClient.wrapped(id, request).thenApply(response -> response.body());
+  }
+
+  /**
+   * Get a user's year-in-review wrapped data.
+   */
+  public CompletableFuture<WrappedResponse> wrapped(String id, UsersWrappedRequest request,
+      RequestOptions requestOptions) {
+    return this.rawClient.wrapped(id, request, requestOptions).thenApply(response -> response.body());
   }
 }

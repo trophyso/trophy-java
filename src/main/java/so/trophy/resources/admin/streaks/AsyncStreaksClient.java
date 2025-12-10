@@ -6,18 +6,47 @@ package so.trophy.resources.admin.streaks;
 
 
 import so.trophy.core.ClientOptions;
+import so.trophy.core.RequestOptions;
 import so.trophy.core.Suppliers;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 import so.trophy.resources.admin.streaks.freezes.AsyncFreezesClient;
+import so.trophy.resources.admin.streaks.requests.RestoreStreaksRequest;
+import so.trophy.types.RestoreStreaksResponse;
 
 public class AsyncStreaksClient {
   protected final ClientOptions clientOptions;
+
+  private final AsyncRawStreaksClient rawClient;
 
   protected final Supplier<AsyncFreezesClient> freezesClient;
 
   public AsyncStreaksClient(ClientOptions clientOptions) {
     this.clientOptions = clientOptions;
+    this.rawClient = new AsyncRawStreaksClient(clientOptions);
     this.freezesClient = Suppliers.memoize(() -> new AsyncFreezesClient(clientOptions));
+  }
+
+  /**
+   * Get responses with HTTP metadata like headers
+   */
+  public AsyncRawStreaksClient withRawResponse() {
+    return this.rawClient;
+  }
+
+  /**
+   * Restore streaks for multiple users to the maximum length in the last 90 days (in the case of daily streaks), one year (in the case of weekly streaks), or two years (in the case of monthly streaks).
+   */
+  public CompletableFuture<RestoreStreaksResponse> restore(RestoreStreaksRequest request) {
+    return this.rawClient.restore(request).thenApply(response -> response.body());
+  }
+
+  /**
+   * Restore streaks for multiple users to the maximum length in the last 90 days (in the case of daily streaks), one year (in the case of weekly streaks), or two years (in the case of monthly streaks).
+   */
+  public CompletableFuture<RestoreStreaksResponse> restore(RestoreStreaksRequest request,
+      RequestOptions requestOptions) {
+    return this.rawClient.restore(request, requestOptions).thenApply(response -> response.body());
   }
 
   public AsyncFreezesClient freezes() {

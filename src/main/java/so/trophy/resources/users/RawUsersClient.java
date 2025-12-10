@@ -36,6 +36,7 @@ import so.trophy.resources.users.requests.UsersMetricEventSummaryRequest;
 import so.trophy.resources.users.requests.UsersPointsEventSummaryRequest;
 import so.trophy.resources.users.requests.UsersPointsRequest;
 import so.trophy.resources.users.requests.UsersStreakRequest;
+import so.trophy.resources.users.requests.UsersWrappedRequest;
 import so.trophy.resources.users.types.UsersMetricEventSummaryResponseItem;
 import so.trophy.resources.users.types.UsersPointsEventSummaryResponseItem;
 import so.trophy.types.CompletedAchievementResponse;
@@ -47,6 +48,7 @@ import so.trophy.types.UpdatedUser;
 import so.trophy.types.UpsertedUser;
 import so.trophy.types.User;
 import so.trophy.types.UserLeaderboardResponseWithHistory;
+import so.trophy.types.WrappedResponse;
 
 public class RawUsersClient {
   protected final ClientOptions clientOptions;
@@ -750,4 +752,64 @@ public class RawUsersClient {
                   throw new TrophyApiException("Network error executing HTTP request", e);
                 }
               }
-            }
+
+              /**
+               * Get a user's year-in-review wrapped data.
+               */
+              public TrophyApiHttpResponse<WrappedResponse> wrapped(String id) {
+                return wrapped(id,UsersWrappedRequest.builder().build());
+              }
+
+              /**
+               * Get a user's year-in-review wrapped data.
+               */
+              public TrophyApiHttpResponse<WrappedResponse> wrapped(String id,
+                  UsersWrappedRequest request) {
+                return wrapped(id,request,null);
+              }
+
+              /**
+               * Get a user's year-in-review wrapped data.
+               */
+              public TrophyApiHttpResponse<WrappedResponse> wrapped(String id,
+                  UsersWrappedRequest request, RequestOptions requestOptions) {
+                HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
+
+                  .addPathSegments("users")
+                  .addPathSegment(id)
+                  .addPathSegments("wrapped");if (request.getYear().isPresent()) {
+                    QueryStringMapper.addQueryParameter(httpUrl, "year", request.getYear().get(), false);
+                  }
+                  Request.Builder _requestBuilder = new Request.Builder()
+                    .url(httpUrl.build())
+                    .method("GET", null)
+                    .headers(Headers.of(clientOptions.headers(requestOptions)))
+                    .addHeader("Accept", "application/json");
+                  Request okhttpRequest = _requestBuilder.build();
+                  OkHttpClient client = clientOptions.httpClient();
+                  if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
+                    client = clientOptions.httpClientWithTimeout(requestOptions);
+                  }
+                  try (Response response = client.newCall(okhttpRequest).execute()) {
+                    ResponseBody responseBody = response.body();
+                    if (response.isSuccessful()) {
+                      return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), WrappedResponse.class), response);
+                    }
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+                    try {
+                      switch (response.code()) {
+                        case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
+                        case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
+                        case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
+                      }
+                    }
+                    catch (JsonProcessingException ignored) {
+                      // unable to map error response, throwing generic error
+                    }
+                    throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
+                  }
+                  catch (IOException e) {
+                    throw new TrophyApiException("Network error executing HTTP request", e);
+                  }
+                }
+              }

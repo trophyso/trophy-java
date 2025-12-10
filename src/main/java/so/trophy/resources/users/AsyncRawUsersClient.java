@@ -41,6 +41,7 @@ import so.trophy.resources.users.requests.UsersMetricEventSummaryRequest;
 import so.trophy.resources.users.requests.UsersPointsEventSummaryRequest;
 import so.trophy.resources.users.requests.UsersPointsRequest;
 import so.trophy.resources.users.requests.UsersStreakRequest;
+import so.trophy.resources.users.requests.UsersWrappedRequest;
 import so.trophy.resources.users.types.UsersMetricEventSummaryResponseItem;
 import so.trophy.resources.users.types.UsersPointsEventSummaryResponseItem;
 import so.trophy.types.CompletedAchievementResponse;
@@ -52,6 +53,7 @@ import so.trophy.types.UpdatedUser;
 import so.trophy.types.UpsertedUser;
 import so.trophy.types.User;
 import so.trophy.types.UserLeaderboardResponseWithHistory;
+import so.trophy.types.WrappedResponse;
 
 public class AsyncRawUsersClient {
   protected final ClientOptions clientOptions;
@@ -955,4 +957,80 @@ public class AsyncRawUsersClient {
                 });
                 return future;
               }
-            }
+
+              /**
+               * Get a user's year-in-review wrapped data.
+               */
+              public CompletableFuture<TrophyApiHttpResponse<WrappedResponse>> wrapped(String id) {
+                return wrapped(id,UsersWrappedRequest.builder().build());
+              }
+
+              /**
+               * Get a user's year-in-review wrapped data.
+               */
+              public CompletableFuture<TrophyApiHttpResponse<WrappedResponse>> wrapped(String id,
+                  UsersWrappedRequest request) {
+                return wrapped(id,request,null);
+              }
+
+              /**
+               * Get a user's year-in-review wrapped data.
+               */
+              public CompletableFuture<TrophyApiHttpResponse<WrappedResponse>> wrapped(String id,
+                  UsersWrappedRequest request, RequestOptions requestOptions) {
+                HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
+
+                  .addPathSegments("users")
+                  .addPathSegment(id)
+                  .addPathSegments("wrapped");if (request.getYear().isPresent()) {
+                    QueryStringMapper.addQueryParameter(httpUrl, "year", request.getYear().get(), false);
+                  }
+                  Request.Builder _requestBuilder = new Request.Builder()
+                    .url(httpUrl.build())
+                    .method("GET", null)
+                    .headers(Headers.of(clientOptions.headers(requestOptions)))
+                    .addHeader("Accept", "application/json");
+                  Request okhttpRequest = _requestBuilder.build();
+                  OkHttpClient client = clientOptions.httpClient();
+                  if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
+                    client = clientOptions.httpClientWithTimeout(requestOptions);
+                  }
+                  CompletableFuture<TrophyApiHttpResponse<WrappedResponse>> future = new CompletableFuture<>();
+                  client.newCall(okhttpRequest).enqueue(new Callback() {
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                      try (ResponseBody responseBody = response.body()) {
+                        if (response.isSuccessful()) {
+                          future.complete(new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), WrappedResponse.class), response));
+                          return;
+                        }
+                        String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+                        try {
+                          switch (response.code()) {
+                            case 401:future.completeExceptionally(new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response));
+                            return;
+                            case 404:future.completeExceptionally(new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response));
+                            return;
+                            case 422:future.completeExceptionally(new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response));
+                            return;
+                          }
+                        }
+                        catch (JsonProcessingException ignored) {
+                          // unable to map error response, throwing generic error
+                        }
+                        future.completeExceptionally(new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response));
+                        return;
+                      }
+                      catch (IOException e) {
+                        future.completeExceptionally(new TrophyApiException("Network error executing HTTP request", e));
+                      }
+                    }
+
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                      future.completeExceptionally(new TrophyApiException("Network error executing HTTP request", e));
+                    }
+                  });
+                  return future;
+                }
+              }
