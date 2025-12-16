@@ -17,7 +17,6 @@ import so.trophy.core.ObjectMappers;
 import java.lang.Object;
 import java.lang.String;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -39,7 +38,7 @@ public final class User {
 
   private final Optional<String> tz;
 
-  private final List<String> deviceTokens;
+  private final Optional<List<String>> deviceTokens;
 
   private final boolean subscribeToEmails;
 
@@ -54,9 +53,9 @@ public final class User {
   private final Map<String, Object> additionalProperties;
 
   private User(String id, Optional<String> email, Optional<String> name, Optional<String> tz,
-      List<String> deviceTokens, boolean subscribeToEmails, Map<String, String> attributes,
-      boolean control, OffsetDateTime created, OffsetDateTime updated,
-      Map<String, Object> additionalProperties) {
+      Optional<List<String>> deviceTokens, boolean subscribeToEmails,
+      Map<String, String> attributes, boolean control, OffsetDateTime created,
+      OffsetDateTime updated, Map<String, Object> additionalProperties) {
     this.id = id;
     this.email = email;
     this.name = name;
@@ -106,7 +105,7 @@ public final class User {
    * @return The user's device tokens.
    */
   @JsonProperty("deviceTokens")
-  public List<String> getDeviceTokens() {
+  public Optional<List<String>> getDeviceTokens() {
     return deviceTokens;
   }
 
@@ -243,11 +242,9 @@ public final class User {
     /**
      * <p>The user's device tokens.</p>
      */
+    _FinalStage deviceTokens(Optional<List<String>> deviceTokens);
+
     _FinalStage deviceTokens(List<String> deviceTokens);
-
-    _FinalStage addDeviceTokens(String deviceTokens);
-
-    _FinalStage addAllDeviceTokens(List<String> deviceTokens);
 
     /**
      * <p>User attributes as key-value pairs. Keys must match existing user attributes set up in the Trophy dashboard.</p>
@@ -275,7 +272,7 @@ public final class User {
 
     private Map<String, String> attributes = new LinkedHashMap<>();
 
-    private List<String> deviceTokens = new ArrayList<>();
+    private Optional<List<String>> deviceTokens = Optional.empty();
 
     private Optional<String> tz = Optional.empty();
 
@@ -405,20 +402,8 @@ public final class User {
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage addAllDeviceTokens(List<String> deviceTokens) {
-      if (deviceTokens != null) {
-        this.deviceTokens.addAll(deviceTokens);
-      }
-      return this;
-    }
-
-    /**
-     * <p>The user's device tokens.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    public _FinalStage addDeviceTokens(String deviceTokens) {
-      this.deviceTokens.add(deviceTokens);
+    public _FinalStage deviceTokens(List<String> deviceTokens) {
+      this.deviceTokens = Optional.ofNullable(deviceTokens);
       return this;
     }
 
@@ -430,9 +415,8 @@ public final class User {
         value = "deviceTokens",
         nulls = Nulls.SKIP
     )
-    public _FinalStage deviceTokens(List<String> deviceTokens) {
-      this.deviceTokens.clear();
-      this.deviceTokens.addAll(deviceTokens);
+    public _FinalStage deviceTokens(Optional<List<String>> deviceTokens) {
+      this.deviceTokens = deviceTokens;
       return this;
     }
 

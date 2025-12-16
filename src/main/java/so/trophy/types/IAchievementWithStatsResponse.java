@@ -5,15 +5,8 @@ package so.trophy.types;
  */
 
 
-import java.util.List;
-import java.util.Optional;
-
 public interface IAchievementWithStatsResponse extends IAchievementResponse {
   int getCompletions();
 
   double getRarity();
-
-  Optional<List<AchievementWithStatsResponseUserAttributesItem>> getUserAttributes();
-
-  Optional<AchievementWithStatsResponseEventAttribute> getEventAttribute();
 }

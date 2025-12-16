@@ -21,27 +21,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import so.trophy.resources.admin.streaks.types.RestoreStreaksRequestUsersItem;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(
     builder = RestoreStreaksRequest.Builder.class
 )
 public final class RestoreStreaksRequest {
-  private final List<String> userIds;
+  private final List<RestoreStreaksRequestUsersItem> users;
 
   private final Map<String, Object> additionalProperties;
 
-  private RestoreStreaksRequest(List<String> userIds, Map<String, Object> additionalProperties) {
-    this.userIds = userIds;
+  private RestoreStreaksRequest(List<RestoreStreaksRequestUsersItem> users,
+      Map<String, Object> additionalProperties) {
+    this.users = users;
     this.additionalProperties = additionalProperties;
   }
 
   /**
-   * @return Array of user IDs to restore streaks for. Maximum 100 users per request.
+   * @return Array of users to restore streaks for. Maximum 100 users per request.
    */
-  @JsonProperty("userIds")
-  public List<String> getUserIds() {
-    return userIds;
+  @JsonProperty("users")
+  public List<RestoreStreaksRequestUsersItem> getUsers() {
+    return users;
   }
 
   @java.lang.Override
@@ -56,12 +58,12 @@ public final class RestoreStreaksRequest {
   }
 
   private boolean equalTo(RestoreStreaksRequest other) {
-    return userIds.equals(other.userIds);
+    return users.equals(other.users);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.userIds);
+    return Objects.hash(this.users);
   }
 
   @java.lang.Override
@@ -77,7 +79,7 @@ public final class RestoreStreaksRequest {
       ignoreUnknown = true
   )
   public static final class Builder {
-    private List<String> userIds = new ArrayList<>();
+    private List<RestoreStreaksRequestUsersItem> users = new ArrayList<>();
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -86,37 +88,37 @@ public final class RestoreStreaksRequest {
     }
 
     public Builder from(RestoreStreaksRequest other) {
-      userIds(other.getUserIds());
+      users(other.getUsers());
       return this;
     }
 
     /**
-     * <p>Array of user IDs to restore streaks for. Maximum 100 users per request.</p>
+     * <p>Array of users to restore streaks for. Maximum 100 users per request.</p>
      */
     @JsonSetter(
-        value = "userIds",
+        value = "users",
         nulls = Nulls.SKIP
     )
-    public Builder userIds(List<String> userIds) {
-      this.userIds.clear();
-      this.userIds.addAll(userIds);
+    public Builder users(List<RestoreStreaksRequestUsersItem> users) {
+      this.users.clear();
+      this.users.addAll(users);
       return this;
     }
 
-    public Builder addUserIds(String userIds) {
-      this.userIds.add(userIds);
+    public Builder addUsers(RestoreStreaksRequestUsersItem users) {
+      this.users.add(users);
       return this;
     }
 
-    public Builder addAllUserIds(List<String> userIds) {
-      if (userIds != null) {
-        this.userIds.addAll(userIds);
+    public Builder addAllUsers(List<RestoreStreaksRequestUsersItem> users) {
+      if (users != null) {
+        this.users.addAll(users);
       }
       return this;
     }
 
     public RestoreStreaksRequest build() {
-      return new RestoreStreaksRequest(userIds, additionalProperties);
+      return new RestoreStreaksRequest(users, additionalProperties);
     }
   }
 }

@@ -19,13 +19,13 @@ import so.trophy.resources.users.requests.UsersStreakRequest;
 import so.trophy.resources.users.requests.UsersWrappedRequest;
 import so.trophy.resources.users.types.UsersMetricEventSummaryResponseItem;
 import so.trophy.resources.users.types.UsersPointsEventSummaryResponseItem;
-import so.trophy.types.CompletedAchievementResponse;
 import so.trophy.types.GetUserPointsResponse;
 import so.trophy.types.MetricResponse;
 import so.trophy.types.StreakResponse;
 import so.trophy.types.UpdatedUser;
 import so.trophy.types.UpsertedUser;
 import so.trophy.types.User;
+import so.trophy.types.UserAchievementWithStatsResponse;
 import so.trophy.types.UserLeaderboardResponseWithHistory;
 import so.trophy.types.WrappedResponse;
 
@@ -167,14 +167,14 @@ public class AsyncUsersClient {
   /**
    * Get a user's achievements.
    */
-  public CompletableFuture<List<CompletedAchievementResponse>> achievements(String id) {
+  public CompletableFuture<List<UserAchievementWithStatsResponse>> achievements(String id) {
     return this.rawClient.achievements(id).thenApply(response -> response.body());
   }
 
   /**
    * Get a user's achievements.
    */
-  public CompletableFuture<List<CompletedAchievementResponse>> achievements(String id,
+  public CompletableFuture<List<UserAchievementWithStatsResponse>> achievements(String id,
       UsersAchievementsRequest request) {
     return this.rawClient.achievements(id, request).thenApply(response -> response.body());
   }
@@ -182,7 +182,7 @@ public class AsyncUsersClient {
   /**
    * Get a user's achievements.
    */
-  public CompletableFuture<List<CompletedAchievementResponse>> achievements(String id,
+  public CompletableFuture<List<UserAchievementWithStatsResponse>> achievements(String id,
       UsersAchievementsRequest request, RequestOptions requestOptions) {
     return this.rawClient.achievements(id, request, requestOptions).thenApply(response -> response.body());
   }

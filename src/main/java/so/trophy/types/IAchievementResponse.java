@@ -8,6 +8,7 @@ package so.trophy.types;
 import java.lang.Double;
 import java.lang.Integer;
 import java.lang.String;
+import java.util.List;
 import java.util.Optional;
 
 public interface IAchievementResponse {
@@ -21,7 +22,7 @@ public interface IAchievementResponse {
 
   Optional<String> getBadgeUrl();
 
-  String getKey();
+  Optional<String> getKey();
 
   Optional<Integer> getStreakLength();
 
@@ -30,4 +31,8 @@ public interface IAchievementResponse {
   Optional<Double> getMetricValue();
 
   Optional<String> getMetricName();
+
+  Optional<List<AchievementResponseUserAttributesItem>> getUserAttributes();
+
+  Optional<AchievementResponseEventAttribute> getEventAttribute();
 }

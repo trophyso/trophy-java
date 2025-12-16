@@ -27,11 +27,11 @@ import org.jetbrains.annotations.NotNull;
 public final class WebhooksAchievementCompletedPayload {
   private final User user;
 
-  private final CompletedAchievementResponse achievement;
+  private final UserAchievementResponse achievement;
 
   private final Map<String, Object> additionalProperties;
 
-  private WebhooksAchievementCompletedPayload(User user, CompletedAchievementResponse achievement,
+  private WebhooksAchievementCompletedPayload(User user, UserAchievementResponse achievement,
       Map<String, Object> additionalProperties) {
     this.user = user;
     this.achievement = achievement;
@@ -58,7 +58,7 @@ public final class WebhooksAchievementCompletedPayload {
    * @return The achievement completion that occurred.
    */
   @JsonProperty("achievement")
-  public CompletedAchievementResponse getAchievement() {
+  public UserAchievementResponse getAchievement() {
     return achievement;
   }
 
@@ -104,7 +104,7 @@ public final class WebhooksAchievementCompletedPayload {
     /**
      * <p>The achievement completion that occurred.</p>
      */
-    _FinalStage achievement(@NotNull CompletedAchievementResponse achievement);
+    _FinalStage achievement(@NotNull UserAchievementResponse achievement);
   }
 
   public interface _FinalStage {
@@ -117,7 +117,7 @@ public final class WebhooksAchievementCompletedPayload {
   public static final class Builder implements UserStage, AchievementStage, _FinalStage {
     private User user;
 
-    private CompletedAchievementResponse achievement;
+    private UserAchievementResponse achievement;
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -151,7 +151,7 @@ public final class WebhooksAchievementCompletedPayload {
      */
     @java.lang.Override
     @JsonSetter("achievement")
-    public _FinalStage achievement(@NotNull CompletedAchievementResponse achievement) {
+    public _FinalStage achievement(@NotNull UserAchievementResponse achievement) {
       this.achievement = Objects.requireNonNull(achievement, "achievement must not be null");
       return this;
     }

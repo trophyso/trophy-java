@@ -33,7 +33,7 @@ public final class WrappedMostActiveWeek implements IWrappedActivityPeriod {
 
   private final Map<String, WrappedPoints> points;
 
-  private final List<CompletedAchievementResponse> achievements;
+  private final List<UserAchievementResponse> achievements;
 
   private final Map<String, UserLeaderboardResponse> leaderboards;
 
@@ -44,7 +44,7 @@ public final class WrappedMostActiveWeek implements IWrappedActivityPeriod {
   private final Map<String, Object> additionalProperties;
 
   private WrappedMostActiveWeek(Map<String, WrappedMetric> metrics,
-      Map<String, WrappedPoints> points, List<CompletedAchievementResponse> achievements,
+      Map<String, WrappedPoints> points, List<UserAchievementResponse> achievements,
       Map<String, UserLeaderboardResponse> leaderboards, String start, String end,
       Map<String, Object> additionalProperties) {
     this.metrics = metrics;
@@ -79,7 +79,7 @@ public final class WrappedMostActiveWeek implements IWrappedActivityPeriod {
    */
   @JsonProperty("achievements")
   @java.lang.Override
-  public List<CompletedAchievementResponse> getAchievements() {
+  public List<UserAchievementResponse> getAchievements() {
     return achievements;
   }
 
@@ -177,11 +177,11 @@ public final class WrappedMostActiveWeek implements IWrappedActivityPeriod {
     /**
      * <p>Achievements completed during this period.</p>
      */
-    _FinalStage achievements(List<CompletedAchievementResponse> achievements);
+    _FinalStage achievements(List<UserAchievementResponse> achievements);
 
-    _FinalStage addAchievements(CompletedAchievementResponse achievements);
+    _FinalStage addAchievements(UserAchievementResponse achievements);
 
-    _FinalStage addAllAchievements(List<CompletedAchievementResponse> achievements);
+    _FinalStage addAllAchievements(List<UserAchievementResponse> achievements);
 
     /**
      * <p>The user's best leaderboard rankings during this period, keyed by leaderboard key.</p>
@@ -203,7 +203,7 @@ public final class WrappedMostActiveWeek implements IWrappedActivityPeriod {
 
     private Map<String, UserLeaderboardResponse> leaderboards = new LinkedHashMap<>();
 
-    private List<CompletedAchievementResponse> achievements = new ArrayList<>();
+    private List<UserAchievementResponse> achievements = new ArrayList<>();
 
     private Map<String, WrappedPoints> points = new LinkedHashMap<>();
 
@@ -291,7 +291,7 @@ public final class WrappedMostActiveWeek implements IWrappedActivityPeriod {
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage addAllAchievements(List<CompletedAchievementResponse> achievements) {
+    public _FinalStage addAllAchievements(List<UserAchievementResponse> achievements) {
       if (achievements != null) {
         this.achievements.addAll(achievements);
       }
@@ -303,7 +303,7 @@ public final class WrappedMostActiveWeek implements IWrappedActivityPeriod {
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage addAchievements(CompletedAchievementResponse achievements) {
+    public _FinalStage addAchievements(UserAchievementResponse achievements) {
       this.achievements.add(achievements);
       return this;
     }
@@ -316,7 +316,7 @@ public final class WrappedMostActiveWeek implements IWrappedActivityPeriod {
         value = "achievements",
         nulls = Nulls.SKIP
     )
-    public _FinalStage achievements(List<CompletedAchievementResponse> achievements) {
+    public _FinalStage achievements(List<UserAchievementResponse> achievements) {
       this.achievements.clear();
       this.achievements.addAll(achievements);
       return this;

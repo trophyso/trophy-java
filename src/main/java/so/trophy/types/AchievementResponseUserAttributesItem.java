@@ -22,16 +22,16 @@ import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(
-    builder = AchievementWithStatsResponseUserAttributesItem.Builder.class
+    builder = AchievementResponseUserAttributesItem.Builder.class
 )
-public final class AchievementWithStatsResponseUserAttributesItem {
+public final class AchievementResponseUserAttributesItem {
   private final String key;
 
   private final String value;
 
   private final Map<String, Object> additionalProperties;
 
-  private AchievementWithStatsResponseUserAttributesItem(String key, String value,
+  private AchievementResponseUserAttributesItem(String key, String value,
       Map<String, Object> additionalProperties) {
     this.key = key;
     this.value = value;
@@ -57,7 +57,7 @@ public final class AchievementWithStatsResponseUserAttributesItem {
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
-    return other instanceof AchievementWithStatsResponseUserAttributesItem && equalTo((AchievementWithStatsResponseUserAttributesItem) other);
+    return other instanceof AchievementResponseUserAttributesItem && equalTo((AchievementResponseUserAttributesItem) other);
   }
 
   @JsonAnyGetter
@@ -65,7 +65,7 @@ public final class AchievementWithStatsResponseUserAttributesItem {
     return this.additionalProperties;
   }
 
-  private boolean equalTo(AchievementWithStatsResponseUserAttributesItem other) {
+  private boolean equalTo(AchievementResponseUserAttributesItem other) {
     return key.equals(other.key) && value.equals(other.value);
   }
 
@@ -89,7 +89,7 @@ public final class AchievementWithStatsResponseUserAttributesItem {
      */
     ValueStage key(@NotNull String key);
 
-    Builder from(AchievementWithStatsResponseUserAttributesItem other);
+    Builder from(AchievementResponseUserAttributesItem other);
   }
 
   public interface ValueStage {
@@ -100,7 +100,7 @@ public final class AchievementWithStatsResponseUserAttributesItem {
   }
 
   public interface _FinalStage {
-    AchievementWithStatsResponseUserAttributesItem build();
+    AchievementResponseUserAttributesItem build();
   }
 
   @JsonIgnoreProperties(
@@ -118,7 +118,7 @@ public final class AchievementWithStatsResponseUserAttributesItem {
     }
 
     @java.lang.Override
-    public Builder from(AchievementWithStatsResponseUserAttributesItem other) {
+    public Builder from(AchievementResponseUserAttributesItem other) {
       key(other.getKey());
       value(other.getValue());
       return this;
@@ -149,8 +149,8 @@ public final class AchievementWithStatsResponseUserAttributesItem {
     }
 
     @java.lang.Override
-    public AchievementWithStatsResponseUserAttributesItem build() {
-      return new AchievementWithStatsResponseUserAttributesItem(key, value, additionalProperties);
+    public AchievementResponseUserAttributesItem build() {
+      return new AchievementResponseUserAttributesItem(key, value, additionalProperties);
     }
   }
 }

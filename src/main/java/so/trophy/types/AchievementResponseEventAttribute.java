@@ -22,16 +22,16 @@ import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(
-    builder = AchievementWithStatsResponseEventAttribute.Builder.class
+    builder = AchievementResponseEventAttribute.Builder.class
 )
-public final class AchievementWithStatsResponseEventAttribute {
+public final class AchievementResponseEventAttribute {
   private final String key;
 
   private final String value;
 
   private final Map<String, Object> additionalProperties;
 
-  private AchievementWithStatsResponseEventAttribute(String key, String value,
+  private AchievementResponseEventAttribute(String key, String value,
       Map<String, Object> additionalProperties) {
     this.key = key;
     this.value = value;
@@ -57,7 +57,7 @@ public final class AchievementWithStatsResponseEventAttribute {
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
-    return other instanceof AchievementWithStatsResponseEventAttribute && equalTo((AchievementWithStatsResponseEventAttribute) other);
+    return other instanceof AchievementResponseEventAttribute && equalTo((AchievementResponseEventAttribute) other);
   }
 
   @JsonAnyGetter
@@ -65,7 +65,7 @@ public final class AchievementWithStatsResponseEventAttribute {
     return this.additionalProperties;
   }
 
-  private boolean equalTo(AchievementWithStatsResponseEventAttribute other) {
+  private boolean equalTo(AchievementResponseEventAttribute other) {
     return key.equals(other.key) && value.equals(other.value);
   }
 
@@ -89,7 +89,7 @@ public final class AchievementWithStatsResponseEventAttribute {
      */
     ValueStage key(@NotNull String key);
 
-    Builder from(AchievementWithStatsResponseEventAttribute other);
+    Builder from(AchievementResponseEventAttribute other);
   }
 
   public interface ValueStage {
@@ -100,7 +100,7 @@ public final class AchievementWithStatsResponseEventAttribute {
   }
 
   public interface _FinalStage {
-    AchievementWithStatsResponseEventAttribute build();
+    AchievementResponseEventAttribute build();
   }
 
   @JsonIgnoreProperties(
@@ -118,7 +118,7 @@ public final class AchievementWithStatsResponseEventAttribute {
     }
 
     @java.lang.Override
-    public Builder from(AchievementWithStatsResponseEventAttribute other) {
+    public Builder from(AchievementResponseEventAttribute other) {
       key(other.getKey());
       value(other.getValue());
       return this;
@@ -149,8 +149,8 @@ public final class AchievementWithStatsResponseEventAttribute {
     }
 
     @java.lang.Override
-    public AchievementWithStatsResponseEventAttribute build() {
-      return new AchievementWithStatsResponseEventAttribute(key, value, additionalProperties);
+    public AchievementResponseEventAttribute build() {
+      return new AchievementResponseEventAttribute(key, value, additionalProperties);
     }
   }
 }

@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import so.trophy.core.ObjectMappers;
 import java.lang.Object;
@@ -18,6 +19,7 @@ import java.lang.String;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
@@ -29,11 +31,11 @@ public final class BulkStreakResponseItem {
 
   private final int streakLength;
 
-  private final String extended;
+  private final Optional<String> extended;
 
   private final Map<String, Object> additionalProperties;
 
-  private BulkStreakResponseItem(String userId, int streakLength, String extended,
+  private BulkStreakResponseItem(String userId, int streakLength, Optional<String> extended,
       Map<String, Object> additionalProperties) {
     this.userId = userId;
     this.streakLength = streakLength;
@@ -58,10 +60,10 @@ public final class BulkStreakResponseItem {
   }
 
   /**
-   * @return The timestamp the streak was extended, as a string.
+   * @return The timestamp the streak was extended, as a string. Null if the streak is not active.
    */
   @JsonProperty("extended")
-  public String getExtended() {
+  public Optional<String> getExtended() {
     return extended;
   }
 
@@ -107,29 +109,29 @@ public final class BulkStreakResponseItem {
     /**
      * <p>The length of the user's streak.</p>
      */
-    ExtendedStage streakLength(int streakLength);
-  }
-
-  public interface ExtendedStage {
-    /**
-     * <p>The timestamp the streak was extended, as a string.</p>
-     */
-    _FinalStage extended(@NotNull String extended);
+    _FinalStage streakLength(int streakLength);
   }
 
   public interface _FinalStage {
     BulkStreakResponseItem build();
+
+    /**
+     * <p>The timestamp the streak was extended, as a string. Null if the streak is not active.</p>
+     */
+    _FinalStage extended(Optional<String> extended);
+
+    _FinalStage extended(String extended);
   }
 
   @JsonIgnoreProperties(
       ignoreUnknown = true
   )
-  public static final class Builder implements UserIdStage, StreakLengthStage, ExtendedStage, _FinalStage {
+  public static final class Builder implements UserIdStage, StreakLengthStage, _FinalStage {
     private String userId;
 
     private int streakLength;
 
-    private String extended;
+    private Optional<String> extended = Optional.empty();
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -164,20 +166,31 @@ public final class BulkStreakResponseItem {
      */
     @java.lang.Override
     @JsonSetter("streakLength")
-    public ExtendedStage streakLength(int streakLength) {
+    public _FinalStage streakLength(int streakLength) {
       this.streakLength = streakLength;
       return this;
     }
 
     /**
-     * <p>The timestamp the streak was extended, as a string.</p>
-     * <p>The timestamp the streak was extended, as a string.</p>
+     * <p>The timestamp the streak was extended, as a string. Null if the streak is not active.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    @JsonSetter("extended")
-    public _FinalStage extended(@NotNull String extended) {
-      this.extended = Objects.requireNonNull(extended, "extended must not be null");
+    public _FinalStage extended(String extended) {
+      this.extended = Optional.ofNullable(extended);
+      return this;
+    }
+
+    /**
+     * <p>The timestamp the streak was extended, as a string. Null if the streak is not active.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "extended",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage extended(Optional<String> extended) {
+      this.extended = extended;
       return this;
     }
 

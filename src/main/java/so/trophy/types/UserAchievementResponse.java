@@ -28,19 +28,9 @@ import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(
-    builder = AchievementCompletionResponseAchievement.Builder.class
+    builder = UserAchievementResponse.Builder.class
 )
-public final class AchievementCompletionResponseAchievement implements ICompletedAchievementResponse, IAchievementWithStatsResponse, IAchievementResponse {
-  private final Optional<OffsetDateTime> achievedAt;
-
-  private final int completions;
-
-  private final double rarity;
-
-  private final Optional<List<AchievementWithStatsResponseUserAttributesItem>> userAttributes;
-
-  private final Optional<AchievementWithStatsResponseEventAttribute> eventAttribute;
-
+public final class UserAchievementResponse implements IAchievementResponse {
   private final String id;
 
   private final String name;
@@ -51,7 +41,7 @@ public final class AchievementCompletionResponseAchievement implements IComplete
 
   private final Optional<String> badgeUrl;
 
-  private final String key;
+  private final Optional<String> key;
 
   private final Optional<Integer> streakLength;
 
@@ -61,23 +51,21 @@ public final class AchievementCompletionResponseAchievement implements IComplete
 
   private final Optional<String> metricName;
 
-  private final Optional<MetricEventStreakResponse> currentStreak;
+  private final Optional<List<AchievementResponseUserAttributesItem>> userAttributes;
+
+  private final Optional<AchievementResponseEventAttribute> eventAttribute;
+
+  private final Optional<OffsetDateTime> achievedAt;
 
   private final Map<String, Object> additionalProperties;
 
-  private AchievementCompletionResponseAchievement(Optional<OffsetDateTime> achievedAt,
-      int completions, double rarity,
-      Optional<List<AchievementWithStatsResponseUserAttributesItem>> userAttributes,
-      Optional<AchievementWithStatsResponseEventAttribute> eventAttribute, String id, String name,
-      AchievementResponseTrigger trigger, Optional<String> description, Optional<String> badgeUrl,
-      String key, Optional<Integer> streakLength, Optional<String> metricId,
-      Optional<Double> metricValue, Optional<String> metricName,
-      Optional<MetricEventStreakResponse> currentStreak, Map<String, Object> additionalProperties) {
-    this.achievedAt = achievedAt;
-    this.completions = completions;
-    this.rarity = rarity;
-    this.userAttributes = userAttributes;
-    this.eventAttribute = eventAttribute;
+  private UserAchievementResponse(String id, String name, AchievementResponseTrigger trigger,
+      Optional<String> description, Optional<String> badgeUrl, Optional<String> key,
+      Optional<Integer> streakLength, Optional<String> metricId, Optional<Double> metricValue,
+      Optional<String> metricName,
+      Optional<List<AchievementResponseUserAttributesItem>> userAttributes,
+      Optional<AchievementResponseEventAttribute> eventAttribute,
+      Optional<OffsetDateTime> achievedAt, Map<String, Object> additionalProperties) {
     this.id = id;
     this.name = name;
     this.trigger = trigger;
@@ -88,51 +76,10 @@ public final class AchievementCompletionResponseAchievement implements IComplete
     this.metricId = metricId;
     this.metricValue = metricValue;
     this.metricName = metricName;
-    this.currentStreak = currentStreak;
+    this.userAttributes = userAttributes;
+    this.eventAttribute = eventAttribute;
+    this.achievedAt = achievedAt;
     this.additionalProperties = additionalProperties;
-  }
-
-  /**
-   * @return The date and time the achievement was completed, in ISO 8601 format. Null if the achievement has not been completed.
-   */
-  @JsonProperty("achievedAt")
-  @java.lang.Override
-  public Optional<OffsetDateTime> getAchievedAt() {
-    return achievedAt;
-  }
-
-  /**
-   * @return The number of users who have completed this achievement.
-   */
-  @JsonProperty("completions")
-  @java.lang.Override
-  public int getCompletions() {
-    return completions;
-  }
-
-  /**
-   * @return The percentage of all users who have completed this achievement.
-   */
-  @JsonProperty("rarity")
-  @java.lang.Override
-  public double getRarity() {
-    return rarity;
-  }
-
-  /**
-   * @return User attribute filters that must be met for this achievement to be completed. Only present if the achievement has user attribute filters configured.
-   */
-  @JsonProperty("userAttributes")
-  public Optional<List<AchievementWithStatsResponseUserAttributesItem>> getUserAttributes() {
-    return userAttributes;
-  }
-
-  /**
-   * @return Event attribute filter that must be met for this achievement to be completed. Only present if the achievement has an event filter configured.
-   */
-  @JsonProperty("eventAttribute")
-  public Optional<AchievementWithStatsResponseEventAttribute> getEventAttribute() {
-    return eventAttribute;
   }
 
   /**
@@ -184,7 +131,7 @@ public final class AchievementCompletionResponseAchievement implements IComplete
    */
   @JsonProperty("key")
   @java.lang.Override
-  public String getKey() {
+  public Optional<String> getKey() {
     return key;
   }
 
@@ -225,17 +172,33 @@ public final class AchievementCompletionResponseAchievement implements IComplete
   }
 
   /**
-   * @return The user's current streak for the metric, if the metric has streaks enabled.
+   * @return User attribute filters that must be met for this achievement to be completed. Only present if the achievement has user attribute filters configured.
    */
-  @JsonProperty("currentStreak")
-  public Optional<MetricEventStreakResponse> getCurrentStreak() {
-    return currentStreak;
+  @JsonProperty("userAttributes")
+  public Optional<List<AchievementResponseUserAttributesItem>> getUserAttributes() {
+    return userAttributes;
+  }
+
+  /**
+   * @return Event attribute filter that must be met for this achievement to be completed. Only present if the achievement has an event filter configured.
+   */
+  @JsonProperty("eventAttribute")
+  public Optional<AchievementResponseEventAttribute> getEventAttribute() {
+    return eventAttribute;
+  }
+
+  /**
+   * @return The date and time the achievement was completed, in ISO 8601 format. Null if the achievement has not been completed.
+   */
+  @JsonProperty("achievedAt")
+  public Optional<OffsetDateTime> getAchievedAt() {
+    return achievedAt;
   }
 
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
-    return other instanceof AchievementCompletionResponseAchievement && equalTo((AchievementCompletionResponseAchievement) other);
+    return other instanceof UserAchievementResponse && equalTo((UserAchievementResponse) other);
   }
 
   @JsonAnyGetter
@@ -243,13 +206,13 @@ public final class AchievementCompletionResponseAchievement implements IComplete
     return this.additionalProperties;
   }
 
-  private boolean equalTo(AchievementCompletionResponseAchievement other) {
-    return achievedAt.equals(other.achievedAt) && completions == other.completions && rarity == other.rarity && userAttributes.equals(other.userAttributes) && eventAttribute.equals(other.eventAttribute) && id.equals(other.id) && name.equals(other.name) && trigger.equals(other.trigger) && description.equals(other.description) && badgeUrl.equals(other.badgeUrl) && key.equals(other.key) && streakLength.equals(other.streakLength) && metricId.equals(other.metricId) && metricValue.equals(other.metricValue) && metricName.equals(other.metricName) && currentStreak.equals(other.currentStreak);
+  private boolean equalTo(UserAchievementResponse other) {
+    return id.equals(other.id) && name.equals(other.name) && trigger.equals(other.trigger) && description.equals(other.description) && badgeUrl.equals(other.badgeUrl) && key.equals(other.key) && streakLength.equals(other.streakLength) && metricId.equals(other.metricId) && metricValue.equals(other.metricValue) && metricName.equals(other.metricName) && userAttributes.equals(other.userAttributes) && eventAttribute.equals(other.eventAttribute) && achievedAt.equals(other.achievedAt);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.achievedAt, this.completions, this.rarity, this.userAttributes, this.eventAttribute, this.id, this.name, this.trigger, this.description, this.badgeUrl, this.key, this.streakLength, this.metricId, this.metricValue, this.metricName, this.currentStreak);
+    return Objects.hash(this.id, this.name, this.trigger, this.description, this.badgeUrl, this.key, this.streakLength, this.metricId, this.metricValue, this.metricName, this.userAttributes, this.eventAttribute, this.achievedAt);
   }
 
   @java.lang.Override
@@ -257,24 +220,8 @@ public final class AchievementCompletionResponseAchievement implements IComplete
     return ObjectMappers.stringify(this);
   }
 
-  public static CompletionsStage builder() {
+  public static IdStage builder() {
     return new Builder();
-  }
-
-  public interface CompletionsStage {
-    /**
-     * <p>The number of users who have completed this achievement.</p>
-     */
-    RarityStage completions(int completions);
-
-    Builder from(AchievementCompletionResponseAchievement other);
-  }
-
-  public interface RarityStage {
-    /**
-     * <p>The percentage of all users who have completed this achievement.</p>
-     */
-    IdStage rarity(double rarity);
   }
 
   public interface IdStage {
@@ -282,6 +229,8 @@ public final class AchievementCompletionResponseAchievement implements IComplete
      * <p>The unique ID of the achievement.</p>
      */
     NameStage id(@NotNull String id);
+
+    Builder from(UserAchievementResponse other);
   }
 
   public interface NameStage {
@@ -295,40 +244,11 @@ public final class AchievementCompletionResponseAchievement implements IComplete
     /**
      * <p>The trigger of the achievement.</p>
      */
-    KeyStage trigger(@NotNull AchievementResponseTrigger trigger);
-  }
-
-  public interface KeyStage {
-    /**
-     * <p>The key used to reference this achievement in the API (only applicable if trigger = 'api')</p>
-     */
-    _FinalStage key(@NotNull String key);
+    _FinalStage trigger(@NotNull AchievementResponseTrigger trigger);
   }
 
   public interface _FinalStage {
-    AchievementCompletionResponseAchievement build();
-
-    /**
-     * <p>The date and time the achievement was completed, in ISO 8601 format. Null if the achievement has not been completed.</p>
-     */
-    _FinalStage achievedAt(Optional<OffsetDateTime> achievedAt);
-
-    _FinalStage achievedAt(OffsetDateTime achievedAt);
-
-    /**
-     * <p>User attribute filters that must be met for this achievement to be completed. Only present if the achievement has user attribute filters configured.</p>
-     */
-    _FinalStage userAttributes(
-        Optional<List<AchievementWithStatsResponseUserAttributesItem>> userAttributes);
-
-    _FinalStage userAttributes(List<AchievementWithStatsResponseUserAttributesItem> userAttributes);
-
-    /**
-     * <p>Event attribute filter that must be met for this achievement to be completed. Only present if the achievement has an event filter configured.</p>
-     */
-    _FinalStage eventAttribute(Optional<AchievementWithStatsResponseEventAttribute> eventAttribute);
-
-    _FinalStage eventAttribute(AchievementWithStatsResponseEventAttribute eventAttribute);
+    UserAchievementResponse build();
 
     /**
      * <p>The description of this achievement.</p>
@@ -343,6 +263,13 @@ public final class AchievementCompletionResponseAchievement implements IComplete
     _FinalStage badgeUrl(Optional<String> badgeUrl);
 
     _FinalStage badgeUrl(String badgeUrl);
+
+    /**
+     * <p>The key used to reference this achievement in the API (only applicable if trigger = 'api')</p>
+     */
+    _FinalStage key(Optional<String> key);
+
+    _FinalStage key(String key);
 
     /**
      * <p>The length of the streak required to complete the achievement (only applicable if trigger = 'streak')</p>
@@ -373,30 +300,43 @@ public final class AchievementCompletionResponseAchievement implements IComplete
     _FinalStage metricName(String metricName);
 
     /**
-     * <p>The user's current streak for the metric, if the metric has streaks enabled.</p>
+     * <p>User attribute filters that must be met for this achievement to be completed. Only present if the achievement has user attribute filters configured.</p>
      */
-    _FinalStage currentStreak(Optional<MetricEventStreakResponse> currentStreak);
+    _FinalStage userAttributes(
+        Optional<List<AchievementResponseUserAttributesItem>> userAttributes);
 
-    _FinalStage currentStreak(MetricEventStreakResponse currentStreak);
+    _FinalStage userAttributes(List<AchievementResponseUserAttributesItem> userAttributes);
+
+    /**
+     * <p>Event attribute filter that must be met for this achievement to be completed. Only present if the achievement has an event filter configured.</p>
+     */
+    _FinalStage eventAttribute(Optional<AchievementResponseEventAttribute> eventAttribute);
+
+    _FinalStage eventAttribute(AchievementResponseEventAttribute eventAttribute);
+
+    /**
+     * <p>The date and time the achievement was completed, in ISO 8601 format. Null if the achievement has not been completed.</p>
+     */
+    _FinalStage achievedAt(Optional<OffsetDateTime> achievedAt);
+
+    _FinalStage achievedAt(OffsetDateTime achievedAt);
   }
 
   @JsonIgnoreProperties(
       ignoreUnknown = true
   )
-  public static final class Builder implements CompletionsStage, RarityStage, IdStage, NameStage, TriggerStage, KeyStage, _FinalStage {
-    private int completions;
-
-    private double rarity;
-
+  public static final class Builder implements IdStage, NameStage, TriggerStage, _FinalStage {
     private String id;
 
     private String name;
 
     private AchievementResponseTrigger trigger;
 
-    private String key;
+    private Optional<OffsetDateTime> achievedAt = Optional.empty();
 
-    private Optional<MetricEventStreakResponse> currentStreak = Optional.empty();
+    private Optional<AchievementResponseEventAttribute> eventAttribute = Optional.empty();
+
+    private Optional<List<AchievementResponseUserAttributesItem>> userAttributes = Optional.empty();
 
     private Optional<String> metricName = Optional.empty();
 
@@ -406,15 +346,11 @@ public final class AchievementCompletionResponseAchievement implements IComplete
 
     private Optional<Integer> streakLength = Optional.empty();
 
+    private Optional<String> key = Optional.empty();
+
     private Optional<String> badgeUrl = Optional.empty();
 
     private Optional<String> description = Optional.empty();
-
-    private Optional<AchievementWithStatsResponseEventAttribute> eventAttribute = Optional.empty();
-
-    private Optional<List<AchievementWithStatsResponseUserAttributesItem>> userAttributes = Optional.empty();
-
-    private Optional<OffsetDateTime> achievedAt = Optional.empty();
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -423,12 +359,7 @@ public final class AchievementCompletionResponseAchievement implements IComplete
     }
 
     @java.lang.Override
-    public Builder from(AchievementCompletionResponseAchievement other) {
-      achievedAt(other.getAchievedAt());
-      completions(other.getCompletions());
-      rarity(other.getRarity());
-      userAttributes(other.getUserAttributes());
-      eventAttribute(other.getEventAttribute());
+    public Builder from(UserAchievementResponse other) {
       id(other.getId());
       name(other.getName());
       trigger(other.getTrigger());
@@ -439,31 +370,9 @@ public final class AchievementCompletionResponseAchievement implements IComplete
       metricId(other.getMetricId());
       metricValue(other.getMetricValue());
       metricName(other.getMetricName());
-      currentStreak(other.getCurrentStreak());
-      return this;
-    }
-
-    /**
-     * <p>The number of users who have completed this achievement.</p>
-     * <p>The number of users who have completed this achievement.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    @JsonSetter("completions")
-    public RarityStage completions(int completions) {
-      this.completions = completions;
-      return this;
-    }
-
-    /**
-     * <p>The percentage of all users who have completed this achievement.</p>
-     * <p>The percentage of all users who have completed this achievement.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    @JsonSetter("rarity")
-    public IdStage rarity(double rarity) {
-      this.rarity = rarity;
+      userAttributes(other.getUserAttributes());
+      eventAttribute(other.getEventAttribute());
+      achievedAt(other.getAchievedAt());
       return this;
     }
 
@@ -498,43 +407,78 @@ public final class AchievementCompletionResponseAchievement implements IComplete
      */
     @java.lang.Override
     @JsonSetter("trigger")
-    public KeyStage trigger(@NotNull AchievementResponseTrigger trigger) {
+    public _FinalStage trigger(@NotNull AchievementResponseTrigger trigger) {
       this.trigger = Objects.requireNonNull(trigger, "trigger must not be null");
       return this;
     }
 
     /**
-     * <p>The key used to reference this achievement in the API (only applicable if trigger = 'api')</p>
-     * <p>The key used to reference this achievement in the API (only applicable if trigger = 'api')</p>
+     * <p>The date and time the achievement was completed, in ISO 8601 format. Null if the achievement has not been completed.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    @JsonSetter("key")
-    public _FinalStage key(@NotNull String key) {
-      this.key = Objects.requireNonNull(key, "key must not be null");
+    public _FinalStage achievedAt(OffsetDateTime achievedAt) {
+      this.achievedAt = Optional.ofNullable(achievedAt);
       return this;
     }
 
     /**
-     * <p>The user's current streak for the metric, if the metric has streaks enabled.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    public _FinalStage currentStreak(MetricEventStreakResponse currentStreak) {
-      this.currentStreak = Optional.ofNullable(currentStreak);
-      return this;
-    }
-
-    /**
-     * <p>The user's current streak for the metric, if the metric has streaks enabled.</p>
+     * <p>The date and time the achievement was completed, in ISO 8601 format. Null if the achievement has not been completed.</p>
      */
     @java.lang.Override
     @JsonSetter(
-        value = "currentStreak",
+        value = "achievedAt",
         nulls = Nulls.SKIP
     )
-    public _FinalStage currentStreak(Optional<MetricEventStreakResponse> currentStreak) {
-      this.currentStreak = currentStreak;
+    public _FinalStage achievedAt(Optional<OffsetDateTime> achievedAt) {
+      this.achievedAt = achievedAt;
+      return this;
+    }
+
+    /**
+     * <p>Event attribute filter that must be met for this achievement to be completed. Only present if the achievement has an event filter configured.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage eventAttribute(AchievementResponseEventAttribute eventAttribute) {
+      this.eventAttribute = Optional.ofNullable(eventAttribute);
+      return this;
+    }
+
+    /**
+     * <p>Event attribute filter that must be met for this achievement to be completed. Only present if the achievement has an event filter configured.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "eventAttribute",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage eventAttribute(Optional<AchievementResponseEventAttribute> eventAttribute) {
+      this.eventAttribute = eventAttribute;
+      return this;
+    }
+
+    /**
+     * <p>User attribute filters that must be met for this achievement to be completed. Only present if the achievement has user attribute filters configured.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage userAttributes(List<AchievementResponseUserAttributesItem> userAttributes) {
+      this.userAttributes = Optional.ofNullable(userAttributes);
+      return this;
+    }
+
+    /**
+     * <p>User attribute filters that must be met for this achievement to be completed. Only present if the achievement has user attribute filters configured.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "userAttributes",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage userAttributes(
+        Optional<List<AchievementResponseUserAttributesItem>> userAttributes) {
+      this.userAttributes = userAttributes;
       return this;
     }
 
@@ -631,6 +575,29 @@ public final class AchievementCompletionResponseAchievement implements IComplete
     }
 
     /**
+     * <p>The key used to reference this achievement in the API (only applicable if trigger = 'api')</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage key(String key) {
+      this.key = Optional.ofNullable(key);
+      return this;
+    }
+
+    /**
+     * <p>The key used to reference this achievement in the API (only applicable if trigger = 'api')</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "key",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage key(Optional<String> key) {
+      this.key = key;
+      return this;
+    }
+
+    /**
      * <p>The URL of the badge image for the achievement, if one has been uploaded.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
@@ -676,81 +643,9 @@ public final class AchievementCompletionResponseAchievement implements IComplete
       return this;
     }
 
-    /**
-     * <p>Event attribute filter that must be met for this achievement to be completed. Only present if the achievement has an event filter configured.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
     @java.lang.Override
-    public _FinalStage eventAttribute(AchievementWithStatsResponseEventAttribute eventAttribute) {
-      this.eventAttribute = Optional.ofNullable(eventAttribute);
-      return this;
-    }
-
-    /**
-     * <p>Event attribute filter that must be met for this achievement to be completed. Only present if the achievement has an event filter configured.</p>
-     */
-    @java.lang.Override
-    @JsonSetter(
-        value = "eventAttribute",
-        nulls = Nulls.SKIP
-    )
-    public _FinalStage eventAttribute(
-        Optional<AchievementWithStatsResponseEventAttribute> eventAttribute) {
-      this.eventAttribute = eventAttribute;
-      return this;
-    }
-
-    /**
-     * <p>User attribute filters that must be met for this achievement to be completed. Only present if the achievement has user attribute filters configured.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    public _FinalStage userAttributes(
-        List<AchievementWithStatsResponseUserAttributesItem> userAttributes) {
-      this.userAttributes = Optional.ofNullable(userAttributes);
-      return this;
-    }
-
-    /**
-     * <p>User attribute filters that must be met for this achievement to be completed. Only present if the achievement has user attribute filters configured.</p>
-     */
-    @java.lang.Override
-    @JsonSetter(
-        value = "userAttributes",
-        nulls = Nulls.SKIP
-    )
-    public _FinalStage userAttributes(
-        Optional<List<AchievementWithStatsResponseUserAttributesItem>> userAttributes) {
-      this.userAttributes = userAttributes;
-      return this;
-    }
-
-    /**
-     * <p>The date and time the achievement was completed, in ISO 8601 format. Null if the achievement has not been completed.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    public _FinalStage achievedAt(OffsetDateTime achievedAt) {
-      this.achievedAt = Optional.ofNullable(achievedAt);
-      return this;
-    }
-
-    /**
-     * <p>The date and time the achievement was completed, in ISO 8601 format. Null if the achievement has not been completed.</p>
-     */
-    @java.lang.Override
-    @JsonSetter(
-        value = "achievedAt",
-        nulls = Nulls.SKIP
-    )
-    public _FinalStage achievedAt(Optional<OffsetDateTime> achievedAt) {
-      this.achievedAt = achievedAt;
-      return this;
-    }
-
-    @java.lang.Override
-    public AchievementCompletionResponseAchievement build() {
-      return new AchievementCompletionResponseAchievement(achievedAt, completions, rarity, userAttributes, eventAttribute, id, name, trigger, description, badgeUrl, key, streakLength, metricId, metricValue, metricName, currentStreak, additionalProperties);
+    public UserAchievementResponse build() {
+      return new UserAchievementResponse(id, name, trigger, description, badgeUrl, key, streakLength, metricId, metricValue, metricName, userAttributes, eventAttribute, achievedAt, additionalProperties);
     }
   }
 }

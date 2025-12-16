@@ -14,7 +14,7 @@ public interface IWrappedActivityPeriod {
 
   Map<String, WrappedPoints> getPoints();
 
-  List<CompletedAchievementResponse> getAchievements();
+  List<UserAchievementResponse> getAchievements();
 
   Map<String, UserLeaderboardResponse> getLeaderboards();
 }

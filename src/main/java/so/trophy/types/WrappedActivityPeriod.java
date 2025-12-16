@@ -32,14 +32,14 @@ public final class WrappedActivityPeriod implements IWrappedActivityPeriod {
 
   private final Map<String, WrappedPoints> points;
 
-  private final List<CompletedAchievementResponse> achievements;
+  private final List<UserAchievementResponse> achievements;
 
   private final Map<String, UserLeaderboardResponse> leaderboards;
 
   private final Map<String, Object> additionalProperties;
 
   private WrappedActivityPeriod(Map<String, WrappedMetric> metrics,
-      Map<String, WrappedPoints> points, List<CompletedAchievementResponse> achievements,
+      Map<String, WrappedPoints> points, List<UserAchievementResponse> achievements,
       Map<String, UserLeaderboardResponse> leaderboards, Map<String, Object> additionalProperties) {
     this.metrics = metrics;
     this.points = points;
@@ -71,7 +71,7 @@ public final class WrappedActivityPeriod implements IWrappedActivityPeriod {
    */
   @JsonProperty("achievements")
   @java.lang.Override
-  public List<CompletedAchievementResponse> getAchievements() {
+  public List<UserAchievementResponse> getAchievements() {
     return achievements;
   }
 
@@ -121,7 +121,7 @@ public final class WrappedActivityPeriod implements IWrappedActivityPeriod {
 
     private Map<String, WrappedPoints> points = new LinkedHashMap<>();
 
-    private List<CompletedAchievementResponse> achievements = new ArrayList<>();
+    private List<UserAchievementResponse> achievements = new ArrayList<>();
 
     private Map<String, UserLeaderboardResponse> leaderboards = new LinkedHashMap<>();
 
@@ -196,18 +196,18 @@ public final class WrappedActivityPeriod implements IWrappedActivityPeriod {
         value = "achievements",
         nulls = Nulls.SKIP
     )
-    public Builder achievements(List<CompletedAchievementResponse> achievements) {
+    public Builder achievements(List<UserAchievementResponse> achievements) {
       this.achievements.clear();
       this.achievements.addAll(achievements);
       return this;
     }
 
-    public Builder addAchievements(CompletedAchievementResponse achievements) {
+    public Builder addAchievements(UserAchievementResponse achievements) {
       this.achievements.add(achievements);
       return this;
     }
 
-    public Builder addAllAchievements(List<CompletedAchievementResponse> achievements) {
+    public Builder addAllAchievements(List<UserAchievementResponse> achievements) {
       if (achievements != null) {
         this.achievements.addAll(achievements);
       }

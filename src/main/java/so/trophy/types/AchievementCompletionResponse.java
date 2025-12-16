@@ -29,14 +29,13 @@ import org.jetbrains.annotations.NotNull;
 public final class AchievementCompletionResponse {
   private final String completionId;
 
-  private final AchievementCompletionResponseAchievement achievement;
+  private final UserAchievementResponse achievement;
 
   private final Map<String, MetricEventPointsResponse> points;
 
   private final Map<String, Object> additionalProperties;
 
-  private AchievementCompletionResponse(String completionId,
-      AchievementCompletionResponseAchievement achievement,
+  private AchievementCompletionResponse(String completionId, UserAchievementResponse achievement,
       Map<String, MetricEventPointsResponse> points, Map<String, Object> additionalProperties) {
     this.completionId = completionId;
     this.achievement = achievement;
@@ -53,7 +52,7 @@ public final class AchievementCompletionResponse {
   }
 
   @JsonProperty("achievement")
-  public AchievementCompletionResponseAchievement getAchievement() {
+  public UserAchievementResponse getAchievement() {
     return achievement;
   }
 
@@ -104,7 +103,7 @@ public final class AchievementCompletionResponse {
   }
 
   public interface AchievementStage {
-    _FinalStage achievement(@NotNull AchievementCompletionResponseAchievement achievement);
+    _FinalStage achievement(@NotNull UserAchievementResponse achievement);
   }
 
   public interface _FinalStage {
@@ -126,7 +125,7 @@ public final class AchievementCompletionResponse {
   public static final class Builder implements CompletionIdStage, AchievementStage, _FinalStage {
     private String completionId;
 
-    private AchievementCompletionResponseAchievement achievement;
+    private UserAchievementResponse achievement;
 
     private Map<String, MetricEventPointsResponse> points = new LinkedHashMap<>();
 
@@ -158,7 +157,7 @@ public final class AchievementCompletionResponse {
 
     @java.lang.Override
     @JsonSetter("achievement")
-    public _FinalStage achievement(@NotNull AchievementCompletionResponseAchievement achievement) {
+    public _FinalStage achievement(@NotNull UserAchievementResponse achievement) {
       this.achievement = Objects.requireNonNull(achievement, "achievement must not be null");
       return this;
     }

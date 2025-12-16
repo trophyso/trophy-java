@@ -39,7 +39,6 @@ import so.trophy.resources.users.requests.UsersStreakRequest;
 import so.trophy.resources.users.requests.UsersWrappedRequest;
 import so.trophy.resources.users.types.UsersMetricEventSummaryResponseItem;
 import so.trophy.resources.users.types.UsersPointsEventSummaryResponseItem;
-import so.trophy.types.CompletedAchievementResponse;
 import so.trophy.types.ErrorBody;
 import so.trophy.types.GetUserPointsResponse;
 import so.trophy.types.MetricResponse;
@@ -47,6 +46,7 @@ import so.trophy.types.StreakResponse;
 import so.trophy.types.UpdatedUser;
 import so.trophy.types.UpsertedUser;
 import so.trophy.types.User;
+import so.trophy.types.UserAchievementWithStatsResponse;
 import so.trophy.types.UserLeaderboardResponseWithHistory;
 import so.trophy.types.WrappedResponse;
 
@@ -455,14 +455,14 @@ public class RawUsersClient {
     /**
      * Get a user's achievements.
      */
-    public TrophyApiHttpResponse<List<CompletedAchievementResponse>> achievements(String id) {
+    public TrophyApiHttpResponse<List<UserAchievementWithStatsResponse>> achievements(String id) {
       return achievements(id,UsersAchievementsRequest.builder().build());
     }
 
     /**
      * Get a user's achievements.
      */
-    public TrophyApiHttpResponse<List<CompletedAchievementResponse>> achievements(String id,
+    public TrophyApiHttpResponse<List<UserAchievementWithStatsResponse>> achievements(String id,
         UsersAchievementsRequest request) {
       return achievements(id,request,null);
     }
@@ -470,7 +470,7 @@ public class RawUsersClient {
     /**
      * Get a user's achievements.
      */
-    public TrophyApiHttpResponse<List<CompletedAchievementResponse>> achievements(String id,
+    public TrophyApiHttpResponse<List<UserAchievementWithStatsResponse>> achievements(String id,
         UsersAchievementsRequest request, RequestOptions requestOptions) {
       HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
@@ -492,7 +492,7 @@ public class RawUsersClient {
         try (Response response = client.newCall(okhttpRequest).execute()) {
           ResponseBody responseBody = response.body();
           if (response.isSuccessful()) {
-            return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<CompletedAchievementResponse>>() {}), response);
+            return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<UserAchievementWithStatsResponse>>() {}), response);
           }
           String responseBodyString = responseBody != null ? responseBody.string() : "{}";
           try {

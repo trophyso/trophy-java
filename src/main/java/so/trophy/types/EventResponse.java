@@ -37,7 +37,7 @@ public final class EventResponse {
 
   private final double total;
 
-  private final List<CompletedAchievementResponse> achievements;
+  private final List<UserAchievementResponse> achievements;
 
   private final MetricEventStreakResponse currentStreak;
 
@@ -52,7 +52,7 @@ public final class EventResponse {
   private final Map<String, Object> additionalProperties;
 
   private EventResponse(String eventId, String metricId, double total,
-      List<CompletedAchievementResponse> achievements, MetricEventStreakResponse currentStreak,
+      List<UserAchievementResponse> achievements, MetricEventStreakResponse currentStreak,
       Map<String, MetricEventPointsResponse> points,
       Map<String, MetricEventLeaderboardResponse> leaderboards, Optional<String> idempotencyKey,
       Optional<Boolean> idempotentReplayed, Map<String, Object> additionalProperties) {
@@ -96,7 +96,7 @@ public final class EventResponse {
    * @return Achievements completed as a result of this event.
    */
   @JsonProperty("achievements")
-  public List<CompletedAchievementResponse> getAchievements() {
+  public List<UserAchievementResponse> getAchievements() {
     return achievements;
   }
 
@@ -205,11 +205,11 @@ public final class EventResponse {
     /**
      * <p>Achievements completed as a result of this event.</p>
      */
-    _FinalStage achievements(List<CompletedAchievementResponse> achievements);
+    _FinalStage achievements(List<UserAchievementResponse> achievements);
 
-    _FinalStage addAchievements(CompletedAchievementResponse achievements);
+    _FinalStage addAchievements(UserAchievementResponse achievements);
 
-    _FinalStage addAllAchievements(List<CompletedAchievementResponse> achievements);
+    _FinalStage addAllAchievements(List<UserAchievementResponse> achievements);
 
     /**
      * <p>A map of points systems by key. Only contains points systems that were affected by the event.</p>
@@ -264,7 +264,7 @@ public final class EventResponse {
 
     private Map<String, MetricEventPointsResponse> points = new LinkedHashMap<>();
 
-    private List<CompletedAchievementResponse> achievements = new ArrayList<>();
+    private List<UserAchievementResponse> achievements = new ArrayList<>();
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -458,7 +458,7 @@ public final class EventResponse {
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage addAllAchievements(List<CompletedAchievementResponse> achievements) {
+    public _FinalStage addAllAchievements(List<UserAchievementResponse> achievements) {
       if (achievements != null) {
         this.achievements.addAll(achievements);
       }
@@ -470,7 +470,7 @@ public final class EventResponse {
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage addAchievements(CompletedAchievementResponse achievements) {
+    public _FinalStage addAchievements(UserAchievementResponse achievements) {
       this.achievements.add(achievements);
       return this;
     }
@@ -483,7 +483,7 @@ public final class EventResponse {
         value = "achievements",
         nulls = Nulls.SKIP
     )
-    public _FinalStage achievements(List<CompletedAchievementResponse> achievements) {
+    public _FinalStage achievements(List<UserAchievementResponse> achievements) {
       this.achievements.clear();
       this.achievements.addAll(achievements);
       return this;

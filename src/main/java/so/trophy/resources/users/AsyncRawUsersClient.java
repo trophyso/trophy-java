@@ -44,7 +44,6 @@ import so.trophy.resources.users.requests.UsersStreakRequest;
 import so.trophy.resources.users.requests.UsersWrappedRequest;
 import so.trophy.resources.users.types.UsersMetricEventSummaryResponseItem;
 import so.trophy.resources.users.types.UsersPointsEventSummaryResponseItem;
-import so.trophy.types.CompletedAchievementResponse;
 import so.trophy.types.ErrorBody;
 import so.trophy.types.GetUserPointsResponse;
 import so.trophy.types.MetricResponse;
@@ -52,6 +51,7 @@ import so.trophy.types.StreakResponse;
 import so.trophy.types.UpdatedUser;
 import so.trophy.types.UpsertedUser;
 import so.trophy.types.User;
+import so.trophy.types.UserAchievementWithStatsResponse;
 import so.trophy.types.UserLeaderboardResponseWithHistory;
 import so.trophy.types.WrappedResponse;
 
@@ -576,7 +576,7 @@ public class AsyncRawUsersClient {
     /**
      * Get a user's achievements.
      */
-    public CompletableFuture<TrophyApiHttpResponse<List<CompletedAchievementResponse>>> achievements(
+    public CompletableFuture<TrophyApiHttpResponse<List<UserAchievementWithStatsResponse>>> achievements(
         String id) {
       return achievements(id,UsersAchievementsRequest.builder().build());
     }
@@ -584,7 +584,7 @@ public class AsyncRawUsersClient {
     /**
      * Get a user's achievements.
      */
-    public CompletableFuture<TrophyApiHttpResponse<List<CompletedAchievementResponse>>> achievements(
+    public CompletableFuture<TrophyApiHttpResponse<List<UserAchievementWithStatsResponse>>> achievements(
         String id, UsersAchievementsRequest request) {
       return achievements(id,request,null);
     }
@@ -592,7 +592,7 @@ public class AsyncRawUsersClient {
     /**
      * Get a user's achievements.
      */
-    public CompletableFuture<TrophyApiHttpResponse<List<CompletedAchievementResponse>>> achievements(
+    public CompletableFuture<TrophyApiHttpResponse<List<UserAchievementWithStatsResponse>>> achievements(
         String id, UsersAchievementsRequest request, RequestOptions requestOptions) {
       HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
@@ -611,13 +611,13 @@ public class AsyncRawUsersClient {
         if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
           client = clientOptions.httpClientWithTimeout(requestOptions);
         }
-        CompletableFuture<TrophyApiHttpResponse<List<CompletedAchievementResponse>>> future = new CompletableFuture<>();
+        CompletableFuture<TrophyApiHttpResponse<List<UserAchievementWithStatsResponse>>> future = new CompletableFuture<>();
         client.newCall(okhttpRequest).enqueue(new Callback() {
           @Override
           public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
             try (ResponseBody responseBody = response.body()) {
               if (response.isSuccessful()) {
-                future.complete(new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<CompletedAchievementResponse>>() {}), response));
+                future.complete(new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<UserAchievementWithStatsResponse>>() {}), response));
                 return;
               }
               String responseBodyString = responseBody != null ? responseBody.string() : "{}";
