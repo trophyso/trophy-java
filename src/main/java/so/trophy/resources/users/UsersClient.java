@@ -9,6 +9,7 @@ import so.trophy.core.ClientOptions;
 import so.trophy.core.RequestOptions;
 import java.lang.String;
 import java.util.List;
+import so.trophy.resources.users.requests.UpdateUserPreferencesRequest;
 import so.trophy.resources.users.requests.UsersAchievementsRequest;
 import so.trophy.resources.users.requests.UsersLeaderboardRequest;
 import so.trophy.resources.users.requests.UsersMetricEventSummaryRequest;
@@ -26,6 +27,7 @@ import so.trophy.types.UpsertedUser;
 import so.trophy.types.User;
 import so.trophy.types.UserAchievementWithStatsResponse;
 import so.trophy.types.UserLeaderboardResponseWithHistory;
+import so.trophy.types.UserPreferencesResponse;
 import so.trophy.types.WrappedResponse;
 
 public class UsersClient {
@@ -113,6 +115,43 @@ public class UsersClient {
    */
   public User update(String id, UpdatedUser request, RequestOptions requestOptions) {
     return this.rawClient.update(id, request, requestOptions).body();
+  }
+
+  /**
+   * Get a user's notification preferences.
+   */
+  public UserPreferencesResponse getPreferences(String id) {
+    return this.rawClient.getPreferences(id).body();
+  }
+
+  /**
+   * Get a user's notification preferences.
+   */
+  public UserPreferencesResponse getPreferences(String id, RequestOptions requestOptions) {
+    return this.rawClient.getPreferences(id, requestOptions).body();
+  }
+
+  /**
+   * Update a user's notification preferences.
+   */
+  public UserPreferencesResponse updatePreferences(String id) {
+    return this.rawClient.updatePreferences(id).body();
+  }
+
+  /**
+   * Update a user's notification preferences.
+   */
+  public UserPreferencesResponse updatePreferences(String id,
+      UpdateUserPreferencesRequest request) {
+    return this.rawClient.updatePreferences(id, request).body();
+  }
+
+  /**
+   * Update a user's notification preferences.
+   */
+  public UserPreferencesResponse updatePreferences(String id, UpdateUserPreferencesRequest request,
+      RequestOptions requestOptions) {
+    return this.rawClient.updatePreferences(id, request, requestOptions).body();
   }
 
   /**

@@ -30,6 +30,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import so.trophy.resources.users.requests.UpdateUserPreferencesRequest;
 import so.trophy.resources.users.requests.UsersAchievementsRequest;
 import so.trophy.resources.users.requests.UsersLeaderboardRequest;
 import so.trophy.resources.users.requests.UsersMetricEventSummaryRequest;
@@ -48,6 +49,7 @@ import so.trophy.types.UpsertedUser;
 import so.trophy.types.User;
 import so.trophy.types.UserAchievementWithStatsResponse;
 import so.trophy.types.UserLeaderboardResponseWithHistory;
+import so.trophy.types.UserPreferencesResponse;
 import so.trophy.types.WrappedResponse;
 
 public class RawUsersClient {
@@ -278,6 +280,124 @@ public class RawUsersClient {
       try {
         switch (response.code()) {
           case 400:throw new BadRequestError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
+          case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
+          case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
+          case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
+        }
+      }
+      catch (JsonProcessingException ignored) {
+        // unable to map error response, throwing generic error
+      }
+      throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
+    }
+    catch (IOException e) {
+      throw new TrophyApiException("Network error executing HTTP request", e);
+    }
+  }
+
+  /**
+   * Get a user's notification preferences.
+   */
+  public TrophyApiHttpResponse<UserPreferencesResponse> getPreferences(String id) {
+    return getPreferences(id,null);
+  }
+
+  /**
+   * Get a user's notification preferences.
+   */
+  public TrophyApiHttpResponse<UserPreferencesResponse> getPreferences(String id,
+      RequestOptions requestOptions) {
+    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
+
+      .addPathSegments("users")
+      .addPathSegment(id)
+      .addPathSegments("preferences")
+      .build();
+    Request okhttpRequest = new Request.Builder()
+      .url(httpUrl)
+      .method("GET", null)
+      .headers(Headers.of(clientOptions.headers(requestOptions)))
+      .addHeader("Accept", "application/json")
+      .build();
+    OkHttpClient client = clientOptions.httpClient();
+    if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
+      client = clientOptions.httpClientWithTimeout(requestOptions);
+    }
+    try (Response response = client.newCall(okhttpRequest).execute()) {
+      ResponseBody responseBody = response.body();
+      if (response.isSuccessful()) {
+        return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), UserPreferencesResponse.class), response);
+      }
+      String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+      try {
+        switch (response.code()) {
+          case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
+          case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
+          case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
+        }
+      }
+      catch (JsonProcessingException ignored) {
+        // unable to map error response, throwing generic error
+      }
+      throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
+    }
+    catch (IOException e) {
+      throw new TrophyApiException("Network error executing HTTP request", e);
+    }
+  }
+
+  /**
+   * Update a user's notification preferences.
+   */
+  public TrophyApiHttpResponse<UserPreferencesResponse> updatePreferences(String id) {
+    return updatePreferences(id,UpdateUserPreferencesRequest.builder().build());
+  }
+
+  /**
+   * Update a user's notification preferences.
+   */
+  public TrophyApiHttpResponse<UserPreferencesResponse> updatePreferences(String id,
+      UpdateUserPreferencesRequest request) {
+    return updatePreferences(id,request,null);
+  }
+
+  /**
+   * Update a user's notification preferences.
+   */
+  public TrophyApiHttpResponse<UserPreferencesResponse> updatePreferences(String id,
+      UpdateUserPreferencesRequest request, RequestOptions requestOptions) {
+    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
+
+      .addPathSegments("users")
+      .addPathSegment(id)
+      .addPathSegments("preferences")
+      .build();
+    RequestBody body;
+    try {
+      body = RequestBody.create(ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
+    }
+    catch(JsonProcessingException e) {
+      throw new TrophyApiException("Failed to serialize request", e);
+    }
+    Request okhttpRequest = new Request.Builder()
+      .url(httpUrl)
+      .method("PATCH", body)
+      .headers(Headers.of(clientOptions.headers(requestOptions)))
+      .addHeader("Content-Type", "application/json")
+      .addHeader("Accept", "application/json")
+      .build();
+    OkHttpClient client = clientOptions.httpClient();
+    if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
+      client = clientOptions.httpClientWithTimeout(requestOptions);
+    }
+    try (Response response = client.newCall(okhttpRequest).execute()) {
+      ResponseBody responseBody = response.body();
+      if (response.isSuccessful()) {
+        return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), UserPreferencesResponse.class), response);
+      }
+      String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+      try {
+        switch (response.code()) {
           case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
           case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
           case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
