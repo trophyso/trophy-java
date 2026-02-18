@@ -10,6 +10,7 @@ import so.trophy.core.RequestOptions;
 import java.lang.String;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import so.trophy.resources.leaderboards.requests.LeaderboardsAllRequest;
 import so.trophy.resources.leaderboards.requests.LeaderboardsGetRequest;
 import so.trophy.resources.leaderboards.types.LeaderboardsAllResponseItem;
 import so.trophy.types.LeaderboardResponseWithRankings;
@@ -32,17 +33,25 @@ public class AsyncLeaderboardsClient {
   }
 
   /**
-   * Get all active leaderboards for your organization.
+   * Get all leaderboards for your organization. Finished leaderboards are excluded by default.
    */
   public CompletableFuture<List<LeaderboardsAllResponseItem>> all() {
     return this.rawClient.all().thenApply(response -> response.body());
   }
 
   /**
-   * Get all active leaderboards for your organization.
+   * Get all leaderboards for your organization. Finished leaderboards are excluded by default.
    */
-  public CompletableFuture<List<LeaderboardsAllResponseItem>> all(RequestOptions requestOptions) {
-    return this.rawClient.all(requestOptions).thenApply(response -> response.body());
+  public CompletableFuture<List<LeaderboardsAllResponseItem>> all(LeaderboardsAllRequest request) {
+    return this.rawClient.all(request).thenApply(response -> response.body());
+  }
+
+  /**
+   * Get all leaderboards for your organization. Finished leaderboards are excluded by default.
+   */
+  public CompletableFuture<List<LeaderboardsAllResponseItem>> all(LeaderboardsAllRequest request,
+      RequestOptions requestOptions) {
+    return this.rawClient.all(request, requestOptions).thenApply(response -> response.body());
   }
 
   /**

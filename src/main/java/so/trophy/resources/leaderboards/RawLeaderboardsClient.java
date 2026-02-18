@@ -27,6 +27,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import so.trophy.resources.leaderboards.requests.LeaderboardsAllRequest;
 import so.trophy.resources.leaderboards.requests.LeaderboardsGetRequest;
 import so.trophy.resources.leaderboards.types.LeaderboardsAllResponseItem;
 import so.trophy.types.ErrorBody;
@@ -40,90 +41,29 @@ public class RawLeaderboardsClient {
   }
 
   /**
-   * Get all active leaderboards for your organization.
+   * Get all leaderboards for your organization. Finished leaderboards are excluded by default.
    */
   public TrophyApiHttpResponse<List<LeaderboardsAllResponseItem>> all() {
-    return all(null);
+    return all(LeaderboardsAllRequest.builder().build());
   }
 
   /**
-   * Get all active leaderboards for your organization.
+   * Get all leaderboards for your organization. Finished leaderboards are excluded by default.
    */
   public TrophyApiHttpResponse<List<LeaderboardsAllResponseItem>> all(
-      RequestOptions requestOptions) {
-    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
-
-      .addPathSegments("leaderboards")
-      .build();
-    Request okhttpRequest = new Request.Builder()
-      .url(httpUrl)
-      .method("GET", null)
-      .headers(Headers.of(clientOptions.headers(requestOptions)))
-      .addHeader("Accept", "application/json")
-      .build();
-    OkHttpClient client = clientOptions.httpClient();
-    if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-      client = clientOptions.httpClientWithTimeout(requestOptions);
-    }
-    try (Response response = client.newCall(okhttpRequest).execute()) {
-      ResponseBody responseBody = response.body();
-      if (response.isSuccessful()) {
-        return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<LeaderboardsAllResponseItem>>() {}), response);
-      }
-      String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-      try {
-        switch (response.code()) {
-          case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
-          case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
-        }
-      }
-      catch (JsonProcessingException ignored) {
-        // unable to map error response, throwing generic error
-      }
-      throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
-    }
-    catch (IOException e) {
-      throw new TrophyApiException("Network error executing HTTP request", e);
-    }
+      LeaderboardsAllRequest request) {
+    return all(request,null);
   }
 
   /**
-   * Get a specific leaderboard by its key.
+   * Get all leaderboards for your organization. Finished leaderboards are excluded by default.
    */
-  public TrophyApiHttpResponse<LeaderboardResponseWithRankings> get(String key) {
-    return get(key,LeaderboardsGetRequest.builder().build());
-  }
-
-  /**
-   * Get a specific leaderboard by its key.
-   */
-  public TrophyApiHttpResponse<LeaderboardResponseWithRankings> get(String key,
-      LeaderboardsGetRequest request) {
-    return get(key,request,null);
-  }
-
-  /**
-   * Get a specific leaderboard by its key.
-   */
-  public TrophyApiHttpResponse<LeaderboardResponseWithRankings> get(String key,
-      LeaderboardsGetRequest request, RequestOptions requestOptions) {
+  public TrophyApiHttpResponse<List<LeaderboardsAllResponseItem>> all(
+      LeaderboardsAllRequest request, RequestOptions requestOptions) {
     HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
-      .addPathSegments("leaderboards")
-      .addPathSegment(key);if (request.getOffset().isPresent()) {
-        QueryStringMapper.addQueryParameter(httpUrl, "offset", request.getOffset().get(), false);
-      }
-      if (request.getLimit().isPresent()) {
-        QueryStringMapper.addQueryParameter(httpUrl, "limit", request.getLimit().get(), false);
-      }
-      if (request.getRun().isPresent()) {
-        QueryStringMapper.addQueryParameter(httpUrl, "run", request.getRun().get(), false);
-      }
-      if (request.getUserId().isPresent()) {
-        QueryStringMapper.addQueryParameter(httpUrl, "userId", request.getUserId().get(), false);
-      }
-      if (request.getUserAttributes().isPresent()) {
-        QueryStringMapper.addQueryParameter(httpUrl, "userAttributes", request.getUserAttributes().get(), false);
+      .addPathSegments("leaderboards");if (request.getIncludeFinished().isPresent()) {
+        QueryStringMapper.addQueryParameter(httpUrl, "includeFinished", request.getIncludeFinished().get(), false);
       }
       Request.Builder _requestBuilder = new Request.Builder()
         .url(httpUrl.build())
@@ -138,13 +78,12 @@ public class RawLeaderboardsClient {
       try (Response response = client.newCall(okhttpRequest).execute()) {
         ResponseBody responseBody = response.body();
         if (response.isSuccessful()) {
-          return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), LeaderboardResponseWithRankings.class), response);
+          return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<LeaderboardsAllResponseItem>>() {}), response);
         }
         String responseBodyString = responseBody != null ? responseBody.string() : "{}";
         try {
           switch (response.code()) {
             case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
-            case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
             case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
           }
         }
@@ -157,4 +96,75 @@ public class RawLeaderboardsClient {
         throw new TrophyApiException("Network error executing HTTP request", e);
       }
     }
-  }
+
+    /**
+     * Get a specific leaderboard by its key.
+     */
+    public TrophyApiHttpResponse<LeaderboardResponseWithRankings> get(String key) {
+      return get(key,LeaderboardsGetRequest.builder().build());
+    }
+
+    /**
+     * Get a specific leaderboard by its key.
+     */
+    public TrophyApiHttpResponse<LeaderboardResponseWithRankings> get(String key,
+        LeaderboardsGetRequest request) {
+      return get(key,request,null);
+    }
+
+    /**
+     * Get a specific leaderboard by its key.
+     */
+    public TrophyApiHttpResponse<LeaderboardResponseWithRankings> get(String key,
+        LeaderboardsGetRequest request, RequestOptions requestOptions) {
+      HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
+
+        .addPathSegments("leaderboards")
+        .addPathSegment(key);if (request.getOffset().isPresent()) {
+          QueryStringMapper.addQueryParameter(httpUrl, "offset", request.getOffset().get(), false);
+        }
+        if (request.getLimit().isPresent()) {
+          QueryStringMapper.addQueryParameter(httpUrl, "limit", request.getLimit().get(), false);
+        }
+        if (request.getRun().isPresent()) {
+          QueryStringMapper.addQueryParameter(httpUrl, "run", request.getRun().get(), false);
+        }
+        if (request.getUserId().isPresent()) {
+          QueryStringMapper.addQueryParameter(httpUrl, "userId", request.getUserId().get(), false);
+        }
+        if (request.getUserAttributes().isPresent()) {
+          QueryStringMapper.addQueryParameter(httpUrl, "userAttributes", request.getUserAttributes().get(), false);
+        }
+        Request.Builder _requestBuilder = new Request.Builder()
+          .url(httpUrl.build())
+          .method("GET", null)
+          .headers(Headers.of(clientOptions.headers(requestOptions)))
+          .addHeader("Accept", "application/json");
+        Request okhttpRequest = _requestBuilder.build();
+        OkHttpClient client = clientOptions.httpClient();
+        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
+          client = clientOptions.httpClientWithTimeout(requestOptions);
+        }
+        try (Response response = client.newCall(okhttpRequest).execute()) {
+          ResponseBody responseBody = response.body();
+          if (response.isSuccessful()) {
+            return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), LeaderboardResponseWithRankings.class), response);
+          }
+          String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+          try {
+            switch (response.code()) {
+              case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
+              case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
+              case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
+            }
+          }
+          catch (JsonProcessingException ignored) {
+            // unable to map error response, throwing generic error
+          }
+          throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
+        }
+        catch (IOException e) {
+          throw new TrophyApiException("Network error executing HTTP request", e);
+        }
+      }
+    }

@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 @JsonDeserialize(
     builder = GetUserPointsResponse.Builder.class
 )
-public final class GetUserPointsResponse implements IGetUserPointsResponse {
+public final class GetUserPointsResponse {
   private final String id;
 
   private final String key;
@@ -66,7 +66,6 @@ public final class GetUserPointsResponse implements IGetUserPointsResponse {
    * @return The ID of the points system
    */
   @JsonProperty("id")
-  @java.lang.Override
   public String getId() {
     return id;
   }
@@ -75,7 +74,6 @@ public final class GetUserPointsResponse implements IGetUserPointsResponse {
    * @return The key of the points system
    */
   @JsonProperty("key")
-  @java.lang.Override
   public String getKey() {
     return key;
   }
@@ -84,7 +82,6 @@ public final class GetUserPointsResponse implements IGetUserPointsResponse {
    * @return The name of the points system
    */
   @JsonProperty("name")
-  @java.lang.Override
   public String getName() {
     return name;
   }
@@ -93,7 +90,6 @@ public final class GetUserPointsResponse implements IGetUserPointsResponse {
    * @return The description of the points system
    */
   @JsonProperty("description")
-  @java.lang.Override
   public Optional<String> getDescription() {
     return description;
   }
@@ -102,7 +98,6 @@ public final class GetUserPointsResponse implements IGetUserPointsResponse {
    * @return The URL of the badge image for the points system
    */
   @JsonProperty("badgeUrl")
-  @java.lang.Override
   public Optional<String> getBadgeUrl() {
     return badgeUrl;
   }
@@ -111,7 +106,6 @@ public final class GetUserPointsResponse implements IGetUserPointsResponse {
    * @return The maximum number of points a user can be awarded in this points system
    */
   @JsonProperty("maxPoints")
-  @java.lang.Override
   public Optional<Double> getMaxPoints() {
     return maxPoints;
   }
@@ -120,7 +114,6 @@ public final class GetUserPointsResponse implements IGetUserPointsResponse {
    * @return The user's total points
    */
   @JsonProperty("total")
-  @java.lang.Override
   public int getTotal() {
     return total;
   }
@@ -129,7 +122,6 @@ public final class GetUserPointsResponse implements IGetUserPointsResponse {
    * @return Array of trigger awards that added points.
    */
   @JsonProperty("awards")
-  @java.lang.Override
   public List<PointsAward> getAwards() {
     return awards;
   }

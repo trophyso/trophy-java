@@ -32,6 +32,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.jetbrains.annotations.NotNull;
+import so.trophy.resources.leaderboards.requests.LeaderboardsAllRequest;
 import so.trophy.resources.leaderboards.requests.LeaderboardsGetRequest;
 import so.trophy.resources.leaderboards.types.LeaderboardsAllResponseItem;
 import so.trophy.types.ErrorBody;
@@ -45,105 +46,29 @@ public class AsyncRawLeaderboardsClient {
   }
 
   /**
-   * Get all active leaderboards for your organization.
+   * Get all leaderboards for your organization. Finished leaderboards are excluded by default.
    */
   public CompletableFuture<TrophyApiHttpResponse<List<LeaderboardsAllResponseItem>>> all() {
-    return all(null);
+    return all(LeaderboardsAllRequest.builder().build());
   }
 
   /**
-   * Get all active leaderboards for your organization.
+   * Get all leaderboards for your organization. Finished leaderboards are excluded by default.
    */
   public CompletableFuture<TrophyApiHttpResponse<List<LeaderboardsAllResponseItem>>> all(
-      RequestOptions requestOptions) {
-    HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
-
-      .addPathSegments("leaderboards")
-      .build();
-    Request okhttpRequest = new Request.Builder()
-      .url(httpUrl)
-      .method("GET", null)
-      .headers(Headers.of(clientOptions.headers(requestOptions)))
-      .addHeader("Accept", "application/json")
-      .build();
-    OkHttpClient client = clientOptions.httpClient();
-    if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-      client = clientOptions.httpClientWithTimeout(requestOptions);
-    }
-    CompletableFuture<TrophyApiHttpResponse<List<LeaderboardsAllResponseItem>>> future = new CompletableFuture<>();
-    client.newCall(okhttpRequest).enqueue(new Callback() {
-      @Override
-      public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-        try (ResponseBody responseBody = response.body()) {
-          if (response.isSuccessful()) {
-            future.complete(new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<LeaderboardsAllResponseItem>>() {}), response));
-            return;
-          }
-          String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-          try {
-            switch (response.code()) {
-              case 401:future.completeExceptionally(new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response));
-              return;
-              case 422:future.completeExceptionally(new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response));
-              return;
-            }
-          }
-          catch (JsonProcessingException ignored) {
-            // unable to map error response, throwing generic error
-          }
-          future.completeExceptionally(new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response));
-          return;
-        }
-        catch (IOException e) {
-          future.completeExceptionally(new TrophyApiException("Network error executing HTTP request", e));
-        }
-      }
-
-      @Override
-      public void onFailure(@NotNull Call call, @NotNull IOException e) {
-        future.completeExceptionally(new TrophyApiException("Network error executing HTTP request", e));
-      }
-    });
-    return future;
+      LeaderboardsAllRequest request) {
+    return all(request,null);
   }
 
   /**
-   * Get a specific leaderboard by its key.
+   * Get all leaderboards for your organization. Finished leaderboards are excluded by default.
    */
-  public CompletableFuture<TrophyApiHttpResponse<LeaderboardResponseWithRankings>> get(String key) {
-    return get(key,LeaderboardsGetRequest.builder().build());
-  }
-
-  /**
-   * Get a specific leaderboard by its key.
-   */
-  public CompletableFuture<TrophyApiHttpResponse<LeaderboardResponseWithRankings>> get(String key,
-      LeaderboardsGetRequest request) {
-    return get(key,request,null);
-  }
-
-  /**
-   * Get a specific leaderboard by its key.
-   */
-  public CompletableFuture<TrophyApiHttpResponse<LeaderboardResponseWithRankings>> get(String key,
-      LeaderboardsGetRequest request, RequestOptions requestOptions) {
+  public CompletableFuture<TrophyApiHttpResponse<List<LeaderboardsAllResponseItem>>> all(
+      LeaderboardsAllRequest request, RequestOptions requestOptions) {
     HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
-      .addPathSegments("leaderboards")
-      .addPathSegment(key);if (request.getOffset().isPresent()) {
-        QueryStringMapper.addQueryParameter(httpUrl, "offset", request.getOffset().get(), false);
-      }
-      if (request.getLimit().isPresent()) {
-        QueryStringMapper.addQueryParameter(httpUrl, "limit", request.getLimit().get(), false);
-      }
-      if (request.getRun().isPresent()) {
-        QueryStringMapper.addQueryParameter(httpUrl, "run", request.getRun().get(), false);
-      }
-      if (request.getUserId().isPresent()) {
-        QueryStringMapper.addQueryParameter(httpUrl, "userId", request.getUserId().get(), false);
-      }
-      if (request.getUserAttributes().isPresent()) {
-        QueryStringMapper.addQueryParameter(httpUrl, "userAttributes", request.getUserAttributes().get(), false);
+      .addPathSegments("leaderboards");if (request.getIncludeFinished().isPresent()) {
+        QueryStringMapper.addQueryParameter(httpUrl, "includeFinished", request.getIncludeFinished().get(), false);
       }
       Request.Builder _requestBuilder = new Request.Builder()
         .url(httpUrl.build())
@@ -155,21 +80,19 @@ public class AsyncRawLeaderboardsClient {
       if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
         client = clientOptions.httpClientWithTimeout(requestOptions);
       }
-      CompletableFuture<TrophyApiHttpResponse<LeaderboardResponseWithRankings>> future = new CompletableFuture<>();
+      CompletableFuture<TrophyApiHttpResponse<List<LeaderboardsAllResponseItem>>> future = new CompletableFuture<>();
       client.newCall(okhttpRequest).enqueue(new Callback() {
         @Override
         public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
           try (ResponseBody responseBody = response.body()) {
             if (response.isSuccessful()) {
-              future.complete(new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), LeaderboardResponseWithRankings.class), response));
+              future.complete(new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<LeaderboardsAllResponseItem>>() {}), response));
               return;
             }
             String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
               switch (response.code()) {
                 case 401:future.completeExceptionally(new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response));
-                return;
-                case 404:future.completeExceptionally(new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response));
                 return;
                 case 422:future.completeExceptionally(new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response));
                 return;
@@ -193,4 +116,92 @@ public class AsyncRawLeaderboardsClient {
       });
       return future;
     }
-  }
+
+    /**
+     * Get a specific leaderboard by its key.
+     */
+    public CompletableFuture<TrophyApiHttpResponse<LeaderboardResponseWithRankings>> get(
+        String key) {
+      return get(key,LeaderboardsGetRequest.builder().build());
+    }
+
+    /**
+     * Get a specific leaderboard by its key.
+     */
+    public CompletableFuture<TrophyApiHttpResponse<LeaderboardResponseWithRankings>> get(String key,
+        LeaderboardsGetRequest request) {
+      return get(key,request,null);
+    }
+
+    /**
+     * Get a specific leaderboard by its key.
+     */
+    public CompletableFuture<TrophyApiHttpResponse<LeaderboardResponseWithRankings>> get(String key,
+        LeaderboardsGetRequest request, RequestOptions requestOptions) {
+      HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
+
+        .addPathSegments("leaderboards")
+        .addPathSegment(key);if (request.getOffset().isPresent()) {
+          QueryStringMapper.addQueryParameter(httpUrl, "offset", request.getOffset().get(), false);
+        }
+        if (request.getLimit().isPresent()) {
+          QueryStringMapper.addQueryParameter(httpUrl, "limit", request.getLimit().get(), false);
+        }
+        if (request.getRun().isPresent()) {
+          QueryStringMapper.addQueryParameter(httpUrl, "run", request.getRun().get(), false);
+        }
+        if (request.getUserId().isPresent()) {
+          QueryStringMapper.addQueryParameter(httpUrl, "userId", request.getUserId().get(), false);
+        }
+        if (request.getUserAttributes().isPresent()) {
+          QueryStringMapper.addQueryParameter(httpUrl, "userAttributes", request.getUserAttributes().get(), false);
+        }
+        Request.Builder _requestBuilder = new Request.Builder()
+          .url(httpUrl.build())
+          .method("GET", null)
+          .headers(Headers.of(clientOptions.headers(requestOptions)))
+          .addHeader("Accept", "application/json");
+        Request okhttpRequest = _requestBuilder.build();
+        OkHttpClient client = clientOptions.httpClient();
+        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
+          client = clientOptions.httpClientWithTimeout(requestOptions);
+        }
+        CompletableFuture<TrophyApiHttpResponse<LeaderboardResponseWithRankings>> future = new CompletableFuture<>();
+        client.newCall(okhttpRequest).enqueue(new Callback() {
+          @Override
+          public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+            try (ResponseBody responseBody = response.body()) {
+              if (response.isSuccessful()) {
+                future.complete(new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), LeaderboardResponseWithRankings.class), response));
+                return;
+              }
+              String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+              try {
+                switch (response.code()) {
+                  case 401:future.completeExceptionally(new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response));
+                  return;
+                  case 404:future.completeExceptionally(new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response));
+                  return;
+                  case 422:future.completeExceptionally(new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response));
+                  return;
+                }
+              }
+              catch (JsonProcessingException ignored) {
+                // unable to map error response, throwing generic error
+              }
+              future.completeExceptionally(new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response));
+              return;
+            }
+            catch (IOException e) {
+              future.completeExceptionally(new TrophyApiException("Network error executing HTTP request", e));
+            }
+          }
+
+          @Override
+          public void onFailure(@NotNull Call call, @NotNull IOException e) {
+            future.completeExceptionally(new TrophyApiException("Network error executing HTTP request", e));
+          }
+        });
+        return future;
+      }
+    }

@@ -9,6 +9,7 @@ import so.trophy.core.ClientOptions;
 import so.trophy.core.RequestOptions;
 import java.lang.String;
 import java.util.List;
+import so.trophy.resources.leaderboards.requests.LeaderboardsAllRequest;
 import so.trophy.resources.leaderboards.requests.LeaderboardsGetRequest;
 import so.trophy.resources.leaderboards.types.LeaderboardsAllResponseItem;
 import so.trophy.types.LeaderboardResponseWithRankings;
@@ -31,17 +32,25 @@ public class LeaderboardsClient {
   }
 
   /**
-   * Get all active leaderboards for your organization.
+   * Get all leaderboards for your organization. Finished leaderboards are excluded by default.
    */
   public List<LeaderboardsAllResponseItem> all() {
     return this.rawClient.all().body();
   }
 
   /**
-   * Get all active leaderboards for your organization.
+   * Get all leaderboards for your organization. Finished leaderboards are excluded by default.
    */
-  public List<LeaderboardsAllResponseItem> all(RequestOptions requestOptions) {
-    return this.rawClient.all(requestOptions).body();
+  public List<LeaderboardsAllResponseItem> all(LeaderboardsAllRequest request) {
+    return this.rawClient.all(request).body();
+  }
+
+  /**
+   * Get all leaderboards for your organization. Finished leaderboards are excluded by default.
+   */
+  public List<LeaderboardsAllResponseItem> all(LeaderboardsAllRequest request,
+      RequestOptions requestOptions) {
+    return this.rawClient.all(request, requestOptions).body();
   }
 
   /**

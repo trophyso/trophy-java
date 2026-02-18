@@ -8,6 +8,7 @@ package so.trophy.resources.admin;
 import so.trophy.core.ClientOptions;
 import so.trophy.core.Suppliers;
 import java.util.function.Supplier;
+import so.trophy.resources.admin.points.AsyncPointsClient;
 import so.trophy.resources.admin.streaks.AsyncStreaksClient;
 
 public class AsyncAdminClient {
@@ -15,12 +16,19 @@ public class AsyncAdminClient {
 
   protected final Supplier<AsyncStreaksClient> streaksClient;
 
+  protected final Supplier<AsyncPointsClient> pointsClient;
+
   public AsyncAdminClient(ClientOptions clientOptions) {
     this.clientOptions = clientOptions;
     this.streaksClient = Suppliers.memoize(() -> new AsyncStreaksClient(clientOptions));
+    this.pointsClient = Suppliers.memoize(() -> new AsyncPointsClient(clientOptions));
   }
 
   public AsyncStreaksClient streaks() {
     return this.streaksClient.get();
+  }
+
+  public AsyncPointsClient points() {
+    return this.pointsClient.get();
   }
 }

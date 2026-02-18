@@ -18,6 +18,7 @@ import java.lang.Integer;
 import java.lang.Object;
 import java.lang.String;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -37,16 +38,19 @@ public final class PointsAward {
 
   private final Optional<PointsTrigger> trigger;
 
+  private final Optional<List<PointsBoost>> boosts;
+
   private final Map<String, Object> additionalProperties;
 
   private PointsAward(Optional<String> id, Optional<Integer> awarded, Optional<String> date,
-      Optional<Integer> total, Optional<PointsTrigger> trigger,
+      Optional<Integer> total, Optional<PointsTrigger> trigger, Optional<List<PointsBoost>> boosts,
       Map<String, Object> additionalProperties) {
     this.id = id;
     this.awarded = awarded;
     this.date = date;
     this.total = total;
     this.trigger = trigger;
+    this.boosts = boosts;
     this.additionalProperties = additionalProperties;
   }
 
@@ -87,6 +91,14 @@ public final class PointsAward {
     return trigger;
   }
 
+  /**
+   * @return Array of points boosts that applied to this award.
+   */
+  @JsonProperty("boosts")
+  public Optional<List<PointsBoost>> getBoosts() {
+    return boosts;
+  }
+
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
@@ -99,12 +111,12 @@ public final class PointsAward {
   }
 
   private boolean equalTo(PointsAward other) {
-    return id.equals(other.id) && awarded.equals(other.awarded) && date.equals(other.date) && total.equals(other.total) && trigger.equals(other.trigger);
+    return id.equals(other.id) && awarded.equals(other.awarded) && date.equals(other.date) && total.equals(other.total) && trigger.equals(other.trigger) && boosts.equals(other.boosts);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.awarded, this.date, this.total, this.trigger);
+    return Objects.hash(this.id, this.awarded, this.date, this.total, this.trigger, this.boosts);
   }
 
   @java.lang.Override
@@ -130,6 +142,8 @@ public final class PointsAward {
 
     private Optional<PointsTrigger> trigger = Optional.empty();
 
+    private Optional<List<PointsBoost>> boosts = Optional.empty();
+
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
 
@@ -142,6 +156,7 @@ public final class PointsAward {
       date(other.getDate());
       total(other.getTotal());
       trigger(other.getTrigger());
+      boosts(other.getBoosts());
       return this;
     }
 
@@ -227,8 +242,25 @@ public final class PointsAward {
       return this;
     }
 
+    /**
+     * <p>Array of points boosts that applied to this award.</p>
+     */
+    @JsonSetter(
+        value = "boosts",
+        nulls = Nulls.SKIP
+    )
+    public Builder boosts(Optional<List<PointsBoost>> boosts) {
+      this.boosts = boosts;
+      return this;
+    }
+
+    public Builder boosts(List<PointsBoost> boosts) {
+      this.boosts = Optional.ofNullable(boosts);
+      return this;
+    }
+
     public PointsAward build() {
-      return new PointsAward(id, awarded, date, total, trigger, additionalProperties);
+      return new PointsAward(id, awarded, date, total, trigger, boosts, additionalProperties);
     }
   }
 }

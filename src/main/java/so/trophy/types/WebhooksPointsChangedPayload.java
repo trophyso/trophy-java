@@ -27,11 +27,11 @@ import org.jetbrains.annotations.NotNull;
 public final class WebhooksPointsChangedPayload {
   private final User user;
 
-  private final GetUserPointsResponse points;
+  private final MetricEventPointsResponse points;
 
   private final Map<String, Object> additionalProperties;
 
-  private WebhooksPointsChangedPayload(User user, GetUserPointsResponse points,
+  private WebhooksPointsChangedPayload(User user, MetricEventPointsResponse points,
       Map<String, Object> additionalProperties) {
     this.user = user;
     this.points = points;
@@ -55,10 +55,10 @@ public final class WebhooksPointsChangedPayload {
   }
 
   /**
-   * @return The user's points after the event.
+   * @return The user's points after the event (includes added amount for this event).
    */
   @JsonProperty("points")
-  public GetUserPointsResponse getPoints() {
+  public MetricEventPointsResponse getPoints() {
     return points;
   }
 
@@ -102,9 +102,9 @@ public final class WebhooksPointsChangedPayload {
 
   public interface PointsStage {
     /**
-     * <p>The user's points after the event.</p>
+     * <p>The user's points after the event (includes added amount for this event).</p>
      */
-    _FinalStage points(@NotNull GetUserPointsResponse points);
+    _FinalStage points(@NotNull MetricEventPointsResponse points);
   }
 
   public interface _FinalStage {
@@ -117,7 +117,7 @@ public final class WebhooksPointsChangedPayload {
   public static final class Builder implements UserStage, PointsStage, _FinalStage {
     private User user;
 
-    private GetUserPointsResponse points;
+    private MetricEventPointsResponse points;
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -145,13 +145,13 @@ public final class WebhooksPointsChangedPayload {
     }
 
     /**
-     * <p>The user's points after the event.</p>
-     * <p>The user's points after the event.</p>
+     * <p>The user's points after the event (includes added amount for this event).</p>
+     * <p>The user's points after the event (includes added amount for this event).</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
     @JsonSetter("points")
-    public _FinalStage points(@NotNull GetUserPointsResponse points) {
+    public _FinalStage points(@NotNull MetricEventPointsResponse points) {
       this.points = Objects.requireNonNull(points, "points must not be null");
       return this;
     }

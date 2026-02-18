@@ -43,6 +43,7 @@ import so.trophy.resources.users.types.UsersPointsEventSummaryResponseItem;
 import so.trophy.types.ErrorBody;
 import so.trophy.types.GetUserPointsResponse;
 import so.trophy.types.MetricResponse;
+import so.trophy.types.PointsBoost;
 import so.trophy.types.StreakResponse;
 import so.trophy.types.UpdatedUser;
 import so.trophy.types.UpsertedUser;
@@ -733,6 +734,59 @@ public class RawUsersClient {
               ResponseBody responseBody = response.body();
               if (response.isSuccessful()) {
                 return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), GetUserPointsResponse.class), response);
+              }
+              String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+              try {
+                switch (response.code()) {
+                  case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
+                  case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
+                  case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
+                }
+              }
+              catch (JsonProcessingException ignored) {
+                // unable to map error response, throwing generic error
+              }
+              throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
+            }
+            catch (IOException e) {
+              throw new TrophyApiException("Network error executing HTTP request", e);
+            }
+          }
+
+          /**
+           * Get active points boosts for a user in a specific points system. Returns both global boosts the user is eligible for and user-specific boosts.
+           */
+          public TrophyApiHttpResponse<List<PointsBoost>> pointsBoosts(String id, String key) {
+            return pointsBoosts(id,key,null);
+          }
+
+          /**
+           * Get active points boosts for a user in a specific points system. Returns both global boosts the user is eligible for and user-specific boosts.
+           */
+          public TrophyApiHttpResponse<List<PointsBoost>> pointsBoosts(String id, String key,
+              RequestOptions requestOptions) {
+            HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
+
+              .addPathSegments("users")
+              .addPathSegment(id)
+              .addPathSegments("points")
+              .addPathSegment(key)
+              .addPathSegments("boosts")
+              .build();
+            Request okhttpRequest = new Request.Builder()
+              .url(httpUrl)
+              .method("GET", null)
+              .headers(Headers.of(clientOptions.headers(requestOptions)))
+              .addHeader("Accept", "application/json")
+              .build();
+            OkHttpClient client = clientOptions.httpClient();
+            if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
+              client = clientOptions.httpClientWithTimeout(requestOptions);
+            }
+            try (Response response = client.newCall(okhttpRequest).execute()) {
+              ResponseBody responseBody = response.body();
+              if (response.isSuccessful()) {
+                return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<PointsBoost>>() {}), response);
               }
               String responseBodyString = responseBody != null ? responseBody.string() : "{}";
               try {

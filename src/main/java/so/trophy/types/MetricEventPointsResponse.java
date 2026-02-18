@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 @JsonDeserialize(
     builder = MetricEventPointsResponse.Builder.class
 )
-public final class MetricEventPointsResponse implements IGetUserPointsResponse {
+public final class MetricEventPointsResponse {
   private final String id;
 
   private final String key;
@@ -44,15 +44,15 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
 
   private final int total;
 
-  private final List<PointsAward> awards;
-
   private final int added;
+
+  private final List<PointsAward> awards;
 
   private final Map<String, Object> additionalProperties;
 
   private MetricEventPointsResponse(String id, String key, String name,
       Optional<String> description, Optional<String> badgeUrl, Optional<Double> maxPoints,
-      int total, List<PointsAward> awards, int added, Map<String, Object> additionalProperties) {
+      int total, int added, List<PointsAward> awards, Map<String, Object> additionalProperties) {
     this.id = id;
     this.key = key;
     this.name = name;
@@ -60,8 +60,8 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
     this.badgeUrl = badgeUrl;
     this.maxPoints = maxPoints;
     this.total = total;
-    this.awards = awards;
     this.added = added;
+    this.awards = awards;
     this.additionalProperties = additionalProperties;
   }
 
@@ -69,7 +69,6 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
    * @return The ID of the points system
    */
   @JsonProperty("id")
-  @java.lang.Override
   public String getId() {
     return id;
   }
@@ -78,7 +77,6 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
    * @return The key of the points system
    */
   @JsonProperty("key")
-  @java.lang.Override
   public String getKey() {
     return key;
   }
@@ -87,7 +85,6 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
    * @return The name of the points system
    */
   @JsonProperty("name")
-  @java.lang.Override
   public String getName() {
     return name;
   }
@@ -96,7 +93,6 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
    * @return The description of the points system
    */
   @JsonProperty("description")
-  @java.lang.Override
   public Optional<String> getDescription() {
     return description;
   }
@@ -105,7 +101,6 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
    * @return The URL of the badge image for the points system
    */
   @JsonProperty("badgeUrl")
-  @java.lang.Override
   public Optional<String> getBadgeUrl() {
     return badgeUrl;
   }
@@ -114,7 +109,6 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
    * @return The maximum number of points a user can be awarded in this points system
    */
   @JsonProperty("maxPoints")
-  @java.lang.Override
   public Optional<Double> getMaxPoints() {
     return maxPoints;
   }
@@ -123,18 +117,8 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
    * @return The user's total points
    */
   @JsonProperty("total")
-  @java.lang.Override
   public int getTotal() {
     return total;
-  }
-
-  /**
-   * @return Array of trigger awards that added points.
-   */
-  @JsonProperty("awards")
-  @java.lang.Override
-  public List<PointsAward> getAwards() {
-    return awards;
   }
 
   /**
@@ -143,6 +127,14 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
   @JsonProperty("added")
   public int getAdded() {
     return added;
+  }
+
+  /**
+   * @return Array of trigger awards that added points.
+   */
+  @JsonProperty("awards")
+  public List<PointsAward> getAwards() {
+    return awards;
   }
 
   @java.lang.Override
@@ -157,12 +149,12 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
   }
 
   private boolean equalTo(MetricEventPointsResponse other) {
-    return id.equals(other.id) && key.equals(other.key) && name.equals(other.name) && description.equals(other.description) && badgeUrl.equals(other.badgeUrl) && maxPoints.equals(other.maxPoints) && total == other.total && awards.equals(other.awards) && added == other.added;
+    return id.equals(other.id) && key.equals(other.key) && name.equals(other.name) && description.equals(other.description) && badgeUrl.equals(other.badgeUrl) && maxPoints.equals(other.maxPoints) && total == other.total && added == other.added && awards.equals(other.awards);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.key, this.name, this.description, this.badgeUrl, this.maxPoints, this.total, this.awards, this.added);
+    return Objects.hash(this.id, this.key, this.name, this.description, this.badgeUrl, this.maxPoints, this.total, this.added, this.awards);
   }
 
   @java.lang.Override
@@ -282,8 +274,8 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
       badgeUrl(other.getBadgeUrl());
       maxPoints(other.getMaxPoints());
       total(other.getTotal());
-      awards(other.getAwards());
       added(other.getAdded());
+      awards(other.getAwards());
       return this;
     }
 
@@ -454,7 +446,7 @@ public final class MetricEventPointsResponse implements IGetUserPointsResponse {
 
     @java.lang.Override
     public MetricEventPointsResponse build() {
-      return new MetricEventPointsResponse(id, key, name, description, badgeUrl, maxPoints, total, awards, added, additionalProperties);
+      return new MetricEventPointsResponse(id, key, name, description, badgeUrl, maxPoints, total, added, awards, additionalProperties);
     }
   }
 }

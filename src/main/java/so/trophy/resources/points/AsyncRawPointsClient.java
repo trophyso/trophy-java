@@ -32,8 +32,10 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.jetbrains.annotations.NotNull;
+import so.trophy.resources.points.requests.PointsBoostsRequest;
 import so.trophy.resources.points.requests.PointsSummaryRequest;
 import so.trophy.types.ErrorBody;
+import so.trophy.types.PointsBoost;
 import so.trophy.types.PointsRange;
 import so.trophy.types.PointsSystemResponse;
 
@@ -121,14 +123,14 @@ public class AsyncRawPointsClient {
     }
 
     /**
-     * Get a points system with all its triggers.
+     * Get a points system with its triggers.
      */
     public CompletableFuture<TrophyApiHttpResponse<PointsSystemResponse>> system(String key) {
       return system(key,null);
     }
 
     /**
-     * Get a points system with all its triggers.
+     * Get a points system with its triggers.
      */
     public CompletableFuture<TrophyApiHttpResponse<PointsSystemResponse>> system(String key,
         RequestOptions requestOptions) {
@@ -183,4 +185,78 @@ public class AsyncRawPointsClient {
       });
       return future;
     }
-  }
+
+    /**
+     * Get all global boosts for a points system. Finished boosts are excluded by default.
+     */
+    public CompletableFuture<TrophyApiHttpResponse<List<PointsBoost>>> boosts(String key) {
+      return boosts(key,PointsBoostsRequest.builder().build());
+    }
+
+    /**
+     * Get all global boosts for a points system. Finished boosts are excluded by default.
+     */
+    public CompletableFuture<TrophyApiHttpResponse<List<PointsBoost>>> boosts(String key,
+        PointsBoostsRequest request) {
+      return boosts(key,request,null);
+    }
+
+    /**
+     * Get all global boosts for a points system. Finished boosts are excluded by default.
+     */
+    public CompletableFuture<TrophyApiHttpResponse<List<PointsBoost>>> boosts(String key,
+        PointsBoostsRequest request, RequestOptions requestOptions) {
+      HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
+
+        .addPathSegments("points")
+        .addPathSegment(key)
+        .addPathSegments("boosts");if (request.getIncludeFinished().isPresent()) {
+          QueryStringMapper.addQueryParameter(httpUrl, "includeFinished", request.getIncludeFinished().get(), false);
+        }
+        Request.Builder _requestBuilder = new Request.Builder()
+          .url(httpUrl.build())
+          .method("GET", null)
+          .headers(Headers.of(clientOptions.headers(requestOptions)))
+          .addHeader("Accept", "application/json");
+        Request okhttpRequest = _requestBuilder.build();
+        OkHttpClient client = clientOptions.httpClient();
+        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
+          client = clientOptions.httpClientWithTimeout(requestOptions);
+        }
+        CompletableFuture<TrophyApiHttpResponse<List<PointsBoost>>> future = new CompletableFuture<>();
+        client.newCall(okhttpRequest).enqueue(new Callback() {
+          @Override
+          public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+            try (ResponseBody responseBody = response.body()) {
+              if (response.isSuccessful()) {
+                future.complete(new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<PointsBoost>>() {}), response));
+                return;
+              }
+              String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+              try {
+                switch (response.code()) {
+                  case 401:future.completeExceptionally(new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response));
+                  return;
+                  case 404:future.completeExceptionally(new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response));
+                  return;
+                }
+              }
+              catch (JsonProcessingException ignored) {
+                // unable to map error response, throwing generic error
+              }
+              future.completeExceptionally(new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response));
+              return;
+            }
+            catch (IOException e) {
+              future.completeExceptionally(new TrophyApiException("Network error executing HTTP request", e));
+            }
+          }
+
+          @Override
+          public void onFailure(@NotNull Call call, @NotNull IOException e) {
+            future.completeExceptionally(new TrophyApiException("Network error executing HTTP request", e));
+          }
+        });
+        return future;
+      }
+    }

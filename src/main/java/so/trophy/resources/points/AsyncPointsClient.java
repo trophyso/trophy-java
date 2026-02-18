@@ -10,7 +10,9 @@ import so.trophy.core.RequestOptions;
 import java.lang.String;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import so.trophy.resources.points.requests.PointsBoostsRequest;
 import so.trophy.resources.points.requests.PointsSummaryRequest;
+import so.trophy.types.PointsBoost;
 import so.trophy.types.PointsRange;
 import so.trophy.types.PointsSystemResponse;
 
@@ -54,16 +56,38 @@ public class AsyncPointsClient {
   }
 
   /**
-   * Get a points system with all its triggers.
+   * Get a points system with its triggers.
    */
   public CompletableFuture<PointsSystemResponse> system(String key) {
     return this.rawClient.system(key).thenApply(response -> response.body());
   }
 
   /**
-   * Get a points system with all its triggers.
+   * Get a points system with its triggers.
    */
   public CompletableFuture<PointsSystemResponse> system(String key, RequestOptions requestOptions) {
     return this.rawClient.system(key, requestOptions).thenApply(response -> response.body());
+  }
+
+  /**
+   * Get all global boosts for a points system. Finished boosts are excluded by default.
+   */
+  public CompletableFuture<List<PointsBoost>> boosts(String key) {
+    return this.rawClient.boosts(key).thenApply(response -> response.body());
+  }
+
+  /**
+   * Get all global boosts for a points system. Finished boosts are excluded by default.
+   */
+  public CompletableFuture<List<PointsBoost>> boosts(String key, PointsBoostsRequest request) {
+    return this.rawClient.boosts(key, request).thenApply(response -> response.body());
+  }
+
+  /**
+   * Get all global boosts for a points system. Finished boosts are excluded by default.
+   */
+  public CompletableFuture<List<PointsBoost>> boosts(String key, PointsBoostsRequest request,
+      RequestOptions requestOptions) {
+    return this.rawClient.boosts(key, request, requestOptions).thenApply(response -> response.body());
   }
 }

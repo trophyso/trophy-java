@@ -22,6 +22,7 @@ import so.trophy.resources.users.types.UsersMetricEventSummaryResponseItem;
 import so.trophy.resources.users.types.UsersPointsEventSummaryResponseItem;
 import so.trophy.types.GetUserPointsResponse;
 import so.trophy.types.MetricResponse;
+import so.trophy.types.PointsBoost;
 import so.trophy.types.StreakResponse;
 import so.trophy.types.UpdatedUser;
 import so.trophy.types.UpsertedUser;
@@ -270,6 +271,21 @@ public class AsyncUsersClient {
   public CompletableFuture<GetUserPointsResponse> points(String id, String key,
       UsersPointsRequest request, RequestOptions requestOptions) {
     return this.rawClient.points(id, key, request, requestOptions).thenApply(response -> response.body());
+  }
+
+  /**
+   * Get active points boosts for a user in a specific points system. Returns both global boosts the user is eligible for and user-specific boosts.
+   */
+  public CompletableFuture<List<PointsBoost>> pointsBoosts(String id, String key) {
+    return this.rawClient.pointsBoosts(id, key).thenApply(response -> response.body());
+  }
+
+  /**
+   * Get active points boosts for a user in a specific points system. Returns both global boosts the user is eligible for and user-specific boosts.
+   */
+  public CompletableFuture<List<PointsBoost>> pointsBoosts(String id, String key,
+      RequestOptions requestOptions) {
+    return this.rawClient.pointsBoosts(id, key, requestOptions).thenApply(response -> response.body());
   }
 
   /**

@@ -27,8 +27,10 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import so.trophy.resources.points.requests.PointsBoostsRequest;
 import so.trophy.resources.points.requests.PointsSummaryRequest;
 import so.trophy.types.ErrorBody;
+import so.trophy.types.PointsBoost;
 import so.trophy.types.PointsRange;
 import so.trophy.types.PointsSystemResponse;
 
@@ -100,14 +102,14 @@ public class RawPointsClient {
     }
 
     /**
-     * Get a points system with all its triggers.
+     * Get a points system with its triggers.
      */
     public TrophyApiHttpResponse<PointsSystemResponse> system(String key) {
       return system(key,null);
     }
 
     /**
-     * Get a points system with all its triggers.
+     * Get a points system with its triggers.
      */
     public TrophyApiHttpResponse<PointsSystemResponse> system(String key,
         RequestOptions requestOptions) {
@@ -147,4 +149,63 @@ public class RawPointsClient {
         throw new TrophyApiException("Network error executing HTTP request", e);
       }
     }
-  }
+
+    /**
+     * Get all global boosts for a points system. Finished boosts are excluded by default.
+     */
+    public TrophyApiHttpResponse<List<PointsBoost>> boosts(String key) {
+      return boosts(key,PointsBoostsRequest.builder().build());
+    }
+
+    /**
+     * Get all global boosts for a points system. Finished boosts are excluded by default.
+     */
+    public TrophyApiHttpResponse<List<PointsBoost>> boosts(String key,
+        PointsBoostsRequest request) {
+      return boosts(key,request,null);
+    }
+
+    /**
+     * Get all global boosts for a points system. Finished boosts are excluded by default.
+     */
+    public TrophyApiHttpResponse<List<PointsBoost>> boosts(String key, PointsBoostsRequest request,
+        RequestOptions requestOptions) {
+      HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
+
+        .addPathSegments("points")
+        .addPathSegment(key)
+        .addPathSegments("boosts");if (request.getIncludeFinished().isPresent()) {
+          QueryStringMapper.addQueryParameter(httpUrl, "includeFinished", request.getIncludeFinished().get(), false);
+        }
+        Request.Builder _requestBuilder = new Request.Builder()
+          .url(httpUrl.build())
+          .method("GET", null)
+          .headers(Headers.of(clientOptions.headers(requestOptions)))
+          .addHeader("Accept", "application/json");
+        Request okhttpRequest = _requestBuilder.build();
+        OkHttpClient client = clientOptions.httpClient();
+        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
+          client = clientOptions.httpClientWithTimeout(requestOptions);
+        }
+        try (Response response = client.newCall(okhttpRequest).execute()) {
+          ResponseBody responseBody = response.body();
+          if (response.isSuccessful()) {
+            return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<PointsBoost>>() {}), response);
+          }
+          String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+          try {
+            switch (response.code()) {
+              case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
+              case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
+            }
+          }
+          catch (JsonProcessingException ignored) {
+            // unable to map error response, throwing generic error
+          }
+          throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
+        }
+        catch (IOException e) {
+          throw new TrophyApiException("Network error executing HTTP request", e);
+        }
+      }
+    }

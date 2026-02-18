@@ -9,7 +9,9 @@ import so.trophy.core.ClientOptions;
 import so.trophy.core.RequestOptions;
 import java.lang.String;
 import java.util.List;
+import so.trophy.resources.points.requests.PointsBoostsRequest;
 import so.trophy.resources.points.requests.PointsSummaryRequest;
+import so.trophy.types.PointsBoost;
 import so.trophy.types.PointsRange;
 import so.trophy.types.PointsSystemResponse;
 
@@ -53,16 +55,38 @@ public class PointsClient {
   }
 
   /**
-   * Get a points system with all its triggers.
+   * Get a points system with its triggers.
    */
   public PointsSystemResponse system(String key) {
     return this.rawClient.system(key).body();
   }
 
   /**
-   * Get a points system with all its triggers.
+   * Get a points system with its triggers.
    */
   public PointsSystemResponse system(String key, RequestOptions requestOptions) {
     return this.rawClient.system(key, requestOptions).body();
+  }
+
+  /**
+   * Get all global boosts for a points system. Finished boosts are excluded by default.
+   */
+  public List<PointsBoost> boosts(String key) {
+    return this.rawClient.boosts(key).body();
+  }
+
+  /**
+   * Get all global boosts for a points system. Finished boosts are excluded by default.
+   */
+  public List<PointsBoost> boosts(String key, PointsBoostsRequest request) {
+    return this.rawClient.boosts(key, request).body();
+  }
+
+  /**
+   * Get all global boosts for a points system. Finished boosts are excluded by default.
+   */
+  public List<PointsBoost> boosts(String key, PointsBoostsRequest request,
+      RequestOptions requestOptions) {
+    return this.rawClient.boosts(key, request, requestOptions).body();
   }
 }
