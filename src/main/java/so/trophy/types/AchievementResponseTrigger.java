@@ -13,7 +13,9 @@ public enum AchievementResponseTrigger {
 
   STREAK("streak"),
 
-  API("api");
+  API("api"),
+
+  ACHIEVEMENT("achievement");
 
   private final String value;
 

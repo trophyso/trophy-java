@@ -45,6 +45,8 @@ public final class UserAchievementResponse implements IAchievementResponse {
 
   private final Optional<Integer> streakLength;
 
+  private final Optional<List<String>> achievementIds;
+
   private final Optional<String> metricId;
 
   private final Optional<Double> metricValue;
@@ -61,8 +63,8 @@ public final class UserAchievementResponse implements IAchievementResponse {
 
   private UserAchievementResponse(String id, String name, AchievementResponseTrigger trigger,
       Optional<String> description, Optional<String> badgeUrl, Optional<String> key,
-      Optional<Integer> streakLength, Optional<String> metricId, Optional<Double> metricValue,
-      Optional<String> metricName,
+      Optional<Integer> streakLength, Optional<List<String>> achievementIds,
+      Optional<String> metricId, Optional<Double> metricValue, Optional<String> metricName,
       Optional<List<AchievementResponseUserAttributesItem>> userAttributes,
       Optional<AchievementResponseEventAttribute> eventAttribute,
       Optional<OffsetDateTime> achievedAt, Map<String, Object> additionalProperties) {
@@ -73,6 +75,7 @@ public final class UserAchievementResponse implements IAchievementResponse {
     this.badgeUrl = badgeUrl;
     this.key = key;
     this.streakLength = streakLength;
+    this.achievementIds = achievementIds;
     this.metricId = metricId;
     this.metricValue = metricValue;
     this.metricName = metricName;
@@ -145,6 +148,15 @@ public final class UserAchievementResponse implements IAchievementResponse {
   }
 
   /**
+   * @return The IDs of the prerequisite achievements that must be completed to earn this achievement (only applicable if trigger = 'achievement')
+   */
+  @JsonProperty("achievementIds")
+  @java.lang.Override
+  public Optional<List<String>> getAchievementIds() {
+    return achievementIds;
+  }
+
+  /**
    * @return The ID of the metric associated with this achievement (only applicable if trigger = 'metric')
    */
   @JsonProperty("metricId")
@@ -207,12 +219,12 @@ public final class UserAchievementResponse implements IAchievementResponse {
   }
 
   private boolean equalTo(UserAchievementResponse other) {
-    return id.equals(other.id) && name.equals(other.name) && trigger.equals(other.trigger) && description.equals(other.description) && badgeUrl.equals(other.badgeUrl) && key.equals(other.key) && streakLength.equals(other.streakLength) && metricId.equals(other.metricId) && metricValue.equals(other.metricValue) && metricName.equals(other.metricName) && userAttributes.equals(other.userAttributes) && eventAttribute.equals(other.eventAttribute) && achievedAt.equals(other.achievedAt);
+    return id.equals(other.id) && name.equals(other.name) && trigger.equals(other.trigger) && description.equals(other.description) && badgeUrl.equals(other.badgeUrl) && key.equals(other.key) && streakLength.equals(other.streakLength) && achievementIds.equals(other.achievementIds) && metricId.equals(other.metricId) && metricValue.equals(other.metricValue) && metricName.equals(other.metricName) && userAttributes.equals(other.userAttributes) && eventAttribute.equals(other.eventAttribute) && achievedAt.equals(other.achievedAt);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.name, this.trigger, this.description, this.badgeUrl, this.key, this.streakLength, this.metricId, this.metricValue, this.metricName, this.userAttributes, this.eventAttribute, this.achievedAt);
+    return Objects.hash(this.id, this.name, this.trigger, this.description, this.badgeUrl, this.key, this.streakLength, this.achievementIds, this.metricId, this.metricValue, this.metricName, this.userAttributes, this.eventAttribute, this.achievedAt);
   }
 
   @java.lang.Override
@@ -277,6 +289,13 @@ public final class UserAchievementResponse implements IAchievementResponse {
     _FinalStage streakLength(Optional<Integer> streakLength);
 
     _FinalStage streakLength(Integer streakLength);
+
+    /**
+     * <p>The IDs of the prerequisite achievements that must be completed to earn this achievement (only applicable if trigger = 'achievement')</p>
+     */
+    _FinalStage achievementIds(Optional<List<String>> achievementIds);
+
+    _FinalStage achievementIds(List<String> achievementIds);
 
     /**
      * <p>The ID of the metric associated with this achievement (only applicable if trigger = 'metric')</p>
@@ -344,6 +363,8 @@ public final class UserAchievementResponse implements IAchievementResponse {
 
     private Optional<String> metricId = Optional.empty();
 
+    private Optional<List<String>> achievementIds = Optional.empty();
+
     private Optional<Integer> streakLength = Optional.empty();
 
     private Optional<String> key = Optional.empty();
@@ -367,6 +388,7 @@ public final class UserAchievementResponse implements IAchievementResponse {
       badgeUrl(other.getBadgeUrl());
       key(other.getKey());
       streakLength(other.getStreakLength());
+      achievementIds(other.getAchievementIds());
       metricId(other.getMetricId());
       metricValue(other.getMetricValue());
       metricName(other.getMetricName());
@@ -552,6 +574,29 @@ public final class UserAchievementResponse implements IAchievementResponse {
     }
 
     /**
+     * <p>The IDs of the prerequisite achievements that must be completed to earn this achievement (only applicable if trigger = 'achievement')</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage achievementIds(List<String> achievementIds) {
+      this.achievementIds = Optional.ofNullable(achievementIds);
+      return this;
+    }
+
+    /**
+     * <p>The IDs of the prerequisite achievements that must be completed to earn this achievement (only applicable if trigger = 'achievement')</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "achievementIds",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage achievementIds(Optional<List<String>> achievementIds) {
+      this.achievementIds = achievementIds;
+      return this;
+    }
+
+    /**
      * <p>The length of the streak required to complete the achievement (only applicable if trigger = 'streak')</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
@@ -645,7 +690,7 @@ public final class UserAchievementResponse implements IAchievementResponse {
 
     @java.lang.Override
     public UserAchievementResponse build() {
-      return new UserAchievementResponse(id, name, trigger, description, badgeUrl, key, streakLength, metricId, metricValue, metricName, userAttributes, eventAttribute, achievedAt, additionalProperties);
+      return new UserAchievementResponse(id, name, trigger, description, badgeUrl, key, streakLength, achievementIds, metricId, metricValue, metricName, userAttributes, eventAttribute, achievedAt, additionalProperties);
     }
   }
 }

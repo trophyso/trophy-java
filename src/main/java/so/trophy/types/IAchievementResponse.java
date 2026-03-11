@@ -26,6 +26,8 @@ public interface IAchievementResponse {
 
   Optional<Integer> getStreakLength();
 
+  Optional<List<String>> getAchievementIds();
+
   Optional<String> getMetricId();
 
   Optional<Double> getMetricValue();
