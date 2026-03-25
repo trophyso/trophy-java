@@ -13,6 +13,8 @@ import java.util.concurrent.CompletableFuture;
 import so.trophy.resources.points.requests.PointsBoostsRequest;
 import so.trophy.resources.points.requests.PointsSummaryRequest;
 import so.trophy.types.PointsBoost;
+import so.trophy.types.PointsLevel;
+import so.trophy.types.PointsLevelSummaryResponseItem;
 import so.trophy.types.PointsRange;
 import so.trophy.types.PointsSystemResponse;
 
@@ -89,5 +91,34 @@ public class AsyncPointsClient {
   public CompletableFuture<List<PointsBoost>> boosts(String key, PointsBoostsRequest request,
       RequestOptions requestOptions) {
     return this.rawClient.boosts(key, request, requestOptions).thenApply(response -> response.body());
+  }
+
+  /**
+   * Get all levels for a points system.
+   */
+  public CompletableFuture<List<PointsLevel>> levels(String key) {
+    return this.rawClient.levels(key).thenApply(response -> response.body());
+  }
+
+  /**
+   * Get all levels for a points system.
+   */
+  public CompletableFuture<List<PointsLevel>> levels(String key, RequestOptions requestOptions) {
+    return this.rawClient.levels(key, requestOptions).thenApply(response -> response.body());
+  }
+
+  /**
+   * Get a breakdown of the number of users at each level in a points system.
+   */
+  public CompletableFuture<List<PointsLevelSummaryResponseItem>> levelSummary(String key) {
+    return this.rawClient.levelSummary(key).thenApply(response -> response.body());
+  }
+
+  /**
+   * Get a breakdown of the number of users at each level in a points system.
+   */
+  public CompletableFuture<List<PointsLevelSummaryResponseItem>> levelSummary(String key,
+      RequestOptions requestOptions) {
+    return this.rawClient.levelSummary(key, requestOptions).thenApply(response -> response.body());
   }
 }

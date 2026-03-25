@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 @JsonDeserialize(
     builder = GetUserPointsResponse.Builder.class
 )
-public final class GetUserPointsResponse {
+public final class GetUserPointsResponse implements IPointsResponse {
   private final String id;
 
   private final String key;
@@ -44,13 +44,15 @@ public final class GetUserPointsResponse {
 
   private final int total;
 
+  private final Optional<PointsLevel> level;
+
   private final List<PointsAward> awards;
 
   private final Map<String, Object> additionalProperties;
 
   private GetUserPointsResponse(String id, String key, String name, Optional<String> description,
-      Optional<String> badgeUrl, Optional<Double> maxPoints, int total, List<PointsAward> awards,
-      Map<String, Object> additionalProperties) {
+      Optional<String> badgeUrl, Optional<Double> maxPoints, int total, Optional<PointsLevel> level,
+      List<PointsAward> awards, Map<String, Object> additionalProperties) {
     this.id = id;
     this.key = key;
     this.name = name;
@@ -58,6 +60,7 @@ public final class GetUserPointsResponse {
     this.badgeUrl = badgeUrl;
     this.maxPoints = maxPoints;
     this.total = total;
+    this.level = level;
     this.awards = awards;
     this.additionalProperties = additionalProperties;
   }
@@ -66,6 +69,7 @@ public final class GetUserPointsResponse {
    * @return The ID of the points system
    */
   @JsonProperty("id")
+  @java.lang.Override
   public String getId() {
     return id;
   }
@@ -74,6 +78,7 @@ public final class GetUserPointsResponse {
    * @return The key of the points system
    */
   @JsonProperty("key")
+  @java.lang.Override
   public String getKey() {
     return key;
   }
@@ -82,6 +87,7 @@ public final class GetUserPointsResponse {
    * @return The name of the points system
    */
   @JsonProperty("name")
+  @java.lang.Override
   public String getName() {
     return name;
   }
@@ -90,6 +96,7 @@ public final class GetUserPointsResponse {
    * @return The description of the points system
    */
   @JsonProperty("description")
+  @java.lang.Override
   public Optional<String> getDescription() {
     return description;
   }
@@ -98,6 +105,7 @@ public final class GetUserPointsResponse {
    * @return The URL of the badge image for the points system
    */
   @JsonProperty("badgeUrl")
+  @java.lang.Override
   public Optional<String> getBadgeUrl() {
     return badgeUrl;
   }
@@ -106,6 +114,7 @@ public final class GetUserPointsResponse {
    * @return The maximum number of points a user can be awarded in this points system
    */
   @JsonProperty("maxPoints")
+  @java.lang.Override
   public Optional<Double> getMaxPoints() {
     return maxPoints;
   }
@@ -116,6 +125,14 @@ public final class GetUserPointsResponse {
   @JsonProperty("total")
   public int getTotal() {
     return total;
+  }
+
+  /**
+   * @return The user's current level in this points system, or null if no levels are configured or the user hasn't reached any level yet.
+   */
+  @JsonProperty("level")
+  public Optional<PointsLevel> getLevel() {
+    return level;
   }
 
   /**
@@ -138,12 +155,12 @@ public final class GetUserPointsResponse {
   }
 
   private boolean equalTo(GetUserPointsResponse other) {
-    return id.equals(other.id) && key.equals(other.key) && name.equals(other.name) && description.equals(other.description) && badgeUrl.equals(other.badgeUrl) && maxPoints.equals(other.maxPoints) && total == other.total && awards.equals(other.awards);
+    return id.equals(other.id) && key.equals(other.key) && name.equals(other.name) && description.equals(other.description) && badgeUrl.equals(other.badgeUrl) && maxPoints.equals(other.maxPoints) && total == other.total && level.equals(other.level) && awards.equals(other.awards);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.key, this.name, this.description, this.badgeUrl, this.maxPoints, this.total, this.awards);
+    return Objects.hash(this.id, this.key, this.name, this.description, this.badgeUrl, this.maxPoints, this.total, this.level, this.awards);
   }
 
   @java.lang.Override
@@ -210,6 +227,13 @@ public final class GetUserPointsResponse {
     _FinalStage maxPoints(Double maxPoints);
 
     /**
+     * <p>The user's current level in this points system, or null if no levels are configured or the user hasn't reached any level yet.</p>
+     */
+    _FinalStage level(Optional<PointsLevel> level);
+
+    _FinalStage level(PointsLevel level);
+
+    /**
      * <p>Array of trigger awards that added points.</p>
      */
     _FinalStage awards(List<PointsAward> awards);
@@ -233,6 +257,8 @@ public final class GetUserPointsResponse {
 
     private List<PointsAward> awards = new ArrayList<>();
 
+    private Optional<PointsLevel> level = Optional.empty();
+
     private Optional<Double> maxPoints = Optional.empty();
 
     private Optional<String> badgeUrl = Optional.empty();
@@ -254,6 +280,7 @@ public final class GetUserPointsResponse {
       badgeUrl(other.getBadgeUrl());
       maxPoints(other.getMaxPoints());
       total(other.getTotal());
+      level(other.getLevel());
       awards(other.getAwards());
       return this;
     }
@@ -343,6 +370,29 @@ public final class GetUserPointsResponse {
     }
 
     /**
+     * <p>The user's current level in this points system, or null if no levels are configured or the user hasn't reached any level yet.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage level(PointsLevel level) {
+      this.level = Optional.ofNullable(level);
+      return this;
+    }
+
+    /**
+     * <p>The user's current level in this points system, or null if no levels are configured or the user hasn't reached any level yet.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "level",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage level(Optional<PointsLevel> level) {
+      this.level = level;
+      return this;
+    }
+
+    /**
      * <p>The maximum number of points a user can be awarded in this points system</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
@@ -413,7 +463,7 @@ public final class GetUserPointsResponse {
 
     @java.lang.Override
     public GetUserPointsResponse build() {
-      return new GetUserPointsResponse(id, key, name, description, badgeUrl, maxPoints, total, awards, additionalProperties);
+      return new GetUserPointsResponse(id, key, name, description, badgeUrl, maxPoints, total, level, awards, additionalProperties);
     }
   }
 }

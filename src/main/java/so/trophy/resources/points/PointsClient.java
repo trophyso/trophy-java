@@ -12,6 +12,8 @@ import java.util.List;
 import so.trophy.resources.points.requests.PointsBoostsRequest;
 import so.trophy.resources.points.requests.PointsSummaryRequest;
 import so.trophy.types.PointsBoost;
+import so.trophy.types.PointsLevel;
+import so.trophy.types.PointsLevelSummaryResponseItem;
 import so.trophy.types.PointsRange;
 import so.trophy.types.PointsSystemResponse;
 
@@ -88,5 +90,34 @@ public class PointsClient {
   public List<PointsBoost> boosts(String key, PointsBoostsRequest request,
       RequestOptions requestOptions) {
     return this.rawClient.boosts(key, request, requestOptions).body();
+  }
+
+  /**
+   * Get all levels for a points system.
+   */
+  public List<PointsLevel> levels(String key) {
+    return this.rawClient.levels(key).body();
+  }
+
+  /**
+   * Get all levels for a points system.
+   */
+  public List<PointsLevel> levels(String key, RequestOptions requestOptions) {
+    return this.rawClient.levels(key, requestOptions).body();
+  }
+
+  /**
+   * Get a breakdown of the number of users at each level in a points system.
+   */
+  public List<PointsLevelSummaryResponseItem> levelSummary(String key) {
+    return this.rawClient.levelSummary(key).body();
+  }
+
+  /**
+   * Get a breakdown of the number of users at each level in a points system.
+   */
+  public List<PointsLevelSummaryResponseItem> levelSummary(String key,
+      RequestOptions requestOptions) {
+    return this.rawClient.levelSummary(key, requestOptions).body();
   }
 }

@@ -17,9 +17,7 @@ import so.trophy.core.ObjectMappers;
 import java.lang.Double;
 import java.lang.Object;
 import java.lang.String;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -27,9 +25,9 @@ import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(
-    builder = MetricEventPointsResponse.Builder.class
+    builder = WebhooksPointsLevelChangedPayloadPoints.Builder.class
 )
-public final class MetricEventPointsResponse implements IPointsResponse {
+public final class WebhooksPointsLevelChangedPayloadPoints implements IPointsResponse {
   private final String id;
 
   private final String key;
@@ -44,18 +42,11 @@ public final class MetricEventPointsResponse implements IPointsResponse {
 
   private final int total;
 
-  private final Optional<PointsLevel> level;
-
-  private final int added;
-
-  private final List<PointsAward> awards;
-
   private final Map<String, Object> additionalProperties;
 
-  private MetricEventPointsResponse(String id, String key, String name,
+  private WebhooksPointsLevelChangedPayloadPoints(String id, String key, String name,
       Optional<String> description, Optional<String> badgeUrl, Optional<Double> maxPoints,
-      int total, Optional<PointsLevel> level, int added, List<PointsAward> awards,
-      Map<String, Object> additionalProperties) {
+      int total, Map<String, Object> additionalProperties) {
     this.id = id;
     this.key = key;
     this.name = name;
@@ -63,9 +54,6 @@ public final class MetricEventPointsResponse implements IPointsResponse {
     this.badgeUrl = badgeUrl;
     this.maxPoints = maxPoints;
     this.total = total;
-    this.level = level;
-    this.added = added;
-    this.awards = awards;
     this.additionalProperties = additionalProperties;
   }
 
@@ -124,41 +112,17 @@ public final class MetricEventPointsResponse implements IPointsResponse {
   }
 
   /**
-   * @return The user's total points
+   * @return The user's total points in this system.
    */
   @JsonProperty("total")
   public int getTotal() {
     return total;
   }
 
-  /**
-   * @return The user's new level, included only when the level changed as a result of this event.
-   */
-  @JsonProperty("level")
-  public Optional<PointsLevel> getLevel() {
-    return level;
-  }
-
-  /**
-   * @return The points added by this event.
-   */
-  @JsonProperty("added")
-  public int getAdded() {
-    return added;
-  }
-
-  /**
-   * @return Array of trigger awards that added points.
-   */
-  @JsonProperty("awards")
-  public List<PointsAward> getAwards() {
-    return awards;
-  }
-
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
-    return other instanceof MetricEventPointsResponse && equalTo((MetricEventPointsResponse) other);
+    return other instanceof WebhooksPointsLevelChangedPayloadPoints && equalTo((WebhooksPointsLevelChangedPayloadPoints) other);
   }
 
   @JsonAnyGetter
@@ -166,13 +130,13 @@ public final class MetricEventPointsResponse implements IPointsResponse {
     return this.additionalProperties;
   }
 
-  private boolean equalTo(MetricEventPointsResponse other) {
-    return id.equals(other.id) && key.equals(other.key) && name.equals(other.name) && description.equals(other.description) && badgeUrl.equals(other.badgeUrl) && maxPoints.equals(other.maxPoints) && total == other.total && level.equals(other.level) && added == other.added && awards.equals(other.awards);
+  private boolean equalTo(WebhooksPointsLevelChangedPayloadPoints other) {
+    return id.equals(other.id) && key.equals(other.key) && name.equals(other.name) && description.equals(other.description) && badgeUrl.equals(other.badgeUrl) && maxPoints.equals(other.maxPoints) && total == other.total;
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.key, this.name, this.description, this.badgeUrl, this.maxPoints, this.total, this.level, this.added, this.awards);
+    return Objects.hash(this.id, this.key, this.name, this.description, this.badgeUrl, this.maxPoints, this.total);
   }
 
   @java.lang.Override
@@ -190,7 +154,7 @@ public final class MetricEventPointsResponse implements IPointsResponse {
      */
     KeyStage id(@NotNull String id);
 
-    Builder from(MetricEventPointsResponse other);
+    Builder from(WebhooksPointsLevelChangedPayloadPoints other);
   }
 
   public interface KeyStage {
@@ -209,20 +173,13 @@ public final class MetricEventPointsResponse implements IPointsResponse {
 
   public interface TotalStage {
     /**
-     * <p>The user's total points</p>
+     * <p>The user's total points in this system.</p>
      */
-    AddedStage total(int total);
-  }
-
-  public interface AddedStage {
-    /**
-     * <p>The points added by this event.</p>
-     */
-    _FinalStage added(int added);
+    _FinalStage total(int total);
   }
 
   public interface _FinalStage {
-    MetricEventPointsResponse build();
+    WebhooksPointsLevelChangedPayloadPoints build();
 
     /**
      * <p>The description of the points system</p>
@@ -244,28 +201,12 @@ public final class MetricEventPointsResponse implements IPointsResponse {
     _FinalStage maxPoints(Optional<Double> maxPoints);
 
     _FinalStage maxPoints(Double maxPoints);
-
-    /**
-     * <p>The user's new level, included only when the level changed as a result of this event.</p>
-     */
-    _FinalStage level(Optional<PointsLevel> level);
-
-    _FinalStage level(PointsLevel level);
-
-    /**
-     * <p>Array of trigger awards that added points.</p>
-     */
-    _FinalStage awards(List<PointsAward> awards);
-
-    _FinalStage addAwards(PointsAward awards);
-
-    _FinalStage addAllAwards(List<PointsAward> awards);
   }
 
   @JsonIgnoreProperties(
       ignoreUnknown = true
   )
-  public static final class Builder implements IdStage, KeyStage, NameStage, TotalStage, AddedStage, _FinalStage {
+  public static final class Builder implements IdStage, KeyStage, NameStage, TotalStage, _FinalStage {
     private String id;
 
     private String key;
@@ -273,12 +214,6 @@ public final class MetricEventPointsResponse implements IPointsResponse {
     private String name;
 
     private int total;
-
-    private int added;
-
-    private List<PointsAward> awards = new ArrayList<>();
-
-    private Optional<PointsLevel> level = Optional.empty();
 
     private Optional<Double> maxPoints = Optional.empty();
 
@@ -293,7 +228,7 @@ public final class MetricEventPointsResponse implements IPointsResponse {
     }
 
     @java.lang.Override
-    public Builder from(MetricEventPointsResponse other) {
+    public Builder from(WebhooksPointsLevelChangedPayloadPoints other) {
       id(other.getId());
       key(other.getKey());
       name(other.getName());
@@ -301,9 +236,6 @@ public final class MetricEventPointsResponse implements IPointsResponse {
       badgeUrl(other.getBadgeUrl());
       maxPoints(other.getMaxPoints());
       total(other.getTotal());
-      level(other.getLevel());
-      added(other.getAdded());
-      awards(other.getAwards());
       return this;
     }
 
@@ -344,85 +276,14 @@ public final class MetricEventPointsResponse implements IPointsResponse {
     }
 
     /**
-     * <p>The user's total points</p>
-     * <p>The user's total points</p>
+     * <p>The user's total points in this system.</p>
+     * <p>The user's total points in this system.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
     @JsonSetter("total")
-    public AddedStage total(int total) {
+    public _FinalStage total(int total) {
       this.total = total;
-      return this;
-    }
-
-    /**
-     * <p>The points added by this event.</p>
-     * <p>The points added by this event.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    @JsonSetter("added")
-    public _FinalStage added(int added) {
-      this.added = added;
-      return this;
-    }
-
-    /**
-     * <p>Array of trigger awards that added points.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    public _FinalStage addAllAwards(List<PointsAward> awards) {
-      if (awards != null) {
-        this.awards.addAll(awards);
-      }
-      return this;
-    }
-
-    /**
-     * <p>Array of trigger awards that added points.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    public _FinalStage addAwards(PointsAward awards) {
-      this.awards.add(awards);
-      return this;
-    }
-
-    /**
-     * <p>Array of trigger awards that added points.</p>
-     */
-    @java.lang.Override
-    @JsonSetter(
-        value = "awards",
-        nulls = Nulls.SKIP
-    )
-    public _FinalStage awards(List<PointsAward> awards) {
-      this.awards.clear();
-      this.awards.addAll(awards);
-      return this;
-    }
-
-    /**
-     * <p>The user's new level, included only when the level changed as a result of this event.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    public _FinalStage level(PointsLevel level) {
-      this.level = Optional.ofNullable(level);
-      return this;
-    }
-
-    /**
-     * <p>The user's new level, included only when the level changed as a result of this event.</p>
-     */
-    @java.lang.Override
-    @JsonSetter(
-        value = "level",
-        nulls = Nulls.SKIP
-    )
-    public _FinalStage level(Optional<PointsLevel> level) {
-      this.level = level;
       return this;
     }
 
@@ -496,8 +357,8 @@ public final class MetricEventPointsResponse implements IPointsResponse {
     }
 
     @java.lang.Override
-    public MetricEventPointsResponse build() {
-      return new MetricEventPointsResponse(id, key, name, description, badgeUrl, maxPoints, total, level, added, awards, additionalProperties);
+    public WebhooksPointsLevelChangedPayloadPoints build() {
+      return new WebhooksPointsLevelChangedPayloadPoints(id, key, name, description, badgeUrl, maxPoints, total, additionalProperties);
     }
   }
 }
