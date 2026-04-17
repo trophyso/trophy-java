@@ -17,21 +17,31 @@ import so.trophy.core.ObjectMappers;
 import java.lang.Integer;
 import java.lang.Object;
 import java.lang.String;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(
     builder = PointsTrigger.Builder.class
 )
 public final class PointsTrigger {
-  private final Optional<String> id;
+  private final String id;
 
-  private final Optional<PointsTriggerType> type;
+  private final PointsTriggerType type;
 
-  private final Optional<Integer> points;
+  private final int points;
+
+  private final PointsTriggerStatus status;
+
+  private final Optional<String> achievementId;
+
+  private final Optional<String> metricId;
 
   private final Optional<String> metricName;
 
@@ -45,22 +55,43 @@ public final class PointsTrigger {
 
   private final Optional<Integer> timeInterval;
 
+  private final List<PointsTriggerUserAttributesItem> userAttributes;
+
+  private final Optional<PointsTriggerEventAttribute> eventAttribute;
+
+  private final Optional<List<PointsTriggerEventAttributesItem>> eventAttributes;
+
+  private final OffsetDateTime created;
+
+  private final OffsetDateTime updated;
+
   private final Map<String, Object> additionalProperties;
 
-  private PointsTrigger(Optional<String> id, Optional<PointsTriggerType> type,
-      Optional<Integer> points, Optional<String> metricName, Optional<Integer> metricThreshold,
-      Optional<Integer> streakLengthThreshold, Optional<String> achievementName,
-      Optional<PointsTriggerTimeUnit> timeUnit, Optional<Integer> timeInterval,
-      Map<String, Object> additionalProperties) {
+  private PointsTrigger(String id, PointsTriggerType type, int points, PointsTriggerStatus status,
+      Optional<String> achievementId, Optional<String> metricId, Optional<String> metricName,
+      Optional<Integer> metricThreshold, Optional<Integer> streakLengthThreshold,
+      Optional<String> achievementName, Optional<PointsTriggerTimeUnit> timeUnit,
+      Optional<Integer> timeInterval, List<PointsTriggerUserAttributesItem> userAttributes,
+      Optional<PointsTriggerEventAttribute> eventAttribute,
+      Optional<List<PointsTriggerEventAttributesItem>> eventAttributes, OffsetDateTime created,
+      OffsetDateTime updated, Map<String, Object> additionalProperties) {
     this.id = id;
     this.type = type;
     this.points = points;
+    this.status = status;
+    this.achievementId = achievementId;
+    this.metricId = metricId;
     this.metricName = metricName;
     this.metricThreshold = metricThreshold;
     this.streakLengthThreshold = streakLengthThreshold;
     this.achievementName = achievementName;
     this.timeUnit = timeUnit;
     this.timeInterval = timeInterval;
+    this.userAttributes = userAttributes;
+    this.eventAttribute = eventAttribute;
+    this.eventAttributes = eventAttributes;
+    this.created = created;
+    this.updated = updated;
     this.additionalProperties = additionalProperties;
   }
 
@@ -68,7 +99,7 @@ public final class PointsTrigger {
    * @return The ID of the trigger
    */
   @JsonProperty("id")
-  public Optional<String> getId() {
+  public String getId() {
     return id;
   }
 
@@ -76,7 +107,7 @@ public final class PointsTrigger {
    * @return The type of trigger
    */
   @JsonProperty("type")
-  public Optional<PointsTriggerType> getType() {
+  public PointsTriggerType getType() {
     return type;
   }
 
@@ -84,8 +115,32 @@ public final class PointsTrigger {
    * @return The points awarded by this trigger.
    */
   @JsonProperty("points")
-  public Optional<Integer> getPoints() {
+  public int getPoints() {
     return points;
+  }
+
+  /**
+   * @return The status of the trigger.
+   */
+  @JsonProperty("status")
+  public PointsTriggerStatus getStatus() {
+    return status;
+  }
+
+  /**
+   * @return The unique ID of the achievement associated with this trigger, if the trigger is an achievement.
+   */
+  @JsonProperty("achievementId")
+  public Optional<String> getAchievementId() {
+    return achievementId;
+  }
+
+  /**
+   * @return The unique ID of the metric associated with this trigger, if the trigger is a metric.
+   */
+  @JsonProperty("metricId")
+  public Optional<String> getMetricId() {
+    return metricId;
   }
 
   /**
@@ -136,6 +191,46 @@ public final class PointsTrigger {
     return timeInterval;
   }
 
+  /**
+   * @return User attribute filters that must be met for this trigger to award points. Empty when the trigger has no user attribute filters configured.
+   */
+  @JsonProperty("userAttributes")
+  public List<PointsTriggerUserAttributesItem> getUserAttributes() {
+    return userAttributes;
+  }
+
+  /**
+   * @return Deprecated. Event attribute filter that must be met for this trigger to award points. Only present if the trigger has an event filter configured.
+   */
+  @JsonProperty("eventAttribute")
+  public Optional<PointsTriggerEventAttribute> getEventAttribute() {
+    return eventAttribute;
+  }
+
+  /**
+   * @return If the trigger has type 'metric', the event attributes that must match for the trigger to award points. Empty when the trigger is metric-based and has no event attribute filters. Omitted for non-metric triggers.
+   */
+  @JsonProperty("eventAttributes")
+  public Optional<List<PointsTriggerEventAttributesItem>> getEventAttributes() {
+    return eventAttributes;
+  }
+
+  /**
+   * @return The date and time the trigger was created, in ISO 8601 format.
+   */
+  @JsonProperty("created")
+  public OffsetDateTime getCreated() {
+    return created;
+  }
+
+  /**
+   * @return The date and time the trigger was last updated, in ISO 8601 format.
+   */
+  @JsonProperty("updated")
+  public OffsetDateTime getUpdated() {
+    return updated;
+  }
+
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
@@ -148,12 +243,12 @@ public final class PointsTrigger {
   }
 
   private boolean equalTo(PointsTrigger other) {
-    return id.equals(other.id) && type.equals(other.type) && points.equals(other.points) && metricName.equals(other.metricName) && metricThreshold.equals(other.metricThreshold) && streakLengthThreshold.equals(other.streakLengthThreshold) && achievementName.equals(other.achievementName) && timeUnit.equals(other.timeUnit) && timeInterval.equals(other.timeInterval);
+    return id.equals(other.id) && type.equals(other.type) && points == other.points && status.equals(other.status) && achievementId.equals(other.achievementId) && metricId.equals(other.metricId) && metricName.equals(other.metricName) && metricThreshold.equals(other.metricThreshold) && streakLengthThreshold.equals(other.streakLengthThreshold) && achievementName.equals(other.achievementName) && timeUnit.equals(other.timeUnit) && timeInterval.equals(other.timeInterval) && userAttributes.equals(other.userAttributes) && eventAttribute.equals(other.eventAttribute) && eventAttributes.equals(other.eventAttributes) && created.equals(other.created) && updated.equals(other.updated);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.type, this.points, this.metricName, this.metricThreshold, this.streakLengthThreshold, this.achievementName, this.timeUnit, this.timeInterval);
+    return Objects.hash(this.id, this.type, this.points, this.status, this.achievementId, this.metricId, this.metricName, this.metricThreshold, this.streakLengthThreshold, this.achievementName, this.timeUnit, this.timeInterval, this.userAttributes, this.eventAttribute, this.eventAttributes, this.created, this.updated);
   }
 
   @java.lang.Override
@@ -161,31 +256,174 @@ public final class PointsTrigger {
     return ObjectMappers.stringify(this);
   }
 
-  public static Builder builder() {
+  public static IdStage builder() {
     return new Builder();
+  }
+
+  public interface IdStage {
+    /**
+     * <p>The ID of the trigger</p>
+     */
+    TypeStage id(@NotNull String id);
+
+    Builder from(PointsTrigger other);
+  }
+
+  public interface TypeStage {
+    /**
+     * <p>The type of trigger</p>
+     */
+    PointsStage type(@NotNull PointsTriggerType type);
+  }
+
+  public interface PointsStage {
+    /**
+     * <p>The points awarded by this trigger.</p>
+     */
+    StatusStage points(int points);
+  }
+
+  public interface StatusStage {
+    /**
+     * <p>The status of the trigger.</p>
+     */
+    CreatedStage status(@NotNull PointsTriggerStatus status);
+  }
+
+  public interface CreatedStage {
+    /**
+     * <p>The date and time the trigger was created, in ISO 8601 format.</p>
+     */
+    UpdatedStage created(@NotNull OffsetDateTime created);
+  }
+
+  public interface UpdatedStage {
+    /**
+     * <p>The date and time the trigger was last updated, in ISO 8601 format.</p>
+     */
+    _FinalStage updated(@NotNull OffsetDateTime updated);
+  }
+
+  public interface _FinalStage {
+    PointsTrigger build();
+
+    /**
+     * <p>The unique ID of the achievement associated with this trigger, if the trigger is an achievement.</p>
+     */
+    _FinalStage achievementId(Optional<String> achievementId);
+
+    _FinalStage achievementId(String achievementId);
+
+    /**
+     * <p>The unique ID of the metric associated with this trigger, if the trigger is a metric.</p>
+     */
+    _FinalStage metricId(Optional<String> metricId);
+
+    _FinalStage metricId(String metricId);
+
+    /**
+     * <p>If the trigger has type 'metric', the name of the metric</p>
+     */
+    _FinalStage metricName(Optional<String> metricName);
+
+    _FinalStage metricName(String metricName);
+
+    /**
+     * <p>If the trigger has type 'metric', the threshold of the metric that triggers the points</p>
+     */
+    _FinalStage metricThreshold(Optional<Integer> metricThreshold);
+
+    _FinalStage metricThreshold(Integer metricThreshold);
+
+    /**
+     * <p>If the trigger has type 'streak', the threshold of the streak that triggers the points</p>
+     */
+    _FinalStage streakLengthThreshold(Optional<Integer> streakLengthThreshold);
+
+    _FinalStage streakLengthThreshold(Integer streakLengthThreshold);
+
+    /**
+     * <p>If the trigger has type 'achievement', the name of the achievement</p>
+     */
+    _FinalStage achievementName(Optional<String> achievementName);
+
+    _FinalStage achievementName(String achievementName);
+
+    /**
+     * <p>If the trigger has type 'time', the unit of time after which to award points</p>
+     */
+    _FinalStage timeUnit(Optional<PointsTriggerTimeUnit> timeUnit);
+
+    _FinalStage timeUnit(PointsTriggerTimeUnit timeUnit);
+
+    /**
+     * <p>If the trigger has type 'time', the numer of units of timeUnit after which to award points</p>
+     */
+    _FinalStage timeInterval(Optional<Integer> timeInterval);
+
+    _FinalStage timeInterval(Integer timeInterval);
+
+    /**
+     * <p>User attribute filters that must be met for this trigger to award points. Empty when the trigger has no user attribute filters configured.</p>
+     */
+    _FinalStage userAttributes(List<PointsTriggerUserAttributesItem> userAttributes);
+
+    _FinalStage addUserAttributes(PointsTriggerUserAttributesItem userAttributes);
+
+    _FinalStage addAllUserAttributes(List<PointsTriggerUserAttributesItem> userAttributes);
+
+    /**
+     * <p>Deprecated. Event attribute filter that must be met for this trigger to award points. Only present if the trigger has an event filter configured.</p>
+     */
+    _FinalStage eventAttribute(Optional<PointsTriggerEventAttribute> eventAttribute);
+
+    _FinalStage eventAttribute(PointsTriggerEventAttribute eventAttribute);
+
+    /**
+     * <p>If the trigger has type 'metric', the event attributes that must match for the trigger to award points. Empty when the trigger is metric-based and has no event attribute filters. Omitted for non-metric triggers.</p>
+     */
+    _FinalStage eventAttributes(Optional<List<PointsTriggerEventAttributesItem>> eventAttributes);
+
+    _FinalStage eventAttributes(List<PointsTriggerEventAttributesItem> eventAttributes);
   }
 
   @JsonIgnoreProperties(
       ignoreUnknown = true
   )
-  public static final class Builder {
-    private Optional<String> id = Optional.empty();
+  public static final class Builder implements IdStage, TypeStage, PointsStage, StatusStage, CreatedStage, UpdatedStage, _FinalStage {
+    private String id;
 
-    private Optional<PointsTriggerType> type = Optional.empty();
+    private PointsTriggerType type;
 
-    private Optional<Integer> points = Optional.empty();
+    private int points;
 
-    private Optional<String> metricName = Optional.empty();
+    private PointsTriggerStatus status;
 
-    private Optional<Integer> metricThreshold = Optional.empty();
+    private OffsetDateTime created;
 
-    private Optional<Integer> streakLengthThreshold = Optional.empty();
+    private OffsetDateTime updated;
 
-    private Optional<String> achievementName = Optional.empty();
+    private Optional<List<PointsTriggerEventAttributesItem>> eventAttributes = Optional.empty();
+
+    private Optional<PointsTriggerEventAttribute> eventAttribute = Optional.empty();
+
+    private List<PointsTriggerUserAttributesItem> userAttributes = new ArrayList<>();
+
+    private Optional<Integer> timeInterval = Optional.empty();
 
     private Optional<PointsTriggerTimeUnit> timeUnit = Optional.empty();
 
-    private Optional<Integer> timeInterval = Optional.empty();
+    private Optional<String> achievementName = Optional.empty();
+
+    private Optional<Integer> streakLengthThreshold = Optional.empty();
+
+    private Optional<Integer> metricThreshold = Optional.empty();
+
+    private Optional<String> metricName = Optional.empty();
+
+    private Optional<String> metricId = Optional.empty();
+
+    private Optional<String> achievementId = Optional.empty();
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -193,174 +431,370 @@ public final class PointsTrigger {
     private Builder() {
     }
 
+    @java.lang.Override
     public Builder from(PointsTrigger other) {
       id(other.getId());
       type(other.getType());
       points(other.getPoints());
+      status(other.getStatus());
+      achievementId(other.getAchievementId());
+      metricId(other.getMetricId());
       metricName(other.getMetricName());
       metricThreshold(other.getMetricThreshold());
       streakLengthThreshold(other.getStreakLengthThreshold());
       achievementName(other.getAchievementName());
       timeUnit(other.getTimeUnit());
       timeInterval(other.getTimeInterval());
+      userAttributes(other.getUserAttributes());
+      eventAttribute(other.getEventAttribute());
+      eventAttributes(other.getEventAttributes());
+      created(other.getCreated());
+      updated(other.getUpdated());
       return this;
     }
 
     /**
      * <p>The ID of the trigger</p>
+     * <p>The ID of the trigger</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
      */
-    @JsonSetter(
-        value = "id",
-        nulls = Nulls.SKIP
-    )
-    public Builder id(Optional<String> id) {
-      this.id = id;
-      return this;
-    }
-
-    public Builder id(String id) {
-      this.id = Optional.ofNullable(id);
+    @java.lang.Override
+    @JsonSetter("id")
+    public TypeStage id(@NotNull String id) {
+      this.id = Objects.requireNonNull(id, "id must not be null");
       return this;
     }
 
     /**
      * <p>The type of trigger</p>
+     * <p>The type of trigger</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
      */
-    @JsonSetter(
-        value = "type",
-        nulls = Nulls.SKIP
-    )
-    public Builder type(Optional<PointsTriggerType> type) {
-      this.type = type;
-      return this;
-    }
-
-    public Builder type(PointsTriggerType type) {
-      this.type = Optional.ofNullable(type);
+    @java.lang.Override
+    @JsonSetter("type")
+    public PointsStage type(@NotNull PointsTriggerType type) {
+      this.type = Objects.requireNonNull(type, "type must not be null");
       return this;
     }
 
     /**
      * <p>The points awarded by this trigger.</p>
+     * <p>The points awarded by this trigger.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
      */
-    @JsonSetter(
-        value = "points",
-        nulls = Nulls.SKIP
-    )
-    public Builder points(Optional<Integer> points) {
+    @java.lang.Override
+    @JsonSetter("points")
+    public StatusStage points(int points) {
       this.points = points;
       return this;
     }
 
-    public Builder points(Integer points) {
-      this.points = Optional.ofNullable(points);
+    /**
+     * <p>The status of the trigger.</p>
+     * <p>The status of the trigger.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    @JsonSetter("status")
+    public CreatedStage status(@NotNull PointsTriggerStatus status) {
+      this.status = Objects.requireNonNull(status, "status must not be null");
       return this;
     }
 
     /**
-     * <p>If the trigger has type 'metric', the name of the metric</p>
+     * <p>The date and time the trigger was created, in ISO 8601 format.</p>
+     * <p>The date and time the trigger was created, in ISO 8601 format.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
      */
-    @JsonSetter(
-        value = "metricName",
-        nulls = Nulls.SKIP
-    )
-    public Builder metricName(Optional<String> metricName) {
-      this.metricName = metricName;
-      return this;
-    }
-
-    public Builder metricName(String metricName) {
-      this.metricName = Optional.ofNullable(metricName);
+    @java.lang.Override
+    @JsonSetter("created")
+    public UpdatedStage created(@NotNull OffsetDateTime created) {
+      this.created = Objects.requireNonNull(created, "created must not be null");
       return this;
     }
 
     /**
-     * <p>If the trigger has type 'metric', the threshold of the metric that triggers the points</p>
+     * <p>The date and time the trigger was last updated, in ISO 8601 format.</p>
+     * <p>The date and time the trigger was last updated, in ISO 8601 format.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
      */
-    @JsonSetter(
-        value = "metricThreshold",
-        nulls = Nulls.SKIP
-    )
-    public Builder metricThreshold(Optional<Integer> metricThreshold) {
-      this.metricThreshold = metricThreshold;
-      return this;
-    }
-
-    public Builder metricThreshold(Integer metricThreshold) {
-      this.metricThreshold = Optional.ofNullable(metricThreshold);
+    @java.lang.Override
+    @JsonSetter("updated")
+    public _FinalStage updated(@NotNull OffsetDateTime updated) {
+      this.updated = Objects.requireNonNull(updated, "updated must not be null");
       return this;
     }
 
     /**
-     * <p>If the trigger has type 'streak', the threshold of the streak that triggers the points</p>
+     * <p>If the trigger has type 'metric', the event attributes that must match for the trigger to award points. Empty when the trigger is metric-based and has no event attribute filters. Omitted for non-metric triggers.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
      */
-    @JsonSetter(
-        value = "streakLengthThreshold",
-        nulls = Nulls.SKIP
-    )
-    public Builder streakLengthThreshold(Optional<Integer> streakLengthThreshold) {
-      this.streakLengthThreshold = streakLengthThreshold;
-      return this;
-    }
-
-    public Builder streakLengthThreshold(Integer streakLengthThreshold) {
-      this.streakLengthThreshold = Optional.ofNullable(streakLengthThreshold);
+    @java.lang.Override
+    public _FinalStage eventAttributes(List<PointsTriggerEventAttributesItem> eventAttributes) {
+      this.eventAttributes = Optional.ofNullable(eventAttributes);
       return this;
     }
 
     /**
-     * <p>If the trigger has type 'achievement', the name of the achievement</p>
+     * <p>If the trigger has type 'metric', the event attributes that must match for the trigger to award points. Empty when the trigger is metric-based and has no event attribute filters. Omitted for non-metric triggers.</p>
      */
+    @java.lang.Override
     @JsonSetter(
-        value = "achievementName",
+        value = "eventAttributes",
         nulls = Nulls.SKIP
     )
-    public Builder achievementName(Optional<String> achievementName) {
-      this.achievementName = achievementName;
-      return this;
-    }
-
-    public Builder achievementName(String achievementName) {
-      this.achievementName = Optional.ofNullable(achievementName);
+    public _FinalStage eventAttributes(
+        Optional<List<PointsTriggerEventAttributesItem>> eventAttributes) {
+      this.eventAttributes = eventAttributes;
       return this;
     }
 
     /**
-     * <p>If the trigger has type 'time', the unit of time after which to award points</p>
+     * <p>Deprecated. Event attribute filter that must be met for this trigger to award points. Only present if the trigger has an event filter configured.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
      */
-    @JsonSetter(
-        value = "timeUnit",
-        nulls = Nulls.SKIP
-    )
-    public Builder timeUnit(Optional<PointsTriggerTimeUnit> timeUnit) {
-      this.timeUnit = timeUnit;
+    @java.lang.Override
+    public _FinalStage eventAttribute(PointsTriggerEventAttribute eventAttribute) {
+      this.eventAttribute = Optional.ofNullable(eventAttribute);
       return this;
     }
 
-    public Builder timeUnit(PointsTriggerTimeUnit timeUnit) {
-      this.timeUnit = Optional.ofNullable(timeUnit);
+    /**
+     * <p>Deprecated. Event attribute filter that must be met for this trigger to award points. Only present if the trigger has an event filter configured.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "eventAttribute",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage eventAttribute(Optional<PointsTriggerEventAttribute> eventAttribute) {
+      this.eventAttribute = eventAttribute;
+      return this;
+    }
+
+    /**
+     * <p>User attribute filters that must be met for this trigger to award points. Empty when the trigger has no user attribute filters configured.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage addAllUserAttributes(List<PointsTriggerUserAttributesItem> userAttributes) {
+      if (userAttributes != null) {
+        this.userAttributes.addAll(userAttributes);
+      }
+      return this;
+    }
+
+    /**
+     * <p>User attribute filters that must be met for this trigger to award points. Empty when the trigger has no user attribute filters configured.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage addUserAttributes(PointsTriggerUserAttributesItem userAttributes) {
+      this.userAttributes.add(userAttributes);
+      return this;
+    }
+
+    /**
+     * <p>User attribute filters that must be met for this trigger to award points. Empty when the trigger has no user attribute filters configured.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "userAttributes",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage userAttributes(List<PointsTriggerUserAttributesItem> userAttributes) {
+      this.userAttributes.clear();
+      this.userAttributes.addAll(userAttributes);
+      return this;
+    }
+
+    /**
+     * <p>If the trigger has type 'time', the numer of units of timeUnit after which to award points</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage timeInterval(Integer timeInterval) {
+      this.timeInterval = Optional.ofNullable(timeInterval);
       return this;
     }
 
     /**
      * <p>If the trigger has type 'time', the numer of units of timeUnit after which to award points</p>
      */
+    @java.lang.Override
     @JsonSetter(
         value = "timeInterval",
         nulls = Nulls.SKIP
     )
-    public Builder timeInterval(Optional<Integer> timeInterval) {
+    public _FinalStage timeInterval(Optional<Integer> timeInterval) {
       this.timeInterval = timeInterval;
       return this;
     }
 
-    public Builder timeInterval(Integer timeInterval) {
-      this.timeInterval = Optional.ofNullable(timeInterval);
+    /**
+     * <p>If the trigger has type 'time', the unit of time after which to award points</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage timeUnit(PointsTriggerTimeUnit timeUnit) {
+      this.timeUnit = Optional.ofNullable(timeUnit);
       return this;
     }
 
+    /**
+     * <p>If the trigger has type 'time', the unit of time after which to award points</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "timeUnit",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage timeUnit(Optional<PointsTriggerTimeUnit> timeUnit) {
+      this.timeUnit = timeUnit;
+      return this;
+    }
+
+    /**
+     * <p>If the trigger has type 'achievement', the name of the achievement</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage achievementName(String achievementName) {
+      this.achievementName = Optional.ofNullable(achievementName);
+      return this;
+    }
+
+    /**
+     * <p>If the trigger has type 'achievement', the name of the achievement</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "achievementName",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage achievementName(Optional<String> achievementName) {
+      this.achievementName = achievementName;
+      return this;
+    }
+
+    /**
+     * <p>If the trigger has type 'streak', the threshold of the streak that triggers the points</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage streakLengthThreshold(Integer streakLengthThreshold) {
+      this.streakLengthThreshold = Optional.ofNullable(streakLengthThreshold);
+      return this;
+    }
+
+    /**
+     * <p>If the trigger has type 'streak', the threshold of the streak that triggers the points</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "streakLengthThreshold",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage streakLengthThreshold(Optional<Integer> streakLengthThreshold) {
+      this.streakLengthThreshold = streakLengthThreshold;
+      return this;
+    }
+
+    /**
+     * <p>If the trigger has type 'metric', the threshold of the metric that triggers the points</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage metricThreshold(Integer metricThreshold) {
+      this.metricThreshold = Optional.ofNullable(metricThreshold);
+      return this;
+    }
+
+    /**
+     * <p>If the trigger has type 'metric', the threshold of the metric that triggers the points</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "metricThreshold",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage metricThreshold(Optional<Integer> metricThreshold) {
+      this.metricThreshold = metricThreshold;
+      return this;
+    }
+
+    /**
+     * <p>If the trigger has type 'metric', the name of the metric</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage metricName(String metricName) {
+      this.metricName = Optional.ofNullable(metricName);
+      return this;
+    }
+
+    /**
+     * <p>If the trigger has type 'metric', the name of the metric</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "metricName",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage metricName(Optional<String> metricName) {
+      this.metricName = metricName;
+      return this;
+    }
+
+    /**
+     * <p>The unique ID of the metric associated with this trigger, if the trigger is a metric.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage metricId(String metricId) {
+      this.metricId = Optional.ofNullable(metricId);
+      return this;
+    }
+
+    /**
+     * <p>The unique ID of the metric associated with this trigger, if the trigger is a metric.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "metricId",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage metricId(Optional<String> metricId) {
+      this.metricId = metricId;
+      return this;
+    }
+
+    /**
+     * <p>The unique ID of the achievement associated with this trigger, if the trigger is an achievement.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage achievementId(String achievementId) {
+      this.achievementId = Optional.ofNullable(achievementId);
+      return this;
+    }
+
+    /**
+     * <p>The unique ID of the achievement associated with this trigger, if the trigger is an achievement.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "achievementId",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage achievementId(Optional<String> achievementId) {
+      this.achievementId = achievementId;
+      return this;
+    }
+
+    @java.lang.Override
     public PointsTrigger build() {
-      return new PointsTrigger(id, type, points, metricName, metricThreshold, streakLengthThreshold, achievementName, timeUnit, timeInterval, additionalProperties);
+      return new PointsTrigger(id, type, points, status, achievementId, metricId, metricName, metricThreshold, streakLengthThreshold, achievementName, timeUnit, timeInterval, userAttributes, eventAttribute, eventAttributes, created, updated, additionalProperties);
     }
   }
 }

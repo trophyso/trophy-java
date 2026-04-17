@@ -40,6 +40,8 @@ public final class LeaderboardResponseWithRankings implements ILeaderboardRespon
 
   private final Optional<String> breakdownAttribute;
 
+  private final List<String> breakdownAttributes;
+
   private final Optional<String> metricKey;
 
   private final Optional<String> metricName;
@@ -68,16 +70,18 @@ public final class LeaderboardResponseWithRankings implements ILeaderboardRespon
 
   private LeaderboardResponseWithRankings(String id, String name, String key,
       LeaderboardResponseRankBy rankBy, Optional<String> breakdownAttribute,
-      Optional<String> metricKey, Optional<String> metricName, Optional<String> pointsSystemKey,
-      Optional<String> pointsSystemName, Optional<String> description, String start,
-      Optional<String> end, int maxParticipants, Optional<LeaderboardResponseRunUnit> runUnit,
-      Optional<Integer> runInterval, LeaderboardResponseWithRankingsStatus status,
-      List<LeaderboardRanking> rankings, Map<String, Object> additionalProperties) {
+      List<String> breakdownAttributes, Optional<String> metricKey, Optional<String> metricName,
+      Optional<String> pointsSystemKey, Optional<String> pointsSystemName,
+      Optional<String> description, String start, Optional<String> end, int maxParticipants,
+      Optional<LeaderboardResponseRunUnit> runUnit, Optional<Integer> runInterval,
+      LeaderboardResponseWithRankingsStatus status, List<LeaderboardRanking> rankings,
+      Map<String, Object> additionalProperties) {
     this.id = id;
     this.name = name;
     this.key = key;
     this.rankBy = rankBy;
     this.breakdownAttribute = breakdownAttribute;
+    this.breakdownAttributes = breakdownAttributes;
     this.metricKey = metricKey;
     this.metricName = metricName;
     this.pointsSystemKey = pointsSystemKey;
@@ -129,12 +133,21 @@ public final class LeaderboardResponseWithRankings implements ILeaderboardRespon
   }
 
   /**
-   * @return The key of the attribute to break down this leaderboard by.
+   * @return Deprecated. The key of the attribute to break down this leaderboard by.
    */
   @JsonProperty("breakdownAttribute")
   @java.lang.Override
   public Optional<String> getBreakdownAttribute() {
     return breakdownAttribute;
+  }
+
+  /**
+   * @return The user attribute keys that this leaderboard is broken down by.
+   */
+  @JsonProperty("breakdownAttributes")
+  @java.lang.Override
+  public List<String> getBreakdownAttributes() {
+    return breakdownAttributes;
   }
 
   /**
@@ -254,12 +267,12 @@ public final class LeaderboardResponseWithRankings implements ILeaderboardRespon
   }
 
   private boolean equalTo(LeaderboardResponseWithRankings other) {
-    return id.equals(other.id) && name.equals(other.name) && key.equals(other.key) && rankBy.equals(other.rankBy) && breakdownAttribute.equals(other.breakdownAttribute) && metricKey.equals(other.metricKey) && metricName.equals(other.metricName) && pointsSystemKey.equals(other.pointsSystemKey) && pointsSystemName.equals(other.pointsSystemName) && description.equals(other.description) && start.equals(other.start) && end.equals(other.end) && maxParticipants == other.maxParticipants && runUnit.equals(other.runUnit) && runInterval.equals(other.runInterval) && status.equals(other.status) && rankings.equals(other.rankings);
+    return id.equals(other.id) && name.equals(other.name) && key.equals(other.key) && rankBy.equals(other.rankBy) && breakdownAttribute.equals(other.breakdownAttribute) && breakdownAttributes.equals(other.breakdownAttributes) && metricKey.equals(other.metricKey) && metricName.equals(other.metricName) && pointsSystemKey.equals(other.pointsSystemKey) && pointsSystemName.equals(other.pointsSystemName) && description.equals(other.description) && start.equals(other.start) && end.equals(other.end) && maxParticipants == other.maxParticipants && runUnit.equals(other.runUnit) && runInterval.equals(other.runInterval) && status.equals(other.status) && rankings.equals(other.rankings);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.name, this.key, this.rankBy, this.breakdownAttribute, this.metricKey, this.metricName, this.pointsSystemKey, this.pointsSystemName, this.description, this.start, this.end, this.maxParticipants, this.runUnit, this.runInterval, this.status, this.rankings);
+    return Objects.hash(this.id, this.name, this.key, this.rankBy, this.breakdownAttribute, this.breakdownAttributes, this.metricKey, this.metricName, this.pointsSystemKey, this.pointsSystemName, this.description, this.start, this.end, this.maxParticipants, this.runUnit, this.runInterval, this.status, this.rankings);
   }
 
   @java.lang.Override
@@ -326,11 +339,20 @@ public final class LeaderboardResponseWithRankings implements ILeaderboardRespon
     LeaderboardResponseWithRankings build();
 
     /**
-     * <p>The key of the attribute to break down this leaderboard by.</p>
+     * <p>Deprecated. The key of the attribute to break down this leaderboard by.</p>
      */
     _FinalStage breakdownAttribute(Optional<String> breakdownAttribute);
 
     _FinalStage breakdownAttribute(String breakdownAttribute);
+
+    /**
+     * <p>The user attribute keys that this leaderboard is broken down by.</p>
+     */
+    _FinalStage breakdownAttributes(List<String> breakdownAttributes);
+
+    _FinalStage addBreakdownAttributes(String breakdownAttributes);
+
+    _FinalStage addAllBreakdownAttributes(List<String> breakdownAttributes);
 
     /**
      * <p>The key of the metric to rank by, if rankBy is 'metric'.</p>
@@ -434,6 +456,8 @@ public final class LeaderboardResponseWithRankings implements ILeaderboardRespon
 
     private Optional<String> metricKey = Optional.empty();
 
+    private List<String> breakdownAttributes = new ArrayList<>();
+
     private Optional<String> breakdownAttribute = Optional.empty();
 
     @JsonAnySetter
@@ -449,6 +473,7 @@ public final class LeaderboardResponseWithRankings implements ILeaderboardRespon
       key(other.getKey());
       rankBy(other.getRankBy());
       breakdownAttribute(other.getBreakdownAttribute());
+      breakdownAttributes(other.getBreakdownAttributes());
       metricKey(other.getMetricKey());
       metricName(other.getMetricName());
       pointsSystemKey(other.getPointsSystemKey());
@@ -769,7 +794,43 @@ public final class LeaderboardResponseWithRankings implements ILeaderboardRespon
     }
 
     /**
-     * <p>The key of the attribute to break down this leaderboard by.</p>
+     * <p>The user attribute keys that this leaderboard is broken down by.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage addAllBreakdownAttributes(List<String> breakdownAttributes) {
+      if (breakdownAttributes != null) {
+        this.breakdownAttributes.addAll(breakdownAttributes);
+      }
+      return this;
+    }
+
+    /**
+     * <p>The user attribute keys that this leaderboard is broken down by.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage addBreakdownAttributes(String breakdownAttributes) {
+      this.breakdownAttributes.add(breakdownAttributes);
+      return this;
+    }
+
+    /**
+     * <p>The user attribute keys that this leaderboard is broken down by.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "breakdownAttributes",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage breakdownAttributes(List<String> breakdownAttributes) {
+      this.breakdownAttributes.clear();
+      this.breakdownAttributes.addAll(breakdownAttributes);
+      return this;
+    }
+
+    /**
+     * <p>Deprecated. The key of the attribute to break down this leaderboard by.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -779,7 +840,7 @@ public final class LeaderboardResponseWithRankings implements ILeaderboardRespon
     }
 
     /**
-     * <p>The key of the attribute to break down this leaderboard by.</p>
+     * <p>Deprecated. The key of the attribute to break down this leaderboard by.</p>
      */
     @java.lang.Override
     @JsonSetter(
@@ -793,7 +854,7 @@ public final class LeaderboardResponseWithRankings implements ILeaderboardRespon
 
     @java.lang.Override
     public LeaderboardResponseWithRankings build() {
-      return new LeaderboardResponseWithRankings(id, name, key, rankBy, breakdownAttribute, metricKey, metricName, pointsSystemKey, pointsSystemName, description, start, end, maxParticipants, runUnit, runInterval, status, rankings, additionalProperties);
+      return new LeaderboardResponseWithRankings(id, name, key, rankBy, breakdownAttribute, breakdownAttributes, metricKey, metricName, pointsSystemKey, pointsSystemName, description, start, end, maxParticipants, runUnit, runInterval, status, rankings, additionalProperties);
     }
   }
 }

@@ -7,6 +7,7 @@ package so.trophy.types;
 
 import java.lang.Integer;
 import java.lang.String;
+import java.util.List;
 import java.util.Optional;
 
 public interface ILeaderboardResponse {
@@ -19,6 +20,8 @@ public interface ILeaderboardResponse {
   LeaderboardResponseRankBy getRankBy();
 
   Optional<String> getBreakdownAttribute();
+
+  List<String> getBreakdownAttributes();
 
   Optional<String> getMetricKey();
 

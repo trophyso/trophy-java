@@ -8,20 +8,16 @@ package so.trophy.types;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.lang.String;
 
-public enum PointsTriggerResponseType {
-  METRIC("metric"),
+public enum PointsTriggerStatus {
+  ACTIVE("active"),
 
-  ACHIEVEMENT("achievement"),
+  INACTIVE("inactive"),
 
-  STREAK("streak"),
-
-  TIME("time"),
-
-  USER_CREATION("user_creation");
+  ARCHIVED("archived");
 
   private final String value;
 
-  PointsTriggerResponseType(String value) {
+  PointsTriggerStatus(String value) {
     this.value = value;
   }
 

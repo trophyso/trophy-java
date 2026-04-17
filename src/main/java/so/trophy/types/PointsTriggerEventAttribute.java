@@ -22,16 +22,16 @@ import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(
-    builder = PointsTriggerResponseEventAttribute.Builder.class
+    builder = PointsTriggerEventAttribute.Builder.class
 )
-public final class PointsTriggerResponseEventAttribute {
+public final class PointsTriggerEventAttribute {
   private final String key;
 
   private final String value;
 
   private final Map<String, Object> additionalProperties;
 
-  private PointsTriggerResponseEventAttribute(String key, String value,
+  private PointsTriggerEventAttribute(String key, String value,
       Map<String, Object> additionalProperties) {
     this.key = key;
     this.value = value;
@@ -57,7 +57,7 @@ public final class PointsTriggerResponseEventAttribute {
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
-    return other instanceof PointsTriggerResponseEventAttribute && equalTo((PointsTriggerResponseEventAttribute) other);
+    return other instanceof PointsTriggerEventAttribute && equalTo((PointsTriggerEventAttribute) other);
   }
 
   @JsonAnyGetter
@@ -65,7 +65,7 @@ public final class PointsTriggerResponseEventAttribute {
     return this.additionalProperties;
   }
 
-  private boolean equalTo(PointsTriggerResponseEventAttribute other) {
+  private boolean equalTo(PointsTriggerEventAttribute other) {
     return key.equals(other.key) && value.equals(other.value);
   }
 
@@ -89,7 +89,7 @@ public final class PointsTriggerResponseEventAttribute {
      */
     ValueStage key(@NotNull String key);
 
-    Builder from(PointsTriggerResponseEventAttribute other);
+    Builder from(PointsTriggerEventAttribute other);
   }
 
   public interface ValueStage {
@@ -100,7 +100,7 @@ public final class PointsTriggerResponseEventAttribute {
   }
 
   public interface _FinalStage {
-    PointsTriggerResponseEventAttribute build();
+    PointsTriggerEventAttribute build();
   }
 
   @JsonIgnoreProperties(
@@ -118,7 +118,7 @@ public final class PointsTriggerResponseEventAttribute {
     }
 
     @java.lang.Override
-    public Builder from(PointsTriggerResponseEventAttribute other) {
+    public Builder from(PointsTriggerEventAttribute other) {
       key(other.getKey());
       value(other.getValue());
       return this;
@@ -149,8 +149,8 @@ public final class PointsTriggerResponseEventAttribute {
     }
 
     @java.lang.Override
-    public PointsTriggerResponseEventAttribute build() {
-      return new PointsTriggerResponseEventAttribute(key, value, additionalProperties);
+    public PointsTriggerEventAttribute build() {
+      return new PointsTriggerEventAttribute(key, value, additionalProperties);
     }
   }
 }

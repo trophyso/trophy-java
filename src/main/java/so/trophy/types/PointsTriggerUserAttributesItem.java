@@ -22,16 +22,16 @@ import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(
-    builder = PointsTriggerResponseUserAttributesItem.Builder.class
+    builder = PointsTriggerUserAttributesItem.Builder.class
 )
-public final class PointsTriggerResponseUserAttributesItem {
+public final class PointsTriggerUserAttributesItem {
   private final String key;
 
   private final String value;
 
   private final Map<String, Object> additionalProperties;
 
-  private PointsTriggerResponseUserAttributesItem(String key, String value,
+  private PointsTriggerUserAttributesItem(String key, String value,
       Map<String, Object> additionalProperties) {
     this.key = key;
     this.value = value;
@@ -47,7 +47,7 @@ public final class PointsTriggerResponseUserAttributesItem {
   }
 
   /**
-   * @return The value of the user attribute.
+   * @return The required value of the user attribute.
    */
   @JsonProperty("value")
   public String getValue() {
@@ -57,7 +57,7 @@ public final class PointsTriggerResponseUserAttributesItem {
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
-    return other instanceof PointsTriggerResponseUserAttributesItem && equalTo((PointsTriggerResponseUserAttributesItem) other);
+    return other instanceof PointsTriggerUserAttributesItem && equalTo((PointsTriggerUserAttributesItem) other);
   }
 
   @JsonAnyGetter
@@ -65,7 +65,7 @@ public final class PointsTriggerResponseUserAttributesItem {
     return this.additionalProperties;
   }
 
-  private boolean equalTo(PointsTriggerResponseUserAttributesItem other) {
+  private boolean equalTo(PointsTriggerUserAttributesItem other) {
     return key.equals(other.key) && value.equals(other.value);
   }
 
@@ -89,18 +89,18 @@ public final class PointsTriggerResponseUserAttributesItem {
      */
     ValueStage key(@NotNull String key);
 
-    Builder from(PointsTriggerResponseUserAttributesItem other);
+    Builder from(PointsTriggerUserAttributesItem other);
   }
 
   public interface ValueStage {
     /**
-     * <p>The value of the user attribute.</p>
+     * <p>The required value of the user attribute.</p>
      */
     _FinalStage value(@NotNull String value);
   }
 
   public interface _FinalStage {
-    PointsTriggerResponseUserAttributesItem build();
+    PointsTriggerUserAttributesItem build();
   }
 
   @JsonIgnoreProperties(
@@ -118,7 +118,7 @@ public final class PointsTriggerResponseUserAttributesItem {
     }
 
     @java.lang.Override
-    public Builder from(PointsTriggerResponseUserAttributesItem other) {
+    public Builder from(PointsTriggerUserAttributesItem other) {
       key(other.getKey());
       value(other.getValue());
       return this;
@@ -137,8 +137,8 @@ public final class PointsTriggerResponseUserAttributesItem {
     }
 
     /**
-     * <p>The value of the user attribute.</p>
-     * <p>The value of the user attribute.</p>
+     * <p>The required value of the user attribute.</p>
+     * <p>The required value of the user attribute.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -149,8 +149,8 @@ public final class PointsTriggerResponseUserAttributesItem {
     }
 
     @java.lang.Override
-    public PointsTriggerResponseUserAttributesItem build() {
-      return new PointsTriggerResponseUserAttributesItem(key, value, additionalProperties);
+    public PointsTriggerUserAttributesItem build() {
+      return new PointsTriggerUserAttributesItem(key, value, additionalProperties);
     }
   }
 }

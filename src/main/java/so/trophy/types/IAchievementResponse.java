@@ -34,7 +34,9 @@ public interface IAchievementResponse {
 
   Optional<String> getMetricName();
 
-  Optional<List<AchievementResponseUserAttributesItem>> getUserAttributes();
+  List<AchievementResponseUserAttributesItem> getUserAttributes();
 
   Optional<AchievementResponseEventAttribute> getEventAttribute();
+
+  Optional<List<AchievementResponseEventAttributesItem>> getEventAttributes();
 }

@@ -175,7 +175,7 @@ public final class StreakResponse implements IBaseStreakResponse {
   }
 
   /**
-   * @return The user's rank across all users. Null if the user has no active streak.
+   * @return Deprecated. The user's rank across all users. Null if the user has no active streak.
    */
   @JsonProperty("rank")
   public Optional<Integer> getRank() {
@@ -294,7 +294,7 @@ public final class StreakResponse implements IBaseStreakResponse {
     _FinalStage streakHistory(List<StreakResponseStreakHistoryItem> streakHistory);
 
     /**
-     * <p>The user's rank across all users. Null if the user has no active streak.</p>
+     * <p>Deprecated. The user's rank across all users. Null if the user has no active streak.</p>
      */
     _FinalStage rank(Optional<Integer> rank);
 
@@ -377,7 +377,7 @@ public final class StreakResponse implements IBaseStreakResponse {
     }
 
     /**
-     * <p>The user's rank across all users. Null if the user has no active streak.</p>
+     * <p>Deprecated. The user's rank across all users. Null if the user has no active streak.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -387,7 +387,7 @@ public final class StreakResponse implements IBaseStreakResponse {
     }
 
     /**
-     * <p>The user's rank across all users. Null if the user has no active streak.</p>
+     * <p>Deprecated. The user's rank across all users. Null if the user has no active streak.</p>
      */
     @java.lang.Override
     @JsonSetter(

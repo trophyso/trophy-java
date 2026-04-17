@@ -17,7 +17,9 @@ import so.trophy.core.ObjectMappers;
 import java.lang.Integer;
 import java.lang.Object;
 import java.lang.String;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -38,6 +40,8 @@ public final class MetricEventLeaderboardResponse {
 
   private final Optional<String> breakdownAttributeValue;
 
+  private final Optional<List<MetricEventLeaderboardResponseBreakdownAttributeValuesItem>> breakdownAttributeValues;
+
   private final String id;
 
   private final String name;
@@ -47,6 +51,8 @@ public final class MetricEventLeaderboardResponse {
   private final LeaderboardResponseRankBy rankBy;
 
   private final Optional<String> breakdownAttribute;
+
+  private final List<String> breakdownAttributes;
 
   private final Optional<String> metricKey;
 
@@ -70,22 +76,25 @@ public final class MetricEventLeaderboardResponse {
 
   private MetricEventLeaderboardResponse(Optional<String> end, Optional<Integer> rank,
       Optional<Integer> previousRank, int threshold, Optional<String> breakdownAttributeValue,
+      Optional<List<MetricEventLeaderboardResponseBreakdownAttributeValuesItem>> breakdownAttributeValues,
       String id, String name, String key, LeaderboardResponseRankBy rankBy,
-      Optional<String> breakdownAttribute, Optional<String> metricKey, Optional<String> metricName,
-      Optional<String> pointsSystemKey, Optional<String> pointsSystemName,
-      Optional<String> description, String start, int maxParticipants,
-      Optional<LeaderboardResponseRunUnit> runUnit, Optional<Integer> runInterval,
-      Map<String, Object> additionalProperties) {
+      Optional<String> breakdownAttribute, List<String> breakdownAttributes,
+      Optional<String> metricKey, Optional<String> metricName, Optional<String> pointsSystemKey,
+      Optional<String> pointsSystemName, Optional<String> description, String start,
+      int maxParticipants, Optional<LeaderboardResponseRunUnit> runUnit,
+      Optional<Integer> runInterval, Map<String, Object> additionalProperties) {
     this.end = end;
     this.rank = rank;
     this.previousRank = previousRank;
     this.threshold = threshold;
     this.breakdownAttributeValue = breakdownAttributeValue;
+    this.breakdownAttributeValues = breakdownAttributeValues;
     this.id = id;
     this.name = name;
     this.key = key;
     this.rankBy = rankBy;
     this.breakdownAttribute = breakdownAttribute;
+    this.breakdownAttributes = breakdownAttributes;
     this.metricKey = metricKey;
     this.metricName = metricName;
     this.pointsSystemKey = pointsSystemKey;
@@ -131,11 +140,20 @@ public final class MetricEventLeaderboardResponse {
   }
 
   /**
-   * @return For leaderboards with a breakdown attribute, the value of the attribute for the user.
+   * @return Deprecated. For leaderboards with a single breakdown attribute, the value of that attribute for the user.
    */
   @JsonProperty("breakdownAttributeValue")
   public Optional<String> getBreakdownAttributeValue() {
     return breakdownAttributeValue;
+  }
+
+  /**
+   * @return For leaderboards with breakdown attributes, the user's values for each breakdown attribute.
+   */
+  @JsonProperty("breakdownAttributeValues")
+  public Optional<List<MetricEventLeaderboardResponseBreakdownAttributeValuesItem>> getBreakdownAttributeValues(
+      ) {
+    return breakdownAttributeValues;
   }
 
   /**
@@ -171,11 +189,19 @@ public final class MetricEventLeaderboardResponse {
   }
 
   /**
-   * @return The key of the attribute to break down this leaderboard by.
+   * @return Deprecated. The key of the attribute to break down this leaderboard by.
    */
   @JsonProperty("breakdownAttribute")
   public Optional<String> getBreakdownAttribute() {
     return breakdownAttribute;
+  }
+
+  /**
+   * @return The user attribute keys that this leaderboard is broken down by.
+   */
+  @JsonProperty("breakdownAttributes")
+  public List<String> getBreakdownAttributes() {
+    return breakdownAttributes;
   }
 
   /**
@@ -262,12 +288,12 @@ public final class MetricEventLeaderboardResponse {
   }
 
   private boolean equalTo(MetricEventLeaderboardResponse other) {
-    return end.equals(other.end) && rank.equals(other.rank) && previousRank.equals(other.previousRank) && threshold == other.threshold && breakdownAttributeValue.equals(other.breakdownAttributeValue) && id.equals(other.id) && name.equals(other.name) && key.equals(other.key) && rankBy.equals(other.rankBy) && breakdownAttribute.equals(other.breakdownAttribute) && metricKey.equals(other.metricKey) && metricName.equals(other.metricName) && pointsSystemKey.equals(other.pointsSystemKey) && pointsSystemName.equals(other.pointsSystemName) && description.equals(other.description) && start.equals(other.start) && maxParticipants == other.maxParticipants && runUnit.equals(other.runUnit) && runInterval.equals(other.runInterval);
+    return end.equals(other.end) && rank.equals(other.rank) && previousRank.equals(other.previousRank) && threshold == other.threshold && breakdownAttributeValue.equals(other.breakdownAttributeValue) && breakdownAttributeValues.equals(other.breakdownAttributeValues) && id.equals(other.id) && name.equals(other.name) && key.equals(other.key) && rankBy.equals(other.rankBy) && breakdownAttribute.equals(other.breakdownAttribute) && breakdownAttributes.equals(other.breakdownAttributes) && metricKey.equals(other.metricKey) && metricName.equals(other.metricName) && pointsSystemKey.equals(other.pointsSystemKey) && pointsSystemName.equals(other.pointsSystemName) && description.equals(other.description) && start.equals(other.start) && maxParticipants == other.maxParticipants && runUnit.equals(other.runUnit) && runInterval.equals(other.runInterval);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.end, this.rank, this.previousRank, this.threshold, this.breakdownAttributeValue, this.id, this.name, this.key, this.rankBy, this.breakdownAttribute, this.metricKey, this.metricName, this.pointsSystemKey, this.pointsSystemName, this.description, this.start, this.maxParticipants, this.runUnit, this.runInterval);
+    return Objects.hash(this.end, this.rank, this.previousRank, this.threshold, this.breakdownAttributeValue, this.breakdownAttributeValues, this.id, this.name, this.key, this.rankBy, this.breakdownAttribute, this.breakdownAttributes, this.metricKey, this.metricName, this.pointsSystemKey, this.pointsSystemName, this.description, this.start, this.maxParticipants, this.runUnit, this.runInterval);
   }
 
   @java.lang.Override
@@ -355,18 +381,36 @@ public final class MetricEventLeaderboardResponse {
     _FinalStage previousRank(Integer previousRank);
 
     /**
-     * <p>For leaderboards with a breakdown attribute, the value of the attribute for the user.</p>
+     * <p>Deprecated. For leaderboards with a single breakdown attribute, the value of that attribute for the user.</p>
      */
     _FinalStage breakdownAttributeValue(Optional<String> breakdownAttributeValue);
 
     _FinalStage breakdownAttributeValue(String breakdownAttributeValue);
 
     /**
-     * <p>The key of the attribute to break down this leaderboard by.</p>
+     * <p>For leaderboards with breakdown attributes, the user's values for each breakdown attribute.</p>
+     */
+    _FinalStage breakdownAttributeValues(
+        Optional<List<MetricEventLeaderboardResponseBreakdownAttributeValuesItem>> breakdownAttributeValues);
+
+    _FinalStage breakdownAttributeValues(
+        List<MetricEventLeaderboardResponseBreakdownAttributeValuesItem> breakdownAttributeValues);
+
+    /**
+     * <p>Deprecated. The key of the attribute to break down this leaderboard by.</p>
      */
     _FinalStage breakdownAttribute(Optional<String> breakdownAttribute);
 
     _FinalStage breakdownAttribute(String breakdownAttribute);
+
+    /**
+     * <p>The user attribute keys that this leaderboard is broken down by.</p>
+     */
+    _FinalStage breakdownAttributes(List<String> breakdownAttributes);
+
+    _FinalStage addBreakdownAttributes(String breakdownAttributes);
+
+    _FinalStage addAllBreakdownAttributes(List<String> breakdownAttributes);
 
     /**
      * <p>The key of the metric to rank by, if rankBy is 'metric'.</p>
@@ -450,7 +494,11 @@ public final class MetricEventLeaderboardResponse {
 
     private Optional<String> metricKey = Optional.empty();
 
+    private List<String> breakdownAttributes = new ArrayList<>();
+
     private Optional<String> breakdownAttribute = Optional.empty();
+
+    private Optional<List<MetricEventLeaderboardResponseBreakdownAttributeValuesItem>> breakdownAttributeValues = Optional.empty();
 
     private Optional<String> breakdownAttributeValue = Optional.empty();
 
@@ -473,11 +521,13 @@ public final class MetricEventLeaderboardResponse {
       previousRank(other.getPreviousRank());
       threshold(other.getThreshold());
       breakdownAttributeValue(other.getBreakdownAttributeValue());
+      breakdownAttributeValues(other.getBreakdownAttributeValues());
       id(other.getId());
       name(other.getName());
       key(other.getKey());
       rankBy(other.getRankBy());
       breakdownAttribute(other.getBreakdownAttribute());
+      breakdownAttributes(other.getBreakdownAttributes());
       metricKey(other.getMetricKey());
       metricName(other.getMetricName());
       pointsSystemKey(other.getPointsSystemKey());
@@ -736,7 +786,43 @@ public final class MetricEventLeaderboardResponse {
     }
 
     /**
-     * <p>The key of the attribute to break down this leaderboard by.</p>
+     * <p>The user attribute keys that this leaderboard is broken down by.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage addAllBreakdownAttributes(List<String> breakdownAttributes) {
+      if (breakdownAttributes != null) {
+        this.breakdownAttributes.addAll(breakdownAttributes);
+      }
+      return this;
+    }
+
+    /**
+     * <p>The user attribute keys that this leaderboard is broken down by.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage addBreakdownAttributes(String breakdownAttributes) {
+      this.breakdownAttributes.add(breakdownAttributes);
+      return this;
+    }
+
+    /**
+     * <p>The user attribute keys that this leaderboard is broken down by.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "breakdownAttributes",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage breakdownAttributes(List<String> breakdownAttributes) {
+      this.breakdownAttributes.clear();
+      this.breakdownAttributes.addAll(breakdownAttributes);
+      return this;
+    }
+
+    /**
+     * <p>Deprecated. The key of the attribute to break down this leaderboard by.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -746,7 +832,7 @@ public final class MetricEventLeaderboardResponse {
     }
 
     /**
-     * <p>The key of the attribute to break down this leaderboard by.</p>
+     * <p>Deprecated. The key of the attribute to break down this leaderboard by.</p>
      */
     @java.lang.Override
     @JsonSetter(
@@ -759,7 +845,32 @@ public final class MetricEventLeaderboardResponse {
     }
 
     /**
-     * <p>For leaderboards with a breakdown attribute, the value of the attribute for the user.</p>
+     * <p>For leaderboards with breakdown attributes, the user's values for each breakdown attribute.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage breakdownAttributeValues(
+        List<MetricEventLeaderboardResponseBreakdownAttributeValuesItem> breakdownAttributeValues) {
+      this.breakdownAttributeValues = Optional.ofNullable(breakdownAttributeValues);
+      return this;
+    }
+
+    /**
+     * <p>For leaderboards with breakdown attributes, the user's values for each breakdown attribute.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "breakdownAttributeValues",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage breakdownAttributeValues(
+        Optional<List<MetricEventLeaderboardResponseBreakdownAttributeValuesItem>> breakdownAttributeValues) {
+      this.breakdownAttributeValues = breakdownAttributeValues;
+      return this;
+    }
+
+    /**
+     * <p>Deprecated. For leaderboards with a single breakdown attribute, the value of that attribute for the user.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -769,7 +880,7 @@ public final class MetricEventLeaderboardResponse {
     }
 
     /**
-     * <p>For leaderboards with a breakdown attribute, the value of the attribute for the user.</p>
+     * <p>Deprecated. For leaderboards with a single breakdown attribute, the value of that attribute for the user.</p>
      */
     @java.lang.Override
     @JsonSetter(
@@ -852,7 +963,7 @@ public final class MetricEventLeaderboardResponse {
 
     @java.lang.Override
     public MetricEventLeaderboardResponse build() {
-      return new MetricEventLeaderboardResponse(end, rank, previousRank, threshold, breakdownAttributeValue, id, name, key, rankBy, breakdownAttribute, metricKey, metricName, pointsSystemKey, pointsSystemName, description, start, maxParticipants, runUnit, runInterval, additionalProperties);
+      return new MetricEventLeaderboardResponse(end, rank, previousRank, threshold, breakdownAttributeValue, breakdownAttributeValues, id, name, key, rankBy, breakdownAttribute, breakdownAttributes, metricKey, metricName, pointsSystemKey, pointsSystemName, description, start, maxParticipants, runUnit, runInterval, additionalProperties);
     }
   }
 }

@@ -40,12 +40,12 @@ public final class PointsSystemResponse {
 
   private final Optional<Double> maxPoints;
 
-  private final List<PointsTriggerResponse> triggers;
+  private final List<PointsTrigger> triggers;
 
   private final Map<String, Object> additionalProperties;
 
   private PointsSystemResponse(String id, String name, Optional<String> description,
-      Optional<String> badgeUrl, Optional<Double> maxPoints, List<PointsTriggerResponse> triggers,
+      Optional<String> badgeUrl, Optional<Double> maxPoints, List<PointsTrigger> triggers,
       Map<String, Object> additionalProperties) {
     this.id = id;
     this.name = name;
@@ -100,7 +100,7 @@ public final class PointsSystemResponse {
    * @return Array of active triggers for this points system.
    */
   @JsonProperty("triggers")
-  public List<PointsTriggerResponse> getTriggers() {
+  public List<PointsTrigger> getTriggers() {
     return triggers;
   }
 
@@ -176,11 +176,11 @@ public final class PointsSystemResponse {
     /**
      * <p>Array of active triggers for this points system.</p>
      */
-    _FinalStage triggers(List<PointsTriggerResponse> triggers);
+    _FinalStage triggers(List<PointsTrigger> triggers);
 
-    _FinalStage addTriggers(PointsTriggerResponse triggers);
+    _FinalStage addTriggers(PointsTrigger triggers);
 
-    _FinalStage addAllTriggers(List<PointsTriggerResponse> triggers);
+    _FinalStage addAllTriggers(List<PointsTrigger> triggers);
   }
 
   @JsonIgnoreProperties(
@@ -191,7 +191,7 @@ public final class PointsSystemResponse {
 
     private String name;
 
-    private List<PointsTriggerResponse> triggers = new ArrayList<>();
+    private List<PointsTrigger> triggers = new ArrayList<>();
 
     private Optional<Double> maxPoints = Optional.empty();
 
@@ -245,7 +245,7 @@ public final class PointsSystemResponse {
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage addAllTriggers(List<PointsTriggerResponse> triggers) {
+    public _FinalStage addAllTriggers(List<PointsTrigger> triggers) {
       if (triggers != null) {
         this.triggers.addAll(triggers);
       }
@@ -257,7 +257,7 @@ public final class PointsSystemResponse {
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage addTriggers(PointsTriggerResponse triggers) {
+    public _FinalStage addTriggers(PointsTrigger triggers) {
       this.triggers.add(triggers);
       return this;
     }
@@ -270,7 +270,7 @@ public final class PointsSystemResponse {
         value = "triggers",
         nulls = Nulls.SKIP
     )
-    public _FinalStage triggers(List<PointsTriggerResponse> triggers) {
+    public _FinalStage triggers(List<PointsTrigger> triggers) {
       this.triggers.clear();
       this.triggers.addAll(triggers);
       return this;
