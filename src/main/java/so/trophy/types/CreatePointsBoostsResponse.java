@@ -29,11 +29,11 @@ import java.util.Objects;
 public final class CreatePointsBoostsResponse {
   private final List<CreatedPointsBoost> created;
 
-  private final List<BulkInsertIssue> issues;
+  private final List<AdminIssue> issues;
 
   private final Map<String, Object> additionalProperties;
 
-  private CreatePointsBoostsResponse(List<CreatedPointsBoost> created, List<BulkInsertIssue> issues,
+  private CreatePointsBoostsResponse(List<CreatedPointsBoost> created, List<AdminIssue> issues,
       Map<String, Object> additionalProperties) {
     this.created = created;
     this.issues = issues;
@@ -52,7 +52,7 @@ public final class CreatePointsBoostsResponse {
    * @return Array of issues encountered during boost creation.
    */
   @JsonProperty("issues")
-  public List<BulkInsertIssue> getIssues() {
+  public List<AdminIssue> getIssues() {
     return issues;
   }
 
@@ -91,7 +91,7 @@ public final class CreatePointsBoostsResponse {
   public static final class Builder {
     private List<CreatedPointsBoost> created = new ArrayList<>();
 
-    private List<BulkInsertIssue> issues = new ArrayList<>();
+    private List<AdminIssue> issues = new ArrayList<>();
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -137,18 +137,18 @@ public final class CreatePointsBoostsResponse {
         value = "issues",
         nulls = Nulls.SKIP
     )
-    public Builder issues(List<BulkInsertIssue> issues) {
+    public Builder issues(List<AdminIssue> issues) {
       this.issues.clear();
       this.issues.addAll(issues);
       return this;
     }
 
-    public Builder addIssues(BulkInsertIssue issues) {
+    public Builder addIssues(AdminIssue issues) {
       this.issues.add(issues);
       return this;
     }
 
-    public Builder addAllIssues(List<BulkInsertIssue> issues) {
+    public Builder addAllIssues(List<AdminIssue> issues) {
       if (issues != null) {
         this.issues.addAll(issues);
       }

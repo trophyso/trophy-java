@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
-import java.lang.Void;
 import java.util.concurrent.CompletableFuture;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -36,8 +35,8 @@ import okhttp3.ResponseBody;
 import org.jetbrains.annotations.NotNull;
 import so.trophy.resources.admin.points.boosts.requests.BoostsBatchArchiveRequest;
 import so.trophy.resources.admin.points.boosts.requests.CreatePointsBoostsRequest;
-import so.trophy.types.ArchivePointsBoostsResponse;
 import so.trophy.types.CreatePointsBoostsResponse;
+import so.trophy.types.DeletePointsBoostsResponse;
 import so.trophy.types.ErrorBody;
 
 public class AsyncRawBoostsClient {
@@ -126,14 +125,14 @@ public class AsyncRawBoostsClient {
   /**
    * Archive multiple points boosts by ID.
    */
-  public CompletableFuture<TrophyApiHttpResponse<ArchivePointsBoostsResponse>> batchArchive() {
+  public CompletableFuture<TrophyApiHttpResponse<DeletePointsBoostsResponse>> batchArchive() {
     return batchArchive(BoostsBatchArchiveRequest.builder().build());
   }
 
   /**
    * Archive multiple points boosts by ID.
    */
-  public CompletableFuture<TrophyApiHttpResponse<ArchivePointsBoostsResponse>> batchArchive(
+  public CompletableFuture<TrophyApiHttpResponse<DeletePointsBoostsResponse>> batchArchive(
       BoostsBatchArchiveRequest request) {
     return batchArchive(request,null);
   }
@@ -141,7 +140,7 @@ public class AsyncRawBoostsClient {
   /**
    * Archive multiple points boosts by ID.
    */
-  public CompletableFuture<TrophyApiHttpResponse<ArchivePointsBoostsResponse>> batchArchive(
+  public CompletableFuture<TrophyApiHttpResponse<DeletePointsBoostsResponse>> batchArchive(
       BoostsBatchArchiveRequest request, RequestOptions requestOptions) {
     HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getAdminURL()).newBuilder()
 
@@ -158,13 +157,13 @@ public class AsyncRawBoostsClient {
       if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
         client = clientOptions.httpClientWithTimeout(requestOptions);
       }
-      CompletableFuture<TrophyApiHttpResponse<ArchivePointsBoostsResponse>> future = new CompletableFuture<>();
+      CompletableFuture<TrophyApiHttpResponse<DeletePointsBoostsResponse>> future = new CompletableFuture<>();
       client.newCall(okhttpRequest).enqueue(new Callback() {
         @Override
         public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
           try (ResponseBody responseBody = response.body()) {
             if (response.isSuccessful()) {
-              future.complete(new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), ArchivePointsBoostsResponse.class), response));
+              future.complete(new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), DeletePointsBoostsResponse.class), response));
               return;
             }
             String responseBodyString = responseBody != null ? responseBody.string() : "{}";
@@ -198,14 +197,14 @@ public class AsyncRawBoostsClient {
     /**
      * Archive a points boost by ID.
      */
-    public CompletableFuture<TrophyApiHttpResponse<Void>> archive(String id) {
+    public CompletableFuture<TrophyApiHttpResponse<DeletePointsBoostsResponse>> archive(String id) {
       return archive(id,null);
     }
 
     /**
      * Archive a points boost by ID.
      */
-    public CompletableFuture<TrophyApiHttpResponse<Void>> archive(String id,
+    public CompletableFuture<TrophyApiHttpResponse<DeletePointsBoostsResponse>> archive(String id,
         RequestOptions requestOptions) {
       HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getAdminURL()).newBuilder()
 
@@ -222,18 +221,20 @@ public class AsyncRawBoostsClient {
       if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
         client = clientOptions.httpClientWithTimeout(requestOptions);
       }
-      CompletableFuture<TrophyApiHttpResponse<Void>> future = new CompletableFuture<>();
+      CompletableFuture<TrophyApiHttpResponse<DeletePointsBoostsResponse>> future = new CompletableFuture<>();
       client.newCall(okhttpRequest).enqueue(new Callback() {
         @Override
         public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
           try (ResponseBody responseBody = response.body()) {
             if (response.isSuccessful()) {
-              future.complete(new TrophyApiHttpResponse<>(null, response));
+              future.complete(new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), DeletePointsBoostsResponse.class), response));
               return;
             }
             String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
               switch (response.code()) {
+                case 400:future.completeExceptionally(new BadRequestError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response));
+                return;
                 case 401:future.completeExceptionally(new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response));
                 return;
                 case 404:future.completeExceptionally(new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response));

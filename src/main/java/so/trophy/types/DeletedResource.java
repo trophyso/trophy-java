@@ -18,33 +18,34 @@ import java.lang.String;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(
-    builder = ArchivePointsBoostsResponse.Builder.class
+    builder = DeletedResource.Builder.class
 )
-public final class ArchivePointsBoostsResponse {
-  private final int archivedCount;
+public final class DeletedResource {
+  private final String id;
 
   private final Map<String, Object> additionalProperties;
 
-  private ArchivePointsBoostsResponse(int archivedCount, Map<String, Object> additionalProperties) {
-    this.archivedCount = archivedCount;
+  private DeletedResource(String id, Map<String, Object> additionalProperties) {
+    this.id = id;
     this.additionalProperties = additionalProperties;
   }
 
   /**
-   * @return The number of boosts that were archived.
+   * @return The ID of the archived resource.
    */
-  @JsonProperty("archivedCount")
-  public int getArchivedCount() {
-    return archivedCount;
+  @JsonProperty("id")
+  public String getId() {
+    return id;
   }
 
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
-    return other instanceof ArchivePointsBoostsResponse && equalTo((ArchivePointsBoostsResponse) other);
+    return other instanceof DeletedResource && equalTo((DeletedResource) other);
   }
 
   @JsonAnyGetter
@@ -52,13 +53,13 @@ public final class ArchivePointsBoostsResponse {
     return this.additionalProperties;
   }
 
-  private boolean equalTo(ArchivePointsBoostsResponse other) {
-    return archivedCount == other.archivedCount;
+  private boolean equalTo(DeletedResource other) {
+    return id.equals(other.id);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.archivedCount);
+    return Objects.hash(this.id);
   }
 
   @java.lang.Override
@@ -66,28 +67,28 @@ public final class ArchivePointsBoostsResponse {
     return ObjectMappers.stringify(this);
   }
 
-  public static ArchivedCountStage builder() {
+  public static IdStage builder() {
     return new Builder();
   }
 
-  public interface ArchivedCountStage {
+  public interface IdStage {
     /**
-     * <p>The number of boosts that were archived.</p>
+     * <p>The ID of the archived resource.</p>
      */
-    _FinalStage archivedCount(int archivedCount);
+    _FinalStage id(@NotNull String id);
 
-    Builder from(ArchivePointsBoostsResponse other);
+    Builder from(DeletedResource other);
   }
 
   public interface _FinalStage {
-    ArchivePointsBoostsResponse build();
+    DeletedResource build();
   }
 
   @JsonIgnoreProperties(
       ignoreUnknown = true
   )
-  public static final class Builder implements ArchivedCountStage, _FinalStage {
-    private int archivedCount;
+  public static final class Builder implements IdStage, _FinalStage {
+    private String id;
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -96,26 +97,26 @@ public final class ArchivePointsBoostsResponse {
     }
 
     @java.lang.Override
-    public Builder from(ArchivePointsBoostsResponse other) {
-      archivedCount(other.getArchivedCount());
+    public Builder from(DeletedResource other) {
+      id(other.getId());
       return this;
     }
 
     /**
-     * <p>The number of boosts that were archived.</p>
-     * <p>The number of boosts that were archived.</p>
+     * <p>The ID of the archived resource.</p>
+     * <p>The ID of the archived resource.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    @JsonSetter("archivedCount")
-    public _FinalStage archivedCount(int archivedCount) {
-      this.archivedCount = archivedCount;
+    @JsonSetter("id")
+    public _FinalStage id(@NotNull String id) {
+      this.id = Objects.requireNonNull(id, "id must not be null");
       return this;
     }
 
     @java.lang.Override
-    public ArchivePointsBoostsResponse build() {
-      return new ArchivePointsBoostsResponse(archivedCount, additionalProperties);
+    public DeletedResource build() {
+      return new DeletedResource(id, additionalProperties);
     }
   }
 }

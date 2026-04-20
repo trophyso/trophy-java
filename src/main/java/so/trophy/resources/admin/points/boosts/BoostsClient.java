@@ -10,8 +10,8 @@ import so.trophy.core.RequestOptions;
 import java.lang.String;
 import so.trophy.resources.admin.points.boosts.requests.BoostsBatchArchiveRequest;
 import so.trophy.resources.admin.points.boosts.requests.CreatePointsBoostsRequest;
-import so.trophy.types.ArchivePointsBoostsResponse;
 import so.trophy.types.CreatePointsBoostsResponse;
+import so.trophy.types.DeletePointsBoostsResponse;
 
 public class BoostsClient {
   protected final ClientOptions clientOptions;
@@ -48,21 +48,21 @@ public class BoostsClient {
   /**
    * Archive multiple points boosts by ID.
    */
-  public ArchivePointsBoostsResponse batchArchive() {
+  public DeletePointsBoostsResponse batchArchive() {
     return this.rawClient.batchArchive().body();
   }
 
   /**
    * Archive multiple points boosts by ID.
    */
-  public ArchivePointsBoostsResponse batchArchive(BoostsBatchArchiveRequest request) {
+  public DeletePointsBoostsResponse batchArchive(BoostsBatchArchiveRequest request) {
     return this.rawClient.batchArchive(request).body();
   }
 
   /**
    * Archive multiple points boosts by ID.
    */
-  public ArchivePointsBoostsResponse batchArchive(BoostsBatchArchiveRequest request,
+  public DeletePointsBoostsResponse batchArchive(BoostsBatchArchiveRequest request,
       RequestOptions requestOptions) {
     return this.rawClient.batchArchive(request, requestOptions).body();
   }
@@ -70,14 +70,14 @@ public class BoostsClient {
   /**
    * Archive a points boost by ID.
    */
-  public void archive(String id) {
-    this.rawClient.archive(id).body();
+  public DeletePointsBoostsResponse archive(String id) {
+    return this.rawClient.archive(id).body();
   }
 
   /**
    * Archive a points boost by ID.
    */
-  public void archive(String id, RequestOptions requestOptions) {
-    this.rawClient.archive(id, requestOptions).body();
+  public DeletePointsBoostsResponse archive(String id, RequestOptions requestOptions) {
+    return this.rawClient.archive(id, requestOptions).body();
   }
 }

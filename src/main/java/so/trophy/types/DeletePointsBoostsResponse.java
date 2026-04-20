@@ -24,32 +24,32 @@ import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(
-    builder = RestoreStreaksResponse.Builder.class
+    builder = DeletePointsBoostsResponse.Builder.class
 )
-public final class RestoreStreaksResponse {
-  private final List<String> restoredUsers;
+public final class DeletePointsBoostsResponse {
+  private final List<DeletedResource> deleted;
 
   private final List<AdminIssue> issues;
 
   private final Map<String, Object> additionalProperties;
 
-  private RestoreStreaksResponse(List<String> restoredUsers, List<AdminIssue> issues,
+  private DeletePointsBoostsResponse(List<DeletedResource> deleted, List<AdminIssue> issues,
       Map<String, Object> additionalProperties) {
-    this.restoredUsers = restoredUsers;
+    this.deleted = deleted;
     this.issues = issues;
     this.additionalProperties = additionalProperties;
   }
 
   /**
-   * @return Array of user IDs whose streaks were successfully restored.
+   * @return Array of archived points boosts represented by ID.
    */
-  @JsonProperty("restoredUsers")
-  public List<String> getRestoredUsers() {
-    return restoredUsers;
+  @JsonProperty("deleted")
+  public List<DeletedResource> getDeleted() {
+    return deleted;
   }
 
   /**
-   * @return Array of issues encountered during streak restoration.
+   * @return Array of issues encountered during boost archival.
    */
   @JsonProperty("issues")
   public List<AdminIssue> getIssues() {
@@ -59,7 +59,7 @@ public final class RestoreStreaksResponse {
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
-    return other instanceof RestoreStreaksResponse && equalTo((RestoreStreaksResponse) other);
+    return other instanceof DeletePointsBoostsResponse && equalTo((DeletePointsBoostsResponse) other);
   }
 
   @JsonAnyGetter
@@ -67,13 +67,13 @@ public final class RestoreStreaksResponse {
     return this.additionalProperties;
   }
 
-  private boolean equalTo(RestoreStreaksResponse other) {
-    return restoredUsers.equals(other.restoredUsers) && issues.equals(other.issues);
+  private boolean equalTo(DeletePointsBoostsResponse other) {
+    return deleted.equals(other.deleted) && issues.equals(other.issues);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.restoredUsers, this.issues);
+    return Objects.hash(this.deleted, this.issues);
   }
 
   @java.lang.Override
@@ -89,7 +89,7 @@ public final class RestoreStreaksResponse {
       ignoreUnknown = true
   )
   public static final class Builder {
-    private List<String> restoredUsers = new ArrayList<>();
+    private List<DeletedResource> deleted = new ArrayList<>();
 
     private List<AdminIssue> issues = new ArrayList<>();
 
@@ -99,39 +99,39 @@ public final class RestoreStreaksResponse {
     private Builder() {
     }
 
-    public Builder from(RestoreStreaksResponse other) {
-      restoredUsers(other.getRestoredUsers());
+    public Builder from(DeletePointsBoostsResponse other) {
+      deleted(other.getDeleted());
       issues(other.getIssues());
       return this;
     }
 
     /**
-     * <p>Array of user IDs whose streaks were successfully restored.</p>
+     * <p>Array of archived points boosts represented by ID.</p>
      */
     @JsonSetter(
-        value = "restoredUsers",
+        value = "deleted",
         nulls = Nulls.SKIP
     )
-    public Builder restoredUsers(List<String> restoredUsers) {
-      this.restoredUsers.clear();
-      this.restoredUsers.addAll(restoredUsers);
+    public Builder deleted(List<DeletedResource> deleted) {
+      this.deleted.clear();
+      this.deleted.addAll(deleted);
       return this;
     }
 
-    public Builder addRestoredUsers(String restoredUsers) {
-      this.restoredUsers.add(restoredUsers);
+    public Builder addDeleted(DeletedResource deleted) {
+      this.deleted.add(deleted);
       return this;
     }
 
-    public Builder addAllRestoredUsers(List<String> restoredUsers) {
-      if (restoredUsers != null) {
-        this.restoredUsers.addAll(restoredUsers);
+    public Builder addAllDeleted(List<DeletedResource> deleted) {
+      if (deleted != null) {
+        this.deleted.addAll(deleted);
       }
       return this;
     }
 
     /**
-     * <p>Array of issues encountered during streak restoration.</p>
+     * <p>Array of issues encountered during boost archival.</p>
      */
     @JsonSetter(
         value = "issues",
@@ -155,8 +155,8 @@ public final class RestoreStreaksResponse {
       return this;
     }
 
-    public RestoreStreaksResponse build() {
-      return new RestoreStreaksResponse(restoredUsers, issues, additionalProperties);
+    public DeletePointsBoostsResponse build() {
+      return new DeletePointsBoostsResponse(deleted, issues, additionalProperties);
     }
   }
 }

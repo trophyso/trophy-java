@@ -51,7 +51,7 @@ public final class CreatePointsBoostsRequest {
   }
 
   /**
-   * @return Array of boosts to create. Maximum 1,000 boosts per request.
+   * @return Array of boosts to create. Maximum 100 boosts per request.
    */
   @JsonProperty("boosts")
   public List<CreatePointsBoostsRequestBoostsItem> getBoosts() {
@@ -100,7 +100,7 @@ public final class CreatePointsBoostsRequest {
     CreatePointsBoostsRequest build();
 
     /**
-     * <p>Array of boosts to create. Maximum 1,000 boosts per request.</p>
+     * <p>Array of boosts to create. Maximum 100 boosts per request.</p>
      */
     _FinalStage boosts(List<CreatePointsBoostsRequestBoostsItem> boosts);
 
@@ -143,7 +143,7 @@ public final class CreatePointsBoostsRequest {
     }
 
     /**
-     * <p>Array of boosts to create. Maximum 1,000 boosts per request.</p>
+     * <p>Array of boosts to create. Maximum 100 boosts per request.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -155,7 +155,7 @@ public final class CreatePointsBoostsRequest {
     }
 
     /**
-     * <p>Array of boosts to create. Maximum 1,000 boosts per request.</p>
+     * <p>Array of boosts to create. Maximum 100 boosts per request.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -165,7 +165,7 @@ public final class CreatePointsBoostsRequest {
     }
 
     /**
-     * <p>Array of boosts to create. Maximum 1,000 boosts per request.</p>
+     * <p>Array of boosts to create. Maximum 100 boosts per request.</p>
      */
     @java.lang.Override
     @JsonSetter(

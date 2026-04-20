@@ -39,7 +39,7 @@ public final class CreateStreakFreezesRequest {
   }
 
   /**
-   * @return Array of freezes to create. Maximum 1,000 freezes per request.
+   * @return Array of freezes to create. Maximum 100 freezes per request.
    */
   @JsonProperty("freezes")
   public List<CreateStreakFreezesRequestFreezesItem> getFreezes() {
@@ -93,7 +93,7 @@ public final class CreateStreakFreezesRequest {
     }
 
     /**
-     * <p>Array of freezes to create. Maximum 1,000 freezes per request.</p>
+     * <p>Array of freezes to create. Maximum 100 freezes per request.</p>
      */
     @JsonSetter(
         value = "freezes",

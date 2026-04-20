@@ -27,11 +27,11 @@ import java.util.Objects;
     builder = CreateStreakFreezesResponse.Builder.class
 )
 public final class CreateStreakFreezesResponse {
-  private final List<BulkInsertIssue> issues;
+  private final List<AdminIssue> issues;
 
   private final Map<String, Object> additionalProperties;
 
-  private CreateStreakFreezesResponse(List<BulkInsertIssue> issues,
+  private CreateStreakFreezesResponse(List<AdminIssue> issues,
       Map<String, Object> additionalProperties) {
     this.issues = issues;
     this.additionalProperties = additionalProperties;
@@ -41,7 +41,7 @@ public final class CreateStreakFreezesResponse {
    * @return Array of issues encountered during freeze creation.
    */
   @JsonProperty("issues")
-  public List<BulkInsertIssue> getIssues() {
+  public List<AdminIssue> getIssues() {
     return issues;
   }
 
@@ -78,7 +78,7 @@ public final class CreateStreakFreezesResponse {
       ignoreUnknown = true
   )
   public static final class Builder {
-    private List<BulkInsertIssue> issues = new ArrayList<>();
+    private List<AdminIssue> issues = new ArrayList<>();
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -98,18 +98,18 @@ public final class CreateStreakFreezesResponse {
         value = "issues",
         nulls = Nulls.SKIP
     )
-    public Builder issues(List<BulkInsertIssue> issues) {
+    public Builder issues(List<AdminIssue> issues) {
       this.issues.clear();
       this.issues.addAll(issues);
       return this;
     }
 
-    public Builder addIssues(BulkInsertIssue issues) {
+    public Builder addIssues(AdminIssue issues) {
       this.issues.add(issues);
       return this;
     }
 
-    public Builder addAllIssues(List<BulkInsertIssue> issues) {
+    public Builder addAllIssues(List<AdminIssue> issues) {
       if (issues != null) {
         this.issues.addAll(issues);
       }

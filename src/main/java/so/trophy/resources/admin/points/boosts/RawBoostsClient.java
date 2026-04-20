@@ -21,7 +21,6 @@ import so.trophy.errors.UnprocessableEntityError;
 import java.io.IOException;
 import java.lang.Object;
 import java.lang.String;
-import java.lang.Void;
 import okhttp3.Headers;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
@@ -31,8 +30,8 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 import so.trophy.resources.admin.points.boosts.requests.BoostsBatchArchiveRequest;
 import so.trophy.resources.admin.points.boosts.requests.CreatePointsBoostsRequest;
-import so.trophy.types.ArchivePointsBoostsResponse;
 import so.trophy.types.CreatePointsBoostsResponse;
+import so.trophy.types.DeletePointsBoostsResponse;
 import so.trophy.types.ErrorBody;
 
 public class RawBoostsClient {
@@ -104,14 +103,14 @@ public class RawBoostsClient {
   /**
    * Archive multiple points boosts by ID.
    */
-  public TrophyApiHttpResponse<ArchivePointsBoostsResponse> batchArchive() {
+  public TrophyApiHttpResponse<DeletePointsBoostsResponse> batchArchive() {
     return batchArchive(BoostsBatchArchiveRequest.builder().build());
   }
 
   /**
    * Archive multiple points boosts by ID.
    */
-  public TrophyApiHttpResponse<ArchivePointsBoostsResponse> batchArchive(
+  public TrophyApiHttpResponse<DeletePointsBoostsResponse> batchArchive(
       BoostsBatchArchiveRequest request) {
     return batchArchive(request,null);
   }
@@ -119,7 +118,7 @@ public class RawBoostsClient {
   /**
    * Archive multiple points boosts by ID.
    */
-  public TrophyApiHttpResponse<ArchivePointsBoostsResponse> batchArchive(
+  public TrophyApiHttpResponse<DeletePointsBoostsResponse> batchArchive(
       BoostsBatchArchiveRequest request, RequestOptions requestOptions) {
     HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getAdminURL()).newBuilder()
 
@@ -139,7 +138,7 @@ public class RawBoostsClient {
       try (Response response = client.newCall(okhttpRequest).execute()) {
         ResponseBody responseBody = response.body();
         if (response.isSuccessful()) {
-          return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), ArchivePointsBoostsResponse.class), response);
+          return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), DeletePointsBoostsResponse.class), response);
         }
         String responseBodyString = responseBody != null ? responseBody.string() : "{}";
         try {
@@ -161,14 +160,15 @@ public class RawBoostsClient {
     /**
      * Archive a points boost by ID.
      */
-    public TrophyApiHttpResponse<Void> archive(String id) {
+    public TrophyApiHttpResponse<DeletePointsBoostsResponse> archive(String id) {
       return archive(id,null);
     }
 
     /**
      * Archive a points boost by ID.
      */
-    public TrophyApiHttpResponse<Void> archive(String id, RequestOptions requestOptions) {
+    public TrophyApiHttpResponse<DeletePointsBoostsResponse> archive(String id,
+        RequestOptions requestOptions) {
       HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getAdminURL()).newBuilder()
 
         .addPathSegments("points/boosts")
@@ -187,11 +187,12 @@ public class RawBoostsClient {
       try (Response response = client.newCall(okhttpRequest).execute()) {
         ResponseBody responseBody = response.body();
         if (response.isSuccessful()) {
-          return new TrophyApiHttpResponse<>(null, response);
+          return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), DeletePointsBoostsResponse.class), response);
         }
         String responseBodyString = responseBody != null ? responseBody.string() : "{}";
         try {
           switch (response.code()) {
+            case 400:throw new BadRequestError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
             case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
             case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
           }

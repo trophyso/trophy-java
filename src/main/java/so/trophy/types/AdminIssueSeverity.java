@@ -8,14 +8,14 @@ package so.trophy.types;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.lang.String;
 
-public enum BulkInsertIssueLevel {
+public enum AdminIssueSeverity {
   ERROR("error"),
 
   WARNING("warning");
 
   private final String value;
 
-  BulkInsertIssueLevel(String value) {
+  AdminIssueSeverity(String value) {
     this.value = value;
   }
 
