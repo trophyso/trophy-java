@@ -35,7 +35,7 @@ public final class DeletedResource {
   }
 
   /**
-   * @return The ID of the archived resource.
+   * @return The ID of the deleted resource.
    */
   @JsonProperty("id")
   public String getId() {
@@ -73,7 +73,7 @@ public final class DeletedResource {
 
   public interface IdStage {
     /**
-     * <p>The ID of the archived resource.</p>
+     * <p>The ID of the deleted resource.</p>
      */
     _FinalStage id(@NotNull String id);
 
@@ -103,8 +103,8 @@ public final class DeletedResource {
     }
 
     /**
-     * <p>The ID of the archived resource.</p>
-     * <p>The ID of the archived resource.</p>
+     * <p>The ID of the deleted resource.</p>
+     * <p>The ID of the deleted resource.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override

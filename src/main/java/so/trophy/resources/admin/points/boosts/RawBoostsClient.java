@@ -28,7 +28,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import so.trophy.resources.admin.points.boosts.requests.BoostsBatchArchiveRequest;
+import so.trophy.resources.admin.points.boosts.requests.BoostsDeleteRequest;
 import so.trophy.resources.admin.points.boosts.requests.CreatePointsBoostsRequest;
 import so.trophy.types.CreatePointsBoostsResponse;
 import so.trophy.types.DeletePointsBoostsResponse;
@@ -101,25 +101,24 @@ public class RawBoostsClient {
   }
 
   /**
-   * Archive multiple points boosts by ID.
+   * Delete multiple points boosts by ID.
    */
-  public TrophyApiHttpResponse<DeletePointsBoostsResponse> batchArchive() {
-    return batchArchive(BoostsBatchArchiveRequest.builder().build());
+  public TrophyApiHttpResponse<DeletePointsBoostsResponse> delete() {
+    return delete(BoostsDeleteRequest.builder().build());
   }
 
   /**
-   * Archive multiple points boosts by ID.
+   * Delete multiple points boosts by ID.
    */
-  public TrophyApiHttpResponse<DeletePointsBoostsResponse> batchArchive(
-      BoostsBatchArchiveRequest request) {
-    return batchArchive(request,null);
+  public TrophyApiHttpResponse<DeletePointsBoostsResponse> delete(BoostsDeleteRequest request) {
+    return delete(request,null);
   }
 
   /**
-   * Archive multiple points boosts by ID.
+   * Delete multiple points boosts by ID.
    */
-  public TrophyApiHttpResponse<DeletePointsBoostsResponse> batchArchive(
-      BoostsBatchArchiveRequest request, RequestOptions requestOptions) {
+  public TrophyApiHttpResponse<DeletePointsBoostsResponse> delete(BoostsDeleteRequest request,
+      RequestOptions requestOptions) {
     HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getAdminURL()).newBuilder()
 
       .addPathSegments("points/boosts");if (request.getIds().isPresent()) {
@@ -145,56 +144,6 @@ public class RawBoostsClient {
           switch (response.code()) {
             case 400:throw new BadRequestError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
             case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
-          }
-        }
-        catch (JsonProcessingException ignored) {
-          // unable to map error response, throwing generic error
-        }
-        throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
-      }
-      catch (IOException e) {
-        throw new TrophyApiException("Network error executing HTTP request", e);
-      }
-    }
-
-    /**
-     * Archive a points boost by ID.
-     */
-    public TrophyApiHttpResponse<DeletePointsBoostsResponse> archive(String id) {
-      return archive(id,null);
-    }
-
-    /**
-     * Archive a points boost by ID.
-     */
-    public TrophyApiHttpResponse<DeletePointsBoostsResponse> archive(String id,
-        RequestOptions requestOptions) {
-      HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getAdminURL()).newBuilder()
-
-        .addPathSegments("points/boosts")
-        .addPathSegment(id)
-        .build();
-      Request okhttpRequest = new Request.Builder()
-        .url(httpUrl)
-        .method("DELETE", null)
-        .headers(Headers.of(clientOptions.headers(requestOptions)))
-        .addHeader("Accept", "application/json")
-        .build();
-      OkHttpClient client = clientOptions.httpClient();
-      if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-        client = clientOptions.httpClientWithTimeout(requestOptions);
-      }
-      try (Response response = client.newCall(okhttpRequest).execute()) {
-        ResponseBody responseBody = response.body();
-        if (response.isSuccessful()) {
-          return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), DeletePointsBoostsResponse.class), response);
-        }
-        String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-        try {
-          switch (response.code()) {
-            case 400:throw new BadRequestError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
-            case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
-            case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
           }
         }
         catch (JsonProcessingException ignored) {

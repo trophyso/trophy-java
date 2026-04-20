@@ -25,14 +25,14 @@ import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(
-    builder = BoostsBatchArchiveRequest.Builder.class
+    builder = BoostsDeleteRequest.Builder.class
 )
-public final class BoostsBatchArchiveRequest {
+public final class BoostsDeleteRequest {
   private final Optional<List<String>> ids;
 
   private final Map<String, Object> additionalProperties;
 
-  private BoostsBatchArchiveRequest(Optional<List<String>> ids,
+  private BoostsDeleteRequest(Optional<List<String>> ids,
       Map<String, Object> additionalProperties) {
     this.ids = ids;
     this.additionalProperties = additionalProperties;
@@ -49,7 +49,7 @@ public final class BoostsBatchArchiveRequest {
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
-    return other instanceof BoostsBatchArchiveRequest && equalTo((BoostsBatchArchiveRequest) other);
+    return other instanceof BoostsDeleteRequest && equalTo((BoostsDeleteRequest) other);
   }
 
   @JsonAnyGetter
@@ -57,7 +57,7 @@ public final class BoostsBatchArchiveRequest {
     return this.additionalProperties;
   }
 
-  private boolean equalTo(BoostsBatchArchiveRequest other) {
+  private boolean equalTo(BoostsDeleteRequest other) {
     return ids.equals(other.ids);
   }
 
@@ -87,7 +87,7 @@ public final class BoostsBatchArchiveRequest {
     private Builder() {
     }
 
-    public Builder from(BoostsBatchArchiveRequest other) {
+    public Builder from(BoostsDeleteRequest other) {
       ids(other.getIds());
       return this;
     }
@@ -114,8 +114,8 @@ public final class BoostsBatchArchiveRequest {
       return this;
     }
 
-    public BoostsBatchArchiveRequest build() {
-      return new BoostsBatchArchiveRequest(ids, additionalProperties);
+    public BoostsDeleteRequest build() {
+      return new BoostsDeleteRequest(ids, additionalProperties);
     }
   }
 }

@@ -7,8 +7,7 @@ package so.trophy.resources.admin.points.boosts;
 
 import so.trophy.core.ClientOptions;
 import so.trophy.core.RequestOptions;
-import java.lang.String;
-import so.trophy.resources.admin.points.boosts.requests.BoostsBatchArchiveRequest;
+import so.trophy.resources.admin.points.boosts.requests.BoostsDeleteRequest;
 import so.trophy.resources.admin.points.boosts.requests.CreatePointsBoostsRequest;
 import so.trophy.types.CreatePointsBoostsResponse;
 import so.trophy.types.DeletePointsBoostsResponse;
@@ -46,38 +45,24 @@ public class BoostsClient {
   }
 
   /**
-   * Archive multiple points boosts by ID.
+   * Delete multiple points boosts by ID.
    */
-  public DeletePointsBoostsResponse batchArchive() {
-    return this.rawClient.batchArchive().body();
+  public DeletePointsBoostsResponse delete() {
+    return this.rawClient.delete().body();
   }
 
   /**
-   * Archive multiple points boosts by ID.
+   * Delete multiple points boosts by ID.
    */
-  public DeletePointsBoostsResponse batchArchive(BoostsBatchArchiveRequest request) {
-    return this.rawClient.batchArchive(request).body();
+  public DeletePointsBoostsResponse delete(BoostsDeleteRequest request) {
+    return this.rawClient.delete(request).body();
   }
 
   /**
-   * Archive multiple points boosts by ID.
+   * Delete multiple points boosts by ID.
    */
-  public DeletePointsBoostsResponse batchArchive(BoostsBatchArchiveRequest request,
+  public DeletePointsBoostsResponse delete(BoostsDeleteRequest request,
       RequestOptions requestOptions) {
-    return this.rawClient.batchArchive(request, requestOptions).body();
-  }
-
-  /**
-   * Archive a points boost by ID.
-   */
-  public DeletePointsBoostsResponse archive(String id) {
-    return this.rawClient.archive(id).body();
-  }
-
-  /**
-   * Archive a points boost by ID.
-   */
-  public DeletePointsBoostsResponse archive(String id, RequestOptions requestOptions) {
-    return this.rawClient.archive(id, requestOptions).body();
+    return this.rawClient.delete(request, requestOptions).body();
   }
 }

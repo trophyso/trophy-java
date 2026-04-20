@@ -7,9 +7,8 @@ package so.trophy.resources.admin.points.boosts;
 
 import so.trophy.core.ClientOptions;
 import so.trophy.core.RequestOptions;
-import java.lang.String;
 import java.util.concurrent.CompletableFuture;
-import so.trophy.resources.admin.points.boosts.requests.BoostsBatchArchiveRequest;
+import so.trophy.resources.admin.points.boosts.requests.BoostsDeleteRequest;
 import so.trophy.resources.admin.points.boosts.requests.CreatePointsBoostsRequest;
 import so.trophy.types.CreatePointsBoostsResponse;
 import so.trophy.types.DeletePointsBoostsResponse;
@@ -47,40 +46,24 @@ public class AsyncBoostsClient {
   }
 
   /**
-   * Archive multiple points boosts by ID.
+   * Delete multiple points boosts by ID.
    */
-  public CompletableFuture<DeletePointsBoostsResponse> batchArchive() {
-    return this.rawClient.batchArchive().thenApply(response -> response.body());
+  public CompletableFuture<DeletePointsBoostsResponse> delete() {
+    return this.rawClient.delete().thenApply(response -> response.body());
   }
 
   /**
-   * Archive multiple points boosts by ID.
+   * Delete multiple points boosts by ID.
    */
-  public CompletableFuture<DeletePointsBoostsResponse> batchArchive(
-      BoostsBatchArchiveRequest request) {
-    return this.rawClient.batchArchive(request).thenApply(response -> response.body());
+  public CompletableFuture<DeletePointsBoostsResponse> delete(BoostsDeleteRequest request) {
+    return this.rawClient.delete(request).thenApply(response -> response.body());
   }
 
   /**
-   * Archive multiple points boosts by ID.
+   * Delete multiple points boosts by ID.
    */
-  public CompletableFuture<DeletePointsBoostsResponse> batchArchive(
-      BoostsBatchArchiveRequest request, RequestOptions requestOptions) {
-    return this.rawClient.batchArchive(request, requestOptions).thenApply(response -> response.body());
-  }
-
-  /**
-   * Archive a points boost by ID.
-   */
-  public CompletableFuture<DeletePointsBoostsResponse> archive(String id) {
-    return this.rawClient.archive(id).thenApply(response -> response.body());
-  }
-
-  /**
-   * Archive a points boost by ID.
-   */
-  public CompletableFuture<DeletePointsBoostsResponse> archive(String id,
+  public CompletableFuture<DeletePointsBoostsResponse> delete(BoostsDeleteRequest request,
       RequestOptions requestOptions) {
-    return this.rawClient.archive(id, requestOptions).thenApply(response -> response.body());
+    return this.rawClient.delete(request, requestOptions).thenApply(response -> response.body());
   }
 }

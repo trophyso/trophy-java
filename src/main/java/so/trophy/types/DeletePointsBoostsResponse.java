@@ -41,7 +41,7 @@ public final class DeletePointsBoostsResponse {
   }
 
   /**
-   * @return Array of archived points boosts represented by ID.
+   * @return Array of deleted points boosts represented by ID.
    */
   @JsonProperty("deleted")
   public List<DeletedResource> getDeleted() {
@@ -106,7 +106,7 @@ public final class DeletePointsBoostsResponse {
     }
 
     /**
-     * <p>Array of archived points boosts represented by ID.</p>
+     * <p>Array of deleted points boosts represented by ID.</p>
      */
     @JsonSetter(
         value = "deleted",
