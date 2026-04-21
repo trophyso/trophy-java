@@ -8,6 +8,8 @@ package so.trophy.resources.admin;
 import so.trophy.core.ClientOptions;
 import so.trophy.core.Suppliers;
 import java.util.function.Supplier;
+import so.trophy.resources.admin.attributes.AsyncAttributesClient;
+import so.trophy.resources.admin.metrics.AsyncMetricsClient;
 import so.trophy.resources.admin.points.AsyncPointsClient;
 import so.trophy.resources.admin.streaks.AsyncStreaksClient;
 
@@ -16,16 +18,30 @@ public class AsyncAdminClient {
 
   protected final Supplier<AsyncStreaksClient> streaksClient;
 
+  protected final Supplier<AsyncAttributesClient> attributesClient;
+
+  protected final Supplier<AsyncMetricsClient> metricsClient;
+
   protected final Supplier<AsyncPointsClient> pointsClient;
 
   public AsyncAdminClient(ClientOptions clientOptions) {
     this.clientOptions = clientOptions;
     this.streaksClient = Suppliers.memoize(() -> new AsyncStreaksClient(clientOptions));
+    this.attributesClient = Suppliers.memoize(() -> new AsyncAttributesClient(clientOptions));
+    this.metricsClient = Suppliers.memoize(() -> new AsyncMetricsClient(clientOptions));
     this.pointsClient = Suppliers.memoize(() -> new AsyncPointsClient(clientOptions));
   }
 
   public AsyncStreaksClient streaks() {
     return this.streaksClient.get();
+  }
+
+  public AsyncAttributesClient attributes() {
+    return this.attributesClient.get();
+  }
+
+  public AsyncMetricsClient metrics() {
+    return this.metricsClient.get();
   }
 
   public AsyncPointsClient points() {

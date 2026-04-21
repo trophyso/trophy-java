@@ -24,16 +24,16 @@ import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(
-    builder = DeletePointsBoostsResponse.Builder.class
+    builder = DeleteAttributesResponse.Builder.class
 )
-public final class DeletePointsBoostsResponse {
+public final class DeleteAttributesResponse {
   private final List<DeletedResource> deleted;
 
   private final List<AdminIssue> issues;
 
   private final Map<String, Object> additionalProperties;
 
-  private DeletePointsBoostsResponse(List<DeletedResource> deleted, List<AdminIssue> issues,
+  private DeleteAttributesResponse(List<DeletedResource> deleted, List<AdminIssue> issues,
       Map<String, Object> additionalProperties) {
     this.deleted = deleted;
     this.issues = issues;
@@ -41,7 +41,7 @@ public final class DeletePointsBoostsResponse {
   }
 
   /**
-   * @return Array of deleted points boosts represented by ID.
+   * @return Array of deleted attributes represented by ID.
    */
   @JsonProperty("deleted")
   public List<DeletedResource> getDeleted() {
@@ -49,7 +49,7 @@ public final class DeletePointsBoostsResponse {
   }
 
   /**
-   * @return Array of issues encountered during boost deletion.
+   * @return Array of issues encountered during attribute deletion.
    */
   @JsonProperty("issues")
   public List<AdminIssue> getIssues() {
@@ -59,7 +59,7 @@ public final class DeletePointsBoostsResponse {
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
-    return other instanceof DeletePointsBoostsResponse && equalTo((DeletePointsBoostsResponse) other);
+    return other instanceof DeleteAttributesResponse && equalTo((DeleteAttributesResponse) other);
   }
 
   @JsonAnyGetter
@@ -67,7 +67,7 @@ public final class DeletePointsBoostsResponse {
     return this.additionalProperties;
   }
 
-  private boolean equalTo(DeletePointsBoostsResponse other) {
+  private boolean equalTo(DeleteAttributesResponse other) {
     return deleted.equals(other.deleted) && issues.equals(other.issues);
   }
 
@@ -99,14 +99,14 @@ public final class DeletePointsBoostsResponse {
     private Builder() {
     }
 
-    public Builder from(DeletePointsBoostsResponse other) {
+    public Builder from(DeleteAttributesResponse other) {
       deleted(other.getDeleted());
       issues(other.getIssues());
       return this;
     }
 
     /**
-     * <p>Array of deleted points boosts represented by ID.</p>
+     * <p>Array of deleted attributes represented by ID.</p>
      */
     @JsonSetter(
         value = "deleted",
@@ -131,7 +131,7 @@ public final class DeletePointsBoostsResponse {
     }
 
     /**
-     * <p>Array of issues encountered during boost deletion.</p>
+     * <p>Array of issues encountered during attribute deletion.</p>
      */
     @JsonSetter(
         value = "issues",
@@ -155,8 +155,8 @@ public final class DeletePointsBoostsResponse {
       return this;
     }
 
-    public DeletePointsBoostsResponse build() {
-      return new DeletePointsBoostsResponse(deleted, issues, additionalProperties);
+    public DeleteAttributesResponse build() {
+      return new DeleteAttributesResponse(deleted, issues, additionalProperties);
     }
   }
 }

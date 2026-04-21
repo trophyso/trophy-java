@@ -8,14 +8,14 @@ package so.trophy.types;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.lang.String;
 
-public enum MetricStatus {
-  ARCHIVED("archived"),
+public enum CreatedMetricUnitType {
+  NUMBER("number"),
 
-  ACTIVE("active");
+  CURRENCY("currency");
 
   private final String value;
 
-  MetricStatus(String value) {
+  CreatedMetricUnitType(String value) {
     this.value = value;
   }
 

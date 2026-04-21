@@ -34,20 +34,17 @@ public final class MetricResponse {
 
   private final String name;
 
-  private final MetricStatus status;
-
   private final double current;
 
   private final List<UserAchievementResponse> achievements;
 
   private final Map<String, Object> additionalProperties;
 
-  private MetricResponse(String id, String key, String name, MetricStatus status, double current,
+  private MetricResponse(String id, String key, String name, double current,
       List<UserAchievementResponse> achievements, Map<String, Object> additionalProperties) {
     this.id = id;
     this.key = key;
     this.name = name;
-    this.status = status;
     this.current = current;
     this.achievements = achievements;
     this.additionalProperties = additionalProperties;
@@ -78,14 +75,6 @@ public final class MetricResponse {
   }
 
   /**
-   * @return The status of the metric.
-   */
-  @JsonProperty("status")
-  public MetricStatus getStatus() {
-    return status;
-  }
-
-  /**
    * @return The user's current total for the metric.
    */
   @JsonProperty("current")
@@ -113,12 +102,12 @@ public final class MetricResponse {
   }
 
   private boolean equalTo(MetricResponse other) {
-    return id.equals(other.id) && key.equals(other.key) && name.equals(other.name) && status.equals(other.status) && current == other.current && achievements.equals(other.achievements);
+    return id.equals(other.id) && key.equals(other.key) && name.equals(other.name) && current == other.current && achievements.equals(other.achievements);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.key, this.name, this.status, this.current, this.achievements);
+    return Objects.hash(this.id, this.key, this.name, this.current, this.achievements);
   }
 
   @java.lang.Override
@@ -150,14 +139,7 @@ public final class MetricResponse {
     /**
      * <p>The name of the metric.</p>
      */
-    StatusStage name(@NotNull String name);
-  }
-
-  public interface StatusStage {
-    /**
-     * <p>The status of the metric.</p>
-     */
-    CurrentStage status(@NotNull MetricStatus status);
+    CurrentStage name(@NotNull String name);
   }
 
   public interface CurrentStage {
@@ -183,14 +165,12 @@ public final class MetricResponse {
   @JsonIgnoreProperties(
       ignoreUnknown = true
   )
-  public static final class Builder implements IdStage, KeyStage, NameStage, StatusStage, CurrentStage, _FinalStage {
+  public static final class Builder implements IdStage, KeyStage, NameStage, CurrentStage, _FinalStage {
     private String id;
 
     private String key;
 
     private String name;
-
-    private MetricStatus status;
 
     private double current;
 
@@ -207,7 +187,6 @@ public final class MetricResponse {
       id(other.getId());
       key(other.getKey());
       name(other.getName());
-      status(other.getStatus());
       current(other.getCurrent());
       achievements(other.getAchievements());
       return this;
@@ -244,20 +223,8 @@ public final class MetricResponse {
      */
     @java.lang.Override
     @JsonSetter("name")
-    public StatusStage name(@NotNull String name) {
+    public CurrentStage name(@NotNull String name) {
       this.name = Objects.requireNonNull(name, "name must not be null");
-      return this;
-    }
-
-    /**
-     * <p>The status of the metric.</p>
-     * <p>The status of the metric.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    @JsonSetter("status")
-    public CurrentStage status(@NotNull MetricStatus status) {
-      this.status = Objects.requireNonNull(status, "status must not be null");
       return this;
     }
 
@@ -311,7 +278,7 @@ public final class MetricResponse {
 
     @java.lang.Override
     public MetricResponse build() {
-      return new MetricResponse(id, key, name, status, current, achievements, additionalProperties);
+      return new MetricResponse(id, key, name, current, achievements, additionalProperties);
     }
   }
 }
