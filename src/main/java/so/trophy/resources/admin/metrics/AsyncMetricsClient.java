@@ -59,14 +59,14 @@ public class AsyncMetricsClient {
   }
 
   /**
-   * Create metrics in bulk.
+   * Create metrics.
    */
   public CompletableFuture<CreateMetricsResponse> create(List<CreateMetricRequestItem> request) {
     return this.rawClient.create(request).thenApply(response -> response.body());
   }
 
   /**
-   * Create metrics in bulk.
+   * Create metrics.
    */
   public CompletableFuture<CreateMetricsResponse> create(List<CreateMetricRequestItem> request,
       RequestOptions requestOptions) {
@@ -74,21 +74,21 @@ public class AsyncMetricsClient {
   }
 
   /**
-   * Delete metrics in bulk by ID.
+   * Delete metrics by ID.
    */
   public CompletableFuture<DeleteMetricsResponse> delete() {
     return this.rawClient.delete().thenApply(response -> response.body());
   }
 
   /**
-   * Delete metrics in bulk by ID.
+   * Delete metrics by ID.
    */
   public CompletableFuture<DeleteMetricsResponse> delete(MetricsDeleteRequest request) {
     return this.rawClient.delete(request).thenApply(response -> response.body());
   }
 
   /**
-   * Delete metrics in bulk by ID.
+   * Delete metrics by ID.
    */
   public CompletableFuture<DeleteMetricsResponse> delete(MetricsDeleteRequest request,
       RequestOptions requestOptions) {
@@ -96,14 +96,14 @@ public class AsyncMetricsClient {
   }
 
   /**
-   * Update metrics in bulk by ID.
+   * Update metrics by ID.
    */
   public CompletableFuture<UpdateMetricsResponse> update(List<UpdateMetricRequestItem> request) {
     return this.rawClient.update(request).thenApply(response -> response.body());
   }
 
   /**
-   * Update metrics in bulk by ID.
+   * Update metrics by ID.
    */
   public CompletableFuture<UpdateMetricsResponse> update(List<UpdateMetricRequestItem> request,
       RequestOptions requestOptions) {

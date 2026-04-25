@@ -59,7 +59,7 @@ public class AsyncAttributesClient {
   }
 
   /**
-   * Create attributes in bulk.
+   * Create attributes.
    */
   public CompletableFuture<CreateAttributesResponse> create(
       List<CreateAttributeRequestItem> request) {
@@ -67,7 +67,7 @@ public class AsyncAttributesClient {
   }
 
   /**
-   * Create attributes in bulk.
+   * Create attributes.
    */
   public CompletableFuture<CreateAttributesResponse> create(
       List<CreateAttributeRequestItem> request, RequestOptions requestOptions) {
@@ -75,21 +75,21 @@ public class AsyncAttributesClient {
   }
 
   /**
-   * Delete attributes in bulk by ID.
+   * Delete attributes by ID.
    */
   public CompletableFuture<DeleteAttributesResponse> delete() {
     return this.rawClient.delete().thenApply(response -> response.body());
   }
 
   /**
-   * Delete attributes in bulk by ID.
+   * Delete attributes by ID.
    */
   public CompletableFuture<DeleteAttributesResponse> delete(AttributesDeleteRequest request) {
     return this.rawClient.delete(request).thenApply(response -> response.body());
   }
 
   /**
-   * Delete attributes in bulk by ID.
+   * Delete attributes by ID.
    */
   public CompletableFuture<DeleteAttributesResponse> delete(AttributesDeleteRequest request,
       RequestOptions requestOptions) {
@@ -97,7 +97,7 @@ public class AsyncAttributesClient {
   }
 
   /**
-   * Update attributes in bulk by ID.
+   * Update attributes by ID.
    */
   public CompletableFuture<UpdateAttributesResponse> update(
       List<UpdateAttributeRequestItem> request) {
@@ -105,7 +105,7 @@ public class AsyncAttributesClient {
   }
 
   /**
-   * Update attributes in bulk by ID.
+   * Update attributes by ID.
    */
   public CompletableFuture<UpdateAttributesResponse> update(
       List<UpdateAttributeRequestItem> request, RequestOptions requestOptions) {

@@ -57,14 +57,14 @@ public class AttributesClient {
   }
 
   /**
-   * Create attributes in bulk.
+   * Create attributes.
    */
   public CreateAttributesResponse create(List<CreateAttributeRequestItem> request) {
     return this.rawClient.create(request).body();
   }
 
   /**
-   * Create attributes in bulk.
+   * Create attributes.
    */
   public CreateAttributesResponse create(List<CreateAttributeRequestItem> request,
       RequestOptions requestOptions) {
@@ -72,21 +72,21 @@ public class AttributesClient {
   }
 
   /**
-   * Delete attributes in bulk by ID.
+   * Delete attributes by ID.
    */
   public DeleteAttributesResponse delete() {
     return this.rawClient.delete().body();
   }
 
   /**
-   * Delete attributes in bulk by ID.
+   * Delete attributes by ID.
    */
   public DeleteAttributesResponse delete(AttributesDeleteRequest request) {
     return this.rawClient.delete(request).body();
   }
 
   /**
-   * Delete attributes in bulk by ID.
+   * Delete attributes by ID.
    */
   public DeleteAttributesResponse delete(AttributesDeleteRequest request,
       RequestOptions requestOptions) {
@@ -94,14 +94,14 @@ public class AttributesClient {
   }
 
   /**
-   * Update attributes in bulk by ID.
+   * Update attributes by ID.
    */
   public UpdateAttributesResponse update(List<UpdateAttributeRequestItem> request) {
     return this.rawClient.update(request).body();
   }
 
   /**
-   * Update attributes in bulk by ID.
+   * Update attributes by ID.
    */
   public UpdateAttributesResponse update(List<UpdateAttributeRequestItem> request,
       RequestOptions requestOptions) {

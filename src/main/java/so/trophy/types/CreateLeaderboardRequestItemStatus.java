@@ -8,18 +8,18 @@ package so.trophy.types;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.lang.String;
 
-public enum NotificationType {
-  ACHIEVEMENT_COMPLETED("achievement_completed"),
+public enum CreateLeaderboardRequestItemStatus {
+  INACTIVE("inactive"),
 
-  RECAP("recap"),
+  ACTIVE("active"),
 
-  REACTIVATION("reactivation"),
+  SCHEDULED("scheduled"),
 
-  STREAK_REMINDER("streak_reminder");
+  FINISHED("finished");
 
   private final String value;
 
-  NotificationType(String value) {
+  CreateLeaderboardRequestItemStatus(String value) {
     this.value = value;
   }
 

@@ -106,7 +106,7 @@ public class RawMetricsClient {
     }
 
     /**
-     * Create metrics in bulk.
+     * Create metrics.
      */
     public TrophyApiHttpResponse<CreateMetricsResponse> create(
         List<CreateMetricRequestItem> request) {
@@ -114,7 +114,7 @@ public class RawMetricsClient {
     }
 
     /**
-     * Create metrics in bulk.
+     * Create metrics.
      */
     public TrophyApiHttpResponse<CreateMetricsResponse> create(
         List<CreateMetricRequestItem> request, RequestOptions requestOptions) {
@@ -163,21 +163,21 @@ public class RawMetricsClient {
     }
 
     /**
-     * Delete metrics in bulk by ID.
+     * Delete metrics by ID.
      */
     public TrophyApiHttpResponse<DeleteMetricsResponse> delete() {
       return delete(MetricsDeleteRequest.builder().build());
     }
 
     /**
-     * Delete metrics in bulk by ID.
+     * Delete metrics by ID.
      */
     public TrophyApiHttpResponse<DeleteMetricsResponse> delete(MetricsDeleteRequest request) {
       return delete(request,null);
     }
 
     /**
-     * Delete metrics in bulk by ID.
+     * Delete metrics by ID.
      */
     public TrophyApiHttpResponse<DeleteMetricsResponse> delete(MetricsDeleteRequest request,
         RequestOptions requestOptions) {
@@ -219,7 +219,7 @@ public class RawMetricsClient {
       }
 
       /**
-       * Update metrics in bulk by ID.
+       * Update metrics by ID.
        */
       public TrophyApiHttpResponse<UpdateMetricsResponse> update(
           List<UpdateMetricRequestItem> request) {
@@ -227,7 +227,7 @@ public class RawMetricsClient {
       }
 
       /**
-       * Update metrics in bulk by ID.
+       * Update metrics by ID.
        */
       public TrophyApiHttpResponse<UpdateMetricsResponse> update(
           List<UpdateMetricRequestItem> request, RequestOptions requestOptions) {

@@ -9,6 +9,7 @@ import so.trophy.core.ClientOptions;
 import so.trophy.core.Suppliers;
 import java.util.function.Supplier;
 import so.trophy.resources.admin.attributes.AttributesClient;
+import so.trophy.resources.admin.leaderboards.LeaderboardsClient;
 import so.trophy.resources.admin.metrics.MetricsClient;
 import so.trophy.resources.admin.points.PointsClient;
 import so.trophy.resources.admin.streaks.StreaksClient;
@@ -16,24 +17,23 @@ import so.trophy.resources.admin.streaks.StreaksClient;
 public class AdminClient {
   protected final ClientOptions clientOptions;
 
-  protected final Supplier<StreaksClient> streaksClient;
-
   protected final Supplier<AttributesClient> attributesClient;
 
   protected final Supplier<MetricsClient> metricsClient;
+
+  protected final Supplier<LeaderboardsClient> leaderboardsClient;
+
+  protected final Supplier<StreaksClient> streaksClient;
 
   protected final Supplier<PointsClient> pointsClient;
 
   public AdminClient(ClientOptions clientOptions) {
     this.clientOptions = clientOptions;
-    this.streaksClient = Suppliers.memoize(() -> new StreaksClient(clientOptions));
     this.attributesClient = Suppliers.memoize(() -> new AttributesClient(clientOptions));
     this.metricsClient = Suppliers.memoize(() -> new MetricsClient(clientOptions));
+    this.leaderboardsClient = Suppliers.memoize(() -> new LeaderboardsClient(clientOptions));
+    this.streaksClient = Suppliers.memoize(() -> new StreaksClient(clientOptions));
     this.pointsClient = Suppliers.memoize(() -> new PointsClient(clientOptions));
-  }
-
-  public StreaksClient streaks() {
-    return this.streaksClient.get();
   }
 
   public AttributesClient attributes() {
@@ -42,6 +42,14 @@ public class AdminClient {
 
   public MetricsClient metrics() {
     return this.metricsClient.get();
+  }
+
+  public LeaderboardsClient leaderboards() {
+    return this.leaderboardsClient.get();
+  }
+
+  public StreaksClient streaks() {
+    return this.streaksClient.get();
   }
 
   public PointsClient points() {

@@ -9,6 +9,7 @@ import so.trophy.core.ClientOptions;
 import so.trophy.core.Suppliers;
 import java.util.function.Supplier;
 import so.trophy.resources.admin.attributes.AsyncAttributesClient;
+import so.trophy.resources.admin.leaderboards.AsyncLeaderboardsClient;
 import so.trophy.resources.admin.metrics.AsyncMetricsClient;
 import so.trophy.resources.admin.points.AsyncPointsClient;
 import so.trophy.resources.admin.streaks.AsyncStreaksClient;
@@ -16,24 +17,23 @@ import so.trophy.resources.admin.streaks.AsyncStreaksClient;
 public class AsyncAdminClient {
   protected final ClientOptions clientOptions;
 
-  protected final Supplier<AsyncStreaksClient> streaksClient;
-
   protected final Supplier<AsyncAttributesClient> attributesClient;
 
   protected final Supplier<AsyncMetricsClient> metricsClient;
+
+  protected final Supplier<AsyncLeaderboardsClient> leaderboardsClient;
+
+  protected final Supplier<AsyncStreaksClient> streaksClient;
 
   protected final Supplier<AsyncPointsClient> pointsClient;
 
   public AsyncAdminClient(ClientOptions clientOptions) {
     this.clientOptions = clientOptions;
-    this.streaksClient = Suppliers.memoize(() -> new AsyncStreaksClient(clientOptions));
     this.attributesClient = Suppliers.memoize(() -> new AsyncAttributesClient(clientOptions));
     this.metricsClient = Suppliers.memoize(() -> new AsyncMetricsClient(clientOptions));
+    this.leaderboardsClient = Suppliers.memoize(() -> new AsyncLeaderboardsClient(clientOptions));
+    this.streaksClient = Suppliers.memoize(() -> new AsyncStreaksClient(clientOptions));
     this.pointsClient = Suppliers.memoize(() -> new AsyncPointsClient(clientOptions));
-  }
-
-  public AsyncStreaksClient streaks() {
-    return this.streaksClient.get();
   }
 
   public AsyncAttributesClient attributes() {
@@ -42,6 +42,14 @@ public class AsyncAdminClient {
 
   public AsyncMetricsClient metrics() {
     return this.metricsClient.get();
+  }
+
+  public AsyncLeaderboardsClient leaderboards() {
+    return this.leaderboardsClient.get();
+  }
+
+  public AsyncStreaksClient streaks() {
+    return this.streaksClient.get();
   }
 
   public AsyncPointsClient points() {

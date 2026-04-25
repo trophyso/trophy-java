@@ -57,14 +57,14 @@ public class MetricsClient {
   }
 
   /**
-   * Create metrics in bulk.
+   * Create metrics.
    */
   public CreateMetricsResponse create(List<CreateMetricRequestItem> request) {
     return this.rawClient.create(request).body();
   }
 
   /**
-   * Create metrics in bulk.
+   * Create metrics.
    */
   public CreateMetricsResponse create(List<CreateMetricRequestItem> request,
       RequestOptions requestOptions) {
@@ -72,35 +72,35 @@ public class MetricsClient {
   }
 
   /**
-   * Delete metrics in bulk by ID.
+   * Delete metrics by ID.
    */
   public DeleteMetricsResponse delete() {
     return this.rawClient.delete().body();
   }
 
   /**
-   * Delete metrics in bulk by ID.
+   * Delete metrics by ID.
    */
   public DeleteMetricsResponse delete(MetricsDeleteRequest request) {
     return this.rawClient.delete(request).body();
   }
 
   /**
-   * Delete metrics in bulk by ID.
+   * Delete metrics by ID.
    */
   public DeleteMetricsResponse delete(MetricsDeleteRequest request, RequestOptions requestOptions) {
     return this.rawClient.delete(request, requestOptions).body();
   }
 
   /**
-   * Update metrics in bulk by ID.
+   * Update metrics by ID.
    */
   public UpdateMetricsResponse update(List<UpdateMetricRequestItem> request) {
     return this.rawClient.update(request).body();
   }
 
   /**
-   * Update metrics in bulk by ID.
+   * Update metrics by ID.
    */
   public UpdateMetricsResponse update(List<UpdateMetricRequestItem> request,
       RequestOptions requestOptions) {
