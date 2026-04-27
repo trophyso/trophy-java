@@ -9,18 +9,42 @@ import so.trophy.core.ClientOptions;
 import so.trophy.core.Suppliers;
 import java.util.function.Supplier;
 import so.trophy.resources.admin.points.boosts.BoostsClient;
+import so.trophy.resources.admin.points.levels.LevelsClient;
+import so.trophy.resources.admin.points.systems.SystemsClient;
+import so.trophy.resources.admin.points.triggers.TriggersClient;
 
 public class PointsClient {
   protected final ClientOptions clientOptions;
 
+  protected final Supplier<SystemsClient> systemsClient;
+
   protected final Supplier<BoostsClient> boostsClient;
+
+  protected final Supplier<LevelsClient> levelsClient;
+
+  protected final Supplier<TriggersClient> triggersClient;
 
   public PointsClient(ClientOptions clientOptions) {
     this.clientOptions = clientOptions;
+    this.systemsClient = Suppliers.memoize(() -> new SystemsClient(clientOptions));
     this.boostsClient = Suppliers.memoize(() -> new BoostsClient(clientOptions));
+    this.levelsClient = Suppliers.memoize(() -> new LevelsClient(clientOptions));
+    this.triggersClient = Suppliers.memoize(() -> new TriggersClient(clientOptions));
+  }
+
+  public SystemsClient systems() {
+    return this.systemsClient.get();
   }
 
   public BoostsClient boosts() {
     return this.boostsClient.get();
+  }
+
+  public LevelsClient levels() {
+    return this.levelsClient.get();
+  }
+
+  public TriggersClient triggers() {
+    return this.triggersClient.get();
   }
 }

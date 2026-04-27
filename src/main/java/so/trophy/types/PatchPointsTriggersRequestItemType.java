@@ -8,16 +8,20 @@ package so.trophy.types;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.lang.String;
 
-public enum CreatedPointsBoostRounding {
-  DOWN("down"),
+public enum PatchPointsTriggersRequestItemType {
+  METRIC("metric"),
 
-  UP("up"),
+  ACHIEVEMENT("achievement"),
 
-  NEAREST("nearest");
+  STREAK("streak"),
+
+  TIME("time"),
+
+  USER_CREATION("user_creation");
 
   private final String value;
 
-  CreatedPointsBoostRounding(String value) {
+  PatchPointsTriggersRequestItemType(String value) {
     this.value = value;
   }
 

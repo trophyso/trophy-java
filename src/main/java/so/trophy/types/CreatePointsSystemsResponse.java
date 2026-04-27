@@ -24,32 +24,32 @@ import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(
-    builder = CreatePointsBoostsResponse.Builder.class
+    builder = CreatePointsSystemsResponse.Builder.class
 )
-public final class CreatePointsBoostsResponse {
-  private final List<AdminPointsBoost> created;
+public final class CreatePointsSystemsResponse {
+  private final List<CreatedAdminPointsSystem> created;
 
   private final List<AdminIssue> issues;
 
   private final Map<String, Object> additionalProperties;
 
-  private CreatePointsBoostsResponse(List<AdminPointsBoost> created, List<AdminIssue> issues,
-      Map<String, Object> additionalProperties) {
+  private CreatePointsSystemsResponse(List<CreatedAdminPointsSystem> created,
+      List<AdminIssue> issues, Map<String, Object> additionalProperties) {
     this.created = created;
     this.issues = issues;
     this.additionalProperties = additionalProperties;
   }
 
   /**
-   * @return Array of successfully created boosts.
+   * @return Array of successfully created points systems.
    */
   @JsonProperty("created")
-  public List<AdminPointsBoost> getCreated() {
+  public List<CreatedAdminPointsSystem> getCreated() {
     return created;
   }
 
   /**
-   * @return Array of issues encountered during boost creation.
+   * @return Array of issues encountered during creation.
    */
   @JsonProperty("issues")
   public List<AdminIssue> getIssues() {
@@ -59,7 +59,7 @@ public final class CreatePointsBoostsResponse {
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
-    return other instanceof CreatePointsBoostsResponse && equalTo((CreatePointsBoostsResponse) other);
+    return other instanceof CreatePointsSystemsResponse && equalTo((CreatePointsSystemsResponse) other);
   }
 
   @JsonAnyGetter
@@ -67,7 +67,7 @@ public final class CreatePointsBoostsResponse {
     return this.additionalProperties;
   }
 
-  private boolean equalTo(CreatePointsBoostsResponse other) {
+  private boolean equalTo(CreatePointsSystemsResponse other) {
     return created.equals(other.created) && issues.equals(other.issues);
   }
 
@@ -89,7 +89,7 @@ public final class CreatePointsBoostsResponse {
       ignoreUnknown = true
   )
   public static final class Builder {
-    private List<AdminPointsBoost> created = new ArrayList<>();
+    private List<CreatedAdminPointsSystem> created = new ArrayList<>();
 
     private List<AdminIssue> issues = new ArrayList<>();
 
@@ -99,31 +99,31 @@ public final class CreatePointsBoostsResponse {
     private Builder() {
     }
 
-    public Builder from(CreatePointsBoostsResponse other) {
+    public Builder from(CreatePointsSystemsResponse other) {
       created(other.getCreated());
       issues(other.getIssues());
       return this;
     }
 
     /**
-     * <p>Array of successfully created boosts.</p>
+     * <p>Array of successfully created points systems.</p>
      */
     @JsonSetter(
         value = "created",
         nulls = Nulls.SKIP
     )
-    public Builder created(List<AdminPointsBoost> created) {
+    public Builder created(List<CreatedAdminPointsSystem> created) {
       this.created.clear();
       this.created.addAll(created);
       return this;
     }
 
-    public Builder addCreated(AdminPointsBoost created) {
+    public Builder addCreated(CreatedAdminPointsSystem created) {
       this.created.add(created);
       return this;
     }
 
-    public Builder addAllCreated(List<AdminPointsBoost> created) {
+    public Builder addAllCreated(List<CreatedAdminPointsSystem> created) {
       if (created != null) {
         this.created.addAll(created);
       }
@@ -131,7 +131,7 @@ public final class CreatePointsBoostsResponse {
     }
 
     /**
-     * <p>Array of issues encountered during boost creation.</p>
+     * <p>Array of issues encountered during creation.</p>
      */
     @JsonSetter(
         value = "issues",
@@ -155,8 +155,8 @@ public final class CreatePointsBoostsResponse {
       return this;
     }
 
-    public CreatePointsBoostsResponse build() {
-      return new CreatePointsBoostsResponse(created, issues, additionalProperties);
+    public CreatePointsSystemsResponse build() {
+      return new CreatePointsSystemsResponse(created, issues, additionalProperties);
     }
   }
 }

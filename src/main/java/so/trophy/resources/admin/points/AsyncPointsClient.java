@@ -9,18 +9,42 @@ import so.trophy.core.ClientOptions;
 import so.trophy.core.Suppliers;
 import java.util.function.Supplier;
 import so.trophy.resources.admin.points.boosts.AsyncBoostsClient;
+import so.trophy.resources.admin.points.levels.AsyncLevelsClient;
+import so.trophy.resources.admin.points.systems.AsyncSystemsClient;
+import so.trophy.resources.admin.points.triggers.AsyncTriggersClient;
 
 public class AsyncPointsClient {
   protected final ClientOptions clientOptions;
 
+  protected final Supplier<AsyncSystemsClient> systemsClient;
+
   protected final Supplier<AsyncBoostsClient> boostsClient;
+
+  protected final Supplier<AsyncLevelsClient> levelsClient;
+
+  protected final Supplier<AsyncTriggersClient> triggersClient;
 
   public AsyncPointsClient(ClientOptions clientOptions) {
     this.clientOptions = clientOptions;
+    this.systemsClient = Suppliers.memoize(() -> new AsyncSystemsClient(clientOptions));
     this.boostsClient = Suppliers.memoize(() -> new AsyncBoostsClient(clientOptions));
+    this.levelsClient = Suppliers.memoize(() -> new AsyncLevelsClient(clientOptions));
+    this.triggersClient = Suppliers.memoize(() -> new AsyncTriggersClient(clientOptions));
+  }
+
+  public AsyncSystemsClient systems() {
+    return this.systemsClient.get();
   }
 
   public AsyncBoostsClient boosts() {
     return this.boostsClient.get();
+  }
+
+  public AsyncLevelsClient levels() {
+    return this.levelsClient.get();
+  }
+
+  public AsyncTriggersClient triggers() {
+    return this.triggersClient.get();
   }
 }

@@ -7,10 +7,16 @@ package so.trophy.resources.admin.points.boosts;
 
 import so.trophy.core.ClientOptions;
 import so.trophy.core.RequestOptions;
+import java.lang.String;
+import java.util.List;
 import so.trophy.resources.admin.points.boosts.requests.BoostsDeleteRequest;
-import so.trophy.resources.admin.points.boosts.requests.CreatePointsBoostsRequest;
+import so.trophy.resources.admin.points.boosts.requests.BoostsListRequest;
+import so.trophy.types.AdminPointsBoost;
+import so.trophy.types.CreatePointsBoostRequestItem;
 import so.trophy.types.CreatePointsBoostsResponse;
 import so.trophy.types.DeletePointsBoostsResponse;
+import so.trophy.types.PatchPointsBoostsRequestItem;
+import so.trophy.types.PatchPointsBoostsResponse;
 
 public class BoostsClient {
   protected final ClientOptions clientOptions;
@@ -30,39 +36,92 @@ public class BoostsClient {
   }
 
   /**
-   * Create points boosts for multiple users.
+   * List points boosts for a system.
    */
-  public CreatePointsBoostsResponse create(CreatePointsBoostsRequest request) {
-    return this.rawClient.create(request).body();
+  public List<AdminPointsBoost> list(String systemId) {
+    return this.rawClient.list(systemId).body();
   }
 
   /**
-   * Create points boosts for multiple users.
+   * List points boosts for a system.
    */
-  public CreatePointsBoostsResponse create(CreatePointsBoostsRequest request,
+  public List<AdminPointsBoost> list(String systemId, BoostsListRequest request) {
+    return this.rawClient.list(systemId, request).body();
+  }
+
+  /**
+   * List points boosts for a system.
+   */
+  public List<AdminPointsBoost> list(String systemId, BoostsListRequest request,
       RequestOptions requestOptions) {
-    return this.rawClient.create(request, requestOptions).body();
+    return this.rawClient.list(systemId, request, requestOptions).body();
+  }
+
+  /**
+   * Create points boosts.
+   */
+  public CreatePointsBoostsResponse create(String systemId,
+      List<CreatePointsBoostRequestItem> request) {
+    return this.rawClient.create(systemId, request).body();
+  }
+
+  /**
+   * Create points boosts.
+   */
+  public CreatePointsBoostsResponse create(String systemId,
+      List<CreatePointsBoostRequestItem> request, RequestOptions requestOptions) {
+    return this.rawClient.create(systemId, request, requestOptions).body();
   }
 
   /**
    * Delete multiple points boosts by ID.
    */
-  public DeletePointsBoostsResponse delete() {
-    return this.rawClient.delete().body();
+  public DeletePointsBoostsResponse delete(String systemId) {
+    return this.rawClient.delete(systemId).body();
   }
 
   /**
    * Delete multiple points boosts by ID.
    */
-  public DeletePointsBoostsResponse delete(BoostsDeleteRequest request) {
-    return this.rawClient.delete(request).body();
+  public DeletePointsBoostsResponse delete(String systemId, BoostsDeleteRequest request) {
+    return this.rawClient.delete(systemId, request).body();
   }
 
   /**
    * Delete multiple points boosts by ID.
    */
-  public DeletePointsBoostsResponse delete(BoostsDeleteRequest request,
+  public DeletePointsBoostsResponse delete(String systemId, BoostsDeleteRequest request,
       RequestOptions requestOptions) {
-    return this.rawClient.delete(request, requestOptions).body();
+    return this.rawClient.delete(systemId, request, requestOptions).body();
+  }
+
+  /**
+   * Update multiple points boosts.
+   */
+  public PatchPointsBoostsResponse update(String systemId,
+      List<PatchPointsBoostsRequestItem> request) {
+    return this.rawClient.update(systemId, request).body();
+  }
+
+  /**
+   * Update multiple points boosts.
+   */
+  public PatchPointsBoostsResponse update(String systemId,
+      List<PatchPointsBoostsRequestItem> request, RequestOptions requestOptions) {
+    return this.rawClient.update(systemId, request, requestOptions).body();
+  }
+
+  /**
+   * Get a single points boost by ID.
+   */
+  public AdminPointsBoost get(String systemId, String id) {
+    return this.rawClient.get(systemId, id).body();
+  }
+
+  /**
+   * Get a single points boost by ID.
+   */
+  public AdminPointsBoost get(String systemId, String id, RequestOptions requestOptions) {
+    return this.rawClient.get(systemId, id, requestOptions).body();
   }
 }

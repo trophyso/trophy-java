@@ -7,11 +7,17 @@ package so.trophy.resources.admin.points.boosts;
 
 import so.trophy.core.ClientOptions;
 import so.trophy.core.RequestOptions;
+import java.lang.String;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import so.trophy.resources.admin.points.boosts.requests.BoostsDeleteRequest;
-import so.trophy.resources.admin.points.boosts.requests.CreatePointsBoostsRequest;
+import so.trophy.resources.admin.points.boosts.requests.BoostsListRequest;
+import so.trophy.types.AdminPointsBoost;
+import so.trophy.types.CreatePointsBoostRequestItem;
 import so.trophy.types.CreatePointsBoostsResponse;
 import so.trophy.types.DeletePointsBoostsResponse;
+import so.trophy.types.PatchPointsBoostsRequestItem;
+import so.trophy.types.PatchPointsBoostsResponse;
 
 public class AsyncBoostsClient {
   protected final ClientOptions clientOptions;
@@ -31,39 +37,95 @@ public class AsyncBoostsClient {
   }
 
   /**
-   * Create points boosts for multiple users.
+   * List points boosts for a system.
    */
-  public CompletableFuture<CreatePointsBoostsResponse> create(CreatePointsBoostsRequest request) {
-    return this.rawClient.create(request).thenApply(response -> response.body());
+  public CompletableFuture<List<AdminPointsBoost>> list(String systemId) {
+    return this.rawClient.list(systemId).thenApply(response -> response.body());
   }
 
   /**
-   * Create points boosts for multiple users.
+   * List points boosts for a system.
    */
-  public CompletableFuture<CreatePointsBoostsResponse> create(CreatePointsBoostsRequest request,
+  public CompletableFuture<List<AdminPointsBoost>> list(String systemId,
+      BoostsListRequest request) {
+    return this.rawClient.list(systemId, request).thenApply(response -> response.body());
+  }
+
+  /**
+   * List points boosts for a system.
+   */
+  public CompletableFuture<List<AdminPointsBoost>> list(String systemId, BoostsListRequest request,
       RequestOptions requestOptions) {
-    return this.rawClient.create(request, requestOptions).thenApply(response -> response.body());
+    return this.rawClient.list(systemId, request, requestOptions).thenApply(response -> response.body());
+  }
+
+  /**
+   * Create points boosts.
+   */
+  public CompletableFuture<CreatePointsBoostsResponse> create(String systemId,
+      List<CreatePointsBoostRequestItem> request) {
+    return this.rawClient.create(systemId, request).thenApply(response -> response.body());
+  }
+
+  /**
+   * Create points boosts.
+   */
+  public CompletableFuture<CreatePointsBoostsResponse> create(String systemId,
+      List<CreatePointsBoostRequestItem> request, RequestOptions requestOptions) {
+    return this.rawClient.create(systemId, request, requestOptions).thenApply(response -> response.body());
   }
 
   /**
    * Delete multiple points boosts by ID.
    */
-  public CompletableFuture<DeletePointsBoostsResponse> delete() {
-    return this.rawClient.delete().thenApply(response -> response.body());
+  public CompletableFuture<DeletePointsBoostsResponse> delete(String systemId) {
+    return this.rawClient.delete(systemId).thenApply(response -> response.body());
   }
 
   /**
    * Delete multiple points boosts by ID.
    */
-  public CompletableFuture<DeletePointsBoostsResponse> delete(BoostsDeleteRequest request) {
-    return this.rawClient.delete(request).thenApply(response -> response.body());
+  public CompletableFuture<DeletePointsBoostsResponse> delete(String systemId,
+      BoostsDeleteRequest request) {
+    return this.rawClient.delete(systemId, request).thenApply(response -> response.body());
   }
 
   /**
    * Delete multiple points boosts by ID.
    */
-  public CompletableFuture<DeletePointsBoostsResponse> delete(BoostsDeleteRequest request,
+  public CompletableFuture<DeletePointsBoostsResponse> delete(String systemId,
+      BoostsDeleteRequest request, RequestOptions requestOptions) {
+    return this.rawClient.delete(systemId, request, requestOptions).thenApply(response -> response.body());
+  }
+
+  /**
+   * Update multiple points boosts.
+   */
+  public CompletableFuture<PatchPointsBoostsResponse> update(String systemId,
+      List<PatchPointsBoostsRequestItem> request) {
+    return this.rawClient.update(systemId, request).thenApply(response -> response.body());
+  }
+
+  /**
+   * Update multiple points boosts.
+   */
+  public CompletableFuture<PatchPointsBoostsResponse> update(String systemId,
+      List<PatchPointsBoostsRequestItem> request, RequestOptions requestOptions) {
+    return this.rawClient.update(systemId, request, requestOptions).thenApply(response -> response.body());
+  }
+
+  /**
+   * Get a single points boost by ID.
+   */
+  public CompletableFuture<AdminPointsBoost> get(String systemId, String id) {
+    return this.rawClient.get(systemId, id).thenApply(response -> response.body());
+  }
+
+  /**
+   * Get a single points boost by ID.
+   */
+  public CompletableFuture<AdminPointsBoost> get(String systemId, String id,
       RequestOptions requestOptions) {
-    return this.rawClient.delete(request, requestOptions).thenApply(response -> response.body());
+    return this.rawClient.get(systemId, id, requestOptions).thenApply(response -> response.body());
   }
 }

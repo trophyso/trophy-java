@@ -24,32 +24,32 @@ import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(
-    builder = CreatePointsBoostsResponse.Builder.class
+    builder = DeletePointsLevelsResponse.Builder.class
 )
-public final class CreatePointsBoostsResponse {
-  private final List<AdminPointsBoost> created;
+public final class DeletePointsLevelsResponse {
+  private final List<DeletedResource> deleted;
 
   private final List<AdminIssue> issues;
 
   private final Map<String, Object> additionalProperties;
 
-  private CreatePointsBoostsResponse(List<AdminPointsBoost> created, List<AdminIssue> issues,
+  private DeletePointsLevelsResponse(List<DeletedResource> deleted, List<AdminIssue> issues,
       Map<String, Object> additionalProperties) {
-    this.created = created;
+    this.deleted = deleted;
     this.issues = issues;
     this.additionalProperties = additionalProperties;
   }
 
   /**
-   * @return Array of successfully created boosts.
+   * @return Array of deleted points levels represented by ID.
    */
-  @JsonProperty("created")
-  public List<AdminPointsBoost> getCreated() {
-    return created;
+  @JsonProperty("deleted")
+  public List<DeletedResource> getDeleted() {
+    return deleted;
   }
 
   /**
-   * @return Array of issues encountered during boost creation.
+   * @return Array of issues encountered during level deletion.
    */
   @JsonProperty("issues")
   public List<AdminIssue> getIssues() {
@@ -59,7 +59,7 @@ public final class CreatePointsBoostsResponse {
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
-    return other instanceof CreatePointsBoostsResponse && equalTo((CreatePointsBoostsResponse) other);
+    return other instanceof DeletePointsLevelsResponse && equalTo((DeletePointsLevelsResponse) other);
   }
 
   @JsonAnyGetter
@@ -67,13 +67,13 @@ public final class CreatePointsBoostsResponse {
     return this.additionalProperties;
   }
 
-  private boolean equalTo(CreatePointsBoostsResponse other) {
-    return created.equals(other.created) && issues.equals(other.issues);
+  private boolean equalTo(DeletePointsLevelsResponse other) {
+    return deleted.equals(other.deleted) && issues.equals(other.issues);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.created, this.issues);
+    return Objects.hash(this.deleted, this.issues);
   }
 
   @java.lang.Override
@@ -89,7 +89,7 @@ public final class CreatePointsBoostsResponse {
       ignoreUnknown = true
   )
   public static final class Builder {
-    private List<AdminPointsBoost> created = new ArrayList<>();
+    private List<DeletedResource> deleted = new ArrayList<>();
 
     private List<AdminIssue> issues = new ArrayList<>();
 
@@ -99,39 +99,39 @@ public final class CreatePointsBoostsResponse {
     private Builder() {
     }
 
-    public Builder from(CreatePointsBoostsResponse other) {
-      created(other.getCreated());
+    public Builder from(DeletePointsLevelsResponse other) {
+      deleted(other.getDeleted());
       issues(other.getIssues());
       return this;
     }
 
     /**
-     * <p>Array of successfully created boosts.</p>
+     * <p>Array of deleted points levels represented by ID.</p>
      */
     @JsonSetter(
-        value = "created",
+        value = "deleted",
         nulls = Nulls.SKIP
     )
-    public Builder created(List<AdminPointsBoost> created) {
-      this.created.clear();
-      this.created.addAll(created);
+    public Builder deleted(List<DeletedResource> deleted) {
+      this.deleted.clear();
+      this.deleted.addAll(deleted);
       return this;
     }
 
-    public Builder addCreated(AdminPointsBoost created) {
-      this.created.add(created);
+    public Builder addDeleted(DeletedResource deleted) {
+      this.deleted.add(deleted);
       return this;
     }
 
-    public Builder addAllCreated(List<AdminPointsBoost> created) {
-      if (created != null) {
-        this.created.addAll(created);
+    public Builder addAllDeleted(List<DeletedResource> deleted) {
+      if (deleted != null) {
+        this.deleted.addAll(deleted);
       }
       return this;
     }
 
     /**
-     * <p>Array of issues encountered during boost creation.</p>
+     * <p>Array of issues encountered during level deletion.</p>
      */
     @JsonSetter(
         value = "issues",
@@ -155,8 +155,8 @@ public final class CreatePointsBoostsResponse {
       return this;
     }
 
-    public CreatePointsBoostsResponse build() {
-      return new CreatePointsBoostsResponse(created, issues, additionalProperties);
+    public DeletePointsLevelsResponse build() {
+      return new DeletePointsLevelsResponse(deleted, issues, additionalProperties);
     }
   }
 }

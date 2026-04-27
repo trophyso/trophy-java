@@ -8,7 +8,7 @@ package so.trophy.types;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.lang.String;
 
-public enum CreatedPointsBoostStatus {
+public enum AdminPointsBoostStatus {
   ACTIVE("active"),
 
   SCHEDULED("scheduled"),
@@ -17,7 +17,7 @@ public enum CreatedPointsBoostStatus {
 
   private final String value;
 
-  CreatedPointsBoostStatus(String value) {
+  AdminPointsBoostStatus(String value) {
     this.value = value;
   }
 

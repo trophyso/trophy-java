@@ -17,6 +17,7 @@ import so.trophy.core.ObjectMappers;
 import java.lang.Object;
 import java.lang.String;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -24,14 +25,14 @@ import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(
-    builder = CreatedPointsBoost.Builder.class
+    builder = AdminPointsBoost.Builder.class
 )
-public final class CreatedPointsBoost {
+public final class AdminPointsBoost {
   private final String id;
 
   private final String name;
 
-  private final CreatedPointsBoostStatus status;
+  private final AdminPointsBoostStatus status;
 
   private final String start;
 
@@ -39,14 +40,17 @@ public final class CreatedPointsBoost {
 
   private final double multiplier;
 
-  private final CreatedPointsBoostRounding rounding;
+  private final AdminPointsBoostRounding rounding;
 
-  private final String userId;
+  private final Optional<String> userId;
+
+  private final Optional<List<AdminPointsBoostUserAttributesItem>> userAttributes;
 
   private final Map<String, Object> additionalProperties;
 
-  private CreatedPointsBoost(String id, String name, CreatedPointsBoostStatus status, String start,
-      Optional<String> end, double multiplier, CreatedPointsBoostRounding rounding, String userId,
+  private AdminPointsBoost(String id, String name, AdminPointsBoostStatus status, String start,
+      Optional<String> end, double multiplier, AdminPointsBoostRounding rounding,
+      Optional<String> userId, Optional<List<AdminPointsBoostUserAttributesItem>> userAttributes,
       Map<String, Object> additionalProperties) {
     this.id = id;
     this.name = name;
@@ -56,11 +60,12 @@ public final class CreatedPointsBoost {
     this.multiplier = multiplier;
     this.rounding = rounding;
     this.userId = userId;
+    this.userAttributes = userAttributes;
     this.additionalProperties = additionalProperties;
   }
 
   /**
-   * @return The UUID of the created boost.
+   * @return The UUID of the boost.
    */
   @JsonProperty("id")
   public String getId() {
@@ -79,7 +84,7 @@ public final class CreatedPointsBoost {
    * @return The status of the boost.
    */
   @JsonProperty("status")
-  public CreatedPointsBoostStatus getStatus() {
+  public AdminPointsBoostStatus getStatus() {
     return status;
   }
 
@@ -111,22 +116,30 @@ public final class CreatedPointsBoost {
    * @return How boosted points are rounded.
    */
   @JsonProperty("rounding")
-  public CreatedPointsBoostRounding getRounding() {
+  public AdminPointsBoostRounding getRounding() {
     return rounding;
   }
 
   /**
-   * @return The customer ID of the user the boost was created for.
+   * @return The customer ID of the user the boost was created for, or null for global/attribute-filtered boosts.
    */
   @JsonProperty("userId")
-  public String getUserId() {
+  public Optional<String> getUserId() {
     return userId;
+  }
+
+  /**
+   * @return User attribute filters applied to the boost. Only present for non-user-specific boosts (i.e. when <code>userId</code> is null). Empty array if no filters are set.
+   */
+  @JsonProperty("userAttributes")
+  public Optional<List<AdminPointsBoostUserAttributesItem>> getUserAttributes() {
+    return userAttributes;
   }
 
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
-    return other instanceof CreatedPointsBoost && equalTo((CreatedPointsBoost) other);
+    return other instanceof AdminPointsBoost && equalTo((AdminPointsBoost) other);
   }
 
   @JsonAnyGetter
@@ -134,13 +147,13 @@ public final class CreatedPointsBoost {
     return this.additionalProperties;
   }
 
-  private boolean equalTo(CreatedPointsBoost other) {
-    return id.equals(other.id) && name.equals(other.name) && status.equals(other.status) && start.equals(other.start) && end.equals(other.end) && multiplier == other.multiplier && rounding.equals(other.rounding) && userId.equals(other.userId);
+  private boolean equalTo(AdminPointsBoost other) {
+    return id.equals(other.id) && name.equals(other.name) && status.equals(other.status) && start.equals(other.start) && end.equals(other.end) && multiplier == other.multiplier && rounding.equals(other.rounding) && userId.equals(other.userId) && userAttributes.equals(other.userAttributes);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.name, this.status, this.start, this.end, this.multiplier, this.rounding, this.userId);
+    return Objects.hash(this.id, this.name, this.status, this.start, this.end, this.multiplier, this.rounding, this.userId, this.userAttributes);
   }
 
   @java.lang.Override
@@ -154,11 +167,11 @@ public final class CreatedPointsBoost {
 
   public interface IdStage {
     /**
-     * <p>The UUID of the created boost.</p>
+     * <p>The UUID of the boost.</p>
      */
     NameStage id(@NotNull String id);
 
-    Builder from(CreatedPointsBoost other);
+    Builder from(AdminPointsBoost other);
   }
 
   public interface NameStage {
@@ -172,7 +185,7 @@ public final class CreatedPointsBoost {
     /**
      * <p>The status of the boost.</p>
      */
-    StartStage status(@NotNull CreatedPointsBoostStatus status);
+    StartStage status(@NotNull AdminPointsBoostStatus status);
   }
 
   public interface StartStage {
@@ -193,18 +206,11 @@ public final class CreatedPointsBoost {
     /**
      * <p>How boosted points are rounded.</p>
      */
-    UserIdStage rounding(@NotNull CreatedPointsBoostRounding rounding);
-  }
-
-  public interface UserIdStage {
-    /**
-     * <p>The customer ID of the user the boost was created for.</p>
-     */
-    _FinalStage userId(@NotNull String userId);
+    _FinalStage rounding(@NotNull AdminPointsBoostRounding rounding);
   }
 
   public interface _FinalStage {
-    CreatedPointsBoost build();
+    AdminPointsBoost build();
 
     /**
      * <p>The end date (YYYY-MM-DD) or null if no end date.</p>
@@ -212,25 +218,41 @@ public final class CreatedPointsBoost {
     _FinalStage end(Optional<String> end);
 
     _FinalStage end(String end);
+
+    /**
+     * <p>The customer ID of the user the boost was created for, or null for global/attribute-filtered boosts.</p>
+     */
+    _FinalStage userId(Optional<String> userId);
+
+    _FinalStage userId(String userId);
+
+    /**
+     * <p>User attribute filters applied to the boost. Only present for non-user-specific boosts (i.e. when <code>userId</code> is null). Empty array if no filters are set.</p>
+     */
+    _FinalStage userAttributes(Optional<List<AdminPointsBoostUserAttributesItem>> userAttributes);
+
+    _FinalStage userAttributes(List<AdminPointsBoostUserAttributesItem> userAttributes);
   }
 
   @JsonIgnoreProperties(
       ignoreUnknown = true
   )
-  public static final class Builder implements IdStage, NameStage, StatusStage, StartStage, MultiplierStage, RoundingStage, UserIdStage, _FinalStage {
+  public static final class Builder implements IdStage, NameStage, StatusStage, StartStage, MultiplierStage, RoundingStage, _FinalStage {
     private String id;
 
     private String name;
 
-    private CreatedPointsBoostStatus status;
+    private AdminPointsBoostStatus status;
 
     private String start;
 
     private double multiplier;
 
-    private CreatedPointsBoostRounding rounding;
+    private AdminPointsBoostRounding rounding;
 
-    private String userId;
+    private Optional<List<AdminPointsBoostUserAttributesItem>> userAttributes = Optional.empty();
+
+    private Optional<String> userId = Optional.empty();
 
     private Optional<String> end = Optional.empty();
 
@@ -241,7 +263,7 @@ public final class CreatedPointsBoost {
     }
 
     @java.lang.Override
-    public Builder from(CreatedPointsBoost other) {
+    public Builder from(AdminPointsBoost other) {
       id(other.getId());
       name(other.getName());
       status(other.getStatus());
@@ -250,12 +272,13 @@ public final class CreatedPointsBoost {
       multiplier(other.getMultiplier());
       rounding(other.getRounding());
       userId(other.getUserId());
+      userAttributes(other.getUserAttributes());
       return this;
     }
 
     /**
-     * <p>The UUID of the created boost.</p>
-     * <p>The UUID of the created boost.</p>
+     * <p>The UUID of the boost.</p>
+     * <p>The UUID of the boost.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -284,7 +307,7 @@ public final class CreatedPointsBoost {
      */
     @java.lang.Override
     @JsonSetter("status")
-    public StartStage status(@NotNull CreatedPointsBoostStatus status) {
+    public StartStage status(@NotNull AdminPointsBoostStatus status) {
       this.status = Objects.requireNonNull(status, "status must not be null");
       return this;
     }
@@ -320,20 +343,55 @@ public final class CreatedPointsBoost {
      */
     @java.lang.Override
     @JsonSetter("rounding")
-    public UserIdStage rounding(@NotNull CreatedPointsBoostRounding rounding) {
+    public _FinalStage rounding(@NotNull AdminPointsBoostRounding rounding) {
       this.rounding = Objects.requireNonNull(rounding, "rounding must not be null");
       return this;
     }
 
     /**
-     * <p>The customer ID of the user the boost was created for.</p>
-     * <p>The customer ID of the user the boost was created for.</p>
+     * <p>User attribute filters applied to the boost. Only present for non-user-specific boosts (i.e. when <code>userId</code> is null). Empty array if no filters are set.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    @JsonSetter("userId")
-    public _FinalStage userId(@NotNull String userId) {
-      this.userId = Objects.requireNonNull(userId, "userId must not be null");
+    public _FinalStage userAttributes(List<AdminPointsBoostUserAttributesItem> userAttributes) {
+      this.userAttributes = Optional.ofNullable(userAttributes);
+      return this;
+    }
+
+    /**
+     * <p>User attribute filters applied to the boost. Only present for non-user-specific boosts (i.e. when <code>userId</code> is null). Empty array if no filters are set.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "userAttributes",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage userAttributes(
+        Optional<List<AdminPointsBoostUserAttributesItem>> userAttributes) {
+      this.userAttributes = userAttributes;
+      return this;
+    }
+
+    /**
+     * <p>The customer ID of the user the boost was created for, or null for global/attribute-filtered boosts.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage userId(String userId) {
+      this.userId = Optional.ofNullable(userId);
+      return this;
+    }
+
+    /**
+     * <p>The customer ID of the user the boost was created for, or null for global/attribute-filtered boosts.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "userId",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage userId(Optional<String> userId) {
+      this.userId = userId;
       return this;
     }
 
@@ -361,8 +419,8 @@ public final class CreatedPointsBoost {
     }
 
     @java.lang.Override
-    public CreatedPointsBoost build() {
-      return new CreatedPointsBoost(id, name, status, start, end, multiplier, rounding, userId, additionalProperties);
+    public AdminPointsBoost build() {
+      return new AdminPointsBoost(id, name, status, start, end, multiplier, rounding, userId, userAttributes, additionalProperties);
     }
   }
 }
