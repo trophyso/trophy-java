@@ -16,6 +16,8 @@ import java.util.function.Supplier;
 public final class RequestOptions {
   private final String apiKey;
 
+  private final String tenantId;
+
   private final Optional<Integer> timeout;
 
   private final TimeUnit timeoutTimeUnit;
@@ -24,9 +26,11 @@ public final class RequestOptions {
 
   private final Map<String, Supplier<String>> headerSuppliers;
 
-  private RequestOptions(String apiKey, Optional<Integer> timeout, TimeUnit timeoutTimeUnit,
-      Map<String, String> headers, Map<String, Supplier<String>> headerSuppliers) {
+  private RequestOptions(String apiKey, String tenantId, Optional<Integer> timeout,
+      TimeUnit timeoutTimeUnit, Map<String, String> headers,
+      Map<String, Supplier<String>> headerSuppliers) {
     this.apiKey = apiKey;
+    this.tenantId = tenantId;
     this.timeout = timeout;
     this.timeoutTimeUnit = timeoutTimeUnit;
     this.headers = headers;
@@ -46,6 +50,9 @@ public final class RequestOptions {
     if (this.apiKey != null) {
       headers.put("X-API-KEY", this.apiKey);
     }
+    if (this.tenantId != null) {
+      headers.put("Tenant-ID", this.tenantId);
+    }
     headers.putAll(this.headers);
     this.headerSuppliers.forEach((key, supplier) ->  {
       headers.put(key, supplier.get());
@@ -60,6 +67,8 @@ public final class RequestOptions {
   public static class Builder {
     private String apiKey = null;
 
+    private String tenantId = null;
+
     private Optional<Integer> timeout = Optional.empty();
 
     private TimeUnit timeoutTimeUnit = TimeUnit.SECONDS;
@@ -70,6 +79,11 @@ public final class RequestOptions {
 
     public Builder apiKey(String apiKey) {
       this.apiKey = apiKey;
+      return this;
+    }
+
+    public Builder tenantId(String tenantId) {
+      this.tenantId = tenantId;
       return this;
     }
 
@@ -95,7 +109,7 @@ public final class RequestOptions {
     }
 
     public RequestOptions build() {
-      return new RequestOptions(apiKey, timeout, timeoutTimeUnit, headers, headerSuppliers);
+      return new RequestOptions(apiKey, tenantId, timeout, timeoutTimeUnit, headers, headerSuppliers);
     }
   }
 }

@@ -13,6 +13,7 @@ import so.trophy.resources.admin.leaderboards.AsyncLeaderboardsClient;
 import so.trophy.resources.admin.metrics.AsyncMetricsClient;
 import so.trophy.resources.admin.points.AsyncPointsClient;
 import so.trophy.resources.admin.streaks.AsyncStreaksClient;
+import so.trophy.resources.admin.tenants.AsyncTenantsClient;
 
 public class AsyncAdminClient {
   protected final ClientOptions clientOptions;
@@ -25,6 +26,8 @@ public class AsyncAdminClient {
 
   protected final Supplier<AsyncStreaksClient> streaksClient;
 
+  protected final Supplier<AsyncTenantsClient> tenantsClient;
+
   protected final Supplier<AsyncPointsClient> pointsClient;
 
   public AsyncAdminClient(ClientOptions clientOptions) {
@@ -33,6 +36,7 @@ public class AsyncAdminClient {
     this.metricsClient = Suppliers.memoize(() -> new AsyncMetricsClient(clientOptions));
     this.leaderboardsClient = Suppliers.memoize(() -> new AsyncLeaderboardsClient(clientOptions));
     this.streaksClient = Suppliers.memoize(() -> new AsyncStreaksClient(clientOptions));
+    this.tenantsClient = Suppliers.memoize(() -> new AsyncTenantsClient(clientOptions));
     this.pointsClient = Suppliers.memoize(() -> new AsyncPointsClient(clientOptions));
   }
 
@@ -50,6 +54,10 @@ public class AsyncAdminClient {
 
   public AsyncStreaksClient streaks() {
     return this.streaksClient.get();
+  }
+
+  public AsyncTenantsClient tenants() {
+    return this.tenantsClient.get();
   }
 
   public AsyncPointsClient points() {

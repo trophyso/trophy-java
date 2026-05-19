@@ -121,7 +121,7 @@ public final class AdminPointsBoost {
   }
 
   /**
-   * @return The customer ID of the user the boost was created for, or null for global/attribute-filtered boosts.
+   * @return The ID of the user the boost was created for, or null for global/attribute-filtered boosts.
    */
   @JsonProperty("userId")
   public Optional<String> getUserId() {
@@ -220,7 +220,7 @@ public final class AdminPointsBoost {
     _FinalStage end(String end);
 
     /**
-     * <p>The customer ID of the user the boost was created for, or null for global/attribute-filtered boosts.</p>
+     * <p>The ID of the user the boost was created for, or null for global/attribute-filtered boosts.</p>
      */
     _FinalStage userId(Optional<String> userId);
 
@@ -373,7 +373,7 @@ public final class AdminPointsBoost {
     }
 
     /**
-     * <p>The customer ID of the user the boost was created for, or null for global/attribute-filtered boosts.</p>
+     * <p>The ID of the user the boost was created for, or null for global/attribute-filtered boosts.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -383,7 +383,7 @@ public final class AdminPointsBoost {
     }
 
     /**
-     * <p>The customer ID of the user the boost was created for, or null for global/attribute-filtered boosts.</p>
+     * <p>The ID of the user the boost was created for, or null for global/attribute-filtered boosts.</p>
      */
     @java.lang.Override
     @JsonSetter(

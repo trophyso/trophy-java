@@ -13,6 +13,7 @@ import so.trophy.resources.admin.leaderboards.LeaderboardsClient;
 import so.trophy.resources.admin.metrics.MetricsClient;
 import so.trophy.resources.admin.points.PointsClient;
 import so.trophy.resources.admin.streaks.StreaksClient;
+import so.trophy.resources.admin.tenants.TenantsClient;
 
 public class AdminClient {
   protected final ClientOptions clientOptions;
@@ -25,6 +26,8 @@ public class AdminClient {
 
   protected final Supplier<StreaksClient> streaksClient;
 
+  protected final Supplier<TenantsClient> tenantsClient;
+
   protected final Supplier<PointsClient> pointsClient;
 
   public AdminClient(ClientOptions clientOptions) {
@@ -33,6 +36,7 @@ public class AdminClient {
     this.metricsClient = Suppliers.memoize(() -> new MetricsClient(clientOptions));
     this.leaderboardsClient = Suppliers.memoize(() -> new LeaderboardsClient(clientOptions));
     this.streaksClient = Suppliers.memoize(() -> new StreaksClient(clientOptions));
+    this.tenantsClient = Suppliers.memoize(() -> new TenantsClient(clientOptions));
     this.pointsClient = Suppliers.memoize(() -> new PointsClient(clientOptions));
   }
 
@@ -50,6 +54,10 @@ public class AdminClient {
 
   public StreaksClient streaks() {
     return this.streaksClient.get();
+  }
+
+  public TenantsClient tenants() {
+    return this.tenantsClient.get();
   }
 
   public PointsClient points() {

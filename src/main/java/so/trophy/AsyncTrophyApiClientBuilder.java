@@ -22,6 +22,8 @@ public class AsyncTrophyApiClientBuilder {
 
   private String apiKey = null;
 
+  private String tenantId = null;
+
   private Environment environment = Environment.PRODUCTION;
 
   private OkHttpClient httpClient;
@@ -31,6 +33,14 @@ public class AsyncTrophyApiClientBuilder {
    */
   public AsyncTrophyApiClientBuilder apiKey(String apiKey) {
     this.apiKey = apiKey;
+    return this;
+  }
+
+  /**
+   * Sets tenantId
+   */
+  public AsyncTrophyApiClientBuilder tenantId(String tenantId) {
+    this.tenantId = tenantId;
     return this;
   }
 
@@ -80,6 +90,7 @@ public class AsyncTrophyApiClientBuilder {
     ClientOptions.Builder builder = ClientOptions.builder();
     setEnvironment(builder);
     setAuthentication(builder);
+    setCustomHeaders(builder);
     setHttpClient(builder);
     setTimeouts(builder);
     setRetries(builder);
@@ -117,6 +128,27 @@ public class AsyncTrophyApiClientBuilder {
    */
   protected void setAuthentication(ClientOptions.Builder builder) {
     builder.addHeader("X-API-KEY", this.apiKey);
+  }
+
+  /**
+   * Override this method to add or modify custom headers.
+   * This method is called during client options construction to set up custom headers defined in the API.
+   *
+   * @param builder The ClientOptions.Builder to configure
+   *
+   * Example:
+   * <pre>{@code
+   * &#64;Override
+   * protected void setCustomHeaders(ClientOptions.Builder builder) {
+   *     super.setCustomHeaders(builder); // Keep existing headers
+   *     builder.addHeader("X-Trace-ID", generateTraceId());
+   * }
+   * }</pre>
+   */
+  protected void setCustomHeaders(ClientOptions.Builder builder) {
+    if (this.tenantId != null) {
+      builder.addHeader("Tenant-ID", this.tenantId);
+    }
   }
 
   /**
