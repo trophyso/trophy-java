@@ -37,7 +37,7 @@ public interface ILeaderboardResponse {
 
   Optional<String> getEnd();
 
-  int getMaxParticipants();
+  Optional<Integer> getMaxParticipants();
 
   Optional<LeaderboardResponseRunUnit> getRunUnit();
 

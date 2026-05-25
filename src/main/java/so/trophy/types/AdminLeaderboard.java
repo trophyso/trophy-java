@@ -46,7 +46,7 @@ public final class AdminLeaderboard {
 
   private final Optional<String> pointsSystemId;
 
-  private final int maxParticipants;
+  private final Optional<Integer> maxParticipants;
 
   private final String start;
 
@@ -62,9 +62,10 @@ public final class AdminLeaderboard {
 
   private AdminLeaderboard(String id, String name, String key, Optional<String> description,
       AdminLeaderboardStatus status, AdminLeaderboardRankBy rankBy, Optional<String> metricId,
-      Optional<String> pointsSystemId, int maxParticipants, String start, Optional<String> end,
-      List<String> breakdownAttributes, Optional<AdminLeaderboardRunUnit> runUnit,
-      Optional<Integer> runInterval, Map<String, Object> additionalProperties) {
+      Optional<String> pointsSystemId, Optional<Integer> maxParticipants, String start,
+      Optional<String> end, List<String> breakdownAttributes,
+      Optional<AdminLeaderboardRunUnit> runUnit, Optional<Integer> runInterval,
+      Map<String, Object> additionalProperties) {
     this.id = id;
     this.name = name;
     this.key = key;
@@ -150,7 +151,7 @@ public final class AdminLeaderboard {
    * @return The maximum number of participants.
    */
   @JsonProperty("maxParticipants")
-  public int getMaxParticipants() {
+  public Optional<Integer> getMaxParticipants() {
     return maxParticipants;
   }
 
@@ -206,7 +207,7 @@ public final class AdminLeaderboard {
   }
 
   private boolean equalTo(AdminLeaderboard other) {
-    return id.equals(other.id) && name.equals(other.name) && key.equals(other.key) && description.equals(other.description) && status.equals(other.status) && rankBy.equals(other.rankBy) && metricId.equals(other.metricId) && pointsSystemId.equals(other.pointsSystemId) && maxParticipants == other.maxParticipants && start.equals(other.start) && end.equals(other.end) && breakdownAttributes.equals(other.breakdownAttributes) && runUnit.equals(other.runUnit) && runInterval.equals(other.runInterval);
+    return id.equals(other.id) && name.equals(other.name) && key.equals(other.key) && description.equals(other.description) && status.equals(other.status) && rankBy.equals(other.rankBy) && metricId.equals(other.metricId) && pointsSystemId.equals(other.pointsSystemId) && maxParticipants.equals(other.maxParticipants) && start.equals(other.start) && end.equals(other.end) && breakdownAttributes.equals(other.breakdownAttributes) && runUnit.equals(other.runUnit) && runInterval.equals(other.runInterval);
   }
 
   @java.lang.Override
@@ -257,14 +258,7 @@ public final class AdminLeaderboard {
     /**
      * <p>What the leaderboard ranks by.</p>
      */
-    MaxParticipantsStage rankBy(@NotNull AdminLeaderboardRankBy rankBy);
-  }
-
-  public interface MaxParticipantsStage {
-    /**
-     * <p>The maximum number of participants.</p>
-     */
-    StartStage maxParticipants(int maxParticipants);
+    StartStage rankBy(@NotNull AdminLeaderboardRankBy rankBy);
   }
 
   public interface StartStage {
@@ -297,6 +291,13 @@ public final class AdminLeaderboard {
     _FinalStage pointsSystemId(Optional<String> pointsSystemId);
 
     _FinalStage pointsSystemId(String pointsSystemId);
+
+    /**
+     * <p>The maximum number of participants.</p>
+     */
+    _FinalStage maxParticipants(Optional<Integer> maxParticipants);
+
+    _FinalStage maxParticipants(Integer maxParticipants);
 
     /**
      * <p>The optional leaderboard end date in YYYY-MM-DD format.</p>
@@ -332,7 +333,7 @@ public final class AdminLeaderboard {
   @JsonIgnoreProperties(
       ignoreUnknown = true
   )
-  public static final class Builder implements IdStage, NameStage, KeyStage, StatusStage, RankByStage, MaxParticipantsStage, StartStage, _FinalStage {
+  public static final class Builder implements IdStage, NameStage, KeyStage, StatusStage, RankByStage, StartStage, _FinalStage {
     private String id;
 
     private String name;
@@ -343,8 +344,6 @@ public final class AdminLeaderboard {
 
     private AdminLeaderboardRankBy rankBy;
 
-    private int maxParticipants;
-
     private String start;
 
     private Optional<Integer> runInterval = Optional.empty();
@@ -354,6 +353,8 @@ public final class AdminLeaderboard {
     private List<String> breakdownAttributes = new ArrayList<>();
 
     private Optional<String> end = Optional.empty();
+
+    private Optional<Integer> maxParticipants = Optional.empty();
 
     private Optional<String> pointsSystemId = Optional.empty();
 
@@ -441,20 +442,8 @@ public final class AdminLeaderboard {
      */
     @java.lang.Override
     @JsonSetter("rankBy")
-    public MaxParticipantsStage rankBy(@NotNull AdminLeaderboardRankBy rankBy) {
+    public StartStage rankBy(@NotNull AdminLeaderboardRankBy rankBy) {
       this.rankBy = Objects.requireNonNull(rankBy, "rankBy must not be null");
-      return this;
-    }
-
-    /**
-     * <p>The maximum number of participants.</p>
-     * <p>The maximum number of participants.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    @JsonSetter("maxParticipants")
-    public StartStage maxParticipants(int maxParticipants) {
-      this.maxParticipants = maxParticipants;
       return this;
     }
 
@@ -572,6 +561,29 @@ public final class AdminLeaderboard {
     )
     public _FinalStage end(Optional<String> end) {
       this.end = end;
+      return this;
+    }
+
+    /**
+     * <p>The maximum number of participants.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage maxParticipants(Integer maxParticipants) {
+      this.maxParticipants = Optional.ofNullable(maxParticipants);
+      return this;
+    }
+
+    /**
+     * <p>The maximum number of participants.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "maxParticipants",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage maxParticipants(Optional<Integer> maxParticipants) {
+      this.maxParticipants = maxParticipants;
       return this;
     }
 

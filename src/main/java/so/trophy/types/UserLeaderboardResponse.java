@@ -60,7 +60,7 @@ public final class UserLeaderboardResponse implements IUserLeaderboardResponse, 
 
   private final Optional<String> end;
 
-  private final int maxParticipants;
+  private final Optional<Integer> maxParticipants;
 
   private final Optional<LeaderboardResponseRunUnit> runUnit;
 
@@ -73,8 +73,9 @@ public final class UserLeaderboardResponse implements IUserLeaderboardResponse, 
       Optional<String> breakdownAttribute, List<String> breakdownAttributes,
       Optional<String> metricKey, Optional<String> metricName, Optional<String> pointsSystemKey,
       Optional<String> pointsSystemName, Optional<String> description, String start,
-      Optional<String> end, int maxParticipants, Optional<LeaderboardResponseRunUnit> runUnit,
-      Optional<Integer> runInterval, Map<String, Object> additionalProperties) {
+      Optional<String> end, Optional<Integer> maxParticipants,
+      Optional<LeaderboardResponseRunUnit> runUnit, Optional<Integer> runInterval,
+      Map<String, Object> additionalProperties) {
     this.rank = rank;
     this.value = value;
     this.id = id;
@@ -235,7 +236,7 @@ public final class UserLeaderboardResponse implements IUserLeaderboardResponse, 
    */
   @JsonProperty("maxParticipants")
   @java.lang.Override
-  public int getMaxParticipants() {
+  public Optional<Integer> getMaxParticipants() {
     return maxParticipants;
   }
 
@@ -268,7 +269,7 @@ public final class UserLeaderboardResponse implements IUserLeaderboardResponse, 
   }
 
   private boolean equalTo(UserLeaderboardResponse other) {
-    return rank.equals(other.rank) && value.equals(other.value) && id.equals(other.id) && name.equals(other.name) && key.equals(other.key) && rankBy.equals(other.rankBy) && breakdownAttribute.equals(other.breakdownAttribute) && breakdownAttributes.equals(other.breakdownAttributes) && metricKey.equals(other.metricKey) && metricName.equals(other.metricName) && pointsSystemKey.equals(other.pointsSystemKey) && pointsSystemName.equals(other.pointsSystemName) && description.equals(other.description) && start.equals(other.start) && end.equals(other.end) && maxParticipants == other.maxParticipants && runUnit.equals(other.runUnit) && runInterval.equals(other.runInterval);
+    return rank.equals(other.rank) && value.equals(other.value) && id.equals(other.id) && name.equals(other.name) && key.equals(other.key) && rankBy.equals(other.rankBy) && breakdownAttribute.equals(other.breakdownAttribute) && breakdownAttributes.equals(other.breakdownAttributes) && metricKey.equals(other.metricKey) && metricName.equals(other.metricName) && pointsSystemKey.equals(other.pointsSystemKey) && pointsSystemName.equals(other.pointsSystemName) && description.equals(other.description) && start.equals(other.start) && end.equals(other.end) && maxParticipants.equals(other.maxParticipants) && runUnit.equals(other.runUnit) && runInterval.equals(other.runInterval);
   }
 
   @java.lang.Override
@@ -319,14 +320,7 @@ public final class UserLeaderboardResponse implements IUserLeaderboardResponse, 
     /**
      * <p>The start date of the leaderboard in YYYY-MM-DD format.</p>
      */
-    MaxParticipantsStage start(@NotNull String start);
-  }
-
-  public interface MaxParticipantsStage {
-    /**
-     * <p>The maximum number of participants in the leaderboard.</p>
-     */
-    _FinalStage maxParticipants(int maxParticipants);
+    _FinalStage start(@NotNull String start);
   }
 
   public interface _FinalStage {
@@ -405,6 +399,13 @@ public final class UserLeaderboardResponse implements IUserLeaderboardResponse, 
     _FinalStage end(String end);
 
     /**
+     * <p>The maximum number of participants in the leaderboard.</p>
+     */
+    _FinalStage maxParticipants(Optional<Integer> maxParticipants);
+
+    _FinalStage maxParticipants(Integer maxParticipants);
+
+    /**
      * <p>The repetition type for recurring leaderboards, or null for one-time leaderboards.</p>
      */
     _FinalStage runUnit(Optional<LeaderboardResponseRunUnit> runUnit);
@@ -422,7 +423,7 @@ public final class UserLeaderboardResponse implements IUserLeaderboardResponse, 
   @JsonIgnoreProperties(
       ignoreUnknown = true
   )
-  public static final class Builder implements IdStage, NameStage, KeyStage, RankByStage, StartStage, MaxParticipantsStage, _FinalStage {
+  public static final class Builder implements IdStage, NameStage, KeyStage, RankByStage, StartStage, _FinalStage {
     private String id;
 
     private String name;
@@ -433,11 +434,11 @@ public final class UserLeaderboardResponse implements IUserLeaderboardResponse, 
 
     private String start;
 
-    private int maxParticipants;
-
     private Optional<Integer> runInterval = Optional.empty();
 
     private Optional<LeaderboardResponseRunUnit> runUnit = Optional.empty();
+
+    private Optional<Integer> maxParticipants = Optional.empty();
 
     private Optional<String> end = Optional.empty();
 
@@ -543,20 +544,8 @@ public final class UserLeaderboardResponse implements IUserLeaderboardResponse, 
      */
     @java.lang.Override
     @JsonSetter("start")
-    public MaxParticipantsStage start(@NotNull String start) {
+    public _FinalStage start(@NotNull String start) {
       this.start = Objects.requireNonNull(start, "start must not be null");
-      return this;
-    }
-
-    /**
-     * <p>The maximum number of participants in the leaderboard.</p>
-     * <p>The maximum number of participants in the leaderboard.</p>
-     * @return Reference to {@code this} so that method calls can be chained together.
-     */
-    @java.lang.Override
-    @JsonSetter("maxParticipants")
-    public _FinalStage maxParticipants(int maxParticipants) {
-      this.maxParticipants = maxParticipants;
       return this;
     }
 
@@ -603,6 +592,29 @@ public final class UserLeaderboardResponse implements IUserLeaderboardResponse, 
     )
     public _FinalStage runUnit(Optional<LeaderboardResponseRunUnit> runUnit) {
       this.runUnit = runUnit;
+      return this;
+    }
+
+    /**
+     * <p>The maximum number of participants in the leaderboard.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage maxParticipants(Integer maxParticipants) {
+      this.maxParticipants = Optional.ofNullable(maxParticipants);
+      return this;
+    }
+
+    /**
+     * <p>The maximum number of participants in the leaderboard.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "maxParticipants",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage maxParticipants(Optional<Integer> maxParticipants) {
+      this.maxParticipants = maxParticipants;
       return this;
     }
 
