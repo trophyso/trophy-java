@@ -305,14 +305,14 @@ public class AsyncUsersClient {
   }
 
   /**
-   * Get a user's rank, value, and history for a specific leaderboard.
+   * Get a user's rank, value, and daily ranking history for a specific leaderboard.
    */
   public CompletableFuture<UserLeaderboardResponseWithHistory> leaderboard(String id, String key) {
     return this.rawClient.leaderboard(id, key).thenApply(response -> response.body());
   }
 
   /**
-   * Get a user's rank, value, and history for a specific leaderboard.
+   * Get a user's rank, value, and daily ranking history for a specific leaderboard.
    */
   public CompletableFuture<UserLeaderboardResponseWithHistory> leaderboard(String id, String key,
       UsersLeaderboardRequest request) {
@@ -320,7 +320,7 @@ public class AsyncUsersClient {
   }
 
   /**
-   * Get a user's rank, value, and history for a specific leaderboard.
+   * Get a user's rank, value, and daily ranking history for a specific leaderboard.
    */
   public CompletableFuture<UserLeaderboardResponseWithHistory> leaderboard(String id, String key,
       UsersLeaderboardRequest request, RequestOptions requestOptions) {

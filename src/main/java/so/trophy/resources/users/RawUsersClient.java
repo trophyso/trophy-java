@@ -863,7 +863,7 @@ public class RawUsersClient {
             }
 
             /**
-             * Get a user's rank, value, and history for a specific leaderboard.
+             * Get a user's rank, value, and daily ranking history for a specific leaderboard.
              */
             public TrophyApiHttpResponse<UserLeaderboardResponseWithHistory> leaderboard(String id,
                 String key) {
@@ -871,7 +871,7 @@ public class RawUsersClient {
             }
 
             /**
-             * Get a user's rank, value, and history for a specific leaderboard.
+             * Get a user's rank, value, and daily ranking history for a specific leaderboard.
              */
             public TrophyApiHttpResponse<UserLeaderboardResponseWithHistory> leaderboard(String id,
                 String key, UsersLeaderboardRequest request) {
@@ -879,7 +879,7 @@ public class RawUsersClient {
             }
 
             /**
-             * Get a user's rank, value, and history for a specific leaderboard.
+             * Get a user's rank, value, and daily ranking history for a specific leaderboard.
              */
             public TrophyApiHttpResponse<UserLeaderboardResponseWithHistory> leaderboard(String id,
                 String key, UsersLeaderboardRequest request, RequestOptions requestOptions) {

@@ -261,7 +261,7 @@ public final class UserLeaderboardResponseWithHistory implements IUserLeaderboar
   }
 
   /**
-   * @return An array of events showing the user's rank and value changes over time.
+   * @return An array of daily change events showing the user's rank and value over time.
    */
   @JsonProperty("history")
   public List<LeaderboardEvent> getHistory() {
@@ -431,7 +431,7 @@ public final class UserLeaderboardResponseWithHistory implements IUserLeaderboar
     _FinalStage runInterval(Integer runInterval);
 
     /**
-     * <p>An array of events showing the user's rank and value changes over time.</p>
+     * <p>An array of daily change events showing the user's rank and value over time.</p>
      */
     _FinalStage history(List<LeaderboardEvent> history);
 
@@ -573,7 +573,7 @@ public final class UserLeaderboardResponseWithHistory implements IUserLeaderboar
     }
 
     /**
-     * <p>An array of events showing the user's rank and value changes over time.</p>
+     * <p>An array of daily change events showing the user's rank and value over time.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -585,7 +585,7 @@ public final class UserLeaderboardResponseWithHistory implements IUserLeaderboar
     }
 
     /**
-     * <p>An array of events showing the user's rank and value changes over time.</p>
+     * <p>An array of daily change events showing the user's rank and value over time.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -595,7 +595,7 @@ public final class UserLeaderboardResponseWithHistory implements IUserLeaderboar
     }
 
     /**
-     * <p>An array of events showing the user's rank and value changes over time.</p>
+     * <p>An array of daily change events showing the user's rank and value over time.</p>
      */
     @java.lang.Override
     @JsonSetter(

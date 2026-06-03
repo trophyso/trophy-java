@@ -49,7 +49,7 @@ public final class UsersLeaderboardRequest {
   }
 
   /**
-   * @return The number of events to return in the history array.
+   * @return The number of days to return in the leaderboard history for the user.
    */
   @JsonProperty("numEvents")
   public Optional<Integer> getNumEvents() {
@@ -123,7 +123,7 @@ public final class UsersLeaderboardRequest {
     }
 
     /**
-     * <p>The number of events to return in the history array.</p>
+     * <p>The number of days to return in the leaderboard history for the user.</p>
      */
     @JsonSetter(
         value = "numEvents",
