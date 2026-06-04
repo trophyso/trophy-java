@@ -32,10 +32,8 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.jetbrains.annotations.NotNull;
 import so.trophy.resources.streaks.requests.StreaksListRequest;
-import so.trophy.resources.streaks.requests.StreaksRankingsRequest;
 import so.trophy.types.BulkStreakResponseItem;
 import so.trophy.types.ErrorBody;
-import so.trophy.types.StreakRankingUser;
 
 public class AsyncRawStreaksClient {
   protected final ClientOptions clientOptions;
@@ -115,79 +113,4 @@ public class AsyncRawStreaksClient {
       });
       return future;
     }
-
-    /**
-     * Get the top users by streak length (active or longest).
-     */
-    public CompletableFuture<TrophyApiHttpResponse<List<StreakRankingUser>>> rankings() {
-      return rankings(StreaksRankingsRequest.builder().build());
-    }
-
-    /**
-     * Get the top users by streak length (active or longest).
-     */
-    public CompletableFuture<TrophyApiHttpResponse<List<StreakRankingUser>>> rankings(
-        StreaksRankingsRequest request) {
-      return rankings(request,null);
-    }
-
-    /**
-     * Get the top users by streak length (active or longest).
-     */
-    public CompletableFuture<TrophyApiHttpResponse<List<StreakRankingUser>>> rankings(
-        StreaksRankingsRequest request, RequestOptions requestOptions) {
-      HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
-
-        .addPathSegments("streaks/rankings");if (request.getLimit().isPresent()) {
-          QueryStringMapper.addQueryParameter(httpUrl, "limit", request.getLimit().get(), false);
-        }
-        if (request.getType().isPresent()) {
-          QueryStringMapper.addQueryParameter(httpUrl, "type", request.getType().get(), false);
-        }
-        Request.Builder _requestBuilder = new Request.Builder()
-          .url(httpUrl.build())
-          .method("GET", null)
-          .headers(Headers.of(clientOptions.headers(requestOptions)))
-          .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-          client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<TrophyApiHttpResponse<List<StreakRankingUser>>> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-          @Override
-          public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-            try (ResponseBody responseBody = response.body()) {
-              if (response.isSuccessful()) {
-                future.complete(new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<StreakRankingUser>>() {}), response));
-                return;
-              }
-              String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-              try {
-                switch (response.code()) {
-                  case 401:future.completeExceptionally(new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response));
-                  return;
-                  case 422:future.completeExceptionally(new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response));
-                  return;
-                }
-              }
-              catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-              }
-              future.completeExceptionally(new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response));
-              return;
-            }
-            catch (IOException e) {
-              future.completeExceptionally(new TrophyApiException("Network error executing HTTP request", e));
-            }
-          }
-
-          @Override
-          public void onFailure(@NotNull Call call, @NotNull IOException e) {
-            future.completeExceptionally(new TrophyApiException("Network error executing HTTP request", e));
-          }
-        });
-        return future;
-      }
-    }
+  }

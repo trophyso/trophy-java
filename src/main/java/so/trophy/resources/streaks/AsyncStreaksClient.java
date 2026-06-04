@@ -10,9 +10,7 @@ import so.trophy.core.RequestOptions;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import so.trophy.resources.streaks.requests.StreaksListRequest;
-import so.trophy.resources.streaks.requests.StreaksRankingsRequest;
 import so.trophy.types.BulkStreakResponseItem;
-import so.trophy.types.StreakRankingUser;
 
 public class AsyncStreaksClient {
   protected final ClientOptions clientOptions;
@@ -51,27 +49,5 @@ public class AsyncStreaksClient {
   public CompletableFuture<List<BulkStreakResponseItem>> list(StreaksListRequest request,
       RequestOptions requestOptions) {
     return this.rawClient.list(request, requestOptions).thenApply(response -> response.body());
-  }
-
-  /**
-   * Get the top users by streak length (active or longest).
-   */
-  public CompletableFuture<List<StreakRankingUser>> rankings() {
-    return this.rawClient.rankings().thenApply(response -> response.body());
-  }
-
-  /**
-   * Get the top users by streak length (active or longest).
-   */
-  public CompletableFuture<List<StreakRankingUser>> rankings(StreaksRankingsRequest request) {
-    return this.rawClient.rankings(request).thenApply(response -> response.body());
-  }
-
-  /**
-   * Get the top users by streak length (active or longest).
-   */
-  public CompletableFuture<List<StreakRankingUser>> rankings(StreaksRankingsRequest request,
-      RequestOptions requestOptions) {
-    return this.rawClient.rankings(request, requestOptions).thenApply(response -> response.body());
   }
 }

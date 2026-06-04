@@ -27,10 +27,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import so.trophy.resources.streaks.requests.StreaksListRequest;
-import so.trophy.resources.streaks.requests.StreaksRankingsRequest;
 import so.trophy.types.BulkStreakResponseItem;
 import so.trophy.types.ErrorBody;
-import so.trophy.types.StreakRankingUser;
 
 public class RawStreaksClient {
   protected final ClientOptions clientOptions;
@@ -94,63 +92,4 @@ public class RawStreaksClient {
         throw new TrophyApiException("Network error executing HTTP request", e);
       }
     }
-
-    /**
-     * Get the top users by streak length (active or longest).
-     */
-    public TrophyApiHttpResponse<List<StreakRankingUser>> rankings() {
-      return rankings(StreaksRankingsRequest.builder().build());
-    }
-
-    /**
-     * Get the top users by streak length (active or longest).
-     */
-    public TrophyApiHttpResponse<List<StreakRankingUser>> rankings(StreaksRankingsRequest request) {
-      return rankings(request,null);
-    }
-
-    /**
-     * Get the top users by streak length (active or longest).
-     */
-    public TrophyApiHttpResponse<List<StreakRankingUser>> rankings(StreaksRankingsRequest request,
-        RequestOptions requestOptions) {
-      HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
-
-        .addPathSegments("streaks/rankings");if (request.getLimit().isPresent()) {
-          QueryStringMapper.addQueryParameter(httpUrl, "limit", request.getLimit().get(), false);
-        }
-        if (request.getType().isPresent()) {
-          QueryStringMapper.addQueryParameter(httpUrl, "type", request.getType().get(), false);
-        }
-        Request.Builder _requestBuilder = new Request.Builder()
-          .url(httpUrl.build())
-          .method("GET", null)
-          .headers(Headers.of(clientOptions.headers(requestOptions)))
-          .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-          client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-          ResponseBody responseBody = response.body();
-          if (response.isSuccessful()) {
-            return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), new TypeReference<List<StreakRankingUser>>() {}), response);
-          }
-          String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-          try {
-            switch (response.code()) {
-              case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
-              case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
-            }
-          }
-          catch (JsonProcessingException ignored) {
-            // unable to map error response, throwing generic error
-          }
-          throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
-        }
-        catch (IOException e) {
-          throw new TrophyApiException("Network error executing HTTP request", e);
-        }
-      }
-    }
+  }

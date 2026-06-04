@@ -9,9 +9,7 @@ import so.trophy.core.ClientOptions;
 import so.trophy.core.RequestOptions;
 import java.util.List;
 import so.trophy.resources.streaks.requests.StreaksListRequest;
-import so.trophy.resources.streaks.requests.StreaksRankingsRequest;
 import so.trophy.types.BulkStreakResponseItem;
-import so.trophy.types.StreakRankingUser;
 
 public class StreaksClient {
   protected final ClientOptions clientOptions;
@@ -50,27 +48,5 @@ public class StreaksClient {
   public List<BulkStreakResponseItem> list(StreaksListRequest request,
       RequestOptions requestOptions) {
     return this.rawClient.list(request, requestOptions).body();
-  }
-
-  /**
-   * Get the top users by streak length (active or longest).
-   */
-  public List<StreakRankingUser> rankings() {
-    return this.rawClient.rankings().body();
-  }
-
-  /**
-   * Get the top users by streak length (active or longest).
-   */
-  public List<StreakRankingUser> rankings(StreaksRankingsRequest request) {
-    return this.rawClient.rankings(request).body();
-  }
-
-  /**
-   * Get the top users by streak length (active or longest).
-   */
-  public List<StreakRankingUser> rankings(StreaksRankingsRequest request,
-      RequestOptions requestOptions) {
-    return this.rawClient.rankings(request, requestOptions).body();
   }
 }

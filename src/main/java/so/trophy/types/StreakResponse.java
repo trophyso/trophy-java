@@ -17,6 +17,8 @@ import so.trophy.core.ObjectMappers;
 import java.lang.Integer;
 import java.lang.Object;
 import java.lang.String;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,9 +51,9 @@ public final class StreakResponse implements IBaseStreakResponse {
 
   private final Optional<Integer> freezeAutoEarnAmount;
 
-  private final Optional<List<StreakResponseStreakHistoryItem>> streakHistory;
+  private final Optional<OffsetDateTime> extended;
 
-  private final Optional<Integer> rank;
+  private final List<StreakResponseStreakHistoryItem> streakHistory;
 
   private final Map<String, Object> additionalProperties;
 
@@ -59,7 +61,7 @@ public final class StreakResponse implements IBaseStreakResponse {
       Optional<String> periodStart, Optional<String> periodEnd, Optional<String> expires,
       Optional<Integer> freezes, Optional<Integer> maxFreezes,
       Optional<Integer> freezeAutoEarnInterval, Optional<Integer> freezeAutoEarnAmount,
-      Optional<List<StreakResponseStreakHistoryItem>> streakHistory, Optional<Integer> rank,
+      Optional<OffsetDateTime> extended, List<StreakResponseStreakHistoryItem> streakHistory,
       Map<String, Object> additionalProperties) {
     this.length = length;
     this.frequency = frequency;
@@ -71,8 +73,8 @@ public final class StreakResponse implements IBaseStreakResponse {
     this.maxFreezes = maxFreezes;
     this.freezeAutoEarnInterval = freezeAutoEarnInterval;
     this.freezeAutoEarnAmount = freezeAutoEarnAmount;
+    this.extended = extended;
     this.streakHistory = streakHistory;
-    this.rank = rank;
     this.additionalProperties = additionalProperties;
   }
 
@@ -167,19 +169,19 @@ public final class StreakResponse implements IBaseStreakResponse {
   }
 
   /**
-   * @return A list of the user's past streak periods up through the current period. Each period includes the start and end dates and the length of the streak.
+   * @return The timestamp the streak was most recently extended. Null if the streak is not active.
    */
-  @JsonProperty("streakHistory")
-  public Optional<List<StreakResponseStreakHistoryItem>> getStreakHistory() {
-    return streakHistory;
+  @JsonProperty("extended")
+  public Optional<OffsetDateTime> getExtended() {
+    return extended;
   }
 
   /**
-   * @return Deprecated. The user's rank across all users. Null if the user has no active streak.
+   * @return A list of the user's past streak periods up through the current period. Each period includes the start and end dates and the length of the streak.
    */
-  @JsonProperty("rank")
-  public Optional<Integer> getRank() {
-    return rank;
+  @JsonProperty("streakHistory")
+  public List<StreakResponseStreakHistoryItem> getStreakHistory() {
+    return streakHistory;
   }
 
   @java.lang.Override
@@ -194,12 +196,12 @@ public final class StreakResponse implements IBaseStreakResponse {
   }
 
   private boolean equalTo(StreakResponse other) {
-    return length == other.length && frequency.equals(other.frequency) && started.equals(other.started) && periodStart.equals(other.periodStart) && periodEnd.equals(other.periodEnd) && expires.equals(other.expires) && freezes.equals(other.freezes) && maxFreezes.equals(other.maxFreezes) && freezeAutoEarnInterval.equals(other.freezeAutoEarnInterval) && freezeAutoEarnAmount.equals(other.freezeAutoEarnAmount) && streakHistory.equals(other.streakHistory) && rank.equals(other.rank);
+    return length == other.length && frequency.equals(other.frequency) && started.equals(other.started) && periodStart.equals(other.periodStart) && periodEnd.equals(other.periodEnd) && expires.equals(other.expires) && freezes.equals(other.freezes) && maxFreezes.equals(other.maxFreezes) && freezeAutoEarnInterval.equals(other.freezeAutoEarnInterval) && freezeAutoEarnAmount.equals(other.freezeAutoEarnAmount) && extended.equals(other.extended) && streakHistory.equals(other.streakHistory);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.length, this.frequency, this.started, this.periodStart, this.periodEnd, this.expires, this.freezes, this.maxFreezes, this.freezeAutoEarnInterval, this.freezeAutoEarnAmount, this.streakHistory, this.rank);
+    return Objects.hash(this.length, this.frequency, this.started, this.periodStart, this.periodEnd, this.expires, this.freezes, this.maxFreezes, this.freezeAutoEarnInterval, this.freezeAutoEarnAmount, this.extended, this.streakHistory);
   }
 
   @java.lang.Override
@@ -287,18 +289,20 @@ public final class StreakResponse implements IBaseStreakResponse {
     _FinalStage freezeAutoEarnAmount(Integer freezeAutoEarnAmount);
 
     /**
-     * <p>A list of the user's past streak periods up through the current period. Each period includes the start and end dates and the length of the streak.</p>
+     * <p>The timestamp the streak was most recently extended. Null if the streak is not active.</p>
      */
-    _FinalStage streakHistory(Optional<List<StreakResponseStreakHistoryItem>> streakHistory);
+    _FinalStage extended(Optional<OffsetDateTime> extended);
 
-    _FinalStage streakHistory(List<StreakResponseStreakHistoryItem> streakHistory);
+    _FinalStage extended(OffsetDateTime extended);
 
     /**
-     * <p>Deprecated. The user's rank across all users. Null if the user has no active streak.</p>
+     * <p>A list of the user's past streak periods up through the current period. Each period includes the start and end dates and the length of the streak.</p>
      */
-    _FinalStage rank(Optional<Integer> rank);
+    _FinalStage streakHistory(List<StreakResponseStreakHistoryItem> streakHistory);
 
-    _FinalStage rank(Integer rank);
+    _FinalStage addStreakHistory(StreakResponseStreakHistoryItem streakHistory);
+
+    _FinalStage addAllStreakHistory(List<StreakResponseStreakHistoryItem> streakHistory);
   }
 
   @JsonIgnoreProperties(
@@ -309,9 +313,9 @@ public final class StreakResponse implements IBaseStreakResponse {
 
     private StreakFrequency frequency;
 
-    private Optional<Integer> rank = Optional.empty();
+    private List<StreakResponseStreakHistoryItem> streakHistory = new ArrayList<>();
 
-    private Optional<List<StreakResponseStreakHistoryItem>> streakHistory = Optional.empty();
+    private Optional<OffsetDateTime> extended = Optional.empty();
 
     private Optional<Integer> freezeAutoEarnAmount = Optional.empty();
 
@@ -347,8 +351,8 @@ public final class StreakResponse implements IBaseStreakResponse {
       maxFreezes(other.getMaxFreezes());
       freezeAutoEarnInterval(other.getFreezeAutoEarnInterval());
       freezeAutoEarnAmount(other.getFreezeAutoEarnAmount());
+      extended(other.getExtended());
       streakHistory(other.getStreakHistory());
-      rank(other.getRank());
       return this;
     }
 
@@ -377,25 +381,14 @@ public final class StreakResponse implements IBaseStreakResponse {
     }
 
     /**
-     * <p>Deprecated. The user's rank across all users. Null if the user has no active streak.</p>
+     * <p>A list of the user's past streak periods up through the current period. Each period includes the start and end dates and the length of the streak.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage rank(Integer rank) {
-      this.rank = Optional.ofNullable(rank);
-      return this;
-    }
-
-    /**
-     * <p>Deprecated. The user's rank across all users. Null if the user has no active streak.</p>
-     */
-    @java.lang.Override
-    @JsonSetter(
-        value = "rank",
-        nulls = Nulls.SKIP
-    )
-    public _FinalStage rank(Optional<Integer> rank) {
-      this.rank = rank;
+    public _FinalStage addAllStreakHistory(List<StreakResponseStreakHistoryItem> streakHistory) {
+      if (streakHistory != null) {
+        this.streakHistory.addAll(streakHistory);
+      }
       return this;
     }
 
@@ -404,8 +397,8 @@ public final class StreakResponse implements IBaseStreakResponse {
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
-    public _FinalStage streakHistory(List<StreakResponseStreakHistoryItem> streakHistory) {
-      this.streakHistory = Optional.ofNullable(streakHistory);
+    public _FinalStage addStreakHistory(StreakResponseStreakHistoryItem streakHistory) {
+      this.streakHistory.add(streakHistory);
       return this;
     }
 
@@ -417,9 +410,32 @@ public final class StreakResponse implements IBaseStreakResponse {
         value = "streakHistory",
         nulls = Nulls.SKIP
     )
-    public _FinalStage streakHistory(
-        Optional<List<StreakResponseStreakHistoryItem>> streakHistory) {
-      this.streakHistory = streakHistory;
+    public _FinalStage streakHistory(List<StreakResponseStreakHistoryItem> streakHistory) {
+      this.streakHistory.clear();
+      this.streakHistory.addAll(streakHistory);
+      return this;
+    }
+
+    /**
+     * <p>The timestamp the streak was most recently extended. Null if the streak is not active.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage extended(OffsetDateTime extended) {
+      this.extended = Optional.ofNullable(extended);
+      return this;
+    }
+
+    /**
+     * <p>The timestamp the streak was most recently extended. Null if the streak is not active.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "extended",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage extended(Optional<OffsetDateTime> extended) {
+      this.extended = extended;
       return this;
     }
 
@@ -609,7 +625,7 @@ public final class StreakResponse implements IBaseStreakResponse {
 
     @java.lang.Override
     public StreakResponse build() {
-      return new StreakResponse(length, frequency, started, periodStart, periodEnd, expires, freezes, maxFreezes, freezeAutoEarnInterval, freezeAutoEarnAmount, streakHistory, rank, additionalProperties);
+      return new StreakResponse(length, frequency, started, periodStart, periodEnd, expires, freezes, maxFreezes, freezeAutoEarnInterval, freezeAutoEarnAmount, extended, streakHistory, additionalProperties);
     }
   }
 }
