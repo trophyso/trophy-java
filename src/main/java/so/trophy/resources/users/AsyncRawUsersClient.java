@@ -16,6 +16,7 @@ import so.trophy.core.TrophyApiApiException;
 import so.trophy.core.TrophyApiException;
 import so.trophy.core.TrophyApiHttpResponse;
 import so.trophy.errors.BadRequestError;
+import so.trophy.errors.ForbiddenError;
 import so.trophy.errors.NotFoundError;
 import so.trophy.errors.UnauthorizedError;
 import so.trophy.errors.UnprocessableEntityError;
@@ -437,7 +438,7 @@ public class AsyncRawUsersClient {
   }
 
   /**
-   * Update a user's notification preferences.
+   * Update a user's notification and streak preferences. Streak preferences require streak customization to be enabled in your Trophy dashboard settings.
    */
   public CompletableFuture<TrophyApiHttpResponse<UserPreferencesResponse>> updatePreferences(
       String id) {
@@ -445,7 +446,7 @@ public class AsyncRawUsersClient {
   }
 
   /**
-   * Update a user's notification preferences.
+   * Update a user's notification and streak preferences. Streak preferences require streak customization to be enabled in your Trophy dashboard settings.
    */
   public CompletableFuture<TrophyApiHttpResponse<UserPreferencesResponse>> updatePreferences(
       String id, UpdateUserPreferencesRequest request) {
@@ -453,7 +454,7 @@ public class AsyncRawUsersClient {
   }
 
   /**
-   * Update a user's notification preferences.
+   * Update a user's notification and streak preferences. Streak preferences require streak customization to be enabled in your Trophy dashboard settings.
    */
   public CompletableFuture<TrophyApiHttpResponse<UserPreferencesResponse>> updatePreferences(
       String id, UpdateUserPreferencesRequest request, RequestOptions requestOptions) {
@@ -494,6 +495,8 @@ public class AsyncRawUsersClient {
           try {
             switch (response.code()) {
               case 401:future.completeExceptionally(new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response));
+              return;
+              case 403:future.completeExceptionally(new ForbiddenError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response));
               return;
               case 404:future.completeExceptionally(new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response));
               return;

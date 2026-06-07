@@ -16,6 +16,7 @@ import so.trophy.core.TrophyApiApiException;
 import so.trophy.core.TrophyApiException;
 import so.trophy.core.TrophyApiHttpResponse;
 import so.trophy.errors.BadRequestError;
+import so.trophy.errors.ForbiddenError;
 import so.trophy.errors.NotFoundError;
 import so.trophy.errors.UnauthorizedError;
 import so.trophy.errors.UnprocessableEntityError;
@@ -348,14 +349,14 @@ public class RawUsersClient {
   }
 
   /**
-   * Update a user's notification preferences.
+   * Update a user's notification and streak preferences. Streak preferences require streak customization to be enabled in your Trophy dashboard settings.
    */
   public TrophyApiHttpResponse<UserPreferencesResponse> updatePreferences(String id) {
     return updatePreferences(id,UpdateUserPreferencesRequest.builder().build());
   }
 
   /**
-   * Update a user's notification preferences.
+   * Update a user's notification and streak preferences. Streak preferences require streak customization to be enabled in your Trophy dashboard settings.
    */
   public TrophyApiHttpResponse<UserPreferencesResponse> updatePreferences(String id,
       UpdateUserPreferencesRequest request) {
@@ -363,7 +364,7 @@ public class RawUsersClient {
   }
 
   /**
-   * Update a user's notification preferences.
+   * Update a user's notification and streak preferences. Streak preferences require streak customization to be enabled in your Trophy dashboard settings.
    */
   public TrophyApiHttpResponse<UserPreferencesResponse> updatePreferences(String id,
       UpdateUserPreferencesRequest request, RequestOptions requestOptions) {
@@ -400,6 +401,7 @@ public class RawUsersClient {
       try {
         switch (response.code()) {
           case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
+          case 403:throw new ForbiddenError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
           case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
           case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
         }

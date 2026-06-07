@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import so.trophy.types.NotificationPreferences;
+import so.trophy.types.StreakPreferences;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(
@@ -29,17 +30,25 @@ import so.trophy.types.NotificationPreferences;
 public final class UpdateUserPreferencesRequest {
   private final Optional<NotificationPreferences> notifications;
 
+  private final Optional<StreakPreferences> streak;
+
   private final Map<String, Object> additionalProperties;
 
   private UpdateUserPreferencesRequest(Optional<NotificationPreferences> notifications,
-      Map<String, Object> additionalProperties) {
+      Optional<StreakPreferences> streak, Map<String, Object> additionalProperties) {
     this.notifications = notifications;
+    this.streak = streak;
     this.additionalProperties = additionalProperties;
   }
 
   @JsonProperty("notifications")
   public Optional<NotificationPreferences> getNotifications() {
     return notifications;
+  }
+
+  @JsonProperty("streak")
+  public Optional<StreakPreferences> getStreak() {
+    return streak;
   }
 
   @java.lang.Override
@@ -54,12 +63,12 @@ public final class UpdateUserPreferencesRequest {
   }
 
   private boolean equalTo(UpdateUserPreferencesRequest other) {
-    return notifications.equals(other.notifications);
+    return notifications.equals(other.notifications) && streak.equals(other.streak);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.notifications);
+    return Objects.hash(this.notifications, this.streak);
   }
 
   @java.lang.Override
@@ -77,6 +86,8 @@ public final class UpdateUserPreferencesRequest {
   public static final class Builder {
     private Optional<NotificationPreferences> notifications = Optional.empty();
 
+    private Optional<StreakPreferences> streak = Optional.empty();
+
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
 
@@ -85,6 +96,7 @@ public final class UpdateUserPreferencesRequest {
 
     public Builder from(UpdateUserPreferencesRequest other) {
       notifications(other.getNotifications());
+      streak(other.getStreak());
       return this;
     }
 
@@ -102,8 +114,22 @@ public final class UpdateUserPreferencesRequest {
       return this;
     }
 
+    @JsonSetter(
+        value = "streak",
+        nulls = Nulls.SKIP
+    )
+    public Builder streak(Optional<StreakPreferences> streak) {
+      this.streak = streak;
+      return this;
+    }
+
+    public Builder streak(StreakPreferences streak) {
+      this.streak = Optional.ofNullable(streak);
+      return this;
+    }
+
     public UpdateUserPreferencesRequest build() {
-      return new UpdateUserPreferencesRequest(notifications, additionalProperties);
+      return new UpdateUserPreferencesRequest(notifications, streak, additionalProperties);
     }
   }
 }

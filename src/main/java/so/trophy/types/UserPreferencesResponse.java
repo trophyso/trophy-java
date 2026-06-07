@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import so.trophy.core.ObjectMappers;
 import java.lang.Object;
@@ -18,6 +19,7 @@ import java.lang.String;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
@@ -27,17 +29,25 @@ import org.jetbrains.annotations.NotNull;
 public final class UserPreferencesResponse {
   private final NotificationPreferences notifications;
 
+  private final Optional<StreakPreferences> streak;
+
   private final Map<String, Object> additionalProperties;
 
   private UserPreferencesResponse(NotificationPreferences notifications,
-      Map<String, Object> additionalProperties) {
+      Optional<StreakPreferences> streak, Map<String, Object> additionalProperties) {
     this.notifications = notifications;
+    this.streak = streak;
     this.additionalProperties = additionalProperties;
   }
 
   @JsonProperty("notifications")
   public NotificationPreferences getNotifications() {
     return notifications;
+  }
+
+  @JsonProperty("streak")
+  public Optional<StreakPreferences> getStreak() {
+    return streak;
   }
 
   @java.lang.Override
@@ -52,12 +62,12 @@ public final class UserPreferencesResponse {
   }
 
   private boolean equalTo(UserPreferencesResponse other) {
-    return notifications.equals(other.notifications);
+    return notifications.equals(other.notifications) && streak.equals(other.streak);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.notifications);
+    return Objects.hash(this.notifications, this.streak);
   }
 
   @java.lang.Override
@@ -77,6 +87,10 @@ public final class UserPreferencesResponse {
 
   public interface _FinalStage {
     UserPreferencesResponse build();
+
+    _FinalStage streak(Optional<StreakPreferences> streak);
+
+    _FinalStage streak(StreakPreferences streak);
   }
 
   @JsonIgnoreProperties(
@@ -84,6 +98,8 @@ public final class UserPreferencesResponse {
   )
   public static final class Builder implements NotificationsStage, _FinalStage {
     private NotificationPreferences notifications;
+
+    private Optional<StreakPreferences> streak = Optional.empty();
 
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
@@ -94,6 +110,7 @@ public final class UserPreferencesResponse {
     @java.lang.Override
     public Builder from(UserPreferencesResponse other) {
       notifications(other.getNotifications());
+      streak(other.getStreak());
       return this;
     }
 
@@ -105,8 +122,24 @@ public final class UserPreferencesResponse {
     }
 
     @java.lang.Override
+    public _FinalStage streak(StreakPreferences streak) {
+      this.streak = Optional.ofNullable(streak);
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter(
+        value = "streak",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage streak(Optional<StreakPreferences> streak) {
+      this.streak = streak;
+      return this;
+    }
+
+    @java.lang.Override
     public UserPreferencesResponse build() {
-      return new UserPreferencesResponse(notifications, additionalProperties);
+      return new UserPreferencesResponse(notifications, streak, additionalProperties);
     }
   }
 }
