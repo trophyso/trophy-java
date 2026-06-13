@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import so.trophy.core.ObjectMappers;
+import java.lang.Boolean;
 import java.lang.Object;
 import java.lang.String;
 import java.util.HashMap;
@@ -27,17 +28,29 @@ import java.util.Optional;
     builder = StreakPreferences.Builder.class
 )
 public final class StreakPreferences {
+  private final Optional<Boolean> enabled;
+
   private final Optional<StreakEvaluationModePreference> evaluationMode;
 
   private final Optional<List<StreakMetricPreference>> metrics;
 
   private final Map<String, Object> additionalProperties;
 
-  private StreakPreferences(Optional<StreakEvaluationModePreference> evaluationMode,
+  private StreakPreferences(Optional<Boolean> enabled,
+      Optional<StreakEvaluationModePreference> evaluationMode,
       Optional<List<StreakMetricPreference>> metrics, Map<String, Object> additionalProperties) {
+    this.enabled = enabled;
     this.evaluationMode = evaluationMode;
     this.metrics = metrics;
     this.additionalProperties = additionalProperties;
+  }
+
+  /**
+   * @return Whether streaks are calculated for this user. When false, the user's streak is always 0 and streak webhooks and notifications are not sent.
+   */
+  @JsonProperty("enabled")
+  public Optional<Boolean> getEnabled() {
+    return enabled;
   }
 
   @JsonProperty("evaluationMode")
@@ -65,12 +78,12 @@ public final class StreakPreferences {
   }
 
   private boolean equalTo(StreakPreferences other) {
-    return evaluationMode.equals(other.evaluationMode) && metrics.equals(other.metrics);
+    return enabled.equals(other.enabled) && evaluationMode.equals(other.evaluationMode) && metrics.equals(other.metrics);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.evaluationMode, this.metrics);
+    return Objects.hash(this.enabled, this.evaluationMode, this.metrics);
   }
 
   @java.lang.Override
@@ -86,6 +99,8 @@ public final class StreakPreferences {
       ignoreUnknown = true
   )
   public static final class Builder {
+    private Optional<Boolean> enabled = Optional.empty();
+
     private Optional<StreakEvaluationModePreference> evaluationMode = Optional.empty();
 
     private Optional<List<StreakMetricPreference>> metrics = Optional.empty();
@@ -97,8 +112,26 @@ public final class StreakPreferences {
     }
 
     public Builder from(StreakPreferences other) {
+      enabled(other.getEnabled());
       evaluationMode(other.getEvaluationMode());
       metrics(other.getMetrics());
+      return this;
+    }
+
+    /**
+     * <p>Whether streaks are calculated for this user. When false, the user's streak is always 0 and streak webhooks and notifications are not sent.</p>
+     */
+    @JsonSetter(
+        value = "enabled",
+        nulls = Nulls.SKIP
+    )
+    public Builder enabled(Optional<Boolean> enabled) {
+      this.enabled = enabled;
+      return this;
+    }
+
+    public Builder enabled(Boolean enabled) {
+      this.enabled = Optional.ofNullable(enabled);
       return this;
     }
 
@@ -134,7 +167,7 @@ public final class StreakPreferences {
     }
 
     public StreakPreferences build() {
-      return new StreakPreferences(evaluationMode, metrics, additionalProperties);
+      return new StreakPreferences(enabled, evaluationMode, metrics, additionalProperties);
     }
   }
 }
