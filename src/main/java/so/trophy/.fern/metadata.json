@@ -1,0 +1,13 @@
+{
+  "cliVersion": "5.62.0",
+  "generatorName": "fernapi/fern-java-sdk",
+  "generatorVersion": "4.11.0",
+  "generatorConfig": {
+    "enable-forward-compatible-enums": false,
+    "retry-status-codes": "legacy"
+  },
+  "originGitCommit": "b18b99972464468a34beacaa16d18002f3d55fce",
+  "originGitCommitIsDirty": false,
+  "invokedBy": "ci",
+  "ciProvider": "github"
+}
