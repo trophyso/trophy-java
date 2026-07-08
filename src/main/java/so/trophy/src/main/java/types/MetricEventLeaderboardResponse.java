@@ -66,6 +66,10 @@ public final class MetricEventLeaderboardResponse {
 
   private final String start;
 
+  private final Optional<String> startTime;
+
+  private final Optional<String> endTime;
+
   private final Optional<Integer> maxParticipants;
 
   private final Optional<LeaderboardResponseRunUnit> runUnit;
@@ -81,8 +85,9 @@ public final class MetricEventLeaderboardResponse {
       Optional<String> breakdownAttribute, List<String> breakdownAttributes,
       Optional<String> metricKey, Optional<String> metricName, Optional<String> pointsSystemKey,
       Optional<String> pointsSystemName, Optional<String> description, String start,
-      Optional<Integer> maxParticipants, Optional<LeaderboardResponseRunUnit> runUnit,
-      Optional<Integer> runInterval, Map<String, Object> additionalProperties) {
+      Optional<String> startTime, Optional<String> endTime, Optional<Integer> maxParticipants,
+      Optional<LeaderboardResponseRunUnit> runUnit, Optional<Integer> runInterval,
+      Map<String, Object> additionalProperties) {
     this.end = end;
     this.rank = rank;
     this.previousRank = previousRank;
@@ -101,6 +106,8 @@ public final class MetricEventLeaderboardResponse {
     this.pointsSystemName = pointsSystemName;
     this.description = description;
     this.start = start;
+    this.startTime = startTime;
+    this.endTime = endTime;
     this.maxParticipants = maxParticipants;
     this.runUnit = runUnit;
     this.runInterval = runInterval;
@@ -253,6 +260,22 @@ public final class MetricEventLeaderboardResponse {
   }
 
   /**
+   * @return When set, ranking only counts activity at or after this time of day in the user's timezone (HH:mm format).
+   */
+  @JsonProperty("startTime")
+  public Optional<String> getStartTime() {
+    return startTime;
+  }
+
+  /**
+   * @return When set, ranking only counts activity before this time of day in the user's timezone (HH:mm format).
+   */
+  @JsonProperty("endTime")
+  public Optional<String> getEndTime() {
+    return endTime;
+  }
+
+  /**
    * @return The maximum number of participants in the leaderboard.
    */
   @JsonProperty("maxParticipants")
@@ -288,12 +311,12 @@ public final class MetricEventLeaderboardResponse {
   }
 
   private boolean equalTo(MetricEventLeaderboardResponse other) {
-    return end.equals(other.end) && rank.equals(other.rank) && previousRank.equals(other.previousRank) && threshold == other.threshold && breakdownAttributeValue.equals(other.breakdownAttributeValue) && breakdownAttributeValues.equals(other.breakdownAttributeValues) && id.equals(other.id) && name.equals(other.name) && key.equals(other.key) && rankBy.equals(other.rankBy) && breakdownAttribute.equals(other.breakdownAttribute) && breakdownAttributes.equals(other.breakdownAttributes) && metricKey.equals(other.metricKey) && metricName.equals(other.metricName) && pointsSystemKey.equals(other.pointsSystemKey) && pointsSystemName.equals(other.pointsSystemName) && description.equals(other.description) && start.equals(other.start) && maxParticipants.equals(other.maxParticipants) && runUnit.equals(other.runUnit) && runInterval.equals(other.runInterval);
+    return end.equals(other.end) && rank.equals(other.rank) && previousRank.equals(other.previousRank) && threshold == other.threshold && breakdownAttributeValue.equals(other.breakdownAttributeValue) && breakdownAttributeValues.equals(other.breakdownAttributeValues) && id.equals(other.id) && name.equals(other.name) && key.equals(other.key) && rankBy.equals(other.rankBy) && breakdownAttribute.equals(other.breakdownAttribute) && breakdownAttributes.equals(other.breakdownAttributes) && metricKey.equals(other.metricKey) && metricName.equals(other.metricName) && pointsSystemKey.equals(other.pointsSystemKey) && pointsSystemName.equals(other.pointsSystemName) && description.equals(other.description) && start.equals(other.start) && startTime.equals(other.startTime) && endTime.equals(other.endTime) && maxParticipants.equals(other.maxParticipants) && runUnit.equals(other.runUnit) && runInterval.equals(other.runInterval);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.end, this.rank, this.previousRank, this.threshold, this.breakdownAttributeValue, this.breakdownAttributeValues, this.id, this.name, this.key, this.rankBy, this.breakdownAttribute, this.breakdownAttributes, this.metricKey, this.metricName, this.pointsSystemKey, this.pointsSystemName, this.description, this.start, this.maxParticipants, this.runUnit, this.runInterval);
+    return Objects.hash(this.end, this.rank, this.previousRank, this.threshold, this.breakdownAttributeValue, this.breakdownAttributeValues, this.id, this.name, this.key, this.rankBy, this.breakdownAttribute, this.breakdownAttributes, this.metricKey, this.metricName, this.pointsSystemKey, this.pointsSystemName, this.description, this.start, this.startTime, this.endTime, this.maxParticipants, this.runUnit, this.runInterval);
   }
 
   @java.lang.Override
@@ -445,6 +468,20 @@ public final class MetricEventLeaderboardResponse {
     _FinalStage description(String description);
 
     /**
+     * <p>When set, ranking only counts activity at or after this time of day in the user's timezone (HH:mm format).</p>
+     */
+    _FinalStage startTime(Optional<String> startTime);
+
+    _FinalStage startTime(String startTime);
+
+    /**
+     * <p>When set, ranking only counts activity before this time of day in the user's timezone (HH:mm format).</p>
+     */
+    _FinalStage endTime(Optional<String> endTime);
+
+    _FinalStage endTime(String endTime);
+
+    /**
      * <p>The maximum number of participants in the leaderboard.</p>
      */
     _FinalStage maxParticipants(Optional<Integer> maxParticipants);
@@ -487,6 +524,10 @@ public final class MetricEventLeaderboardResponse {
     private Optional<LeaderboardResponseRunUnit> runUnit = Optional.empty();
 
     private Optional<Integer> maxParticipants = Optional.empty();
+
+    private Optional<String> endTime = Optional.empty();
+
+    private Optional<String> startTime = Optional.empty();
 
     private Optional<String> description = Optional.empty();
 
@@ -538,6 +579,8 @@ public final class MetricEventLeaderboardResponse {
       pointsSystemName(other.getPointsSystemName());
       description(other.getDescription());
       start(other.getStart());
+      startTime(other.getStartTime());
+      endTime(other.getEndTime());
       maxParticipants(other.getMaxParticipants());
       runUnit(other.getRunUnit());
       runInterval(other.getRunInterval());
@@ -676,6 +719,52 @@ public final class MetricEventLeaderboardResponse {
     )
     public _FinalStage maxParticipants(Optional<Integer> maxParticipants) {
       this.maxParticipants = maxParticipants;
+      return this;
+    }
+
+    /**
+     * <p>When set, ranking only counts activity before this time of day in the user's timezone (HH:mm format).</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage endTime(String endTime) {
+      this.endTime = Optional.ofNullable(endTime);
+      return this;
+    }
+
+    /**
+     * <p>When set, ranking only counts activity before this time of day in the user's timezone (HH:mm format).</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "endTime",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage endTime(Optional<String> endTime) {
+      this.endTime = endTime;
+      return this;
+    }
+
+    /**
+     * <p>When set, ranking only counts activity at or after this time of day in the user's timezone (HH:mm format).</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage startTime(String startTime) {
+      this.startTime = Optional.ofNullable(startTime);
+      return this;
+    }
+
+    /**
+     * <p>When set, ranking only counts activity at or after this time of day in the user's timezone (HH:mm format).</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "startTime",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage startTime(Optional<String> startTime) {
+      this.startTime = startTime;
       return this;
     }
 
@@ -974,7 +1063,7 @@ public final class MetricEventLeaderboardResponse {
 
     @java.lang.Override
     public MetricEventLeaderboardResponse build() {
-      return new MetricEventLeaderboardResponse(end, rank, previousRank, threshold, breakdownAttributeValue, breakdownAttributeValues, id, name, key, rankBy, breakdownAttribute, breakdownAttributes, metricKey, metricName, pointsSystemKey, pointsSystemName, description, start, maxParticipants, runUnit, runInterval, additionalProperties);
+      return new MetricEventLeaderboardResponse(end, rank, previousRank, threshold, breakdownAttributeValue, breakdownAttributeValues, id, name, key, rankBy, breakdownAttribute, breakdownAttributes, metricKey, metricName, pointsSystemKey, pointsSystemName, description, start, startTime, endTime, maxParticipants, runUnit, runInterval, additionalProperties);
     }
 
     @java.lang.Override

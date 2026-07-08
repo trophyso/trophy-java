@@ -51,6 +51,10 @@ public final class UpdateLeaderboardRequestItem {
 
   private final Optional<String> end;
 
+  private final Optional<String> startTime;
+
+  private final Optional<String> endTime;
+
   private final Optional<List<String>> breakdownAttributes;
 
   private final Optional<UpdateLeaderboardRequestItemRunUnit> runUnit;
@@ -63,7 +67,8 @@ public final class UpdateLeaderboardRequestItem {
       Optional<String> description, Optional<UpdateLeaderboardRequestItemStatus> status,
       Optional<UpdateLeaderboardRequestItemRankBy> rankBy, Optional<String> metricId,
       Optional<String> pointsSystemId, Optional<Integer> maxParticipants, Optional<String> start,
-      Optional<String> end, Optional<List<String>> breakdownAttributes,
+      Optional<String> end, Optional<String> startTime, Optional<String> endTime,
+      Optional<List<String>> breakdownAttributes,
       Optional<UpdateLeaderboardRequestItemRunUnit> runUnit, Optional<Integer> runInterval,
       Map<String, Object> additionalProperties) {
     this.id = id;
@@ -77,6 +82,8 @@ public final class UpdateLeaderboardRequestItem {
     this.maxParticipants = maxParticipants;
     this.start = start;
     this.end = end;
+    this.startTime = startTime;
+    this.endTime = endTime;
     this.breakdownAttributes = breakdownAttributes;
     this.runUnit = runUnit;
     this.runInterval = runInterval;
@@ -172,6 +179,22 @@ public final class UpdateLeaderboardRequestItem {
   }
 
   /**
+   * @return The updated start of the daily ranking time window in HH:mm format, or <code>null</code> to clear it.
+   */
+  @JsonProperty("startTime")
+  public Optional<String> getStartTime() {
+    return startTime;
+  }
+
+  /**
+   * @return The updated end of the daily ranking time window in HH:mm format, or <code>null</code> to clear it.
+   */
+  @JsonProperty("endTime")
+  public Optional<String> getEndTime() {
+    return endTime;
+  }
+
+  /**
    * @return The updated breakdown attribute UUIDs.
    */
   @JsonProperty("breakdownAttributes")
@@ -207,12 +230,12 @@ public final class UpdateLeaderboardRequestItem {
   }
 
   private boolean equalTo(UpdateLeaderboardRequestItem other) {
-    return id.equals(other.id) && name.equals(other.name) && key.equals(other.key) && description.equals(other.description) && status.equals(other.status) && rankBy.equals(other.rankBy) && metricId.equals(other.metricId) && pointsSystemId.equals(other.pointsSystemId) && maxParticipants.equals(other.maxParticipants) && start.equals(other.start) && end.equals(other.end) && breakdownAttributes.equals(other.breakdownAttributes) && runUnit.equals(other.runUnit) && runInterval.equals(other.runInterval);
+    return id.equals(other.id) && name.equals(other.name) && key.equals(other.key) && description.equals(other.description) && status.equals(other.status) && rankBy.equals(other.rankBy) && metricId.equals(other.metricId) && pointsSystemId.equals(other.pointsSystemId) && maxParticipants.equals(other.maxParticipants) && start.equals(other.start) && end.equals(other.end) && startTime.equals(other.startTime) && endTime.equals(other.endTime) && breakdownAttributes.equals(other.breakdownAttributes) && runUnit.equals(other.runUnit) && runInterval.equals(other.runInterval);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.name, this.key, this.description, this.status, this.rankBy, this.metricId, this.pointsSystemId, this.maxParticipants, this.start, this.end, this.breakdownAttributes, this.runUnit, this.runInterval);
+    return Objects.hash(this.id, this.name, this.key, this.description, this.status, this.rankBy, this.metricId, this.pointsSystemId, this.maxParticipants, this.start, this.end, this.startTime, this.endTime, this.breakdownAttributes, this.runUnit, this.runInterval);
   }
 
   @java.lang.Override
@@ -311,6 +334,20 @@ public final class UpdateLeaderboardRequestItem {
     _FinalStage end(String end);
 
     /**
+     * <p>The updated start of the daily ranking time window in HH:mm format, or <code>null</code> to clear it.</p>
+     */
+    _FinalStage startTime(Optional<String> startTime);
+
+    _FinalStage startTime(String startTime);
+
+    /**
+     * <p>The updated end of the daily ranking time window in HH:mm format, or <code>null</code> to clear it.</p>
+     */
+    _FinalStage endTime(Optional<String> endTime);
+
+    _FinalStage endTime(String endTime);
+
+    /**
      * <p>The updated breakdown attribute UUIDs.</p>
      */
     _FinalStage breakdownAttributes(Optional<List<String>> breakdownAttributes);
@@ -343,6 +380,10 @@ public final class UpdateLeaderboardRequestItem {
     private Optional<UpdateLeaderboardRequestItemRunUnit> runUnit = Optional.empty();
 
     private Optional<List<String>> breakdownAttributes = Optional.empty();
+
+    private Optional<String> endTime = Optional.empty();
+
+    private Optional<String> startTime = Optional.empty();
 
     private Optional<String> end = Optional.empty();
 
@@ -383,6 +424,8 @@ public final class UpdateLeaderboardRequestItem {
       maxParticipants(other.getMaxParticipants());
       start(other.getStart());
       end(other.getEnd());
+      startTime(other.getStartTime());
+      endTime(other.getEndTime());
       breakdownAttributes(other.getBreakdownAttributes());
       runUnit(other.getRunUnit());
       runInterval(other.getRunInterval());
@@ -466,6 +509,52 @@ public final class UpdateLeaderboardRequestItem {
     )
     public _FinalStage breakdownAttributes(Optional<List<String>> breakdownAttributes) {
       this.breakdownAttributes = breakdownAttributes;
+      return this;
+    }
+
+    /**
+     * <p>The updated end of the daily ranking time window in HH:mm format, or <code>null</code> to clear it.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage endTime(String endTime) {
+      this.endTime = Optional.ofNullable(endTime);
+      return this;
+    }
+
+    /**
+     * <p>The updated end of the daily ranking time window in HH:mm format, or <code>null</code> to clear it.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "endTime",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage endTime(Optional<String> endTime) {
+      this.endTime = endTime;
+      return this;
+    }
+
+    /**
+     * <p>The updated start of the daily ranking time window in HH:mm format, or <code>null</code> to clear it.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage startTime(String startTime) {
+      this.startTime = Optional.ofNullable(startTime);
+      return this;
+    }
+
+    /**
+     * <p>The updated start of the daily ranking time window in HH:mm format, or <code>null</code> to clear it.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "startTime",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage startTime(Optional<String> startTime) {
+      this.startTime = startTime;
       return this;
     }
 
@@ -701,7 +790,7 @@ public final class UpdateLeaderboardRequestItem {
 
     @java.lang.Override
     public UpdateLeaderboardRequestItem build() {
-      return new UpdateLeaderboardRequestItem(id, name, key, description, status, rankBy, metricId, pointsSystemId, maxParticipants, start, end, breakdownAttributes, runUnit, runInterval, additionalProperties);
+      return new UpdateLeaderboardRequestItem(id, name, key, description, status, rankBy, metricId, pointsSystemId, maxParticipants, start, end, startTime, endTime, breakdownAttributes, runUnit, runInterval, additionalProperties);
     }
 
     @java.lang.Override

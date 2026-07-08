@@ -49,6 +49,10 @@ public final class CreateLeaderboardRequestItem {
 
   private final Optional<String> end;
 
+  private final Optional<String> startTime;
+
+  private final Optional<String> endTime;
+
   private final Optional<List<String>> breakdownAttributes;
 
   private final Optional<CreateLeaderboardRequestItemRunUnit> runUnit;
@@ -61,7 +65,8 @@ public final class CreateLeaderboardRequestItem {
       Optional<CreateLeaderboardRequestItemStatus> status,
       CreateLeaderboardRequestItemRankBy rankBy, Optional<String> metricId,
       Optional<String> pointsSystemId, Optional<Integer> maxParticipants, Optional<String> start,
-      Optional<String> end, Optional<List<String>> breakdownAttributes,
+      Optional<String> end, Optional<String> startTime, Optional<String> endTime,
+      Optional<List<String>> breakdownAttributes,
       Optional<CreateLeaderboardRequestItemRunUnit> runUnit, Optional<Integer> runInterval,
       Map<String, Object> additionalProperties) {
     this.name = name;
@@ -74,6 +79,8 @@ public final class CreateLeaderboardRequestItem {
     this.maxParticipants = maxParticipants;
     this.start = start;
     this.end = end;
+    this.startTime = startTime;
+    this.endTime = endTime;
     this.breakdownAttributes = breakdownAttributes;
     this.runUnit = runUnit;
     this.runInterval = runInterval;
@@ -161,6 +168,22 @@ public final class CreateLeaderboardRequestItem {
   }
 
   /**
+   * @return When set, ranking only counts activity at or after this time of day in the user's timezone (HH:mm format).
+   */
+  @JsonProperty("startTime")
+  public Optional<String> getStartTime() {
+    return startTime;
+  }
+
+  /**
+   * @return When set, ranking only counts activity before this time of day in the user's timezone (HH:mm format).
+   */
+  @JsonProperty("endTime")
+  public Optional<String> getEndTime() {
+    return endTime;
+  }
+
+  /**
    * @return The UUIDs of the active user attributes to break rankings down by.
    */
   @JsonProperty("breakdownAttributes")
@@ -196,12 +219,12 @@ public final class CreateLeaderboardRequestItem {
   }
 
   private boolean equalTo(CreateLeaderboardRequestItem other) {
-    return name.equals(other.name) && key.equals(other.key) && description.equals(other.description) && status.equals(other.status) && rankBy.equals(other.rankBy) && metricId.equals(other.metricId) && pointsSystemId.equals(other.pointsSystemId) && maxParticipants.equals(other.maxParticipants) && start.equals(other.start) && end.equals(other.end) && breakdownAttributes.equals(other.breakdownAttributes) && runUnit.equals(other.runUnit) && runInterval.equals(other.runInterval);
+    return name.equals(other.name) && key.equals(other.key) && description.equals(other.description) && status.equals(other.status) && rankBy.equals(other.rankBy) && metricId.equals(other.metricId) && pointsSystemId.equals(other.pointsSystemId) && maxParticipants.equals(other.maxParticipants) && start.equals(other.start) && end.equals(other.end) && startTime.equals(other.startTime) && endTime.equals(other.endTime) && breakdownAttributes.equals(other.breakdownAttributes) && runUnit.equals(other.runUnit) && runInterval.equals(other.runInterval);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.name, this.key, this.description, this.status, this.rankBy, this.metricId, this.pointsSystemId, this.maxParticipants, this.start, this.end, this.breakdownAttributes, this.runUnit, this.runInterval);
+    return Objects.hash(this.name, this.key, this.description, this.status, this.rankBy, this.metricId, this.pointsSystemId, this.maxParticipants, this.start, this.end, this.startTime, this.endTime, this.breakdownAttributes, this.runUnit, this.runInterval);
   }
 
   @java.lang.Override
@@ -293,6 +316,20 @@ public final class CreateLeaderboardRequestItem {
     _FinalStage end(String end);
 
     /**
+     * <p>When set, ranking only counts activity at or after this time of day in the user's timezone (HH:mm format).</p>
+     */
+    _FinalStage startTime(Optional<String> startTime);
+
+    _FinalStage startTime(String startTime);
+
+    /**
+     * <p>When set, ranking only counts activity before this time of day in the user's timezone (HH:mm format).</p>
+     */
+    _FinalStage endTime(Optional<String> endTime);
+
+    _FinalStage endTime(String endTime);
+
+    /**
      * <p>The UUIDs of the active user attributes to break rankings down by.</p>
      */
     _FinalStage breakdownAttributes(Optional<List<String>> breakdownAttributes);
@@ -330,6 +367,10 @@ public final class CreateLeaderboardRequestItem {
 
     private Optional<List<String>> breakdownAttributes = Optional.empty();
 
+    private Optional<String> endTime = Optional.empty();
+
+    private Optional<String> startTime = Optional.empty();
+
     private Optional<String> end = Optional.empty();
 
     private Optional<String> start = Optional.empty();
@@ -362,6 +403,8 @@ public final class CreateLeaderboardRequestItem {
       maxParticipants(other.getMaxParticipants());
       start(other.getStart());
       end(other.getEnd());
+      startTime(other.getStartTime());
+      endTime(other.getEndTime());
       breakdownAttributes(other.getBreakdownAttributes());
       runUnit(other.getRunUnit());
       runInterval(other.getRunInterval());
@@ -467,6 +510,52 @@ public final class CreateLeaderboardRequestItem {
     )
     public _FinalStage breakdownAttributes(Optional<List<String>> breakdownAttributes) {
       this.breakdownAttributes = breakdownAttributes;
+      return this;
+    }
+
+    /**
+     * <p>When set, ranking only counts activity before this time of day in the user's timezone (HH:mm format).</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage endTime(String endTime) {
+      this.endTime = Optional.ofNullable(endTime);
+      return this;
+    }
+
+    /**
+     * <p>When set, ranking only counts activity before this time of day in the user's timezone (HH:mm format).</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "endTime",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage endTime(Optional<String> endTime) {
+      this.endTime = endTime;
+      return this;
+    }
+
+    /**
+     * <p>When set, ranking only counts activity at or after this time of day in the user's timezone (HH:mm format).</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage startTime(String startTime) {
+      this.startTime = Optional.ofNullable(startTime);
+      return this;
+    }
+
+    /**
+     * <p>When set, ranking only counts activity at or after this time of day in the user's timezone (HH:mm format).</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "startTime",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage startTime(Optional<String> startTime) {
+      this.startTime = startTime;
       return this;
     }
 
@@ -633,7 +722,7 @@ public final class CreateLeaderboardRequestItem {
 
     @java.lang.Override
     public CreateLeaderboardRequestItem build() {
-      return new CreateLeaderboardRequestItem(name, key, description, status, rankBy, metricId, pointsSystemId, maxParticipants, start, end, breakdownAttributes, runUnit, runInterval, additionalProperties);
+      return new CreateLeaderboardRequestItem(name, key, description, status, rankBy, metricId, pointsSystemId, maxParticipants, start, end, startTime, endTime, breakdownAttributes, runUnit, runInterval, additionalProperties);
     }
 
     @java.lang.Override

@@ -52,6 +52,10 @@ public final class AdminLeaderboard {
 
   private final Optional<String> end;
 
+  private final Optional<String> startTime;
+
+  private final Optional<String> endTime;
+
   private final List<String> breakdownAttributes;
 
   private final Optional<AdminLeaderboardRunUnit> runUnit;
@@ -63,9 +67,9 @@ public final class AdminLeaderboard {
   private AdminLeaderboard(String id, String name, String key, Optional<String> description,
       AdminLeaderboardStatus status, AdminLeaderboardRankBy rankBy, Optional<String> metricId,
       Optional<String> pointsSystemId, Optional<Integer> maxParticipants, String start,
-      Optional<String> end, List<String> breakdownAttributes,
-      Optional<AdminLeaderboardRunUnit> runUnit, Optional<Integer> runInterval,
-      Map<String, Object> additionalProperties) {
+      Optional<String> end, Optional<String> startTime, Optional<String> endTime,
+      List<String> breakdownAttributes, Optional<AdminLeaderboardRunUnit> runUnit,
+      Optional<Integer> runInterval, Map<String, Object> additionalProperties) {
     this.id = id;
     this.name = name;
     this.key = key;
@@ -77,6 +81,8 @@ public final class AdminLeaderboard {
     this.maxParticipants = maxParticipants;
     this.start = start;
     this.end = end;
+    this.startTime = startTime;
+    this.endTime = endTime;
     this.breakdownAttributes = breakdownAttributes;
     this.runUnit = runUnit;
     this.runInterval = runInterval;
@@ -172,6 +178,22 @@ public final class AdminLeaderboard {
   }
 
   /**
+   * @return When set, ranking only counts activity at or after this time of day in the user's timezone (HH:mm format).
+   */
+  @JsonProperty("startTime")
+  public Optional<String> getStartTime() {
+    return startTime;
+  }
+
+  /**
+   * @return When set, ranking only counts activity before this time of day in the user's timezone (HH:mm format).
+   */
+  @JsonProperty("endTime")
+  public Optional<String> getEndTime() {
+    return endTime;
+  }
+
+  /**
    * @return The UUIDs of the user attributes used for ranking breakdowns.
    */
   @JsonProperty("breakdownAttributes")
@@ -207,12 +229,12 @@ public final class AdminLeaderboard {
   }
 
   private boolean equalTo(AdminLeaderboard other) {
-    return id.equals(other.id) && name.equals(other.name) && key.equals(other.key) && description.equals(other.description) && status.equals(other.status) && rankBy.equals(other.rankBy) && metricId.equals(other.metricId) && pointsSystemId.equals(other.pointsSystemId) && maxParticipants.equals(other.maxParticipants) && start.equals(other.start) && end.equals(other.end) && breakdownAttributes.equals(other.breakdownAttributes) && runUnit.equals(other.runUnit) && runInterval.equals(other.runInterval);
+    return id.equals(other.id) && name.equals(other.name) && key.equals(other.key) && description.equals(other.description) && status.equals(other.status) && rankBy.equals(other.rankBy) && metricId.equals(other.metricId) && pointsSystemId.equals(other.pointsSystemId) && maxParticipants.equals(other.maxParticipants) && start.equals(other.start) && end.equals(other.end) && startTime.equals(other.startTime) && endTime.equals(other.endTime) && breakdownAttributes.equals(other.breakdownAttributes) && runUnit.equals(other.runUnit) && runInterval.equals(other.runInterval);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.name, this.key, this.description, this.status, this.rankBy, this.metricId, this.pointsSystemId, this.maxParticipants, this.start, this.end, this.breakdownAttributes, this.runUnit, this.runInterval);
+    return Objects.hash(this.id, this.name, this.key, this.description, this.status, this.rankBy, this.metricId, this.pointsSystemId, this.maxParticipants, this.start, this.end, this.startTime, this.endTime, this.breakdownAttributes, this.runUnit, this.runInterval);
   }
 
   @java.lang.Override
@@ -311,6 +333,20 @@ public final class AdminLeaderboard {
     _FinalStage end(String end);
 
     /**
+     * <p>When set, ranking only counts activity at or after this time of day in the user's timezone (HH:mm format).</p>
+     */
+    _FinalStage startTime(Optional<String> startTime);
+
+    _FinalStage startTime(String startTime);
+
+    /**
+     * <p>When set, ranking only counts activity before this time of day in the user's timezone (HH:mm format).</p>
+     */
+    _FinalStage endTime(Optional<String> endTime);
+
+    _FinalStage endTime(String endTime);
+
+    /**
      * <p>The UUIDs of the user attributes used for ranking breakdowns.</p>
      */
     _FinalStage breakdownAttributes(List<String> breakdownAttributes);
@@ -356,6 +392,10 @@ public final class AdminLeaderboard {
 
     private List<String> breakdownAttributes = new ArrayList<>();
 
+    private Optional<String> endTime = Optional.empty();
+
+    private Optional<String> startTime = Optional.empty();
+
     private Optional<String> end = Optional.empty();
 
     private Optional<Integer> maxParticipants = Optional.empty();
@@ -385,6 +425,8 @@ public final class AdminLeaderboard {
       maxParticipants(other.getMaxParticipants());
       start(other.getStart());
       end(other.getEnd());
+      startTime(other.getStartTime());
+      endTime(other.getEndTime());
       breakdownAttributes(other.getBreakdownAttributes());
       runUnit(other.getRunUnit());
       runInterval(other.getRunInterval());
@@ -542,6 +584,52 @@ public final class AdminLeaderboard {
     }
 
     /**
+     * <p>When set, ranking only counts activity before this time of day in the user's timezone (HH:mm format).</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage endTime(String endTime) {
+      this.endTime = Optional.ofNullable(endTime);
+      return this;
+    }
+
+    /**
+     * <p>When set, ranking only counts activity before this time of day in the user's timezone (HH:mm format).</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "endTime",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage endTime(Optional<String> endTime) {
+      this.endTime = endTime;
+      return this;
+    }
+
+    /**
+     * <p>When set, ranking only counts activity at or after this time of day in the user's timezone (HH:mm format).</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage startTime(String startTime) {
+      this.startTime = Optional.ofNullable(startTime);
+      return this;
+    }
+
+    /**
+     * <p>When set, ranking only counts activity at or after this time of day in the user's timezone (HH:mm format).</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "startTime",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage startTime(Optional<String> startTime) {
+      this.startTime = startTime;
+      return this;
+    }
+
+    /**
      * <p>The optional leaderboard end date in YYYY-MM-DD format.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
@@ -658,7 +746,7 @@ public final class AdminLeaderboard {
 
     @java.lang.Override
     public AdminLeaderboard build() {
-      return new AdminLeaderboard(id, name, key, description, status, rankBy, metricId, pointsSystemId, maxParticipants, start, end, breakdownAttributes, runUnit, runInterval, additionalProperties);
+      return new AdminLeaderboard(id, name, key, description, status, rankBy, metricId, pointsSystemId, maxParticipants, start, end, startTime, endTime, breakdownAttributes, runUnit, runInterval, additionalProperties);
     }
 
     @java.lang.Override
