@@ -94,7 +94,7 @@ public final class PointsBoostWebhookPayload {
   }
 
   /**
-   * @return The customer-facing user ID that the boost is scoped to, or null for global boosts.
+   * @return The user ID the boost is scoped to, or null for global boosts.
    */
   @JsonProperty("userId")
   public Optional<String> getUserId() {
@@ -259,7 +259,7 @@ public final class PointsBoostWebhookPayload {
     _FinalStage additionalProperties(Map<String, Object> additionalProperties);
 
     /**
-     * <p>The customer-facing user ID that the boost is scoped to, or null for global boosts.</p>
+     * <p>The user ID the boost is scoped to, or null for global boosts.</p>
      */
     _FinalStage userId(Optional<String> userId);
 
@@ -444,7 +444,7 @@ public final class PointsBoostWebhookPayload {
     }
 
     /**
-     * <p>The customer-facing user ID that the boost is scoped to, or null for global boosts.</p>
+     * <p>The user ID the boost is scoped to, or null for global boosts.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -454,7 +454,7 @@ public final class PointsBoostWebhookPayload {
     }
 
     /**
-     * <p>The customer-facing user ID that the boost is scoped to, or null for global boosts.</p>
+     * <p>The user ID the boost is scoped to, or null for global boosts.</p>
      */
     @java.lang.Override
     @JsonSetter(

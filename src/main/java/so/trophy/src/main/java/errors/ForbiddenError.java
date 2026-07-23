@@ -6,21 +6,21 @@ package so.trophy.src.main.java.errors;
 
 
 import so.trophy.core.TrophyApiApiException;
+import java.lang.Object;
 import okhttp3.Response;
-import so.trophy.types.ErrorBody;
 
 public final class ForbiddenError extends TrophyApiApiException {
   /**
    * The body of the response that triggered the exception.
    */
-  private final ErrorBody body;
+  private final Object body;
 
-  public ForbiddenError(ErrorBody body) {
+  public ForbiddenError(Object body) {
     super("ForbiddenError", 403, body);
     this.body = body;
   }
 
-  public ForbiddenError(ErrorBody body, Response rawResponse) {
+  public ForbiddenError(Object body, Response rawResponse) {
     super("ForbiddenError", 403, body, rawResponse);
     this.body = body;
   }
@@ -29,7 +29,7 @@ public final class ForbiddenError extends TrophyApiApiException {
    * @return the body
    */
   @java.lang.Override
-  public ErrorBody body() {
+  public Object body() {
     return this.body;
   }
 }

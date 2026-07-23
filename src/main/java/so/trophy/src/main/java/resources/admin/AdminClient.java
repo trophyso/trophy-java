@@ -8,6 +8,7 @@ package so.trophy.src.main.java.resources.admin;
 import so.trophy.core.ClientOptions;
 import so.trophy.core.Suppliers;
 import java.util.function.Supplier;
+import so.trophy.resources.admin.applicationapikeys.ApplicationApiKeysClient;
 import so.trophy.resources.admin.attributes.AttributesClient;
 import so.trophy.resources.admin.leaderboards.LeaderboardsClient;
 import so.trophy.resources.admin.metrics.MetricsClient;
@@ -26,6 +27,8 @@ public class AdminClient {
 
   protected final Supplier<StreaksClient> streaksClient;
 
+  protected final Supplier<ApplicationApiKeysClient> applicationApiKeysClient;
+
   protected final Supplier<TenantsClient> tenantsClient;
 
   protected final Supplier<PointsClient> pointsClient;
@@ -36,6 +39,7 @@ public class AdminClient {
     this.metricsClient = Suppliers.memoize(() -> new MetricsClient(clientOptions));
     this.leaderboardsClient = Suppliers.memoize(() -> new LeaderboardsClient(clientOptions));
     this.streaksClient = Suppliers.memoize(() -> new StreaksClient(clientOptions));
+    this.applicationApiKeysClient = Suppliers.memoize(() -> new ApplicationApiKeysClient(clientOptions));
     this.tenantsClient = Suppliers.memoize(() -> new TenantsClient(clientOptions));
     this.pointsClient = Suppliers.memoize(() -> new PointsClient(clientOptions));
   }
@@ -54,6 +58,10 @@ public class AdminClient {
 
   public StreaksClient streaks() {
     return this.streaksClient.get();
+  }
+
+  public ApplicationApiKeysClient applicationApiKeys() {
+    return this.applicationApiKeysClient.get();
   }
 
   public TenantsClient tenants() {

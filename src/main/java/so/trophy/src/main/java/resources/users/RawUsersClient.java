@@ -42,7 +42,6 @@ import so.trophy.resources.users.requests.UsersStreakRequest;
 import so.trophy.resources.users.requests.UsersWrappedRequest;
 import so.trophy.resources.users.types.UsersMetricEventSummaryResponseItem;
 import so.trophy.resources.users.types.UsersPointsEventSummaryResponseItem;
-import so.trophy.types.ErrorBody;
 import so.trophy.types.GetUserPointsResponse;
 import so.trophy.types.MetricResponse;
 import so.trophy.types.PointsBoost;
@@ -465,7 +464,7 @@ public class RawUsersClient {
                   try {
                     switch (response.code()) {
                       case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
-                      case 403:throw new ForbiddenError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
+                      case 403:throw new ForbiddenError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
                       case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
                       case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
                     }

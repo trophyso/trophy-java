@@ -47,7 +47,6 @@ import so.trophy.resources.users.requests.UsersStreakRequest;
 import so.trophy.resources.users.requests.UsersWrappedRequest;
 import so.trophy.resources.users.types.UsersMetricEventSummaryResponseItem;
 import so.trophy.resources.users.types.UsersPointsEventSummaryResponseItem;
-import so.trophy.types.ErrorBody;
 import so.trophy.types.GetUserPointsResponse;
 import so.trophy.types.MetricResponse;
 import so.trophy.types.PointsBoost;
@@ -564,7 +563,7 @@ public class AsyncRawUsersClient {
                         switch (response.code()) {
                           case 401:future.completeExceptionally(new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response));
                           return;
-                          case 403:future.completeExceptionally(new ForbiddenError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response));
+                          case 403:future.completeExceptionally(new ForbiddenError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response));
                           return;
                           case 404:future.completeExceptionally(new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response));
                           return;

@@ -28,6 +28,8 @@ import org.jetbrains.annotations.NotNull;
     builder = AdminIssue.Builder.class
 )
 public final class AdminIssue {
+  private final Optional<String> id;
+
   private final Optional<String> userId;
 
   private final Optional<String> boostId;
@@ -40,14 +42,24 @@ public final class AdminIssue {
 
   private final Map<String, Object> additionalProperties;
 
-  private AdminIssue(Optional<String> userId, Optional<String> boostId, Optional<Integer> index,
-      AdminIssueSeverity severity, String message, Map<String, Object> additionalProperties) {
+  private AdminIssue(Optional<String> id, Optional<String> userId, Optional<String> boostId,
+      Optional<Integer> index, AdminIssueSeverity severity, String message,
+      Map<String, Object> additionalProperties) {
+    this.id = id;
     this.userId = userId;
     this.boostId = boostId;
     this.index = index;
     this.severity = severity;
     this.message = message;
     this.additionalProperties = additionalProperties;
+  }
+
+  /**
+   * @return The ID of the resource the issue relates to, when applicable.
+   */
+  @JsonProperty("id")
+  public Optional<String> getId() {
+    return id;
   }
 
   /**
@@ -102,12 +114,12 @@ public final class AdminIssue {
   }
 
   private boolean equalTo(AdminIssue other) {
-    return userId.equals(other.userId) && boostId.equals(other.boostId) && index.equals(other.index) && severity.equals(other.severity) && message.equals(other.message);
+    return id.equals(other.id) && userId.equals(other.userId) && boostId.equals(other.boostId) && index.equals(other.index) && severity.equals(other.severity) && message.equals(other.message);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.userId, this.boostId, this.index, this.severity, this.message);
+    return Objects.hash(this.id, this.userId, this.boostId, this.index, this.severity, this.message);
   }
 
   @java.lang.Override
@@ -141,6 +153,13 @@ public final class AdminIssue {
     _FinalStage additionalProperty(String key, Object value);
 
     _FinalStage additionalProperties(Map<String, Object> additionalProperties);
+
+    /**
+     * <p>The ID of the resource the issue relates to, when applicable.</p>
+     */
+    _FinalStage id(Optional<String> id);
+
+    _FinalStage id(String id);
 
     /**
      * <p>The ID of the user the issue relates to, when applicable.</p>
@@ -178,6 +197,8 @@ public final class AdminIssue {
 
     private Optional<String> userId = Optional.empty();
 
+    private Optional<String> id = Optional.empty();
+
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
 
@@ -186,6 +207,7 @@ public final class AdminIssue {
 
     @java.lang.Override
     public Builder from(AdminIssue other) {
+      id(other.getId());
       userId(other.getUserId());
       boostId(other.getBoostId());
       index(other.getIndex());
@@ -285,9 +307,32 @@ public final class AdminIssue {
       return this;
     }
 
+    /**
+     * <p>The ID of the resource the issue relates to, when applicable.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage id(String id) {
+      this.id = Optional.ofNullable(id);
+      return this;
+    }
+
+    /**
+     * <p>The ID of the resource the issue relates to, when applicable.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "id",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage id(Optional<String> id) {
+      this.id = id;
+      return this;
+    }
+
     @java.lang.Override
     public AdminIssue build() {
-      return new AdminIssue(userId, boostId, index, severity, message, additionalProperties);
+      return new AdminIssue(id, userId, boostId, index, severity, message, additionalProperties);
     }
 
     @java.lang.Override
