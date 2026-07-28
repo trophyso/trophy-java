@@ -16,6 +16,7 @@ import so.trophy.core.RetryInterceptor;
 import so.trophy.core.TrophyApiApiException;
 import so.trophy.core.TrophyApiException;
 import so.trophy.core.TrophyApiHttpResponse;
+import so.trophy.errors.BadRequestError;
 import so.trophy.errors.NotFoundError;
 import so.trophy.errors.UnauthorizedError;
 import so.trophy.errors.UnprocessableEntityError;
@@ -32,6 +33,8 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 import so.trophy.resources.admin.metrics.requests.MetricsDeleteRequest;
 import so.trophy.resources.admin.metrics.requests.MetricsListRequest;
+import so.trophy.types.BatchEventsResponse;
+import so.trophy.types.BatchMetricEvent;
 import so.trophy.types.CreateMetricRequestItem;
 import so.trophy.types.CreateMetricsResponse;
 import so.trophy.types.CreatedMetric;
@@ -377,4 +380,70 @@ public class RawMetricsClient {
                 throw new TrophyApiException("Network error executing HTTP request", e);
               }
             }
-          }
+
+            /**
+             * Submit up to 1,000 metric events for asynchronous processing.
+             */
+            public TrophyApiHttpResponse<BatchEventsResponse> batchEvents(
+                List<BatchMetricEvent> request) {
+              return batchEvents(request,null);
+            }
+
+            /**
+             * Submit up to 1,000 metric events for asynchronous processing.
+             */
+            public TrophyApiHttpResponse<BatchEventsResponse> batchEvents(
+                List<BatchMetricEvent> request, RequestOptions requestOptions) {
+              HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getAdminURL()).newBuilder()
+
+                .addPathSegments("metrics/events");if (requestOptions != null) {
+                  requestOptions.getQueryParameters().forEach((_key, _value) -> {
+                    httpUrl.addQueryParameter(_key, _value);
+                  } );
+                }
+                RequestBody body;
+                try {
+                  body = RequestBody.create(ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
+                }
+                catch(JsonProcessingException e) {
+                  throw new TrophyApiException("Failed to serialize request", e);
+                }
+                Request okhttpRequest = new Request.Builder()
+                  .url(httpUrl.build())
+                  .method("POST", body)
+                  .headers(Headers.of(clientOptions.headers(requestOptions)))
+                  .addHeader("Content-Type", "application/json")
+                  .addHeader("Accept", "application/json")
+                  .build();
+                OkHttpClient client = clientOptions.httpClient();
+                if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
+                  client = clientOptions.httpClientWithTimeout(requestOptions);
+                }
+                if (requestOptions != null && requestOptions.getMaxRetries().isPresent()) {
+                  okhttpRequest = okhttpRequest.newBuilder().tag(RetryInterceptor.MaxRetriesOverride.class, new RetryInterceptor.MaxRetriesOverride(requestOptions.getMaxRetries().get())).build();
+                }
+                try (Response response = client.newCall(okhttpRequest).execute()) {
+                  ResponseBody responseBody = response.body();
+                  String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+                  if (response.isSuccessful()) {
+                    return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, BatchEventsResponse.class), response);
+                  }
+                  try {
+                    switch (response.code()) {
+                      case 400:throw new BadRequestError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
+                      case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
+                      case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
+                      case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
+                    }
+                  }
+                  catch (JsonProcessingException ignored) {
+                    // unable to map error response, throwing generic error
+                  }
+                  Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
+                  throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), errorBody, response);
+                }
+                catch (IOException e) {
+                  throw new TrophyApiException("Network error executing HTTP request", e);
+                }
+              }
+            }

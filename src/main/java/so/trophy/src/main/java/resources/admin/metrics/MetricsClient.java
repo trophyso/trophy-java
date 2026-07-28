@@ -11,6 +11,8 @@ import java.lang.String;
 import java.util.List;
 import so.trophy.resources.admin.metrics.requests.MetricsDeleteRequest;
 import so.trophy.resources.admin.metrics.requests.MetricsListRequest;
+import so.trophy.types.BatchEventsResponse;
+import so.trophy.types.BatchMetricEvent;
 import so.trophy.types.CreateMetricRequestItem;
 import so.trophy.types.CreateMetricsResponse;
 import so.trophy.types.CreatedMetric;
@@ -133,5 +135,20 @@ public class MetricsClient {
    */
   public CreatedMetric get(String id, RequestOptions requestOptions) {
     return this.rawClient.get(id, requestOptions).body();
+  }
+
+  /**
+   * Submit up to 1,000 metric events for asynchronous processing.
+   */
+  public BatchEventsResponse batchEvents(List<BatchMetricEvent> request) {
+    return this.rawClient.batchEvents(request).body();
+  }
+
+  /**
+   * Submit up to 1,000 metric events for asynchronous processing.
+   */
+  public BatchEventsResponse batchEvents(List<BatchMetricEvent> request,
+      RequestOptions requestOptions) {
+    return this.rawClient.batchEvents(request, requestOptions).body();
   }
 }

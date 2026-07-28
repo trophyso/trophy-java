@@ -16,6 +16,7 @@ import so.trophy.core.RetryInterceptor;
 import so.trophy.core.TrophyApiApiException;
 import so.trophy.core.TrophyApiException;
 import so.trophy.core.TrophyApiHttpResponse;
+import so.trophy.errors.BadRequestError;
 import so.trophy.errors.NotFoundError;
 import so.trophy.errors.UnauthorizedError;
 import so.trophy.errors.UnprocessableEntityError;
@@ -37,6 +38,8 @@ import okhttp3.ResponseBody;
 import org.jetbrains.annotations.NotNull;
 import so.trophy.resources.admin.metrics.requests.MetricsDeleteRequest;
 import so.trophy.resources.admin.metrics.requests.MetricsListRequest;
+import so.trophy.types.BatchEventsResponse;
+import so.trophy.types.BatchMetricEvent;
 import so.trophy.types.CreateMetricRequestItem;
 import so.trophy.types.CreateMetricsResponse;
 import so.trophy.types.CreatedMetric;
@@ -462,4 +465,87 @@ public class AsyncRawMetricsClient {
               });
               return future;
             }
-          }
+
+            /**
+             * Submit up to 1,000 metric events for asynchronous processing.
+             */
+            public CompletableFuture<TrophyApiHttpResponse<BatchEventsResponse>> batchEvents(
+                List<BatchMetricEvent> request) {
+              return batchEvents(request,null);
+            }
+
+            /**
+             * Submit up to 1,000 metric events for asynchronous processing.
+             */
+            public CompletableFuture<TrophyApiHttpResponse<BatchEventsResponse>> batchEvents(
+                List<BatchMetricEvent> request, RequestOptions requestOptions) {
+              HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getAdminURL()).newBuilder()
+
+                .addPathSegments("metrics/events");if (requestOptions != null) {
+                  requestOptions.getQueryParameters().forEach((_key, _value) -> {
+                    httpUrl.addQueryParameter(_key, _value);
+                  } );
+                }
+                RequestBody body;
+                try {
+                  body = RequestBody.create(ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
+                }
+                catch(JsonProcessingException e) {
+                  throw new TrophyApiException("Failed to serialize request", e);
+                }
+                Request okhttpRequest = new Request.Builder()
+                  .url(httpUrl.build())
+                  .method("POST", body)
+                  .headers(Headers.of(clientOptions.headers(requestOptions)))
+                  .addHeader("Content-Type", "application/json")
+                  .addHeader("Accept", "application/json")
+                  .build();
+                OkHttpClient client = clientOptions.httpClient();
+                if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
+                  client = clientOptions.httpClientWithTimeout(requestOptions);
+                }
+                if (requestOptions != null && requestOptions.getMaxRetries().isPresent()) {
+                  okhttpRequest = okhttpRequest.newBuilder().tag(RetryInterceptor.MaxRetriesOverride.class, new RetryInterceptor.MaxRetriesOverride(requestOptions.getMaxRetries().get())).build();
+                }
+                CompletableFuture<TrophyApiHttpResponse<BatchEventsResponse>> future = new CompletableFuture<>();
+                client.newCall(okhttpRequest).enqueue(new Callback() {
+                  @Override
+                  public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    try (ResponseBody responseBody = response.body()) {
+                      String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+                      if (response.isSuccessful()) {
+                        future.complete(new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, BatchEventsResponse.class), response));
+                        return;
+                      }
+                      try {
+                        switch (response.code()) {
+                          case 400:future.completeExceptionally(new BadRequestError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response));
+                          return;
+                          case 401:future.completeExceptionally(new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response));
+                          return;
+                          case 404:future.completeExceptionally(new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response));
+                          return;
+                          case 422:future.completeExceptionally(new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response));
+                          return;
+                        }
+                      }
+                      catch (JsonProcessingException ignored) {
+                        // unable to map error response, throwing generic error
+                      }
+                      Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
+                      future.completeExceptionally(new TrophyApiApiException("Error with status code " + response.code(), response.code(), errorBody, response));
+                      return;
+                    }
+                    catch (IOException e) {
+                      future.completeExceptionally(new TrophyApiException("Network error executing HTTP request", e));
+                    }
+                  }
+
+                  @Override
+                  public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    future.completeExceptionally(new TrophyApiException("Network error executing HTTP request", e));
+                  }
+                });
+                return future;
+              }
+            }
