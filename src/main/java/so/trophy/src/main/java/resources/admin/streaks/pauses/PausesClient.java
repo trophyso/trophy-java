@@ -45,28 +45,28 @@ public class PausesClient {
   }
 
   /**
-   * Archive streak pauses by ID. Pause records are not deleted; their status is set to archived so they no longer apply to streak logic.
+   * Delete streak pauses by ID.
    */
   public DeleteStreakPausesResponse delete() {
     return this.rawClient.delete().body();
   }
 
   /**
-   * Archive streak pauses by ID. Pause records are not deleted; their status is set to archived so they no longer apply to streak logic.
+   * Delete streak pauses by ID.
    */
   public DeleteStreakPausesResponse delete(RequestOptions requestOptions) {
     return this.rawClient.delete(requestOptions).body();
   }
 
   /**
-   * Archive streak pauses by ID. Pause records are not deleted; their status is set to archived so they no longer apply to streak logic.
+   * Delete streak pauses by ID.
    */
   public DeleteStreakPausesResponse delete(PausesDeleteRequest request) {
     return this.rawClient.delete(request).body();
   }
 
   /**
-   * Archive streak pauses by ID. Pause records are not deleted; their status is set to archived so they no longer apply to streak logic.
+   * Delete streak pauses by ID.
    */
   public DeleteStreakPausesResponse delete(PausesDeleteRequest request,
       RequestOptions requestOptions) {

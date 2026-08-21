@@ -84,14 +84,14 @@ public class AsyncTriggersClient {
   }
 
   /**
-   * Delete (archive) points triggers by ID. Maximum 100 trigger IDs per request.
+   * Delete points triggers by ID. Maximum 100 trigger IDs per request.
    */
   public CompletableFuture<DeletePointsTriggersResponse> delete(String systemId) {
     return this.rawClient.delete(systemId).thenApply(response -> response.body());
   }
 
   /**
-   * Delete (archive) points triggers by ID. Maximum 100 trigger IDs per request.
+   * Delete points triggers by ID. Maximum 100 trigger IDs per request.
    */
   public CompletableFuture<DeletePointsTriggersResponse> delete(String systemId,
       RequestOptions requestOptions) {
@@ -99,7 +99,7 @@ public class AsyncTriggersClient {
   }
 
   /**
-   * Delete (archive) points triggers by ID. Maximum 100 trigger IDs per request.
+   * Delete points triggers by ID. Maximum 100 trigger IDs per request.
    */
   public CompletableFuture<DeletePointsTriggersResponse> delete(String systemId,
       TriggersDeleteRequest request) {
@@ -107,7 +107,7 @@ public class AsyncTriggersClient {
   }
 
   /**
-   * Delete (archive) points triggers by ID. Maximum 100 trigger IDs per request.
+   * Delete points triggers by ID. Maximum 100 trigger IDs per request.
    */
   public CompletableFuture<DeletePointsTriggersResponse> delete(String systemId,
       TriggersDeleteRequest request, RequestOptions requestOptions) {

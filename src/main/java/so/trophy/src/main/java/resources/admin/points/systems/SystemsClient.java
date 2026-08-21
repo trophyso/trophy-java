@@ -79,28 +79,28 @@ public class SystemsClient {
   }
 
   /**
-   * Delete (archive) points systems by ID.
+   * Delete points systems by ID.
    */
   public DeletePointsSystemsResponse delete() {
     return this.rawClient.delete().body();
   }
 
   /**
-   * Delete (archive) points systems by ID.
+   * Delete points systems by ID.
    */
   public DeletePointsSystemsResponse delete(RequestOptions requestOptions) {
     return this.rawClient.delete(requestOptions).body();
   }
 
   /**
-   * Delete (archive) points systems by ID.
+   * Delete points systems by ID.
    */
   public DeletePointsSystemsResponse delete(SystemsDeleteRequest request) {
     return this.rawClient.delete(request).body();
   }
 
   /**
-   * Delete (archive) points systems by ID.
+   * Delete points systems by ID.
    */
   public DeletePointsSystemsResponse delete(SystemsDeleteRequest request,
       RequestOptions requestOptions) {

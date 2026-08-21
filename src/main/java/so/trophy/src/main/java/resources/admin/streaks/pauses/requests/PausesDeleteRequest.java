@@ -39,7 +39,7 @@ public final class PausesDeleteRequest {
   }
 
   /**
-   * @return Streak pause IDs to archive. Repeat the query param or provide a comma-separated list.
+   * @return Streak pause IDs to delete. Repeat the query param or provide a comma-separated list.
    */
   @JsonProperty("ids")
   public Optional<List<String>> getIds() {
@@ -93,7 +93,7 @@ public final class PausesDeleteRequest {
     }
 
     /**
-     * <p>Streak pause IDs to archive. Repeat the query param or provide a comma-separated list.</p>
+     * <p>Streak pause IDs to delete. Repeat the query param or provide a comma-separated list.</p>
      */
     @JsonSetter(
         value = "ids",

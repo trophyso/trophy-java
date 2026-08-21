@@ -188,7 +188,7 @@ public final class StreakResponse implements IBaseStreakResponse {
   }
 
   /**
-   * @return Upcoming and currently active streak pauses for the user. Past and archived pauses are omitted.
+   * @return Upcoming and currently active streak pauses for the user.
    */
   @JsonProperty("pauses")
   public List<StreakResponsePausesItem> getPauses() {
@@ -320,7 +320,7 @@ public final class StreakResponse implements IBaseStreakResponse {
     _FinalStage addAllStreakHistory(List<StreakResponseStreakHistoryItem> streakHistory);
 
     /**
-     * <p>Upcoming and currently active streak pauses for the user. Past and archived pauses are omitted.</p>
+     * <p>Upcoming and currently active streak pauses for the user.</p>
      */
     _FinalStage pauses(List<StreakResponsePausesItem> pauses);
 
@@ -406,7 +406,7 @@ public final class StreakResponse implements IBaseStreakResponse {
     }
 
     /**
-     * <p>Upcoming and currently active streak pauses for the user. Past and archived pauses are omitted.</p>
+     * <p>Upcoming and currently active streak pauses for the user.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -418,7 +418,7 @@ public final class StreakResponse implements IBaseStreakResponse {
     }
 
     /**
-     * <p>Upcoming and currently active streak pauses for the user. Past and archived pauses are omitted.</p>
+     * <p>Upcoming and currently active streak pauses for the user.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -428,7 +428,7 @@ public final class StreakResponse implements IBaseStreakResponse {
     }
 
     /**
-     * <p>Upcoming and currently active streak pauses for the user. Past and archived pauses are omitted.</p>
+     * <p>Upcoming and currently active streak pauses for the user.</p>
      */
     @java.lang.Override
     @JsonSetter(

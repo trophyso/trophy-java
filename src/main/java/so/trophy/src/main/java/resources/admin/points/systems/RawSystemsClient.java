@@ -186,14 +186,14 @@ public class RawSystemsClient {
       }
 
       /**
-       * Delete (archive) points systems by ID.
+       * Delete points systems by ID.
        */
       public TrophyApiHttpResponse<DeletePointsSystemsResponse> delete() {
         return delete(SystemsDeleteRequest.builder().build());
       }
 
       /**
-       * Delete (archive) points systems by ID.
+       * Delete points systems by ID.
        */
       public TrophyApiHttpResponse<DeletePointsSystemsResponse> delete(
           RequestOptions requestOptions) {
@@ -201,7 +201,7 @@ public class RawSystemsClient {
       }
 
       /**
-       * Delete (archive) points systems by ID.
+       * Delete points systems by ID.
        */
       public TrophyApiHttpResponse<DeletePointsSystemsResponse> delete(
           SystemsDeleteRequest request) {
@@ -209,7 +209,7 @@ public class RawSystemsClient {
       }
 
       /**
-       * Delete (archive) points systems by ID.
+       * Delete points systems by ID.
        */
       public TrophyApiHttpResponse<DeletePointsSystemsResponse> delete(SystemsDeleteRequest request,
           RequestOptions requestOptions) {

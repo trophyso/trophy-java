@@ -232,7 +232,7 @@ public class AsyncRawTriggersClient {
       }
 
       /**
-       * Delete (archive) points triggers by ID. Maximum 100 trigger IDs per request.
+       * Delete points triggers by ID. Maximum 100 trigger IDs per request.
        */
       public CompletableFuture<TrophyApiHttpResponse<DeletePointsTriggersResponse>> delete(
           String systemId) {
@@ -240,7 +240,7 @@ public class AsyncRawTriggersClient {
       }
 
       /**
-       * Delete (archive) points triggers by ID. Maximum 100 trigger IDs per request.
+       * Delete points triggers by ID. Maximum 100 trigger IDs per request.
        */
       public CompletableFuture<TrophyApiHttpResponse<DeletePointsTriggersResponse>> delete(
           String systemId, RequestOptions requestOptions) {
@@ -248,7 +248,7 @@ public class AsyncRawTriggersClient {
       }
 
       /**
-       * Delete (archive) points triggers by ID. Maximum 100 trigger IDs per request.
+       * Delete points triggers by ID. Maximum 100 trigger IDs per request.
        */
       public CompletableFuture<TrophyApiHttpResponse<DeletePointsTriggersResponse>> delete(
           String systemId, TriggersDeleteRequest request) {
@@ -256,7 +256,7 @@ public class AsyncRawTriggersClient {
       }
 
       /**
-       * Delete (archive) points triggers by ID. Maximum 100 trigger IDs per request.
+       * Delete points triggers by ID. Maximum 100 trigger IDs per request.
        */
       public CompletableFuture<TrophyApiHttpResponse<DeletePointsTriggersResponse>> delete(
           String systemId, TriggersDeleteRequest request, RequestOptions requestOptions) {

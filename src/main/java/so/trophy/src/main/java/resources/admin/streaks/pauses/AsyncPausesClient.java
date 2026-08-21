@@ -46,28 +46,28 @@ public class AsyncPausesClient {
   }
 
   /**
-   * Archive streak pauses by ID. Pause records are not deleted; their status is set to archived so they no longer apply to streak logic.
+   * Delete streak pauses by ID.
    */
   public CompletableFuture<DeleteStreakPausesResponse> delete() {
     return this.rawClient.delete().thenApply(response -> response.body());
   }
 
   /**
-   * Archive streak pauses by ID. Pause records are not deleted; their status is set to archived so they no longer apply to streak logic.
+   * Delete streak pauses by ID.
    */
   public CompletableFuture<DeleteStreakPausesResponse> delete(RequestOptions requestOptions) {
     return this.rawClient.delete(requestOptions).thenApply(response -> response.body());
   }
 
   /**
-   * Archive streak pauses by ID. Pause records are not deleted; their status is set to archived so they no longer apply to streak logic.
+   * Delete streak pauses by ID.
    */
   public CompletableFuture<DeleteStreakPausesResponse> delete(PausesDeleteRequest request) {
     return this.rawClient.delete(request).thenApply(response -> response.body());
   }
 
   /**
-   * Archive streak pauses by ID. Pause records are not deleted; their status is set to archived so they no longer apply to streak logic.
+   * Delete streak pauses by ID.
    */
   public CompletableFuture<DeleteStreakPausesResponse> delete(PausesDeleteRequest request,
       RequestOptions requestOptions) {

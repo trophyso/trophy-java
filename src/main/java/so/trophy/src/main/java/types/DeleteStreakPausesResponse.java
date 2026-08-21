@@ -41,7 +41,7 @@ public final class DeleteStreakPausesResponse {
   }
 
   /**
-   * @return Array of archived streak pause IDs.
+   * @return Array of deleted streak pause IDs.
    */
   @JsonProperty("deleted")
   public List<DeletedResource> getDeleted() {
@@ -49,7 +49,7 @@ public final class DeleteStreakPausesResponse {
   }
 
   /**
-   * @return Array of issues encountered during pause archival.
+   * @return Array of issues encountered during pause deletion.
    */
   @JsonProperty("issues")
   public List<AdminIssue> getIssues() {
@@ -106,7 +106,7 @@ public final class DeleteStreakPausesResponse {
     }
 
     /**
-     * <p>Array of archived streak pause IDs.</p>
+     * <p>Array of deleted streak pause IDs.</p>
      */
     @JsonSetter(
         value = "deleted",
@@ -133,7 +133,7 @@ public final class DeleteStreakPausesResponse {
     }
 
     /**
-     * <p>Array of issues encountered during pause archival.</p>
+     * <p>Array of issues encountered during pause deletion.</p>
      */
     @JsonSetter(
         value = "issues",

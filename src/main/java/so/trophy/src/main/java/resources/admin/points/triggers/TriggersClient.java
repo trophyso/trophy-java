@@ -81,28 +81,28 @@ public class TriggersClient {
   }
 
   /**
-   * Delete (archive) points triggers by ID. Maximum 100 trigger IDs per request.
+   * Delete points triggers by ID. Maximum 100 trigger IDs per request.
    */
   public DeletePointsTriggersResponse delete(String systemId) {
     return this.rawClient.delete(systemId).body();
   }
 
   /**
-   * Delete (archive) points triggers by ID. Maximum 100 trigger IDs per request.
+   * Delete points triggers by ID. Maximum 100 trigger IDs per request.
    */
   public DeletePointsTriggersResponse delete(String systemId, RequestOptions requestOptions) {
     return this.rawClient.delete(systemId, requestOptions).body();
   }
 
   /**
-   * Delete (archive) points triggers by ID. Maximum 100 trigger IDs per request.
+   * Delete points triggers by ID. Maximum 100 trigger IDs per request.
    */
   public DeletePointsTriggersResponse delete(String systemId, TriggersDeleteRequest request) {
     return this.rawClient.delete(systemId, request).body();
   }
 
   /**
-   * Delete (archive) points triggers by ID. Maximum 100 trigger IDs per request.
+   * Delete points triggers by ID. Maximum 100 trigger IDs per request.
    */
   public DeletePointsTriggersResponse delete(String systemId, TriggersDeleteRequest request,
       RequestOptions requestOptions) {

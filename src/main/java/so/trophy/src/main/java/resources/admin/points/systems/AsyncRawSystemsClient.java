@@ -223,14 +223,14 @@ public class AsyncRawSystemsClient {
       }
 
       /**
-       * Delete (archive) points systems by ID.
+       * Delete points systems by ID.
        */
       public CompletableFuture<TrophyApiHttpResponse<DeletePointsSystemsResponse>> delete() {
         return delete(SystemsDeleteRequest.builder().build());
       }
 
       /**
-       * Delete (archive) points systems by ID.
+       * Delete points systems by ID.
        */
       public CompletableFuture<TrophyApiHttpResponse<DeletePointsSystemsResponse>> delete(
           RequestOptions requestOptions) {
@@ -238,7 +238,7 @@ public class AsyncRawSystemsClient {
       }
 
       /**
-       * Delete (archive) points systems by ID.
+       * Delete points systems by ID.
        */
       public CompletableFuture<TrophyApiHttpResponse<DeletePointsSystemsResponse>> delete(
           SystemsDeleteRequest request) {
@@ -246,7 +246,7 @@ public class AsyncRawSystemsClient {
       }
 
       /**
-       * Delete (archive) points systems by ID.
+       * Delete points systems by ID.
        */
       public CompletableFuture<TrophyApiHttpResponse<DeletePointsSystemsResponse>> delete(
           SystemsDeleteRequest request, RequestOptions requestOptions) {

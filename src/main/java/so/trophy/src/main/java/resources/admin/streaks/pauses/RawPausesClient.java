@@ -104,28 +104,28 @@ public class RawPausesClient {
     }
 
     /**
-     * Archive streak pauses by ID. Pause records are not deleted; their status is set to archived so they no longer apply to streak logic.
+     * Delete streak pauses by ID.
      */
     public TrophyApiHttpResponse<DeleteStreakPausesResponse> delete() {
       return delete(PausesDeleteRequest.builder().build());
     }
 
     /**
-     * Archive streak pauses by ID. Pause records are not deleted; their status is set to archived so they no longer apply to streak logic.
+     * Delete streak pauses by ID.
      */
     public TrophyApiHttpResponse<DeleteStreakPausesResponse> delete(RequestOptions requestOptions) {
       return delete(PausesDeleteRequest.builder().build(),requestOptions);
     }
 
     /**
-     * Archive streak pauses by ID. Pause records are not deleted; their status is set to archived so they no longer apply to streak logic.
+     * Delete streak pauses by ID.
      */
     public TrophyApiHttpResponse<DeleteStreakPausesResponse> delete(PausesDeleteRequest request) {
       return delete(request,null);
     }
 
     /**
-     * Archive streak pauses by ID. Pause records are not deleted; their status is set to archived so they no longer apply to streak logic.
+     * Delete streak pauses by ID.
      */
     public TrophyApiHttpResponse<DeleteStreakPausesResponse> delete(PausesDeleteRequest request,
         RequestOptions requestOptions) {

@@ -82,28 +82,28 @@ public class AsyncSystemsClient {
   }
 
   /**
-   * Delete (archive) points systems by ID.
+   * Delete points systems by ID.
    */
   public CompletableFuture<DeletePointsSystemsResponse> delete() {
     return this.rawClient.delete().thenApply(response -> response.body());
   }
 
   /**
-   * Delete (archive) points systems by ID.
+   * Delete points systems by ID.
    */
   public CompletableFuture<DeletePointsSystemsResponse> delete(RequestOptions requestOptions) {
     return this.rawClient.delete(requestOptions).thenApply(response -> response.body());
   }
 
   /**
-   * Delete (archive) points systems by ID.
+   * Delete points systems by ID.
    */
   public CompletableFuture<DeletePointsSystemsResponse> delete(SystemsDeleteRequest request) {
     return this.rawClient.delete(request).thenApply(response -> response.body());
   }
 
   /**
-   * Delete (archive) points systems by ID.
+   * Delete points systems by ID.
    */
   public CompletableFuture<DeletePointsSystemsResponse> delete(SystemsDeleteRequest request,
       RequestOptions requestOptions) {
