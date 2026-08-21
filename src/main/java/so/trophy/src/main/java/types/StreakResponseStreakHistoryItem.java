@@ -36,14 +36,17 @@ public final class StreakResponseStreakHistoryItem {
 
   private final Optional<Boolean> usedFreeze;
 
+  private final boolean usedPause;
+
   private final Map<String, Object> additionalProperties;
 
   private StreakResponseStreakHistoryItem(String periodStart, String periodEnd, int length,
-      Optional<Boolean> usedFreeze, Map<String, Object> additionalProperties) {
+      Optional<Boolean> usedFreeze, boolean usedPause, Map<String, Object> additionalProperties) {
     this.periodStart = periodStart;
     this.periodEnd = periodEnd;
     this.length = length;
     this.usedFreeze = usedFreeze;
+    this.usedPause = usedPause;
     this.additionalProperties = additionalProperties;
   }
 
@@ -79,6 +82,14 @@ public final class StreakResponseStreakHistoryItem {
     return usedFreeze;
   }
 
+  /**
+   * @return Whether the user's streak was paused during this period.
+   */
+  @JsonProperty("usedPause")
+  public boolean getUsedPause() {
+    return usedPause;
+  }
+
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
@@ -91,12 +102,12 @@ public final class StreakResponseStreakHistoryItem {
   }
 
   private boolean equalTo(StreakResponseStreakHistoryItem other) {
-    return periodStart.equals(other.periodStart) && periodEnd.equals(other.periodEnd) && length == other.length && usedFreeze.equals(other.usedFreeze);
+    return periodStart.equals(other.periodStart) && periodEnd.equals(other.periodEnd) && length == other.length && usedFreeze.equals(other.usedFreeze) && usedPause == other.usedPause;
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.periodStart, this.periodEnd, this.length, this.usedFreeze);
+    return Objects.hash(this.periodStart, this.periodEnd, this.length, this.usedFreeze, this.usedPause);
   }
 
   @java.lang.Override
@@ -128,7 +139,14 @@ public final class StreakResponseStreakHistoryItem {
     /**
      * <p>The length of the user's streak during this period.</p>
      */
-    _FinalStage length(int length);
+    UsedPauseStage length(int length);
+  }
+
+  public interface UsedPauseStage {
+    /**
+     * <p>Whether the user's streak was paused during this period.</p>
+     */
+    _FinalStage usedPause(boolean usedPause);
   }
 
   public interface _FinalStage {
@@ -149,12 +167,14 @@ public final class StreakResponseStreakHistoryItem {
   @JsonIgnoreProperties(
       ignoreUnknown = true
   )
-  public static final class Builder implements PeriodStartStage, PeriodEndStage, LengthStage, _FinalStage {
+  public static final class Builder implements PeriodStartStage, PeriodEndStage, LengthStage, UsedPauseStage, _FinalStage {
     private String periodStart;
 
     private String periodEnd;
 
     private int length;
+
+    private boolean usedPause;
 
     private Optional<Boolean> usedFreeze = Optional.empty();
 
@@ -170,6 +190,7 @@ public final class StreakResponseStreakHistoryItem {
       periodEnd(other.getPeriodEnd());
       length(other.getLength());
       usedFreeze(other.getUsedFreeze());
+      usedPause(other.getUsedPause());
       return this;
     }
 
@@ -201,8 +222,19 @@ public final class StreakResponseStreakHistoryItem {
      */
     @java.lang.Override
     @JsonSetter("length")
-    public _FinalStage length(int length) {
+    public UsedPauseStage length(int length) {
       this.length = length;
+      return this;
+    }
+
+    /**
+     * <p>Whether the user's streak was paused during this period.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    @JsonSetter("usedPause")
+    public _FinalStage usedPause(boolean usedPause) {
+      this.usedPause = usedPause;
       return this;
     }
 
@@ -231,7 +263,7 @@ public final class StreakResponseStreakHistoryItem {
 
     @java.lang.Override
     public StreakResponseStreakHistoryItem build() {
-      return new StreakResponseStreakHistoryItem(periodStart, periodEnd, length, usedFreeze, additionalProperties);
+      return new StreakResponseStreakHistoryItem(periodStart, periodEnd, length, usedFreeze, usedPause, additionalProperties);
     }
 
     @java.lang.Override

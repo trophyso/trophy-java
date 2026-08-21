@@ -10,6 +10,7 @@ import so.trophy.core.RequestOptions;
 import so.trophy.core.Suppliers;
 import java.util.function.Supplier;
 import so.trophy.resources.admin.streaks.freezes.FreezesClient;
+import so.trophy.resources.admin.streaks.pauses.PausesClient;
 import so.trophy.resources.admin.streaks.requests.RestoreStreaksRequest;
 import so.trophy.types.RestoreStreaksResponse;
 
@@ -20,10 +21,13 @@ public class StreaksClient {
 
   protected final Supplier<FreezesClient> freezesClient;
 
+  protected final Supplier<PausesClient> pausesClient;
+
   public StreaksClient(ClientOptions clientOptions) {
     this.clientOptions = clientOptions;
     this.rawClient = new RawStreaksClient(clientOptions);
     this.freezesClient = Suppliers.memoize(() -> new FreezesClient(clientOptions));
+    this.pausesClient = Suppliers.memoize(() -> new PausesClient(clientOptions));
   }
 
   /**
@@ -50,5 +54,9 @@ public class StreaksClient {
 
   public FreezesClient freezes() {
     return this.freezesClient.get();
+  }
+
+  public PausesClient pauses() {
+    return this.pausesClient.get();
   }
 }

@@ -55,6 +55,8 @@ public final class StreakResponse implements IBaseStreakResponse {
 
   private final List<StreakResponseStreakHistoryItem> streakHistory;
 
+  private final List<StreakResponsePausesItem> pauses;
+
   private final Map<String, Object> additionalProperties;
 
   private StreakResponse(int length, StreakFrequency frequency, Optional<String> started,
@@ -62,7 +64,7 @@ public final class StreakResponse implements IBaseStreakResponse {
       Optional<Integer> freezes, Optional<Integer> maxFreezes,
       Optional<Integer> freezeAutoEarnInterval, Optional<Integer> freezeAutoEarnAmount,
       Optional<OffsetDateTime> extended, List<StreakResponseStreakHistoryItem> streakHistory,
-      Map<String, Object> additionalProperties) {
+      List<StreakResponsePausesItem> pauses, Map<String, Object> additionalProperties) {
     this.length = length;
     this.frequency = frequency;
     this.started = started;
@@ -75,6 +77,7 @@ public final class StreakResponse implements IBaseStreakResponse {
     this.freezeAutoEarnAmount = freezeAutoEarnAmount;
     this.extended = extended;
     this.streakHistory = streakHistory;
+    this.pauses = pauses;
     this.additionalProperties = additionalProperties;
   }
 
@@ -184,6 +187,14 @@ public final class StreakResponse implements IBaseStreakResponse {
     return streakHistory;
   }
 
+  /**
+   * @return Upcoming and currently active streak pauses for the user. Past and archived pauses are omitted.
+   */
+  @JsonProperty("pauses")
+  public List<StreakResponsePausesItem> getPauses() {
+    return pauses;
+  }
+
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
@@ -196,12 +207,12 @@ public final class StreakResponse implements IBaseStreakResponse {
   }
 
   private boolean equalTo(StreakResponse other) {
-    return length == other.length && frequency.equals(other.frequency) && started.equals(other.started) && periodStart.equals(other.periodStart) && periodEnd.equals(other.periodEnd) && expires.equals(other.expires) && freezes.equals(other.freezes) && maxFreezes.equals(other.maxFreezes) && freezeAutoEarnInterval.equals(other.freezeAutoEarnInterval) && freezeAutoEarnAmount.equals(other.freezeAutoEarnAmount) && extended.equals(other.extended) && streakHistory.equals(other.streakHistory);
+    return length == other.length && frequency.equals(other.frequency) && started.equals(other.started) && periodStart.equals(other.periodStart) && periodEnd.equals(other.periodEnd) && expires.equals(other.expires) && freezes.equals(other.freezes) && maxFreezes.equals(other.maxFreezes) && freezeAutoEarnInterval.equals(other.freezeAutoEarnInterval) && freezeAutoEarnAmount.equals(other.freezeAutoEarnAmount) && extended.equals(other.extended) && streakHistory.equals(other.streakHistory) && pauses.equals(other.pauses);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.length, this.frequency, this.started, this.periodStart, this.periodEnd, this.expires, this.freezes, this.maxFreezes, this.freezeAutoEarnInterval, this.freezeAutoEarnAmount, this.extended, this.streakHistory);
+    return Objects.hash(this.length, this.frequency, this.started, this.periodStart, this.periodEnd, this.expires, this.freezes, this.maxFreezes, this.freezeAutoEarnInterval, this.freezeAutoEarnAmount, this.extended, this.streakHistory, this.pauses);
   }
 
   @java.lang.Override
@@ -307,6 +318,15 @@ public final class StreakResponse implements IBaseStreakResponse {
     _FinalStage addStreakHistory(StreakResponseStreakHistoryItem streakHistory);
 
     _FinalStage addAllStreakHistory(List<StreakResponseStreakHistoryItem> streakHistory);
+
+    /**
+     * <p>Upcoming and currently active streak pauses for the user. Past and archived pauses are omitted.</p>
+     */
+    _FinalStage pauses(List<StreakResponsePausesItem> pauses);
+
+    _FinalStage addPauses(StreakResponsePausesItem pauses);
+
+    _FinalStage addAllPauses(List<StreakResponsePausesItem> pauses);
   }
 
   @JsonIgnoreProperties(
@@ -316,6 +336,8 @@ public final class StreakResponse implements IBaseStreakResponse {
     private int length;
 
     private StreakFrequency frequency;
+
+    private List<StreakResponsePausesItem> pauses = new ArrayList<>();
 
     private List<StreakResponseStreakHistoryItem> streakHistory = new ArrayList<>();
 
@@ -357,6 +379,7 @@ public final class StreakResponse implements IBaseStreakResponse {
       freezeAutoEarnAmount(other.getFreezeAutoEarnAmount());
       extended(other.getExtended());
       streakHistory(other.getStreakHistory());
+      pauses(other.getPauses());
       return this;
     }
 
@@ -379,6 +402,44 @@ public final class StreakResponse implements IBaseStreakResponse {
     @JsonSetter("frequency")
     public _FinalStage frequency(@NotNull StreakFrequency frequency) {
       this.frequency = Objects.requireNonNull(frequency, "frequency must not be null");
+      return this;
+    }
+
+    /**
+     * <p>Upcoming and currently active streak pauses for the user. Past and archived pauses are omitted.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage addAllPauses(List<StreakResponsePausesItem> pauses) {
+      if (pauses != null) {
+        this.pauses.addAll(pauses);
+      }
+      return this;
+    }
+
+    /**
+     * <p>Upcoming and currently active streak pauses for the user. Past and archived pauses are omitted.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage addPauses(StreakResponsePausesItem pauses) {
+      this.pauses.add(pauses);
+      return this;
+    }
+
+    /**
+     * <p>Upcoming and currently active streak pauses for the user. Past and archived pauses are omitted.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "pauses",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage pauses(List<StreakResponsePausesItem> pauses) {
+      this.pauses.clear();
+      if (pauses != null) {
+        this.pauses.addAll(pauses);
+      }
       return this;
     }
 
@@ -629,7 +690,7 @@ public final class StreakResponse implements IBaseStreakResponse {
 
     @java.lang.Override
     public StreakResponse build() {
-      return new StreakResponse(length, frequency, started, periodStart, periodEnd, expires, freezes, maxFreezes, freezeAutoEarnInterval, freezeAutoEarnAmount, extended, streakHistory, additionalProperties);
+      return new StreakResponse(length, frequency, started, periodStart, periodEnd, expires, freezes, maxFreezes, freezeAutoEarnInterval, freezeAutoEarnAmount, extended, streakHistory, pauses, additionalProperties);
     }
 
     @java.lang.Override
