@@ -147,21 +147,21 @@ public class UsersClient {
   }
 
   /**
-   * Update a user's notification and streak preferences. Streak preferences require streak customization to be enabled in your Trophy dashboard settings.
+   * Update a user's notification and streak preferences. Streak preferences other than <code>streak.enabled</code> require streak customization to be enabled in your Trophy dashboard settings.
    */
   public UserPreferencesResponse updatePreferences(String id) {
     return this.rawClient.updatePreferences(id).body();
   }
 
   /**
-   * Update a user's notification and streak preferences. Streak preferences require streak customization to be enabled in your Trophy dashboard settings.
+   * Update a user's notification and streak preferences. Streak preferences other than <code>streak.enabled</code> require streak customization to be enabled in your Trophy dashboard settings.
    */
   public UserPreferencesResponse updatePreferences(String id, RequestOptions requestOptions) {
     return this.rawClient.updatePreferences(id, requestOptions).body();
   }
 
   /**
-   * Update a user's notification and streak preferences. Streak preferences require streak customization to be enabled in your Trophy dashboard settings.
+   * Update a user's notification and streak preferences. Streak preferences other than <code>streak.enabled</code> require streak customization to be enabled in your Trophy dashboard settings.
    */
   public UserPreferencesResponse updatePreferences(String id,
       UpdateUserPreferencesRequest request) {
@@ -169,7 +169,7 @@ public class UsersClient {
   }
 
   /**
-   * Update a user's notification and streak preferences. Streak preferences require streak customization to be enabled in your Trophy dashboard settings.
+   * Update a user's notification and streak preferences. Streak preferences other than <code>streak.enabled</code> require streak customization to be enabled in your Trophy dashboard settings.
    */
   public UserPreferencesResponse updatePreferences(String id, UpdateUserPreferencesRequest request,
       RequestOptions requestOptions) {

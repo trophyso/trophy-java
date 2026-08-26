@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import so.trophy.core.ObjectMappers;
 import java.lang.Boolean;
+import java.lang.Integer;
 import java.lang.Object;
 import java.lang.String;
 import java.util.HashMap;
@@ -34,14 +35,18 @@ public final class StreakPreferences {
 
   private final Optional<List<StreakMetricPreference>> metrics;
 
+  private final Optional<List<Integer>> daysOff;
+
   private final Map<String, Object> additionalProperties;
 
   private StreakPreferences(Optional<Boolean> enabled,
       Optional<StreakEvaluationModePreference> evaluationMode,
-      Optional<List<StreakMetricPreference>> metrics, Map<String, Object> additionalProperties) {
+      Optional<List<StreakMetricPreference>> metrics, Optional<List<Integer>> daysOff,
+      Map<String, Object> additionalProperties) {
     this.enabled = enabled;
     this.evaluationMode = evaluationMode;
     this.metrics = metrics;
+    this.daysOff = daysOff;
     this.additionalProperties = additionalProperties;
   }
 
@@ -66,6 +71,14 @@ public final class StreakPreferences {
     return metrics;
   }
 
+  /**
+   * @return Days of the week that do not count toward the user's daily streak. Represented as zero-based integers matching JavaScript <code>Date.getDay()</code> (0 = Sunday, 6 = Saturday). For example, <code>[0, 6]</code> means Sunday and Saturday are days off. Only applied when streak frequency is daily. Users can still increase their streak on these days; if they do not, the streak stays paused at its current length instead of being lost.
+   */
+  @JsonProperty("daysOff")
+  public Optional<List<Integer>> getDaysOff() {
+    return daysOff;
+  }
+
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
@@ -78,12 +91,12 @@ public final class StreakPreferences {
   }
 
   private boolean equalTo(StreakPreferences other) {
-    return enabled.equals(other.enabled) && evaluationMode.equals(other.evaluationMode) && metrics.equals(other.metrics);
+    return enabled.equals(other.enabled) && evaluationMode.equals(other.evaluationMode) && metrics.equals(other.metrics) && daysOff.equals(other.daysOff);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.enabled, this.evaluationMode, this.metrics);
+    return Objects.hash(this.enabled, this.evaluationMode, this.metrics, this.daysOff);
   }
 
   @java.lang.Override
@@ -105,6 +118,8 @@ public final class StreakPreferences {
 
     private Optional<List<StreakMetricPreference>> metrics = Optional.empty();
 
+    private Optional<List<Integer>> daysOff = Optional.empty();
+
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
 
@@ -115,6 +130,7 @@ public final class StreakPreferences {
       enabled(other.getEnabled());
       evaluationMode(other.getEvaluationMode());
       metrics(other.getMetrics());
+      daysOff(other.getDaysOff());
       return this;
     }
 
@@ -166,8 +182,25 @@ public final class StreakPreferences {
       return this;
     }
 
+    /**
+     * <p>Days of the week that do not count toward the user's daily streak. Represented as zero-based integers matching JavaScript <code>Date.getDay()</code> (0 = Sunday, 6 = Saturday). For example, <code>[0, 6]</code> means Sunday and Saturday are days off. Only applied when streak frequency is daily. Users can still increase their streak on these days; if they do not, the streak stays paused at its current length instead of being lost.</p>
+     */
+    @JsonSetter(
+        value = "daysOff",
+        nulls = Nulls.SKIP
+    )
+    public Builder daysOff(Optional<List<Integer>> daysOff) {
+      this.daysOff = daysOff;
+      return this;
+    }
+
+    public Builder daysOff(List<Integer> daysOff) {
+      this.daysOff = Optional.ofNullable(daysOff);
+      return this;
+    }
+
     public StreakPreferences build() {
-      return new StreakPreferences(enabled, evaluationMode, metrics, additionalProperties);
+      return new StreakPreferences(enabled, evaluationMode, metrics, daysOff, additionalProperties);
     }
 
     public Builder additionalProperty(String key, Object value) {
