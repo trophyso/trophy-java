@@ -49,6 +49,8 @@ public final class AchievementWithStatsResponse implements IAchievementWithStats
 
   private final Optional<Integer> streakLength;
 
+  private final Optional<Integer> anniversaryYears;
+
   private final Optional<List<String>> achievementIds;
 
   private final Optional<String> metricId;
@@ -67,8 +69,9 @@ public final class AchievementWithStatsResponse implements IAchievementWithStats
 
   private AchievementWithStatsResponse(int completions, double rarity, String id, String name,
       AchievementResponseTrigger trigger, Optional<String> description, Optional<String> badgeUrl,
-      Optional<String> key, Optional<Integer> streakLength, Optional<List<String>> achievementIds,
-      Optional<String> metricId, Optional<Double> metricValue, Optional<String> metricName,
+      Optional<String> key, Optional<Integer> streakLength, Optional<Integer> anniversaryYears,
+      Optional<List<String>> achievementIds, Optional<String> metricId,
+      Optional<Double> metricValue, Optional<String> metricName,
       List<AchievementResponseUserAttributesItem> userAttributes,
       Optional<AchievementResponseEventAttribute> eventAttribute,
       Optional<List<AchievementResponseEventAttributesItem>> eventAttributes,
@@ -82,6 +85,7 @@ public final class AchievementWithStatsResponse implements IAchievementWithStats
     this.badgeUrl = badgeUrl;
     this.key = key;
     this.streakLength = streakLength;
+    this.anniversaryYears = anniversaryYears;
     this.achievementIds = achievementIds;
     this.metricId = metricId;
     this.metricValue = metricValue;
@@ -173,6 +177,15 @@ public final class AchievementWithStatsResponse implements IAchievementWithStats
   }
 
   /**
+   * @return The number of years after sign-up required to complete the achievement (only applicable if trigger = 'anniversary')
+   */
+  @JsonProperty("anniversaryYears")
+  @java.lang.Override
+  public Optional<Integer> getAnniversaryYears() {
+    return anniversaryYears;
+  }
+
+  /**
    * @return The IDs of the prerequisite achievements that must be completed to earn this achievement (only applicable if trigger = 'achievement')
    */
   @JsonProperty("achievementIds")
@@ -244,12 +257,12 @@ public final class AchievementWithStatsResponse implements IAchievementWithStats
   }
 
   private boolean equalTo(AchievementWithStatsResponse other) {
-    return completions == other.completions && rarity == other.rarity && id.equals(other.id) && name.equals(other.name) && trigger.equals(other.trigger) && description.equals(other.description) && badgeUrl.equals(other.badgeUrl) && key.equals(other.key) && streakLength.equals(other.streakLength) && achievementIds.equals(other.achievementIds) && metricId.equals(other.metricId) && metricValue.equals(other.metricValue) && metricName.equals(other.metricName) && userAttributes.equals(other.userAttributes) && eventAttribute.equals(other.eventAttribute) && eventAttributes.equals(other.eventAttributes);
+    return completions == other.completions && rarity == other.rarity && id.equals(other.id) && name.equals(other.name) && trigger.equals(other.trigger) && description.equals(other.description) && badgeUrl.equals(other.badgeUrl) && key.equals(other.key) && streakLength.equals(other.streakLength) && anniversaryYears.equals(other.anniversaryYears) && achievementIds.equals(other.achievementIds) && metricId.equals(other.metricId) && metricValue.equals(other.metricValue) && metricName.equals(other.metricName) && userAttributes.equals(other.userAttributes) && eventAttribute.equals(other.eventAttribute) && eventAttributes.equals(other.eventAttributes);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.completions, this.rarity, this.id, this.name, this.trigger, this.description, this.badgeUrl, this.key, this.streakLength, this.achievementIds, this.metricId, this.metricValue, this.metricName, this.userAttributes, this.eventAttribute, this.eventAttributes);
+    return Objects.hash(this.completions, this.rarity, this.id, this.name, this.trigger, this.description, this.badgeUrl, this.key, this.streakLength, this.anniversaryYears, this.achievementIds, this.metricId, this.metricValue, this.metricName, this.userAttributes, this.eventAttribute, this.eventAttributes);
   }
 
   @java.lang.Override
@@ -334,6 +347,13 @@ public final class AchievementWithStatsResponse implements IAchievementWithStats
     _FinalStage streakLength(Integer streakLength);
 
     /**
+     * <p>The number of years after sign-up required to complete the achievement (only applicable if trigger = 'anniversary')</p>
+     */
+    _FinalStage anniversaryYears(Optional<Integer> anniversaryYears);
+
+    _FinalStage anniversaryYears(Integer anniversaryYears);
+
+    /**
      * <p>The IDs of the prerequisite achievements that must be completed to earn this achievement (only applicable if trigger = 'achievement')</p>
      */
     _FinalStage achievementIds(Optional<List<String>> achievementIds);
@@ -414,6 +434,8 @@ public final class AchievementWithStatsResponse implements IAchievementWithStats
 
     private Optional<List<String>> achievementIds = Optional.empty();
 
+    private Optional<Integer> anniversaryYears = Optional.empty();
+
     private Optional<Integer> streakLength = Optional.empty();
 
     private Optional<String> key = Optional.empty();
@@ -439,6 +461,7 @@ public final class AchievementWithStatsResponse implements IAchievementWithStats
       badgeUrl(other.getBadgeUrl());
       key(other.getKey());
       streakLength(other.getStreakLength());
+      anniversaryYears(other.getAnniversaryYears());
       achievementIds(other.getAchievementIds());
       metricId(other.getMetricId());
       metricValue(other.getMetricValue());
@@ -684,6 +707,29 @@ public final class AchievementWithStatsResponse implements IAchievementWithStats
     }
 
     /**
+     * <p>The number of years after sign-up required to complete the achievement (only applicable if trigger = 'anniversary')</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage anniversaryYears(Integer anniversaryYears) {
+      this.anniversaryYears = Optional.ofNullable(anniversaryYears);
+      return this;
+    }
+
+    /**
+     * <p>The number of years after sign-up required to complete the achievement (only applicable if trigger = 'anniversary')</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "anniversaryYears",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage anniversaryYears(Optional<Integer> anniversaryYears) {
+      this.anniversaryYears = anniversaryYears;
+      return this;
+    }
+
+    /**
      * <p>The length of the streak required to complete the achievement (only applicable if trigger = 'streak')</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
@@ -777,7 +823,7 @@ public final class AchievementWithStatsResponse implements IAchievementWithStats
 
     @java.lang.Override
     public AchievementWithStatsResponse build() {
-      return new AchievementWithStatsResponse(completions, rarity, id, name, trigger, description, badgeUrl, key, streakLength, achievementIds, metricId, metricValue, metricName, userAttributes, eventAttribute, eventAttributes, additionalProperties);
+      return new AchievementWithStatsResponse(completions, rarity, id, name, trigger, description, badgeUrl, key, streakLength, anniversaryYears, achievementIds, metricId, metricValue, metricName, userAttributes, eventAttribute, eventAttributes, additionalProperties);
     }
 
     @java.lang.Override

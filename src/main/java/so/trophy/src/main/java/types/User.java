@@ -38,6 +38,8 @@ public final class User {
 
   private final Optional<String> tz;
 
+  private final Optional<String> signUpDate;
+
   private final Optional<List<String>> deviceTokens;
 
   private final boolean subscribeToEmails;
@@ -53,13 +55,14 @@ public final class User {
   private final Map<String, Object> additionalProperties;
 
   private User(String id, Optional<String> email, Optional<String> name, Optional<String> tz,
-      Optional<List<String>> deviceTokens, boolean subscribeToEmails,
+      Optional<String> signUpDate, Optional<List<String>> deviceTokens, boolean subscribeToEmails,
       Map<String, String> attributes, boolean control, OffsetDateTime created,
       OffsetDateTime updated, Map<String, Object> additionalProperties) {
     this.id = id;
     this.email = email;
     this.name = name;
     this.tz = tz;
+    this.signUpDate = signUpDate;
     this.deviceTokens = deviceTokens;
     this.subscribeToEmails = subscribeToEmails;
     this.attributes = attributes;
@@ -99,6 +102,14 @@ public final class User {
   @JsonProperty("tz")
   public Optional<String> getTz() {
     return tz;
+  }
+
+  /**
+   * @return The date the user signed up on your platform, as YYYY-MM-DD. Required for anniversary achievements. Null if not set, in which case the user is not eligible for anniversary achievements.
+   */
+  @JsonProperty("signUpDate")
+  public Optional<String> getSignUpDate() {
+    return signUpDate;
   }
 
   /**
@@ -161,12 +172,12 @@ public final class User {
   }
 
   private boolean equalTo(User other) {
-    return id.equals(other.id) && email.equals(other.email) && name.equals(other.name) && tz.equals(other.tz) && deviceTokens.equals(other.deviceTokens) && subscribeToEmails == other.subscribeToEmails && attributes.equals(other.attributes) && control == other.control && created.equals(other.created) && updated.equals(other.updated);
+    return id.equals(other.id) && email.equals(other.email) && name.equals(other.name) && tz.equals(other.tz) && signUpDate.equals(other.signUpDate) && deviceTokens.equals(other.deviceTokens) && subscribeToEmails == other.subscribeToEmails && attributes.equals(other.attributes) && control == other.control && created.equals(other.created) && updated.equals(other.updated);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.email, this.name, this.tz, this.deviceTokens, this.subscribeToEmails, this.attributes, this.control, this.created, this.updated);
+    return Objects.hash(this.id, this.email, this.name, this.tz, this.signUpDate, this.deviceTokens, this.subscribeToEmails, this.attributes, this.control, this.created, this.updated);
   }
 
   @java.lang.Override
@@ -244,6 +255,13 @@ public final class User {
     _FinalStage tz(String tz);
 
     /**
+     * <p>The date the user signed up on your platform, as YYYY-MM-DD. Required for anniversary achievements. Null if not set, in which case the user is not eligible for anniversary achievements.</p>
+     */
+    _FinalStage signUpDate(Optional<String> signUpDate);
+
+    _FinalStage signUpDate(String signUpDate);
+
+    /**
      * <p>The user's device tokens.</p>
      */
     _FinalStage deviceTokens(Optional<List<String>> deviceTokens);
@@ -278,6 +296,8 @@ public final class User {
 
     private Optional<List<String>> deviceTokens = Optional.empty();
 
+    private Optional<String> signUpDate = Optional.empty();
+
     private Optional<String> tz = Optional.empty();
 
     private Optional<String> name = Optional.empty();
@@ -296,6 +316,7 @@ public final class User {
       email(other.getEmail());
       name(other.getName());
       tz(other.getTz());
+      signUpDate(other.getSignUpDate());
       deviceTokens(other.getDeviceTokens());
       subscribeToEmails(other.getSubscribeToEmails());
       attributes(other.getAttributes());
@@ -422,6 +443,29 @@ public final class User {
     }
 
     /**
+     * <p>The date the user signed up on your platform, as YYYY-MM-DD. Required for anniversary achievements. Null if not set, in which case the user is not eligible for anniversary achievements.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage signUpDate(String signUpDate) {
+      this.signUpDate = Optional.ofNullable(signUpDate);
+      return this;
+    }
+
+    /**
+     * <p>The date the user signed up on your platform, as YYYY-MM-DD. Required for anniversary achievements. Null if not set, in which case the user is not eligible for anniversary achievements.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "signUpDate",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage signUpDate(Optional<String> signUpDate) {
+      this.signUpDate = signUpDate;
+      return this;
+    }
+
+    /**
      * <p>The user's timezone.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
@@ -492,7 +536,7 @@ public final class User {
 
     @java.lang.Override
     public User build() {
-      return new User(id, email, name, tz, deviceTokens, subscribeToEmails, attributes, control, created, updated, additionalProperties);
+      return new User(id, email, name, tz, signUpDate, deviceTokens, subscribeToEmails, attributes, control, created, updated, additionalProperties);
     }
 
     @java.lang.Override

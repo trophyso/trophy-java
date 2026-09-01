@@ -34,6 +34,8 @@ public final class UpdatedUser implements IUpdatedUser {
 
   private final Optional<String> tz;
 
+  private final Optional<String> signUpDate;
+
   private final Optional<List<String>> deviceTokens;
 
   private final Optional<Boolean> subscribeToEmails;
@@ -43,11 +45,13 @@ public final class UpdatedUser implements IUpdatedUser {
   private final Map<String, Object> additionalProperties;
 
   private UpdatedUser(Optional<String> email, Optional<String> name, Optional<String> tz,
-      Optional<List<String>> deviceTokens, Optional<Boolean> subscribeToEmails,
-      Optional<Map<String, String>> attributes, Map<String, Object> additionalProperties) {
+      Optional<String> signUpDate, Optional<List<String>> deviceTokens,
+      Optional<Boolean> subscribeToEmails, Optional<Map<String, String>> attributes,
+      Map<String, Object> additionalProperties) {
     this.email = email;
     this.name = name;
     this.tz = tz;
+    this.signUpDate = signUpDate;
     this.deviceTokens = deviceTokens;
     this.subscribeToEmails = subscribeToEmails;
     this.attributes = attributes;
@@ -79,6 +83,15 @@ public final class UpdatedUser implements IUpdatedUser {
   @java.lang.Override
   public Optional<String> getTz() {
     return tz;
+  }
+
+  /**
+   * @return The date the user signed up on your platform, as YYYY-MM-DD. ISO 8601 date-times are accepted and stored as their UTC calendar day. Must not be after today in the user's timezone. Required for anniversary achievements. Users without a signUpDate are not eligible.
+   */
+  @JsonProperty("signUpDate")
+  @java.lang.Override
+  public Optional<String> getSignUpDate() {
+    return signUpDate;
   }
 
   /**
@@ -120,12 +133,12 @@ public final class UpdatedUser implements IUpdatedUser {
   }
 
   private boolean equalTo(UpdatedUser other) {
-    return email.equals(other.email) && name.equals(other.name) && tz.equals(other.tz) && deviceTokens.equals(other.deviceTokens) && subscribeToEmails.equals(other.subscribeToEmails) && attributes.equals(other.attributes);
+    return email.equals(other.email) && name.equals(other.name) && tz.equals(other.tz) && signUpDate.equals(other.signUpDate) && deviceTokens.equals(other.deviceTokens) && subscribeToEmails.equals(other.subscribeToEmails) && attributes.equals(other.attributes);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.email, this.name, this.tz, this.deviceTokens, this.subscribeToEmails, this.attributes);
+    return Objects.hash(this.email, this.name, this.tz, this.signUpDate, this.deviceTokens, this.subscribeToEmails, this.attributes);
   }
 
   @java.lang.Override
@@ -147,6 +160,8 @@ public final class UpdatedUser implements IUpdatedUser {
 
     private Optional<String> tz = Optional.empty();
 
+    private Optional<String> signUpDate = Optional.empty();
+
     private Optional<List<String>> deviceTokens = Optional.empty();
 
     private Optional<Boolean> subscribeToEmails = Optional.empty();
@@ -163,6 +178,7 @@ public final class UpdatedUser implements IUpdatedUser {
       email(other.getEmail());
       name(other.getName());
       tz(other.getTz());
+      signUpDate(other.getSignUpDate());
       deviceTokens(other.getDeviceTokens());
       subscribeToEmails(other.getSubscribeToEmails());
       attributes(other.getAttributes());
@@ -221,6 +237,23 @@ public final class UpdatedUser implements IUpdatedUser {
     }
 
     /**
+     * <p>The date the user signed up on your platform, as YYYY-MM-DD. ISO 8601 date-times are accepted and stored as their UTC calendar day. Must not be after today in the user's timezone. Required for anniversary achievements. Users without a signUpDate are not eligible.</p>
+     */
+    @JsonSetter(
+        value = "signUpDate",
+        nulls = Nulls.SKIP
+    )
+    public Builder signUpDate(Optional<String> signUpDate) {
+      this.signUpDate = signUpDate;
+      return this;
+    }
+
+    public Builder signUpDate(String signUpDate) {
+      this.signUpDate = Optional.ofNullable(signUpDate);
+      return this;
+    }
+
+    /**
      * <p>The user's device tokens, used for push notifications.</p>
      */
     @JsonSetter(
@@ -272,7 +305,7 @@ public final class UpdatedUser implements IUpdatedUser {
     }
 
     public UpdatedUser build() {
-      return new UpdatedUser(email, name, tz, deviceTokens, subscribeToEmails, attributes, additionalProperties);
+      return new UpdatedUser(email, name, tz, signUpDate, deviceTokens, subscribeToEmails, attributes, additionalProperties);
     }
 
     public Builder additionalProperty(String key, Object value) {

@@ -18,6 +18,8 @@ public interface IUpdatedUser {
 
   Optional<String> getTz();
 
+  Optional<String> getSignUpDate();
+
   Optional<List<String>> getDeviceTokens();
 
   Optional<Boolean> getSubscribeToEmails();

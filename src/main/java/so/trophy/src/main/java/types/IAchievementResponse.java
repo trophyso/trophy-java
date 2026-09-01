@@ -26,6 +26,8 @@ public interface IAchievementResponse {
 
   Optional<Integer> getStreakLength();
 
+  Optional<Integer> getAnniversaryYears();
+
   Optional<List<String>> getAchievementIds();
 
   Optional<String> getMetricId();

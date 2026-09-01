@@ -35,6 +35,8 @@ public final class UpsertedUser implements IUpdatedUser {
 
   private final Optional<String> tz;
 
+  private final Optional<String> signUpDate;
+
   private final Optional<List<String>> deviceTokens;
 
   private final Optional<Boolean> subscribeToEmails;
@@ -46,12 +48,13 @@ public final class UpsertedUser implements IUpdatedUser {
   private final Map<String, Object> additionalProperties;
 
   private UpsertedUser(Optional<String> email, Optional<String> name, Optional<String> tz,
-      Optional<List<String>> deviceTokens, Optional<Boolean> subscribeToEmails,
-      Optional<Map<String, String>> attributes, String id,
+      Optional<String> signUpDate, Optional<List<String>> deviceTokens,
+      Optional<Boolean> subscribeToEmails, Optional<Map<String, String>> attributes, String id,
       Map<String, Object> additionalProperties) {
     this.email = email;
     this.name = name;
     this.tz = tz;
+    this.signUpDate = signUpDate;
     this.deviceTokens = deviceTokens;
     this.subscribeToEmails = subscribeToEmails;
     this.attributes = attributes;
@@ -84,6 +87,15 @@ public final class UpsertedUser implements IUpdatedUser {
   @java.lang.Override
   public Optional<String> getTz() {
     return tz;
+  }
+
+  /**
+   * @return The date the user signed up on your platform, as YYYY-MM-DD. ISO 8601 date-times are accepted and stored as their UTC calendar day. Must not be after today in the user's timezone. Required for anniversary achievements. Users without a signUpDate are not eligible.
+   */
+  @JsonProperty("signUpDate")
+  @java.lang.Override
+  public Optional<String> getSignUpDate() {
+    return signUpDate;
   }
 
   /**
@@ -133,12 +145,12 @@ public final class UpsertedUser implements IUpdatedUser {
   }
 
   private boolean equalTo(UpsertedUser other) {
-    return email.equals(other.email) && name.equals(other.name) && tz.equals(other.tz) && deviceTokens.equals(other.deviceTokens) && subscribeToEmails.equals(other.subscribeToEmails) && attributes.equals(other.attributes) && id.equals(other.id);
+    return email.equals(other.email) && name.equals(other.name) && tz.equals(other.tz) && signUpDate.equals(other.signUpDate) && deviceTokens.equals(other.deviceTokens) && subscribeToEmails.equals(other.subscribeToEmails) && attributes.equals(other.attributes) && id.equals(other.id);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.email, this.name, this.tz, this.deviceTokens, this.subscribeToEmails, this.attributes, this.id);
+    return Objects.hash(this.email, this.name, this.tz, this.signUpDate, this.deviceTokens, this.subscribeToEmails, this.attributes, this.id);
   }
 
   @java.lang.Override
@@ -188,6 +200,13 @@ public final class UpsertedUser implements IUpdatedUser {
     _FinalStage tz(String tz);
 
     /**
+     * <p>The date the user signed up on your platform, as YYYY-MM-DD. ISO 8601 date-times are accepted and stored as their UTC calendar day. Must not be after today in the user's timezone. Required for anniversary achievements. Users without a signUpDate are not eligible.</p>
+     */
+    _FinalStage signUpDate(Optional<String> signUpDate);
+
+    _FinalStage signUpDate(String signUpDate);
+
+    /**
      * <p>The user's device tokens, used for push notifications.</p>
      */
     _FinalStage deviceTokens(Optional<List<String>> deviceTokens);
@@ -221,6 +240,8 @@ public final class UpsertedUser implements IUpdatedUser {
 
     private Optional<List<String>> deviceTokens = Optional.empty();
 
+    private Optional<String> signUpDate = Optional.empty();
+
     private Optional<String> tz = Optional.empty();
 
     private Optional<String> name = Optional.empty();
@@ -238,6 +259,7 @@ public final class UpsertedUser implements IUpdatedUser {
       email(other.getEmail());
       name(other.getName());
       tz(other.getTz());
+      signUpDate(other.getSignUpDate());
       deviceTokens(other.getDeviceTokens());
       subscribeToEmails(other.getSubscribeToEmails());
       attributes(other.getAttributes());
@@ -326,6 +348,29 @@ public final class UpsertedUser implements IUpdatedUser {
     }
 
     /**
+     * <p>The date the user signed up on your platform, as YYYY-MM-DD. ISO 8601 date-times are accepted and stored as their UTC calendar day. Must not be after today in the user's timezone. Required for anniversary achievements. Users without a signUpDate are not eligible.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage signUpDate(String signUpDate) {
+      this.signUpDate = Optional.ofNullable(signUpDate);
+      return this;
+    }
+
+    /**
+     * <p>The date the user signed up on your platform, as YYYY-MM-DD. ISO 8601 date-times are accepted and stored as their UTC calendar day. Must not be after today in the user's timezone. Required for anniversary achievements. Users without a signUpDate are not eligible.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "signUpDate",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage signUpDate(Optional<String> signUpDate) {
+      this.signUpDate = signUpDate;
+      return this;
+    }
+
+    /**
      * <p>The user's timezone (used for email scheduling).</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
@@ -396,7 +441,7 @@ public final class UpsertedUser implements IUpdatedUser {
 
     @java.lang.Override
     public UpsertedUser build() {
-      return new UpsertedUser(email, name, tz, deviceTokens, subscribeToEmails, attributes, id, additionalProperties);
+      return new UpsertedUser(email, name, tz, signUpDate, deviceTokens, subscribeToEmails, attributes, id, additionalProperties);
     }
 
     @java.lang.Override

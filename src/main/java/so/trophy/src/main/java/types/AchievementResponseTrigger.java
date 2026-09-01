@@ -15,7 +15,9 @@ public enum AchievementResponseTrigger {
 
   API("api"),
 
-  ACHIEVEMENT("achievement");
+  ACHIEVEMENT("achievement"),
+
+  ANNIVERSARY("anniversary");
 
   private final String value;
 
