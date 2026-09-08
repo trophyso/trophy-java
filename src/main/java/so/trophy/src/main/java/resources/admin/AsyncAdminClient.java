@@ -8,11 +8,13 @@ package so.trophy.src.main.java.resources.admin;
 import so.trophy.core.ClientOptions;
 import so.trophy.core.Suppliers;
 import java.util.function.Supplier;
+import so.trophy.resources.admin.achievements.AsyncAchievementsClient;
 import so.trophy.resources.admin.applicationapikeys.AsyncApplicationApiKeysClient;
 import so.trophy.resources.admin.attributes.AsyncAttributesClient;
 import so.trophy.resources.admin.leaderboards.AsyncLeaderboardsClient;
 import so.trophy.resources.admin.metrics.AsyncMetricsClient;
 import so.trophy.resources.admin.points.AsyncPointsClient;
+import so.trophy.resources.admin.settings.AsyncSettingsClient;
 import so.trophy.resources.admin.streaks.AsyncStreaksClient;
 import so.trophy.resources.admin.tenants.AsyncTenantsClient;
 
@@ -21,11 +23,15 @@ public class AsyncAdminClient {
 
   protected final Supplier<AsyncAttributesClient> attributesClient;
 
+  protected final Supplier<AsyncAchievementsClient> achievementsClient;
+
   protected final Supplier<AsyncMetricsClient> metricsClient;
 
   protected final Supplier<AsyncLeaderboardsClient> leaderboardsClient;
 
   protected final Supplier<AsyncStreaksClient> streaksClient;
+
+  protected final Supplier<AsyncSettingsClient> settingsClient;
 
   protected final Supplier<AsyncApplicationApiKeysClient> applicationApiKeysClient;
 
@@ -36,9 +42,11 @@ public class AsyncAdminClient {
   public AsyncAdminClient(ClientOptions clientOptions) {
     this.clientOptions = clientOptions;
     this.attributesClient = Suppliers.memoize(() -> new AsyncAttributesClient(clientOptions));
+    this.achievementsClient = Suppliers.memoize(() -> new AsyncAchievementsClient(clientOptions));
     this.metricsClient = Suppliers.memoize(() -> new AsyncMetricsClient(clientOptions));
     this.leaderboardsClient = Suppliers.memoize(() -> new AsyncLeaderboardsClient(clientOptions));
     this.streaksClient = Suppliers.memoize(() -> new AsyncStreaksClient(clientOptions));
+    this.settingsClient = Suppliers.memoize(() -> new AsyncSettingsClient(clientOptions));
     this.applicationApiKeysClient = Suppliers.memoize(() -> new AsyncApplicationApiKeysClient(clientOptions));
     this.tenantsClient = Suppliers.memoize(() -> new AsyncTenantsClient(clientOptions));
     this.pointsClient = Suppliers.memoize(() -> new AsyncPointsClient(clientOptions));
@@ -46,6 +54,10 @@ public class AsyncAdminClient {
 
   public AsyncAttributesClient attributes() {
     return this.attributesClient.get();
+  }
+
+  public AsyncAchievementsClient achievements() {
+    return this.achievementsClient.get();
   }
 
   public AsyncMetricsClient metrics() {
@@ -58,6 +70,10 @@ public class AsyncAdminClient {
 
   public AsyncStreaksClient streaks() {
     return this.streaksClient.get();
+  }
+
+  public AsyncSettingsClient settings() {
+    return this.settingsClient.get();
   }
 
   public AsyncApplicationApiKeysClient applicationApiKeys() {

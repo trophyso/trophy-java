@@ -148,7 +148,7 @@ public class AsyncRawTriggersClient {
     }
 
     /**
-     * Create points triggers in bulk. Maximum 100 triggers per request.
+     * Create points triggers in bulk.
      */
     public CompletableFuture<TrophyApiHttpResponse<CreatePointsTriggersResponse>> create(
         String systemId, List<CreatePointsTriggerRequestItem> request) {
@@ -156,7 +156,7 @@ public class AsyncRawTriggersClient {
     }
 
     /**
-     * Create points triggers in bulk. Maximum 100 triggers per request.
+     * Create points triggers in bulk.
      */
     public CompletableFuture<TrophyApiHttpResponse<CreatePointsTriggersResponse>> create(
         String systemId, List<CreatePointsTriggerRequestItem> request,

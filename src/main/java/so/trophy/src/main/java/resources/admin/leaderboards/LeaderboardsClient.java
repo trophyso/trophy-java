@@ -65,14 +65,14 @@ public class LeaderboardsClient {
   }
 
   /**
-   * Create leaderboards. Maximum 100 leaderboards per request.
+   * Create leaderboards.
    */
   public CreateLeaderboardsResponse create(List<CreateLeaderboardRequestItem> request) {
     return this.rawClient.create(request).body();
   }
 
   /**
-   * Create leaderboards. Maximum 100 leaderboards per request.
+   * Create leaderboards.
    */
   public CreateLeaderboardsResponse create(List<CreateLeaderboardRequestItem> request,
       RequestOptions requestOptions) {

@@ -8,11 +8,13 @@ package so.trophy.src.main.java.resources.admin;
 import so.trophy.core.ClientOptions;
 import so.trophy.core.Suppliers;
 import java.util.function.Supplier;
+import so.trophy.resources.admin.achievements.AchievementsClient;
 import so.trophy.resources.admin.applicationapikeys.ApplicationApiKeysClient;
 import so.trophy.resources.admin.attributes.AttributesClient;
 import so.trophy.resources.admin.leaderboards.LeaderboardsClient;
 import so.trophy.resources.admin.metrics.MetricsClient;
 import so.trophy.resources.admin.points.PointsClient;
+import so.trophy.resources.admin.settings.SettingsClient;
 import so.trophy.resources.admin.streaks.StreaksClient;
 import so.trophy.resources.admin.tenants.TenantsClient;
 
@@ -21,11 +23,15 @@ public class AdminClient {
 
   protected final Supplier<AttributesClient> attributesClient;
 
+  protected final Supplier<AchievementsClient> achievementsClient;
+
   protected final Supplier<MetricsClient> metricsClient;
 
   protected final Supplier<LeaderboardsClient> leaderboardsClient;
 
   protected final Supplier<StreaksClient> streaksClient;
+
+  protected final Supplier<SettingsClient> settingsClient;
 
   protected final Supplier<ApplicationApiKeysClient> applicationApiKeysClient;
 
@@ -36,9 +42,11 @@ public class AdminClient {
   public AdminClient(ClientOptions clientOptions) {
     this.clientOptions = clientOptions;
     this.attributesClient = Suppliers.memoize(() -> new AttributesClient(clientOptions));
+    this.achievementsClient = Suppliers.memoize(() -> new AchievementsClient(clientOptions));
     this.metricsClient = Suppliers.memoize(() -> new MetricsClient(clientOptions));
     this.leaderboardsClient = Suppliers.memoize(() -> new LeaderboardsClient(clientOptions));
     this.streaksClient = Suppliers.memoize(() -> new StreaksClient(clientOptions));
+    this.settingsClient = Suppliers.memoize(() -> new SettingsClient(clientOptions));
     this.applicationApiKeysClient = Suppliers.memoize(() -> new ApplicationApiKeysClient(clientOptions));
     this.tenantsClient = Suppliers.memoize(() -> new TenantsClient(clientOptions));
     this.pointsClient = Suppliers.memoize(() -> new PointsClient(clientOptions));
@@ -46,6 +54,10 @@ public class AdminClient {
 
   public AttributesClient attributes() {
     return this.attributesClient.get();
+  }
+
+  public AchievementsClient achievements() {
+    return this.achievementsClient.get();
   }
 
   public MetricsClient metrics() {
@@ -58,6 +70,10 @@ public class AdminClient {
 
   public StreaksClient streaks() {
     return this.streaksClient.get();
+  }
+
+  public SettingsClient settings() {
+    return this.settingsClient.get();
   }
 
   public ApplicationApiKeysClient applicationApiKeys() {

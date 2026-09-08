@@ -148,7 +148,7 @@ public class AsyncRawLevelsClient {
     }
 
     /**
-     * Create points levels. Maximum 100 levels per request.
+     * Create points levels.
      */
     public CompletableFuture<TrophyApiHttpResponse<CreatePointsLevelsResponse>> create(
         String systemId, List<CreatePointsLevelRequestItem> request) {
@@ -156,7 +156,7 @@ public class AsyncRawLevelsClient {
     }
 
     /**
-     * Create points levels. Maximum 100 levels per request.
+     * Create points levels.
      */
     public CompletableFuture<TrophyApiHttpResponse<CreatePointsLevelsResponse>> create(
         String systemId, List<CreatePointsLevelRequestItem> request,

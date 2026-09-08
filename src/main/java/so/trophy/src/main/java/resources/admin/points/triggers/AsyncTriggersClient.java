@@ -68,7 +68,7 @@ public class AsyncTriggersClient {
   }
 
   /**
-   * Create points triggers in bulk. Maximum 100 triggers per request.
+   * Create points triggers in bulk.
    */
   public CompletableFuture<CreatePointsTriggersResponse> create(String systemId,
       List<CreatePointsTriggerRequestItem> request) {
@@ -76,7 +76,7 @@ public class AsyncTriggersClient {
   }
 
   /**
-   * Create points triggers in bulk. Maximum 100 triggers per request.
+   * Create points triggers in bulk.
    */
   public CompletableFuture<CreatePointsTriggersResponse> create(String systemId,
       List<CreatePointsTriggerRequestItem> request, RequestOptions requestOptions) {

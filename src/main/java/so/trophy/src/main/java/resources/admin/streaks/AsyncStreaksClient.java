@@ -13,6 +13,7 @@ import java.util.function.Supplier;
 import so.trophy.resources.admin.streaks.freezes.AsyncFreezesClient;
 import so.trophy.resources.admin.streaks.pauses.AsyncPausesClient;
 import so.trophy.resources.admin.streaks.requests.RestoreStreaksRequest;
+import so.trophy.resources.admin.streaks.settings.AsyncSettingsClient;
 import so.trophy.types.RestoreStreaksResponse;
 
 public class AsyncStreaksClient {
@@ -24,11 +25,14 @@ public class AsyncStreaksClient {
 
   protected final Supplier<AsyncPausesClient> pausesClient;
 
+  protected final Supplier<AsyncSettingsClient> settingsClient;
+
   public AsyncStreaksClient(ClientOptions clientOptions) {
     this.clientOptions = clientOptions;
     this.rawClient = new AsyncRawStreaksClient(clientOptions);
     this.freezesClient = Suppliers.memoize(() -> new AsyncFreezesClient(clientOptions));
     this.pausesClient = Suppliers.memoize(() -> new AsyncPausesClient(clientOptions));
+    this.settingsClient = Suppliers.memoize(() -> new AsyncSettingsClient(clientOptions));
   }
 
   /**
@@ -59,5 +63,9 @@ public class AsyncStreaksClient {
 
   public AsyncPausesClient pauses() {
     return this.pausesClient.get();
+  }
+
+  public AsyncSettingsClient settings() {
+    return this.settingsClient.get();
   }
 }

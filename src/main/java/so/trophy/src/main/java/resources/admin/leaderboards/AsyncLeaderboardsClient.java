@@ -66,7 +66,7 @@ public class AsyncLeaderboardsClient {
   }
 
   /**
-   * Create leaderboards. Maximum 100 leaderboards per request.
+   * Create leaderboards.
    */
   public CompletableFuture<CreateLeaderboardsResponse> create(
       List<CreateLeaderboardRequestItem> request) {
@@ -74,7 +74,7 @@ public class AsyncLeaderboardsClient {
   }
 
   /**
-   * Create leaderboards. Maximum 100 leaderboards per request.
+   * Create leaderboards.
    */
   public CompletableFuture<CreateLeaderboardsResponse> create(
       List<CreateLeaderboardRequestItem> request, RequestOptions requestOptions) {

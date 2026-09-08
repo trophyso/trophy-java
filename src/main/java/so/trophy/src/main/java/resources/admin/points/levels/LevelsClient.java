@@ -65,7 +65,7 @@ public class LevelsClient {
   }
 
   /**
-   * Create points levels. Maximum 100 levels per request.
+   * Create points levels.
    */
   public CreatePointsLevelsResponse create(String systemId,
       List<CreatePointsLevelRequestItem> request) {
@@ -73,7 +73,7 @@ public class LevelsClient {
   }
 
   /**
-   * Create points levels. Maximum 100 levels per request.
+   * Create points levels.
    */
   public CreatePointsLevelsResponse create(String systemId,
       List<CreatePointsLevelRequestItem> request, RequestOptions requestOptions) {

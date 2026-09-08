@@ -65,7 +65,7 @@ public class TriggersClient {
   }
 
   /**
-   * Create points triggers in bulk. Maximum 100 triggers per request.
+   * Create points triggers in bulk.
    */
   public CreatePointsTriggersResponse create(String systemId,
       List<CreatePointsTriggerRequestItem> request) {
@@ -73,7 +73,7 @@ public class TriggersClient {
   }
 
   /**
-   * Create points triggers in bulk. Maximum 100 triggers per request.
+   * Create points triggers in bulk.
    */
   public CreatePointsTriggersResponse create(String systemId,
       List<CreatePointsTriggerRequestItem> request, RequestOptions requestOptions) {

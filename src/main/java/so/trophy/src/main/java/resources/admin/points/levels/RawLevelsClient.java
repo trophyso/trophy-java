@@ -127,7 +127,7 @@ public class RawLevelsClient {
     }
 
     /**
-     * Create points levels. Maximum 100 levels per request.
+     * Create points levels.
      */
     public TrophyApiHttpResponse<CreatePointsLevelsResponse> create(String systemId,
         List<CreatePointsLevelRequestItem> request) {
@@ -135,7 +135,7 @@ public class RawLevelsClient {
     }
 
     /**
-     * Create points levels. Maximum 100 levels per request.
+     * Create points levels.
      */
     public TrophyApiHttpResponse<CreatePointsLevelsResponse> create(String systemId,
         List<CreatePointsLevelRequestItem> request, RequestOptions requestOptions) {

@@ -144,7 +144,7 @@ public class AsyncRawLeaderboardsClient {
     }
 
     /**
-     * Create leaderboards. Maximum 100 leaderboards per request.
+     * Create leaderboards.
      */
     public CompletableFuture<TrophyApiHttpResponse<CreateLeaderboardsResponse>> create(
         List<CreateLeaderboardRequestItem> request) {
@@ -152,7 +152,7 @@ public class AsyncRawLeaderboardsClient {
     }
 
     /**
-     * Create leaderboards. Maximum 100 leaderboards per request.
+     * Create leaderboards.
      */
     public CompletableFuture<TrophyApiHttpResponse<CreateLeaderboardsResponse>> create(
         List<CreateLeaderboardRequestItem> request, RequestOptions requestOptions) {
