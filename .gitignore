@@ -25,6 +25,3 @@ replay_pid*
 
 # OSX
 .DS_Store
-
-# Maven
-target/

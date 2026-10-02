@@ -17,6 +17,7 @@ import so.trophy.core.ObjectMappers;
 import java.lang.Boolean;
 import java.lang.Object;
 import java.lang.String;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -38,15 +39,19 @@ public final class StreakResponseStreakHistoryItem {
 
   private final boolean usedPause;
 
+  private final Optional<OffsetDateTime> resetAt;
+
   private final Map<String, Object> additionalProperties;
 
   private StreakResponseStreakHistoryItem(String periodStart, String periodEnd, int length,
-      Optional<Boolean> usedFreeze, boolean usedPause, Map<String, Object> additionalProperties) {
+      Optional<Boolean> usedFreeze, boolean usedPause, Optional<OffsetDateTime> resetAt,
+      Map<String, Object> additionalProperties) {
     this.periodStart = periodStart;
     this.periodEnd = periodEnd;
     this.length = length;
     this.usedFreeze = usedFreeze;
     this.usedPause = usedPause;
+    this.resetAt = resetAt;
     this.additionalProperties = additionalProperties;
   }
 
@@ -90,6 +95,14 @@ public final class StreakResponseStreakHistoryItem {
     return usedPause;
   }
 
+  /**
+   * @return The timestamp the streak was reset to zero using the admin API.
+   */
+  @JsonProperty("resetAt")
+  public Optional<OffsetDateTime> getResetAt() {
+    return resetAt;
+  }
+
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
@@ -102,12 +115,12 @@ public final class StreakResponseStreakHistoryItem {
   }
 
   private boolean equalTo(StreakResponseStreakHistoryItem other) {
-    return periodStart.equals(other.periodStart) && periodEnd.equals(other.periodEnd) && length == other.length && usedFreeze.equals(other.usedFreeze) && usedPause == other.usedPause;
+    return periodStart.equals(other.periodStart) && periodEnd.equals(other.periodEnd) && length == other.length && usedFreeze.equals(other.usedFreeze) && usedPause == other.usedPause && resetAt.equals(other.resetAt);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.periodStart, this.periodEnd, this.length, this.usedFreeze, this.usedPause);
+    return Objects.hash(this.periodStart, this.periodEnd, this.length, this.usedFreeze, this.usedPause, this.resetAt);
   }
 
   @java.lang.Override
@@ -162,6 +175,13 @@ public final class StreakResponseStreakHistoryItem {
     _FinalStage usedFreeze(Optional<Boolean> usedFreeze);
 
     _FinalStage usedFreeze(Boolean usedFreeze);
+
+    /**
+     * <p>The timestamp the streak was reset to zero using the admin API.</p>
+     */
+    _FinalStage resetAt(Optional<OffsetDateTime> resetAt);
+
+    _FinalStage resetAt(OffsetDateTime resetAt);
   }
 
   @JsonIgnoreProperties(
@@ -175,6 +195,8 @@ public final class StreakResponseStreakHistoryItem {
     private int length;
 
     private boolean usedPause;
+
+    private Optional<OffsetDateTime> resetAt = Optional.empty();
 
     private Optional<Boolean> usedFreeze = Optional.empty();
 
@@ -191,6 +213,7 @@ public final class StreakResponseStreakHistoryItem {
       length(other.getLength());
       usedFreeze(other.getUsedFreeze());
       usedPause(other.getUsedPause());
+      resetAt(other.getResetAt());
       return this;
     }
 
@@ -239,6 +262,29 @@ public final class StreakResponseStreakHistoryItem {
     }
 
     /**
+     * <p>The timestamp the streak was reset to zero using the admin API.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage resetAt(OffsetDateTime resetAt) {
+      this.resetAt = Optional.ofNullable(resetAt);
+      return this;
+    }
+
+    /**
+     * <p>The timestamp the streak was reset to zero using the admin API.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "resetAt",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage resetAt(Optional<OffsetDateTime> resetAt) {
+      this.resetAt = resetAt;
+      return this;
+    }
+
+    /**
      * <p>Whether the user used a streak freeze during this period. Only present if the organization has enabled streak freezes.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
@@ -263,7 +309,7 @@ public final class StreakResponseStreakHistoryItem {
 
     @java.lang.Override
     public StreakResponseStreakHistoryItem build() {
-      return new StreakResponseStreakHistoryItem(periodStart, periodEnd, length, usedFreeze, usedPause, additionalProperties);
+      return new StreakResponseStreakHistoryItem(periodStart, periodEnd, length, usedFreeze, usedPause, resetAt, additionalProperties);
     }
 
     @java.lang.Override

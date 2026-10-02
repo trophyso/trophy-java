@@ -12,8 +12,10 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 import so.trophy.resources.admin.streaks.freezes.AsyncFreezesClient;
 import so.trophy.resources.admin.streaks.pauses.AsyncPausesClient;
+import so.trophy.resources.admin.streaks.requests.ResetStreaksRequest;
 import so.trophy.resources.admin.streaks.requests.RestoreStreaksRequest;
 import so.trophy.resources.admin.streaks.settings.AsyncSettingsClient;
+import so.trophy.types.ResetStreaksResponse;
 import so.trophy.types.RestoreStreaksResponse;
 
 public class AsyncStreaksClient {
@@ -55,6 +57,21 @@ public class AsyncStreaksClient {
   public CompletableFuture<RestoreStreaksResponse> restore(RestoreStreaksRequest request,
       RequestOptions requestOptions) {
     return this.rawClient.restore(request, requestOptions).thenApply(response -> response.body());
+  }
+
+  /**
+   * Reset the current streak to zero for multiple users.
+   */
+  public CompletableFuture<ResetStreaksResponse> reset(ResetStreaksRequest request) {
+    return this.rawClient.reset(request).thenApply(response -> response.body());
+  }
+
+  /**
+   * Reset the current streak to zero for multiple users.
+   */
+  public CompletableFuture<ResetStreaksResponse> reset(ResetStreaksRequest request,
+      RequestOptions requestOptions) {
+    return this.rawClient.reset(request, requestOptions).thenApply(response -> response.body());
   }
 
   public AsyncFreezesClient freezes() {

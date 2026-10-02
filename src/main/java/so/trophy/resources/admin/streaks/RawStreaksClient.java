@@ -27,7 +27,9 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import so.trophy.resources.admin.streaks.requests.ResetStreaksRequest;
 import so.trophy.resources.admin.streaks.requests.RestoreStreaksRequest;
+import so.trophy.types.ResetStreaksResponse;
 import so.trophy.types.RestoreStreaksResponse;
 
 public class RawStreaksClient {
@@ -100,4 +102,68 @@ public class RawStreaksClient {
         throw new TrophyApiException("Network error executing HTTP request", e);
       }
     }
-  }
+
+    /**
+     * Reset the current streak to zero for multiple users.
+     */
+    public TrophyApiHttpResponse<ResetStreaksResponse> reset(ResetStreaksRequest request) {
+      return reset(request,null);
+    }
+
+    /**
+     * Reset the current streak to zero for multiple users.
+     */
+    public TrophyApiHttpResponse<ResetStreaksResponse> reset(ResetStreaksRequest request,
+        RequestOptions requestOptions) {
+      HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getAdminURL()).newBuilder()
+
+        .addPathSegments("streaks/reset");if (requestOptions != null) {
+          requestOptions.getQueryParameters().forEach((_key, _value) -> {
+            httpUrl.addQueryParameter(_key, _value);
+          } );
+        }
+        RequestBody body;
+        try {
+          body = RequestBody.create(ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
+        }
+        catch(JsonProcessingException e) {
+          throw new TrophyApiException("Failed to serialize request", e);
+        }
+        Request okhttpRequest = new Request.Builder()
+          .url(httpUrl.build())
+          .method("POST", body)
+          .headers(Headers.of(clientOptions.headers(requestOptions)))
+          .addHeader("Content-Type", "application/json")
+          .addHeader("Accept", "application/json")
+          .build();
+        OkHttpClient client = clientOptions.httpClient();
+        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
+          client = clientOptions.httpClientWithTimeout(requestOptions);
+        }
+        if (requestOptions != null && requestOptions.getMaxRetries().isPresent()) {
+          okhttpRequest = okhttpRequest.newBuilder().tag(RetryInterceptor.MaxRetriesOverride.class, new RetryInterceptor.MaxRetriesOverride(requestOptions.getMaxRetries().get())).build();
+        }
+        try (Response response = client.newCall(okhttpRequest).execute()) {
+          ResponseBody responseBody = response.body();
+          String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+          if (response.isSuccessful()) {
+            return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ResetStreaksResponse.class), response);
+          }
+          try {
+            switch (response.code()) {
+              case 400:throw new BadRequestError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
+              case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
+              case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
+            }
+          }
+          catch (JsonProcessingException ignored) {
+            // unable to map error response, throwing generic error
+          }
+          Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
+          throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), errorBody, response);
+        }
+        catch (IOException e) {
+          throw new TrophyApiException("Network error executing HTTP request", e);
+        }
+      }
+    }

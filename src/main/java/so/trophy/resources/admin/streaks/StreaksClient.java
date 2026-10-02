@@ -11,8 +11,10 @@ import so.trophy.core.Suppliers;
 import java.util.function.Supplier;
 import so.trophy.resources.admin.streaks.freezes.FreezesClient;
 import so.trophy.resources.admin.streaks.pauses.PausesClient;
+import so.trophy.resources.admin.streaks.requests.ResetStreaksRequest;
 import so.trophy.resources.admin.streaks.requests.RestoreStreaksRequest;
 import so.trophy.resources.admin.streaks.settings.SettingsClient;
+import so.trophy.types.ResetStreaksResponse;
 import so.trophy.types.RestoreStreaksResponse;
 
 public class StreaksClient {
@@ -54,6 +56,20 @@ public class StreaksClient {
   public RestoreStreaksResponse restore(RestoreStreaksRequest request,
       RequestOptions requestOptions) {
     return this.rawClient.restore(request, requestOptions).body();
+  }
+
+  /**
+   * Reset the current streak to zero for multiple users.
+   */
+  public ResetStreaksResponse reset(ResetStreaksRequest request) {
+    return this.rawClient.reset(request).body();
+  }
+
+  /**
+   * Reset the current streak to zero for multiple users.
+   */
+  public ResetStreaksResponse reset(ResetStreaksRequest request, RequestOptions requestOptions) {
+    return this.rawClient.reset(request, requestOptions).body();
   }
 
   public FreezesClient freezes() {
