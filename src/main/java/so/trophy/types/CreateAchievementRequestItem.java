@@ -123,7 +123,7 @@ public final class CreateAchievementRequestItem {
   }
 
   /**
-   * @return User attribute filters applied to the achievement. Each <code>attributeId</code> must be an active user attribute.
+   * @return User attribute filters applied to the achievement.
    */
   @JsonProperty("userAttributes")
   public Optional<List<CreateAchievementRequestItemUserAttributesItem>> getUserAttributes() {
@@ -260,7 +260,7 @@ public final class CreateAchievementRequestItem {
     _FinalStage badge(CreateAchievementRequestItemBadge badge);
 
     /**
-     * <p>User attribute filters applied to the achievement. Each <code>attributeId</code> must be an active user attribute.</p>
+     * <p>User attribute filters applied to the achievement.</p>
      */
     _FinalStage userAttributes(
         Optional<List<CreateAchievementRequestItemUserAttributesItem>> userAttributes);
@@ -559,7 +559,7 @@ public final class CreateAchievementRequestItem {
     }
 
     /**
-     * <p>User attribute filters applied to the achievement. Each <code>attributeId</code> must be an active user attribute.</p>
+     * <p>User attribute filters applied to the achievement.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -570,7 +570,7 @@ public final class CreateAchievementRequestItem {
     }
 
     /**
-     * <p>User attribute filters applied to the achievement. Each <code>attributeId</code> must be an active user attribute.</p>
+     * <p>User attribute filters applied to the achievement.</p>
      */
     @java.lang.Override
     @JsonSetter(

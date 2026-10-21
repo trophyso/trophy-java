@@ -135,7 +135,7 @@ public final class UpdateAchievementRequestItem {
   }
 
   /**
-   * @return Updated user attribute filters. Send <code>null</code> to clear. Each <code>attributeId</code> must be an active user attribute.
+   * @return Updated user attribute filters. Send <code>null</code> to clear.
    */
   @JsonProperty("userAttributes")
   public Optional<List<UpdateAchievementRequestItemUserAttributesItem>> getUserAttributes() {
@@ -279,7 +279,7 @@ public final class UpdateAchievementRequestItem {
     _FinalStage badge(UpdateAchievementRequestItemBadge badge);
 
     /**
-     * <p>Updated user attribute filters. Send <code>null</code> to clear. Each <code>attributeId</code> must be an active user attribute.</p>
+     * <p>Updated user attribute filters. Send <code>null</code> to clear.</p>
      */
     _FinalStage userAttributes(
         Optional<List<UpdateAchievementRequestItemUserAttributesItem>> userAttributes);
@@ -570,7 +570,7 @@ public final class UpdateAchievementRequestItem {
     }
 
     /**
-     * <p>Updated user attribute filters. Send <code>null</code> to clear. Each <code>attributeId</code> must be an active user attribute.</p>
+     * <p>Updated user attribute filters. Send <code>null</code> to clear.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
     @java.lang.Override
@@ -581,7 +581,7 @@ public final class UpdateAchievementRequestItem {
     }
 
     /**
-     * <p>Updated user attribute filters. Send <code>null</code> to clear. Each <code>attributeId</code> must be an active user attribute.</p>
+     * <p>Updated user attribute filters. Send <code>null</code> to clear.</p>
      */
     @java.lang.Override
     @JsonSetter(

@@ -62,6 +62,8 @@ public final class AdminLeaderboard {
 
   private final Optional<Integer> runInterval;
 
+  private final List<AdminLeaderboardUserAttributesItem> userAttributes;
+
   private final Map<String, Object> additionalProperties;
 
   private AdminLeaderboard(String id, String name, String key, Optional<String> description,
@@ -69,7 +71,8 @@ public final class AdminLeaderboard {
       Optional<String> pointsSystemId, Optional<Integer> maxParticipants, String start,
       Optional<String> end, Optional<String> startTime, Optional<String> endTime,
       List<String> breakdownAttributes, Optional<AdminLeaderboardRunUnit> runUnit,
-      Optional<Integer> runInterval, Map<String, Object> additionalProperties) {
+      Optional<Integer> runInterval, List<AdminLeaderboardUserAttributesItem> userAttributes,
+      Map<String, Object> additionalProperties) {
     this.id = id;
     this.name = name;
     this.key = key;
@@ -86,6 +89,7 @@ public final class AdminLeaderboard {
     this.breakdownAttributes = breakdownAttributes;
     this.runUnit = runUnit;
     this.runInterval = runInterval;
+    this.userAttributes = userAttributes;
     this.additionalProperties = additionalProperties;
   }
 
@@ -217,6 +221,14 @@ public final class AdminLeaderboard {
     return runInterval;
   }
 
+  /**
+   * @return User attribute filters.
+   */
+  @JsonProperty("userAttributes")
+  public List<AdminLeaderboardUserAttributesItem> getUserAttributes() {
+    return userAttributes;
+  }
+
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
@@ -229,12 +241,12 @@ public final class AdminLeaderboard {
   }
 
   private boolean equalTo(AdminLeaderboard other) {
-    return id.equals(other.id) && name.equals(other.name) && key.equals(other.key) && description.equals(other.description) && status.equals(other.status) && rankBy.equals(other.rankBy) && metricId.equals(other.metricId) && pointsSystemId.equals(other.pointsSystemId) && maxParticipants.equals(other.maxParticipants) && start.equals(other.start) && end.equals(other.end) && startTime.equals(other.startTime) && endTime.equals(other.endTime) && breakdownAttributes.equals(other.breakdownAttributes) && runUnit.equals(other.runUnit) && runInterval.equals(other.runInterval);
+    return id.equals(other.id) && name.equals(other.name) && key.equals(other.key) && description.equals(other.description) && status.equals(other.status) && rankBy.equals(other.rankBy) && metricId.equals(other.metricId) && pointsSystemId.equals(other.pointsSystemId) && maxParticipants.equals(other.maxParticipants) && start.equals(other.start) && end.equals(other.end) && startTime.equals(other.startTime) && endTime.equals(other.endTime) && breakdownAttributes.equals(other.breakdownAttributes) && runUnit.equals(other.runUnit) && runInterval.equals(other.runInterval) && userAttributes.equals(other.userAttributes);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.name, this.key, this.description, this.status, this.rankBy, this.metricId, this.pointsSystemId, this.maxParticipants, this.start, this.end, this.startTime, this.endTime, this.breakdownAttributes, this.runUnit, this.runInterval);
+    return Objects.hash(this.id, this.name, this.key, this.description, this.status, this.rankBy, this.metricId, this.pointsSystemId, this.maxParticipants, this.start, this.end, this.startTime, this.endTime, this.breakdownAttributes, this.runUnit, this.runInterval, this.userAttributes);
   }
 
   @java.lang.Override
@@ -368,6 +380,15 @@ public final class AdminLeaderboard {
     _FinalStage runInterval(Optional<Integer> runInterval);
 
     _FinalStage runInterval(Integer runInterval);
+
+    /**
+     * <p>User attribute filters.</p>
+     */
+    _FinalStage userAttributes(List<AdminLeaderboardUserAttributesItem> userAttributes);
+
+    _FinalStage addUserAttributes(AdminLeaderboardUserAttributesItem userAttributes);
+
+    _FinalStage addAllUserAttributes(List<AdminLeaderboardUserAttributesItem> userAttributes);
   }
 
   @JsonIgnoreProperties(
@@ -385,6 +406,8 @@ public final class AdminLeaderboard {
     private AdminLeaderboardRankBy rankBy;
 
     private String start;
+
+    private List<AdminLeaderboardUserAttributesItem> userAttributes = new ArrayList<>();
 
     private Optional<Integer> runInterval = Optional.empty();
 
@@ -430,6 +453,7 @@ public final class AdminLeaderboard {
       breakdownAttributes(other.getBreakdownAttributes());
       runUnit(other.getRunUnit());
       runInterval(other.getRunInterval());
+      userAttributes(other.getUserAttributes());
       return this;
     }
 
@@ -496,6 +520,45 @@ public final class AdminLeaderboard {
     @JsonSetter("start")
     public _FinalStage start(@NotNull String start) {
       this.start = Objects.requireNonNull(start, "start must not be null");
+      return this;
+    }
+
+    /**
+     * <p>User attribute filters.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage addAllUserAttributes(
+        List<AdminLeaderboardUserAttributesItem> userAttributes) {
+      if (userAttributes != null) {
+        this.userAttributes.addAll(userAttributes);
+      }
+      return this;
+    }
+
+    /**
+     * <p>User attribute filters.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage addUserAttributes(AdminLeaderboardUserAttributesItem userAttributes) {
+      this.userAttributes.add(userAttributes);
+      return this;
+    }
+
+    /**
+     * <p>User attribute filters.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "userAttributes",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage userAttributes(List<AdminLeaderboardUserAttributesItem> userAttributes) {
+      this.userAttributes.clear();
+      if (userAttributes != null) {
+        this.userAttributes.addAll(userAttributes);
+      }
       return this;
     }
 
@@ -746,7 +809,7 @@ public final class AdminLeaderboard {
 
     @java.lang.Override
     public AdminLeaderboard build() {
-      return new AdminLeaderboard(id, name, key, description, status, rankBy, metricId, pointsSystemId, maxParticipants, start, end, startTime, endTime, breakdownAttributes, runUnit, runInterval, additionalProperties);
+      return new AdminLeaderboard(id, name, key, description, status, rankBy, metricId, pointsSystemId, maxParticipants, start, end, startTime, endTime, breakdownAttributes, runUnit, runInterval, userAttributes, additionalProperties);
     }
 
     @java.lang.Override

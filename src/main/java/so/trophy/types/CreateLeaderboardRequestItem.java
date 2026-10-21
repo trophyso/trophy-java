@@ -59,6 +59,8 @@ public final class CreateLeaderboardRequestItem {
 
   private final Optional<Integer> runInterval;
 
+  private final Optional<List<CreateLeaderboardRequestItemUserAttributesItem>> userAttributes;
+
   private final Map<String, Object> additionalProperties;
 
   private CreateLeaderboardRequestItem(String name, String key, Optional<String> description,
@@ -68,6 +70,7 @@ public final class CreateLeaderboardRequestItem {
       Optional<String> end, Optional<String> startTime, Optional<String> endTime,
       Optional<List<String>> breakdownAttributes,
       Optional<CreateLeaderboardRequestItemRunUnit> runUnit, Optional<Integer> runInterval,
+      Optional<List<CreateLeaderboardRequestItemUserAttributesItem>> userAttributes,
       Map<String, Object> additionalProperties) {
     this.name = name;
     this.key = key;
@@ -84,6 +87,7 @@ public final class CreateLeaderboardRequestItem {
     this.breakdownAttributes = breakdownAttributes;
     this.runUnit = runUnit;
     this.runInterval = runInterval;
+    this.userAttributes = userAttributes;
     this.additionalProperties = additionalProperties;
   }
 
@@ -207,6 +211,14 @@ public final class CreateLeaderboardRequestItem {
     return runInterval;
   }
 
+  /**
+   * @return User attribute filters. Omit to allow every user.
+   */
+  @JsonProperty("userAttributes")
+  public Optional<List<CreateLeaderboardRequestItemUserAttributesItem>> getUserAttributes() {
+    return userAttributes;
+  }
+
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
@@ -219,12 +231,12 @@ public final class CreateLeaderboardRequestItem {
   }
 
   private boolean equalTo(CreateLeaderboardRequestItem other) {
-    return name.equals(other.name) && key.equals(other.key) && description.equals(other.description) && status.equals(other.status) && rankBy.equals(other.rankBy) && metricId.equals(other.metricId) && pointsSystemId.equals(other.pointsSystemId) && maxParticipants.equals(other.maxParticipants) && start.equals(other.start) && end.equals(other.end) && startTime.equals(other.startTime) && endTime.equals(other.endTime) && breakdownAttributes.equals(other.breakdownAttributes) && runUnit.equals(other.runUnit) && runInterval.equals(other.runInterval);
+    return name.equals(other.name) && key.equals(other.key) && description.equals(other.description) && status.equals(other.status) && rankBy.equals(other.rankBy) && metricId.equals(other.metricId) && pointsSystemId.equals(other.pointsSystemId) && maxParticipants.equals(other.maxParticipants) && start.equals(other.start) && end.equals(other.end) && startTime.equals(other.startTime) && endTime.equals(other.endTime) && breakdownAttributes.equals(other.breakdownAttributes) && runUnit.equals(other.runUnit) && runInterval.equals(other.runInterval) && userAttributes.equals(other.userAttributes);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.name, this.key, this.description, this.status, this.rankBy, this.metricId, this.pointsSystemId, this.maxParticipants, this.start, this.end, this.startTime, this.endTime, this.breakdownAttributes, this.runUnit, this.runInterval);
+    return Objects.hash(this.name, this.key, this.description, this.status, this.rankBy, this.metricId, this.pointsSystemId, this.maxParticipants, this.start, this.end, this.startTime, this.endTime, this.breakdownAttributes, this.runUnit, this.runInterval, this.userAttributes);
   }
 
   @java.lang.Override
@@ -349,6 +361,14 @@ public final class CreateLeaderboardRequestItem {
     _FinalStage runInterval(Optional<Integer> runInterval);
 
     _FinalStage runInterval(Integer runInterval);
+
+    /**
+     * <p>User attribute filters. Omit to allow every user.</p>
+     */
+    _FinalStage userAttributes(
+        Optional<List<CreateLeaderboardRequestItemUserAttributesItem>> userAttributes);
+
+    _FinalStage userAttributes(List<CreateLeaderboardRequestItemUserAttributesItem> userAttributes);
   }
 
   @JsonIgnoreProperties(
@@ -360,6 +380,8 @@ public final class CreateLeaderboardRequestItem {
     private String key;
 
     private CreateLeaderboardRequestItemRankBy rankBy;
+
+    private Optional<List<CreateLeaderboardRequestItemUserAttributesItem>> userAttributes = Optional.empty();
 
     private Optional<Integer> runInterval = Optional.empty();
 
@@ -408,6 +430,7 @@ public final class CreateLeaderboardRequestItem {
       breakdownAttributes(other.getBreakdownAttributes());
       runUnit(other.getRunUnit());
       runInterval(other.getRunInterval());
+      userAttributes(other.getUserAttributes());
       return this;
     }
 
@@ -441,6 +464,31 @@ public final class CreateLeaderboardRequestItem {
     @JsonSetter("rankBy")
     public _FinalStage rankBy(@NotNull CreateLeaderboardRequestItemRankBy rankBy) {
       this.rankBy = Objects.requireNonNull(rankBy, "rankBy must not be null");
+      return this;
+    }
+
+    /**
+     * <p>User attribute filters. Omit to allow every user.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage userAttributes(
+        List<CreateLeaderboardRequestItemUserAttributesItem> userAttributes) {
+      this.userAttributes = Optional.ofNullable(userAttributes);
+      return this;
+    }
+
+    /**
+     * <p>User attribute filters. Omit to allow every user.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "userAttributes",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage userAttributes(
+        Optional<List<CreateLeaderboardRequestItemUserAttributesItem>> userAttributes) {
+      this.userAttributes = userAttributes;
       return this;
     }
 
@@ -722,7 +770,7 @@ public final class CreateLeaderboardRequestItem {
 
     @java.lang.Override
     public CreateLeaderboardRequestItem build() {
-      return new CreateLeaderboardRequestItem(name, key, description, status, rankBy, metricId, pointsSystemId, maxParticipants, start, end, startTime, endTime, breakdownAttributes, runUnit, runInterval, additionalProperties);
+      return new CreateLeaderboardRequestItem(name, key, description, status, rankBy, metricId, pointsSystemId, maxParticipants, start, end, startTime, endTime, breakdownAttributes, runUnit, runInterval, userAttributes, additionalProperties);
     }
 
     @java.lang.Override

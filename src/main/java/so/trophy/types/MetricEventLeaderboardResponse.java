@@ -76,6 +76,8 @@ public final class MetricEventLeaderboardResponse {
 
   private final Optional<Integer> runInterval;
 
+  private final List<LeaderboardResponseUserAttributesItem> userAttributes;
+
   private final Map<String, Object> additionalProperties;
 
   private MetricEventLeaderboardResponse(Optional<String> end, Optional<Integer> rank,
@@ -87,6 +89,7 @@ public final class MetricEventLeaderboardResponse {
       Optional<String> pointsSystemName, Optional<String> description, String start,
       Optional<String> startTime, Optional<String> endTime, Optional<Integer> maxParticipants,
       Optional<LeaderboardResponseRunUnit> runUnit, Optional<Integer> runInterval,
+      List<LeaderboardResponseUserAttributesItem> userAttributes,
       Map<String, Object> additionalProperties) {
     this.end = end;
     this.rank = rank;
@@ -111,6 +114,7 @@ public final class MetricEventLeaderboardResponse {
     this.maxParticipants = maxParticipants;
     this.runUnit = runUnit;
     this.runInterval = runInterval;
+    this.userAttributes = userAttributes;
     this.additionalProperties = additionalProperties;
   }
 
@@ -299,6 +303,14 @@ public final class MetricEventLeaderboardResponse {
     return runInterval;
   }
 
+  /**
+   * @return User attribute filters that a user must match to participate in this leaderboard and appear in its rankings.
+   */
+  @JsonProperty("userAttributes")
+  public List<LeaderboardResponseUserAttributesItem> getUserAttributes() {
+    return userAttributes;
+  }
+
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
@@ -311,12 +323,12 @@ public final class MetricEventLeaderboardResponse {
   }
 
   private boolean equalTo(MetricEventLeaderboardResponse other) {
-    return end.equals(other.end) && rank.equals(other.rank) && previousRank.equals(other.previousRank) && threshold == other.threshold && breakdownAttributeValue.equals(other.breakdownAttributeValue) && breakdownAttributeValues.equals(other.breakdownAttributeValues) && id.equals(other.id) && name.equals(other.name) && key.equals(other.key) && rankBy.equals(other.rankBy) && breakdownAttribute.equals(other.breakdownAttribute) && breakdownAttributes.equals(other.breakdownAttributes) && metricKey.equals(other.metricKey) && metricName.equals(other.metricName) && pointsSystemKey.equals(other.pointsSystemKey) && pointsSystemName.equals(other.pointsSystemName) && description.equals(other.description) && start.equals(other.start) && startTime.equals(other.startTime) && endTime.equals(other.endTime) && maxParticipants.equals(other.maxParticipants) && runUnit.equals(other.runUnit) && runInterval.equals(other.runInterval);
+    return end.equals(other.end) && rank.equals(other.rank) && previousRank.equals(other.previousRank) && threshold == other.threshold && breakdownAttributeValue.equals(other.breakdownAttributeValue) && breakdownAttributeValues.equals(other.breakdownAttributeValues) && id.equals(other.id) && name.equals(other.name) && key.equals(other.key) && rankBy.equals(other.rankBy) && breakdownAttribute.equals(other.breakdownAttribute) && breakdownAttributes.equals(other.breakdownAttributes) && metricKey.equals(other.metricKey) && metricName.equals(other.metricName) && pointsSystemKey.equals(other.pointsSystemKey) && pointsSystemName.equals(other.pointsSystemName) && description.equals(other.description) && start.equals(other.start) && startTime.equals(other.startTime) && endTime.equals(other.endTime) && maxParticipants.equals(other.maxParticipants) && runUnit.equals(other.runUnit) && runInterval.equals(other.runInterval) && userAttributes.equals(other.userAttributes);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.end, this.rank, this.previousRank, this.threshold, this.breakdownAttributeValue, this.breakdownAttributeValues, this.id, this.name, this.key, this.rankBy, this.breakdownAttribute, this.breakdownAttributes, this.metricKey, this.metricName, this.pointsSystemKey, this.pointsSystemName, this.description, this.start, this.startTime, this.endTime, this.maxParticipants, this.runUnit, this.runInterval);
+    return Objects.hash(this.end, this.rank, this.previousRank, this.threshold, this.breakdownAttributeValue, this.breakdownAttributeValues, this.id, this.name, this.key, this.rankBy, this.breakdownAttribute, this.breakdownAttributes, this.metricKey, this.metricName, this.pointsSystemKey, this.pointsSystemName, this.description, this.start, this.startTime, this.endTime, this.maxParticipants, this.runUnit, this.runInterval, this.userAttributes);
   }
 
   @java.lang.Override
@@ -501,6 +513,15 @@ public final class MetricEventLeaderboardResponse {
     _FinalStage runInterval(Optional<Integer> runInterval);
 
     _FinalStage runInterval(Integer runInterval);
+
+    /**
+     * <p>User attribute filters that a user must match to participate in this leaderboard and appear in its rankings.</p>
+     */
+    _FinalStage userAttributes(List<LeaderboardResponseUserAttributesItem> userAttributes);
+
+    _FinalStage addUserAttributes(LeaderboardResponseUserAttributesItem userAttributes);
+
+    _FinalStage addAllUserAttributes(List<LeaderboardResponseUserAttributesItem> userAttributes);
   }
 
   @JsonIgnoreProperties(
@@ -518,6 +539,8 @@ public final class MetricEventLeaderboardResponse {
     private LeaderboardResponseRankBy rankBy;
 
     private String start;
+
+    private List<LeaderboardResponseUserAttributesItem> userAttributes = new ArrayList<>();
 
     private Optional<Integer> runInterval = Optional.empty();
 
@@ -584,6 +607,7 @@ public final class MetricEventLeaderboardResponse {
       maxParticipants(other.getMaxParticipants());
       runUnit(other.getRunUnit());
       runInterval(other.getRunInterval());
+      userAttributes(other.getUserAttributes());
       return this;
     }
 
@@ -650,6 +674,45 @@ public final class MetricEventLeaderboardResponse {
     @JsonSetter("start")
     public _FinalStage start(@NotNull String start) {
       this.start = Objects.requireNonNull(start, "start must not be null");
+      return this;
+    }
+
+    /**
+     * <p>User attribute filters that a user must match to participate in this leaderboard and appear in its rankings.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage addAllUserAttributes(
+        List<LeaderboardResponseUserAttributesItem> userAttributes) {
+      if (userAttributes != null) {
+        this.userAttributes.addAll(userAttributes);
+      }
+      return this;
+    }
+
+    /**
+     * <p>User attribute filters that a user must match to participate in this leaderboard and appear in its rankings.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage addUserAttributes(LeaderboardResponseUserAttributesItem userAttributes) {
+      this.userAttributes.add(userAttributes);
+      return this;
+    }
+
+    /**
+     * <p>User attribute filters that a user must match to participate in this leaderboard and appear in its rankings.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "userAttributes",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage userAttributes(List<LeaderboardResponseUserAttributesItem> userAttributes) {
+      this.userAttributes.clear();
+      if (userAttributes != null) {
+        this.userAttributes.addAll(userAttributes);
+      }
       return this;
     }
 
@@ -1063,7 +1126,7 @@ public final class MetricEventLeaderboardResponse {
 
     @java.lang.Override
     public MetricEventLeaderboardResponse build() {
-      return new MetricEventLeaderboardResponse(end, rank, previousRank, threshold, breakdownAttributeValue, breakdownAttributeValues, id, name, key, rankBy, breakdownAttribute, breakdownAttributes, metricKey, metricName, pointsSystemKey, pointsSystemName, description, start, startTime, endTime, maxParticipants, runUnit, runInterval, additionalProperties);
+      return new MetricEventLeaderboardResponse(end, rank, previousRank, threshold, breakdownAttributeValue, breakdownAttributeValues, id, name, key, rankBy, breakdownAttribute, breakdownAttributes, metricKey, metricName, pointsSystemKey, pointsSystemName, description, start, startTime, endTime, maxParticipants, runUnit, runInterval, userAttributes, additionalProperties);
     }
 
     @java.lang.Override

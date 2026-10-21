@@ -66,6 +66,8 @@ public final class LeaderboardResponseWithRankings implements ILeaderboardRespon
 
   private final Optional<Integer> runInterval;
 
+  private final List<LeaderboardResponseUserAttributesItem> userAttributes;
+
   private final LeaderboardResponseWithRankingsStatus status;
 
   private final List<LeaderboardRanking> rankings;
@@ -79,6 +81,7 @@ public final class LeaderboardResponseWithRankings implements ILeaderboardRespon
       Optional<String> description, String start, Optional<String> end, Optional<String> startTime,
       Optional<String> endTime, Optional<Integer> maxParticipants,
       Optional<LeaderboardResponseRunUnit> runUnit, Optional<Integer> runInterval,
+      List<LeaderboardResponseUserAttributesItem> userAttributes,
       LeaderboardResponseWithRankingsStatus status, List<LeaderboardRanking> rankings,
       Map<String, Object> additionalProperties) {
     this.id = id;
@@ -99,6 +102,7 @@ public final class LeaderboardResponseWithRankings implements ILeaderboardRespon
     this.maxParticipants = maxParticipants;
     this.runUnit = runUnit;
     this.runInterval = runInterval;
+    this.userAttributes = userAttributes;
     this.status = status;
     this.rankings = rankings;
     this.additionalProperties = additionalProperties;
@@ -265,6 +269,14 @@ public final class LeaderboardResponseWithRankings implements ILeaderboardRespon
   }
 
   /**
+   * @return User attribute filters that a user must match to participate in this leaderboard and appear in its rankings.
+   */
+  @JsonProperty("userAttributes")
+  public List<LeaderboardResponseUserAttributesItem> getUserAttributes() {
+    return userAttributes;
+  }
+
+  /**
    * @return The status of the leaderboard.
    */
   @JsonProperty("status")
@@ -292,12 +304,12 @@ public final class LeaderboardResponseWithRankings implements ILeaderboardRespon
   }
 
   private boolean equalTo(LeaderboardResponseWithRankings other) {
-    return id.equals(other.id) && name.equals(other.name) && key.equals(other.key) && rankBy.equals(other.rankBy) && breakdownAttribute.equals(other.breakdownAttribute) && breakdownAttributes.equals(other.breakdownAttributes) && metricKey.equals(other.metricKey) && metricName.equals(other.metricName) && pointsSystemKey.equals(other.pointsSystemKey) && pointsSystemName.equals(other.pointsSystemName) && description.equals(other.description) && start.equals(other.start) && end.equals(other.end) && startTime.equals(other.startTime) && endTime.equals(other.endTime) && maxParticipants.equals(other.maxParticipants) && runUnit.equals(other.runUnit) && runInterval.equals(other.runInterval) && status.equals(other.status) && rankings.equals(other.rankings);
+    return id.equals(other.id) && name.equals(other.name) && key.equals(other.key) && rankBy.equals(other.rankBy) && breakdownAttribute.equals(other.breakdownAttribute) && breakdownAttributes.equals(other.breakdownAttributes) && metricKey.equals(other.metricKey) && metricName.equals(other.metricName) && pointsSystemKey.equals(other.pointsSystemKey) && pointsSystemName.equals(other.pointsSystemName) && description.equals(other.description) && start.equals(other.start) && end.equals(other.end) && startTime.equals(other.startTime) && endTime.equals(other.endTime) && maxParticipants.equals(other.maxParticipants) && runUnit.equals(other.runUnit) && runInterval.equals(other.runInterval) && userAttributes.equals(other.userAttributes) && status.equals(other.status) && rankings.equals(other.rankings);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.name, this.key, this.rankBy, this.breakdownAttribute, this.breakdownAttributes, this.metricKey, this.metricName, this.pointsSystemKey, this.pointsSystemName, this.description, this.start, this.end, this.startTime, this.endTime, this.maxParticipants, this.runUnit, this.runInterval, this.status, this.rankings);
+    return Objects.hash(this.id, this.name, this.key, this.rankBy, this.breakdownAttribute, this.breakdownAttributes, this.metricKey, this.metricName, this.pointsSystemKey, this.pointsSystemName, this.description, this.start, this.end, this.startTime, this.endTime, this.maxParticipants, this.runUnit, this.runInterval, this.userAttributes, this.status, this.rankings);
   }
 
   @java.lang.Override
@@ -454,6 +466,15 @@ public final class LeaderboardResponseWithRankings implements ILeaderboardRespon
     _FinalStage runInterval(Integer runInterval);
 
     /**
+     * <p>User attribute filters that a user must match to participate in this leaderboard and appear in its rankings.</p>
+     */
+    _FinalStage userAttributes(List<LeaderboardResponseUserAttributesItem> userAttributes);
+
+    _FinalStage addUserAttributes(LeaderboardResponseUserAttributesItem userAttributes);
+
+    _FinalStage addAllUserAttributes(List<LeaderboardResponseUserAttributesItem> userAttributes);
+
+    /**
      * <p>Array of user rankings for the leaderboard.</p>
      */
     _FinalStage rankings(List<LeaderboardRanking> rankings);
@@ -480,6 +501,8 @@ public final class LeaderboardResponseWithRankings implements ILeaderboardRespon
     private LeaderboardResponseWithRankingsStatus status;
 
     private List<LeaderboardRanking> rankings = new ArrayList<>();
+
+    private List<LeaderboardResponseUserAttributesItem> userAttributes = new ArrayList<>();
 
     private Optional<Integer> runInterval = Optional.empty();
 
@@ -533,6 +556,7 @@ public final class LeaderboardResponseWithRankings implements ILeaderboardRespon
       maxParticipants(other.getMaxParticipants());
       runUnit(other.getRunUnit());
       runInterval(other.getRunInterval());
+      userAttributes(other.getUserAttributes());
       status(other.getStatus());
       rankings(other.getRankings());
       return this;
@@ -638,6 +662,45 @@ public final class LeaderboardResponseWithRankings implements ILeaderboardRespon
       this.rankings.clear();
       if (rankings != null) {
         this.rankings.addAll(rankings);
+      }
+      return this;
+    }
+
+    /**
+     * <p>User attribute filters that a user must match to participate in this leaderboard and appear in its rankings.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage addAllUserAttributes(
+        List<LeaderboardResponseUserAttributesItem> userAttributes) {
+      if (userAttributes != null) {
+        this.userAttributes.addAll(userAttributes);
+      }
+      return this;
+    }
+
+    /**
+     * <p>User attribute filters that a user must match to participate in this leaderboard and appear in its rankings.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage addUserAttributes(LeaderboardResponseUserAttributesItem userAttributes) {
+      this.userAttributes.add(userAttributes);
+      return this;
+    }
+
+    /**
+     * <p>User attribute filters that a user must match to participate in this leaderboard and appear in its rankings.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "userAttributes",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage userAttributes(List<LeaderboardResponseUserAttributesItem> userAttributes) {
+      this.userAttributes.clear();
+      if (userAttributes != null) {
+        this.userAttributes.addAll(userAttributes);
       }
       return this;
     }
@@ -958,7 +1021,7 @@ public final class LeaderboardResponseWithRankings implements ILeaderboardRespon
 
     @java.lang.Override
     public LeaderboardResponseWithRankings build() {
-      return new LeaderboardResponseWithRankings(id, name, key, rankBy, breakdownAttribute, breakdownAttributes, metricKey, metricName, pointsSystemKey, pointsSystemName, description, start, end, startTime, endTime, maxParticipants, runUnit, runInterval, status, rankings, additionalProperties);
+      return new LeaderboardResponseWithRankings(id, name, key, rankBy, breakdownAttribute, breakdownAttributes, metricKey, metricName, pointsSystemKey, pointsSystemName, description, start, end, startTime, endTime, maxParticipants, runUnit, runInterval, userAttributes, status, rankings, additionalProperties);
     }
 
     @java.lang.Override

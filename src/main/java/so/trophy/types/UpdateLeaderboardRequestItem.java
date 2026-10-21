@@ -61,6 +61,8 @@ public final class UpdateLeaderboardRequestItem {
 
   private final Optional<Integer> runInterval;
 
+  private final Optional<List<UpdateLeaderboardRequestItemUserAttributesItem>> userAttributes;
+
   private final Map<String, Object> additionalProperties;
 
   private UpdateLeaderboardRequestItem(String id, Optional<String> name, Optional<String> key,
@@ -70,6 +72,7 @@ public final class UpdateLeaderboardRequestItem {
       Optional<String> end, Optional<String> startTime, Optional<String> endTime,
       Optional<List<String>> breakdownAttributes,
       Optional<UpdateLeaderboardRequestItemRunUnit> runUnit, Optional<Integer> runInterval,
+      Optional<List<UpdateLeaderboardRequestItemUserAttributesItem>> userAttributes,
       Map<String, Object> additionalProperties) {
     this.id = id;
     this.name = name;
@@ -87,6 +90,7 @@ public final class UpdateLeaderboardRequestItem {
     this.breakdownAttributes = breakdownAttributes;
     this.runUnit = runUnit;
     this.runInterval = runInterval;
+    this.userAttributes = userAttributes;
     this.additionalProperties = additionalProperties;
   }
 
@@ -218,6 +222,14 @@ public final class UpdateLeaderboardRequestItem {
     return runInterval;
   }
 
+  /**
+   * @return Replacement user attribute filters, or <code>null</code> to clear them. Omit to leave the current filters unchanged. This can only be changed while the leaderboard is inactive.
+   */
+  @JsonProperty("userAttributes")
+  public Optional<List<UpdateLeaderboardRequestItemUserAttributesItem>> getUserAttributes() {
+    return userAttributes;
+  }
+
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
@@ -230,12 +242,12 @@ public final class UpdateLeaderboardRequestItem {
   }
 
   private boolean equalTo(UpdateLeaderboardRequestItem other) {
-    return id.equals(other.id) && name.equals(other.name) && key.equals(other.key) && description.equals(other.description) && status.equals(other.status) && rankBy.equals(other.rankBy) && metricId.equals(other.metricId) && pointsSystemId.equals(other.pointsSystemId) && maxParticipants.equals(other.maxParticipants) && start.equals(other.start) && end.equals(other.end) && startTime.equals(other.startTime) && endTime.equals(other.endTime) && breakdownAttributes.equals(other.breakdownAttributes) && runUnit.equals(other.runUnit) && runInterval.equals(other.runInterval);
+    return id.equals(other.id) && name.equals(other.name) && key.equals(other.key) && description.equals(other.description) && status.equals(other.status) && rankBy.equals(other.rankBy) && metricId.equals(other.metricId) && pointsSystemId.equals(other.pointsSystemId) && maxParticipants.equals(other.maxParticipants) && start.equals(other.start) && end.equals(other.end) && startTime.equals(other.startTime) && endTime.equals(other.endTime) && breakdownAttributes.equals(other.breakdownAttributes) && runUnit.equals(other.runUnit) && runInterval.equals(other.runInterval) && userAttributes.equals(other.userAttributes);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.name, this.key, this.description, this.status, this.rankBy, this.metricId, this.pointsSystemId, this.maxParticipants, this.start, this.end, this.startTime, this.endTime, this.breakdownAttributes, this.runUnit, this.runInterval);
+    return Objects.hash(this.id, this.name, this.key, this.description, this.status, this.rankBy, this.metricId, this.pointsSystemId, this.maxParticipants, this.start, this.end, this.startTime, this.endTime, this.breakdownAttributes, this.runUnit, this.runInterval, this.userAttributes);
   }
 
   @java.lang.Override
@@ -367,6 +379,14 @@ public final class UpdateLeaderboardRequestItem {
     _FinalStage runInterval(Optional<Integer> runInterval);
 
     _FinalStage runInterval(Integer runInterval);
+
+    /**
+     * <p>Replacement user attribute filters, or <code>null</code> to clear them. Omit to leave the current filters unchanged. This can only be changed while the leaderboard is inactive.</p>
+     */
+    _FinalStage userAttributes(
+        Optional<List<UpdateLeaderboardRequestItemUserAttributesItem>> userAttributes);
+
+    _FinalStage userAttributes(List<UpdateLeaderboardRequestItemUserAttributesItem> userAttributes);
   }
 
   @JsonIgnoreProperties(
@@ -374,6 +394,8 @@ public final class UpdateLeaderboardRequestItem {
   )
   public static final class Builder implements IdStage, _FinalStage {
     private String id;
+
+    private Optional<List<UpdateLeaderboardRequestItemUserAttributesItem>> userAttributes = Optional.empty();
 
     private Optional<Integer> runInterval = Optional.empty();
 
@@ -429,6 +451,7 @@ public final class UpdateLeaderboardRequestItem {
       breakdownAttributes(other.getBreakdownAttributes());
       runUnit(other.getRunUnit());
       runInterval(other.getRunInterval());
+      userAttributes(other.getUserAttributes());
       return this;
     }
 
@@ -440,6 +463,31 @@ public final class UpdateLeaderboardRequestItem {
     @JsonSetter("id")
     public _FinalStage id(@NotNull String id) {
       this.id = Objects.requireNonNull(id, "id must not be null");
+      return this;
+    }
+
+    /**
+     * <p>Replacement user attribute filters, or <code>null</code> to clear them. Omit to leave the current filters unchanged. This can only be changed while the leaderboard is inactive.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage userAttributes(
+        List<UpdateLeaderboardRequestItemUserAttributesItem> userAttributes) {
+      this.userAttributes = Optional.ofNullable(userAttributes);
+      return this;
+    }
+
+    /**
+     * <p>Replacement user attribute filters, or <code>null</code> to clear them. Omit to leave the current filters unchanged. This can only be changed while the leaderboard is inactive.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "userAttributes",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage userAttributes(
+        Optional<List<UpdateLeaderboardRequestItemUserAttributesItem>> userAttributes) {
+      this.userAttributes = userAttributes;
       return this;
     }
 
@@ -790,7 +838,7 @@ public final class UpdateLeaderboardRequestItem {
 
     @java.lang.Override
     public UpdateLeaderboardRequestItem build() {
-      return new UpdateLeaderboardRequestItem(id, name, key, description, status, rankBy, metricId, pointsSystemId, maxParticipants, start, end, startTime, endTime, breakdownAttributes, runUnit, runInterval, additionalProperties);
+      return new UpdateLeaderboardRequestItem(id, name, key, description, status, rankBy, metricId, pointsSystemId, maxParticipants, start, end, startTime, endTime, breakdownAttributes, runUnit, runInterval, userAttributes, additionalProperties);
     }
 
     @java.lang.Override

@@ -46,4 +46,6 @@ public interface ILeaderboardResponse {
   Optional<LeaderboardResponseRunUnit> getRunUnit();
 
   Optional<Integer> getRunInterval();
+
+  List<LeaderboardResponseUserAttributesItem> getUserAttributes();
 }

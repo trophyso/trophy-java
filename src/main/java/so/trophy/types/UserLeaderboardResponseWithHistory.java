@@ -70,6 +70,8 @@ public final class UserLeaderboardResponseWithHistory implements IUserLeaderboar
 
   private final Optional<Integer> runInterval;
 
+  private final List<LeaderboardResponseUserAttributesItem> userAttributes;
+
   private final List<LeaderboardEvent> history;
 
   private final Map<String, Object> additionalProperties;
@@ -81,8 +83,8 @@ public final class UserLeaderboardResponseWithHistory implements IUserLeaderboar
       Optional<String> pointsSystemName, Optional<String> description, String start,
       Optional<String> end, Optional<String> startTime, Optional<String> endTime,
       Optional<Integer> maxParticipants, Optional<LeaderboardResponseRunUnit> runUnit,
-      Optional<Integer> runInterval, List<LeaderboardEvent> history,
-      Map<String, Object> additionalProperties) {
+      Optional<Integer> runInterval, List<LeaderboardResponseUserAttributesItem> userAttributes,
+      List<LeaderboardEvent> history, Map<String, Object> additionalProperties) {
     this.rank = rank;
     this.value = value;
     this.id = id;
@@ -103,6 +105,7 @@ public final class UserLeaderboardResponseWithHistory implements IUserLeaderboar
     this.maxParticipants = maxParticipants;
     this.runUnit = runUnit;
     this.runInterval = runInterval;
+    this.userAttributes = userAttributes;
     this.history = history;
     this.additionalProperties = additionalProperties;
   }
@@ -286,6 +289,14 @@ public final class UserLeaderboardResponseWithHistory implements IUserLeaderboar
   }
 
   /**
+   * @return User attribute filters that a user must match to participate in this leaderboard and appear in its rankings.
+   */
+  @JsonProperty("userAttributes")
+  public List<LeaderboardResponseUserAttributesItem> getUserAttributes() {
+    return userAttributes;
+  }
+
+  /**
    * @return An array of daily change events showing the user's rank and value over time.
    */
   @JsonProperty("history")
@@ -305,12 +316,12 @@ public final class UserLeaderboardResponseWithHistory implements IUserLeaderboar
   }
 
   private boolean equalTo(UserLeaderboardResponseWithHistory other) {
-    return rank.equals(other.rank) && value.equals(other.value) && id.equals(other.id) && name.equals(other.name) && key.equals(other.key) && rankBy.equals(other.rankBy) && breakdownAttribute.equals(other.breakdownAttribute) && breakdownAttributes.equals(other.breakdownAttributes) && metricKey.equals(other.metricKey) && metricName.equals(other.metricName) && pointsSystemKey.equals(other.pointsSystemKey) && pointsSystemName.equals(other.pointsSystemName) && description.equals(other.description) && start.equals(other.start) && end.equals(other.end) && startTime.equals(other.startTime) && endTime.equals(other.endTime) && maxParticipants.equals(other.maxParticipants) && runUnit.equals(other.runUnit) && runInterval.equals(other.runInterval) && history.equals(other.history);
+    return rank.equals(other.rank) && value.equals(other.value) && id.equals(other.id) && name.equals(other.name) && key.equals(other.key) && rankBy.equals(other.rankBy) && breakdownAttribute.equals(other.breakdownAttribute) && breakdownAttributes.equals(other.breakdownAttributes) && metricKey.equals(other.metricKey) && metricName.equals(other.metricName) && pointsSystemKey.equals(other.pointsSystemKey) && pointsSystemName.equals(other.pointsSystemName) && description.equals(other.description) && start.equals(other.start) && end.equals(other.end) && startTime.equals(other.startTime) && endTime.equals(other.endTime) && maxParticipants.equals(other.maxParticipants) && runUnit.equals(other.runUnit) && runInterval.equals(other.runInterval) && userAttributes.equals(other.userAttributes) && history.equals(other.history);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.rank, this.value, this.id, this.name, this.key, this.rankBy, this.breakdownAttribute, this.breakdownAttributes, this.metricKey, this.metricName, this.pointsSystemKey, this.pointsSystemName, this.description, this.start, this.end, this.startTime, this.endTime, this.maxParticipants, this.runUnit, this.runInterval, this.history);
+    return Objects.hash(this.rank, this.value, this.id, this.name, this.key, this.rankBy, this.breakdownAttribute, this.breakdownAttributes, this.metricKey, this.metricName, this.pointsSystemKey, this.pointsSystemName, this.description, this.start, this.end, this.startTime, this.endTime, this.maxParticipants, this.runUnit, this.runInterval, this.userAttributes, this.history);
   }
 
   @java.lang.Override
@@ -474,6 +485,15 @@ public final class UserLeaderboardResponseWithHistory implements IUserLeaderboar
     _FinalStage runInterval(Integer runInterval);
 
     /**
+     * <p>User attribute filters that a user must match to participate in this leaderboard and appear in its rankings.</p>
+     */
+    _FinalStage userAttributes(List<LeaderboardResponseUserAttributesItem> userAttributes);
+
+    _FinalStage addUserAttributes(LeaderboardResponseUserAttributesItem userAttributes);
+
+    _FinalStage addAllUserAttributes(List<LeaderboardResponseUserAttributesItem> userAttributes);
+
+    /**
      * <p>An array of daily change events showing the user's rank and value over time.</p>
      */
     _FinalStage history(List<LeaderboardEvent> history);
@@ -498,6 +518,8 @@ public final class UserLeaderboardResponseWithHistory implements IUserLeaderboar
     private String start;
 
     private List<LeaderboardEvent> history = new ArrayList<>();
+
+    private List<LeaderboardResponseUserAttributesItem> userAttributes = new ArrayList<>();
 
     private Optional<Integer> runInterval = Optional.empty();
 
@@ -557,6 +579,7 @@ public final class UserLeaderboardResponseWithHistory implements IUserLeaderboar
       maxParticipants(other.getMaxParticipants());
       runUnit(other.getRunUnit());
       runInterval(other.getRunInterval());
+      userAttributes(other.getUserAttributes());
       history(other.getHistory());
       return this;
     }
@@ -650,6 +673,45 @@ public final class UserLeaderboardResponseWithHistory implements IUserLeaderboar
       this.history.clear();
       if (history != null) {
         this.history.addAll(history);
+      }
+      return this;
+    }
+
+    /**
+     * <p>User attribute filters that a user must match to participate in this leaderboard and appear in its rankings.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage addAllUserAttributes(
+        List<LeaderboardResponseUserAttributesItem> userAttributes) {
+      if (userAttributes != null) {
+        this.userAttributes.addAll(userAttributes);
+      }
+      return this;
+    }
+
+    /**
+     * <p>User attribute filters that a user must match to participate in this leaderboard and appear in its rankings.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage addUserAttributes(LeaderboardResponseUserAttributesItem userAttributes) {
+      this.userAttributes.add(userAttributes);
+      return this;
+    }
+
+    /**
+     * <p>User attribute filters that a user must match to participate in this leaderboard and appear in its rankings.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "userAttributes",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage userAttributes(List<LeaderboardResponseUserAttributesItem> userAttributes) {
+      this.userAttributes.clear();
+      if (userAttributes != null) {
+        this.userAttributes.addAll(userAttributes);
       }
       return this;
     }
@@ -1016,7 +1078,7 @@ public final class UserLeaderboardResponseWithHistory implements IUserLeaderboar
 
     @java.lang.Override
     public UserLeaderboardResponseWithHistory build() {
-      return new UserLeaderboardResponseWithHistory(rank, value, id, name, key, rankBy, breakdownAttribute, breakdownAttributes, metricKey, metricName, pointsSystemKey, pointsSystemName, description, start, end, startTime, endTime, maxParticipants, runUnit, runInterval, history, additionalProperties);
+      return new UserLeaderboardResponseWithHistory(rank, value, id, name, key, rankBy, breakdownAttribute, breakdownAttributes, metricKey, metricName, pointsSystemKey, pointsSystemName, description, start, end, startTime, endTime, maxParticipants, runUnit, runInterval, userAttributes, history, additionalProperties);
     }
 
     @java.lang.Override
