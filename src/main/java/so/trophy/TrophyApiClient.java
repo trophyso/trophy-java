@@ -12,6 +12,7 @@ import so.trophy.resources.admin.AdminClient;
 import so.trophy.resources.leaderboards.LeaderboardsClient;
 import so.trophy.resources.metrics.MetricsClient;
 import so.trophy.resources.points.PointsClient;
+import so.trophy.resources.rewards.RewardsClient;
 import so.trophy.resources.streaks.StreaksClient;
 import so.trophy.resources.users.UsersClient;
 
@@ -19,6 +20,8 @@ public class TrophyApiClient {
   protected final ClientOptions clientOptions;
 
   protected final Supplier<AchievementsClient> achievementsClient;
+
+  protected final Supplier<RewardsClient> rewardsClient;
 
   protected final Supplier<MetricsClient> metricsClient;
 
@@ -35,6 +38,7 @@ public class TrophyApiClient {
   public TrophyApiClient(ClientOptions clientOptions) {
     this.clientOptions = clientOptions;
     this.achievementsClient = Suppliers.memoize(() -> new AchievementsClient(clientOptions));
+    this.rewardsClient = Suppliers.memoize(() -> new RewardsClient(clientOptions));
     this.metricsClient = Suppliers.memoize(() -> new MetricsClient(clientOptions));
     this.usersClient = Suppliers.memoize(() -> new UsersClient(clientOptions));
     this.streaksClient = Suppliers.memoize(() -> new StreaksClient(clientOptions));
@@ -45,6 +49,10 @@ public class TrophyApiClient {
 
   public AchievementsClient achievements() {
     return this.achievementsClient.get();
+  }
+
+  public RewardsClient rewards() {
+    return this.rewardsClient.get();
   }
 
   public MetricsClient metrics() {

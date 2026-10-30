@@ -38,6 +38,7 @@ import so.trophy.resources.users.requests.UsersLeaderboardRequest;
 import so.trophy.resources.users.requests.UsersMetricEventSummaryRequest;
 import so.trophy.resources.users.requests.UsersPointsEventSummaryRequest;
 import so.trophy.resources.users.requests.UsersPointsRequest;
+import so.trophy.resources.users.requests.UsersRewardsRequest;
 import so.trophy.resources.users.requests.UsersStreakRequest;
 import so.trophy.resources.users.requests.UsersWrappedRequest;
 import so.trophy.resources.users.types.UsersMetricEventSummaryResponseItem;
@@ -52,6 +53,7 @@ import so.trophy.types.User;
 import so.trophy.types.UserAchievementWithStatsResponse;
 import so.trophy.types.UserLeaderboardResponseWithHistory;
 import so.trophy.types.UserPreferencesResponse;
+import so.trophy.types.UserRewardResponse;
 import so.trophy.types.WrappedResponse;
 
 public class RawUsersClient {
@@ -742,39 +744,51 @@ public class RawUsersClient {
                       }
 
                       /**
-                       * Get a user's streak data.
+                       * Get rewards awarded to a user. Filter by redeemed state and the date the reward was awarded.
                        */
-                      public TrophyApiHttpResponse<StreakResponse> streak(String id) {
-                        return streak(id,UsersStreakRequest.builder().build());
+                      public TrophyApiHttpResponse<List<UserRewardResponse>> rewards(String id) {
+                        return rewards(id,UsersRewardsRequest.builder().build());
                       }
 
                       /**
-                       * Get a user's streak data.
+                       * Get rewards awarded to a user. Filter by redeemed state and the date the reward was awarded.
                        */
-                      public TrophyApiHttpResponse<StreakResponse> streak(String id,
+                      public TrophyApiHttpResponse<List<UserRewardResponse>> rewards(String id,
                           RequestOptions requestOptions) {
-                        return streak(id,UsersStreakRequest.builder().build(),requestOptions);
+                        return rewards(id,UsersRewardsRequest.builder().build(),requestOptions);
                       }
 
                       /**
-                       * Get a user's streak data.
+                       * Get rewards awarded to a user. Filter by redeemed state and the date the reward was awarded.
                        */
-                      public TrophyApiHttpResponse<StreakResponse> streak(String id,
-                          UsersStreakRequest request) {
-                        return streak(id,request,null);
+                      public TrophyApiHttpResponse<List<UserRewardResponse>> rewards(String id,
+                          UsersRewardsRequest request) {
+                        return rewards(id,request,null);
                       }
 
                       /**
-                       * Get a user's streak data.
+                       * Get rewards awarded to a user. Filter by redeemed state and the date the reward was awarded.
                        */
-                      public TrophyApiHttpResponse<StreakResponse> streak(String id,
-                          UsersStreakRequest request, RequestOptions requestOptions) {
+                      public TrophyApiHttpResponse<List<UserRewardResponse>> rewards(String id,
+                          UsersRewardsRequest request, RequestOptions requestOptions) {
                         HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
                           .addPathSegments("users")
                           .addPathSegment(id)
-                          .addPathSegments("streak");if (request.getHistoryPeriods().isPresent()) {
-                            QueryStringMapper.addQueryParameter(httpUrl, "historyPeriods", request.getHistoryPeriods().get(), false);
+                          .addPathSegments("rewards");if (request.getRedeemed().isPresent()) {
+                            QueryStringMapper.addQueryParameter(httpUrl, "redeemed", request.getRedeemed().get(), false);
+                          }
+                          if (request.getStartDate().isPresent()) {
+                            QueryStringMapper.addQueryParameter(httpUrl, "startDate", request.getStartDate().get(), false);
+                          }
+                          if (request.getEndDate().isPresent()) {
+                            QueryStringMapper.addQueryParameter(httpUrl, "endDate", request.getEndDate().get(), false);
+                          }
+                          if (request.getSkip().isPresent()) {
+                            QueryStringMapper.addQueryParameter(httpUrl, "skip", request.getSkip().get(), false);
+                          }
+                          if (request.getLimit().isPresent()) {
+                            QueryStringMapper.addQueryParameter(httpUrl, "limit", request.getLimit().get(), false);
                           }
                           if (requestOptions != null) {
                             requestOptions.getQueryParameters().forEach((_key, _value) -> {
@@ -798,11 +812,10 @@ public class RawUsersClient {
                             ResponseBody responseBody = response.body();
                             String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                             if (response.isSuccessful()) {
-                              return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, StreakResponse.class), response);
+                              return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, new TypeReference<List<UserRewardResponse>>() {}), response);
                             }
                             try {
                               switch (response.code()) {
-                                case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
                                 case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
                                 case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
                               }
@@ -819,41 +832,39 @@ public class RawUsersClient {
                         }
 
                         /**
-                         * Get a user's points for a specific points system.
+                         * Get a user's streak data.
                          */
-                        public TrophyApiHttpResponse<GetUserPointsResponse> points(String id,
-                            String key) {
-                          return points(id,key,UsersPointsRequest.builder().build());
+                        public TrophyApiHttpResponse<StreakResponse> streak(String id) {
+                          return streak(id,UsersStreakRequest.builder().build());
                         }
 
                         /**
-                         * Get a user's points for a specific points system.
+                         * Get a user's streak data.
                          */
-                        public TrophyApiHttpResponse<GetUserPointsResponse> points(String id,
-                            String key, RequestOptions requestOptions) {
-                          return points(id,key,UsersPointsRequest.builder().build(),requestOptions);
+                        public TrophyApiHttpResponse<StreakResponse> streak(String id,
+                            RequestOptions requestOptions) {
+                          return streak(id,UsersStreakRequest.builder().build(),requestOptions);
                         }
 
                         /**
-                         * Get a user's points for a specific points system.
+                         * Get a user's streak data.
                          */
-                        public TrophyApiHttpResponse<GetUserPointsResponse> points(String id,
-                            String key, UsersPointsRequest request) {
-                          return points(id,key,request,null);
+                        public TrophyApiHttpResponse<StreakResponse> streak(String id,
+                            UsersStreakRequest request) {
+                          return streak(id,request,null);
                         }
 
                         /**
-                         * Get a user's points for a specific points system.
+                         * Get a user's streak data.
                          */
-                        public TrophyApiHttpResponse<GetUserPointsResponse> points(String id,
-                            String key, UsersPointsRequest request, RequestOptions requestOptions) {
+                        public TrophyApiHttpResponse<StreakResponse> streak(String id,
+                            UsersStreakRequest request, RequestOptions requestOptions) {
                           HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
                             .addPathSegments("users")
                             .addPathSegment(id)
-                            .addPathSegments("points")
-                            .addPathSegment(key);if (request.getAwards().isPresent()) {
-                              QueryStringMapper.addQueryParameter(httpUrl, "awards", request.getAwards().get(), false);
+                            .addPathSegments("streak");if (request.getHistoryPeriods().isPresent()) {
+                              QueryStringMapper.addQueryParameter(httpUrl, "historyPeriods", request.getHistoryPeriods().get(), false);
                             }
                             if (requestOptions != null) {
                               requestOptions.getQueryParameters().forEach((_key, _value) -> {
@@ -877,7 +888,7 @@ public class RawUsersClient {
                               ResponseBody responseBody = response.body();
                               String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                               if (response.isSuccessful()) {
-                                return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, GetUserPointsResponse.class), response);
+                                return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, StreakResponse.class), response);
                               }
                               try {
                                 switch (response.code()) {
@@ -898,35 +909,54 @@ public class RawUsersClient {
                           }
 
                           /**
-                           * Get active points boosts for a user in a specific points system. Returns both global boosts the user is eligible for and user-specific boosts.
+                           * Get a user's points for a specific points system.
                            */
-                          public TrophyApiHttpResponse<List<PointsBoost>> pointsBoosts(String id,
+                          public TrophyApiHttpResponse<GetUserPointsResponse> points(String id,
                               String key) {
-                            return pointsBoosts(id,key,null);
+                            return points(id,key,UsersPointsRequest.builder().build());
                           }
 
                           /**
-                           * Get active points boosts for a user in a specific points system. Returns both global boosts the user is eligible for and user-specific boosts.
+                           * Get a user's points for a specific points system.
                            */
-                          public TrophyApiHttpResponse<List<PointsBoost>> pointsBoosts(String id,
+                          public TrophyApiHttpResponse<GetUserPointsResponse> points(String id,
                               String key, RequestOptions requestOptions) {
+                            return points(id,key,UsersPointsRequest.builder().build(),requestOptions);
+                          }
+
+                          /**
+                           * Get a user's points for a specific points system.
+                           */
+                          public TrophyApiHttpResponse<GetUserPointsResponse> points(String id,
+                              String key, UsersPointsRequest request) {
+                            return points(id,key,request,null);
+                          }
+
+                          /**
+                           * Get a user's points for a specific points system.
+                           */
+                          public TrophyApiHttpResponse<GetUserPointsResponse> points(String id,
+                              String key, UsersPointsRequest request,
+                              RequestOptions requestOptions) {
                             HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
                               .addPathSegments("users")
                               .addPathSegment(id)
                               .addPathSegments("points")
-                              .addPathSegment(key)
-                              .addPathSegments("boosts");if (requestOptions != null) {
+                              .addPathSegment(key);if (request.getAwards().isPresent()) {
+                                QueryStringMapper.addQueryParameter(httpUrl, "awards", request.getAwards().get(), false);
+                              }
+                              if (requestOptions != null) {
                                 requestOptions.getQueryParameters().forEach((_key, _value) -> {
                                   httpUrl.addQueryParameter(_key, _value);
                                 } );
                               }
-                              Request okhttpRequest = new Request.Builder()
+                              Request.Builder _requestBuilder = new Request.Builder()
                                 .url(httpUrl.build())
                                 .method("GET", null)
                                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                                .addHeader("Accept", "application/json")
-                                .build();
+                                .addHeader("Accept", "application/json");
+                              Request okhttpRequest = _requestBuilder.build();
                               OkHttpClient client = clientOptions.httpClient();
                               if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
                                 client = clientOptions.httpClientWithTimeout(requestOptions);
@@ -938,7 +968,7 @@ public class RawUsersClient {
                                 ResponseBody responseBody = response.body();
                                 String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                                 if (response.isSuccessful()) {
-                                  return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, new TypeReference<List<PointsBoost>>() {}), response);
+                                  return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, GetUserPointsResponse.class), response);
                                 }
                                 try {
                                   switch (response.code()) {
@@ -959,39 +989,35 @@ public class RawUsersClient {
                             }
 
                             /**
-                             * Get a summary of points awards over time for a user for a specific points system.
+                             * Get active points boosts for a user in a specific points system. Returns both global boosts the user is eligible for and user-specific boosts.
                              */
-                            public TrophyApiHttpResponse<List<UsersPointsEventSummaryResponseItem>> pointsEventSummary(
-                                String id, String key, UsersPointsEventSummaryRequest request) {
-                              return pointsEventSummary(id,key,request,null);
+                            public TrophyApiHttpResponse<List<PointsBoost>> pointsBoosts(String id,
+                                String key) {
+                              return pointsBoosts(id,key,null);
                             }
 
                             /**
-                             * Get a summary of points awards over time for a user for a specific points system.
+                             * Get active points boosts for a user in a specific points system. Returns both global boosts the user is eligible for and user-specific boosts.
                              */
-                            public TrophyApiHttpResponse<List<UsersPointsEventSummaryResponseItem>> pointsEventSummary(
-                                String id, String key, UsersPointsEventSummaryRequest request,
-                                RequestOptions requestOptions) {
+                            public TrophyApiHttpResponse<List<PointsBoost>> pointsBoosts(String id,
+                                String key, RequestOptions requestOptions) {
                               HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
                                 .addPathSegments("users")
                                 .addPathSegment(id)
                                 .addPathSegments("points")
                                 .addPathSegment(key)
-                                .addPathSegments("event-summary");QueryStringMapper.addQueryParameter(httpUrl, "aggregation", request.getAggregation(), false);
-                                QueryStringMapper.addQueryParameter(httpUrl, "startDate", request.getStartDate(), false);
-                                QueryStringMapper.addQueryParameter(httpUrl, "endDate", request.getEndDate(), false);
-                                if (requestOptions != null) {
+                                .addPathSegments("boosts");if (requestOptions != null) {
                                   requestOptions.getQueryParameters().forEach((_key, _value) -> {
                                     httpUrl.addQueryParameter(_key, _value);
                                   } );
                                 }
-                                Request.Builder _requestBuilder = new Request.Builder()
+                                Request okhttpRequest = new Request.Builder()
                                   .url(httpUrl.build())
                                   .method("GET", null)
                                   .headers(Headers.of(clientOptions.headers(requestOptions)))
-                                  .addHeader("Accept", "application/json");
-                                Request okhttpRequest = _requestBuilder.build();
+                                  .addHeader("Accept", "application/json")
+                                  .build();
                                 OkHttpClient client = clientOptions.httpClient();
                                 if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
                                   client = clientOptions.httpClientWithTimeout(requestOptions);
@@ -1003,7 +1029,7 @@ public class RawUsersClient {
                                   ResponseBody responseBody = response.body();
                                   String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                                   if (response.isSuccessful()) {
-                                    return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, new TypeReference<List<UsersPointsEventSummaryResponseItem>>() {}), response);
+                                    return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, new TypeReference<List<PointsBoost>>() {}), response);
                                   }
                                   try {
                                     switch (response.code()) {
@@ -1024,46 +1050,28 @@ public class RawUsersClient {
                               }
 
                               /**
-                               * Get a user's rank, value, and daily ranking history for a specific leaderboard.
+                               * Get a summary of points awards over time for a user for a specific points system.
                                */
-                              public TrophyApiHttpResponse<UserLeaderboardResponseWithHistory> leaderboard(
-                                  String id, String key) {
-                                return leaderboard(id,key,UsersLeaderboardRequest.builder().build());
+                              public TrophyApiHttpResponse<List<UsersPointsEventSummaryResponseItem>> pointsEventSummary(
+                                  String id, String key, UsersPointsEventSummaryRequest request) {
+                                return pointsEventSummary(id,key,request,null);
                               }
 
                               /**
-                               * Get a user's rank, value, and daily ranking history for a specific leaderboard.
+                               * Get a summary of points awards over time for a user for a specific points system.
                                */
-                              public TrophyApiHttpResponse<UserLeaderboardResponseWithHistory> leaderboard(
-                                  String id, String key, RequestOptions requestOptions) {
-                                return leaderboard(id,key,UsersLeaderboardRequest.builder().build(),requestOptions);
-                              }
-
-                              /**
-                               * Get a user's rank, value, and daily ranking history for a specific leaderboard.
-                               */
-                              public TrophyApiHttpResponse<UserLeaderboardResponseWithHistory> leaderboard(
-                                  String id, String key, UsersLeaderboardRequest request) {
-                                return leaderboard(id,key,request,null);
-                              }
-
-                              /**
-                               * Get a user's rank, value, and daily ranking history for a specific leaderboard.
-                               */
-                              public TrophyApiHttpResponse<UserLeaderboardResponseWithHistory> leaderboard(
-                                  String id, String key, UsersLeaderboardRequest request,
+                              public TrophyApiHttpResponse<List<UsersPointsEventSummaryResponseItem>> pointsEventSummary(
+                                  String id, String key, UsersPointsEventSummaryRequest request,
                                   RequestOptions requestOptions) {
                                 HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
                                   .addPathSegments("users")
                                   .addPathSegment(id)
-                                  .addPathSegments("leaderboards")
-                                  .addPathSegment(key);if (request.getRun().isPresent()) {
-                                    QueryStringMapper.addQueryParameter(httpUrl, "run", request.getRun().get(), false);
-                                  }
-                                  if (request.getNumEvents().isPresent()) {
-                                    QueryStringMapper.addQueryParameter(httpUrl, "numEvents", request.getNumEvents().get(), false);
-                                  }
+                                  .addPathSegments("points")
+                                  .addPathSegment(key)
+                                  .addPathSegments("event-summary");QueryStringMapper.addQueryParameter(httpUrl, "aggregation", request.getAggregation(), false);
+                                  QueryStringMapper.addQueryParameter(httpUrl, "startDate", request.getStartDate(), false);
+                                  QueryStringMapper.addQueryParameter(httpUrl, "endDate", request.getEndDate(), false);
                                   if (requestOptions != null) {
                                     requestOptions.getQueryParameters().forEach((_key, _value) -> {
                                       httpUrl.addQueryParameter(_key, _value);
@@ -1086,7 +1094,7 @@ public class RawUsersClient {
                                     ResponseBody responseBody = response.body();
                                     String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                                     if (response.isSuccessful()) {
-                                      return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, UserLeaderboardResponseWithHistory.class), response);
+                                      return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, new TypeReference<List<UsersPointsEventSummaryResponseItem>>() {}), response);
                                     }
                                     try {
                                       switch (response.code()) {
@@ -1107,39 +1115,45 @@ public class RawUsersClient {
                                 }
 
                                 /**
-                                 * Get a user's year-in-review wrapped data.
+                                 * Get a user's rank, value, and daily ranking history for a specific leaderboard.
                                  */
-                                public TrophyApiHttpResponse<WrappedResponse> wrapped(String id) {
-                                  return wrapped(id,UsersWrappedRequest.builder().build());
+                                public TrophyApiHttpResponse<UserLeaderboardResponseWithHistory> leaderboard(
+                                    String id, String key) {
+                                  return leaderboard(id,key,UsersLeaderboardRequest.builder().build());
                                 }
 
                                 /**
-                                 * Get a user's year-in-review wrapped data.
+                                 * Get a user's rank, value, and daily ranking history for a specific leaderboard.
                                  */
-                                public TrophyApiHttpResponse<WrappedResponse> wrapped(String id,
+                                public TrophyApiHttpResponse<UserLeaderboardResponseWithHistory> leaderboard(
+                                    String id, String key, RequestOptions requestOptions) {
+                                  return leaderboard(id,key,UsersLeaderboardRequest.builder().build(),requestOptions);
+                                }
+
+                                /**
+                                 * Get a user's rank, value, and daily ranking history for a specific leaderboard.
+                                 */
+                                public TrophyApiHttpResponse<UserLeaderboardResponseWithHistory> leaderboard(
+                                    String id, String key, UsersLeaderboardRequest request) {
+                                  return leaderboard(id,key,request,null);
+                                }
+
+                                /**
+                                 * Get a user's rank, value, and daily ranking history for a specific leaderboard.
+                                 */
+                                public TrophyApiHttpResponse<UserLeaderboardResponseWithHistory> leaderboard(
+                                    String id, String key, UsersLeaderboardRequest request,
                                     RequestOptions requestOptions) {
-                                  return wrapped(id,UsersWrappedRequest.builder().build(),requestOptions);
-                                }
-
-                                /**
-                                 * Get a user's year-in-review wrapped data.
-                                 */
-                                public TrophyApiHttpResponse<WrappedResponse> wrapped(String id,
-                                    UsersWrappedRequest request) {
-                                  return wrapped(id,request,null);
-                                }
-
-                                /**
-                                 * Get a user's year-in-review wrapped data.
-                                 */
-                                public TrophyApiHttpResponse<WrappedResponse> wrapped(String id,
-                                    UsersWrappedRequest request, RequestOptions requestOptions) {
                                   HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
                                     .addPathSegments("users")
                                     .addPathSegment(id)
-                                    .addPathSegments("wrapped");if (request.getYear().isPresent()) {
-                                      QueryStringMapper.addQueryParameter(httpUrl, "year", request.getYear().get(), false);
+                                    .addPathSegments("leaderboards")
+                                    .addPathSegment(key);if (request.getRun().isPresent()) {
+                                      QueryStringMapper.addQueryParameter(httpUrl, "run", request.getRun().get(), false);
+                                    }
+                                    if (request.getNumEvents().isPresent()) {
+                                      QueryStringMapper.addQueryParameter(httpUrl, "numEvents", request.getNumEvents().get(), false);
                                     }
                                     if (requestOptions != null) {
                                       requestOptions.getQueryParameters().forEach((_key, _value) -> {
@@ -1163,7 +1177,7 @@ public class RawUsersClient {
                                       ResponseBody responseBody = response.body();
                                       String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                                       if (response.isSuccessful()) {
-                                        return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, WrappedResponse.class), response);
+                                        return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, UserLeaderboardResponseWithHistory.class), response);
                                       }
                                       try {
                                         switch (response.code()) {
@@ -1182,4 +1196,81 @@ public class RawUsersClient {
                                       throw new TrophyApiException("Network error executing HTTP request", e);
                                     }
                                   }
-                                }
+
+                                  /**
+                                   * Get a user's year-in-review wrapped data.
+                                   */
+                                  public TrophyApiHttpResponse<WrappedResponse> wrapped(String id) {
+                                    return wrapped(id,UsersWrappedRequest.builder().build());
+                                  }
+
+                                  /**
+                                   * Get a user's year-in-review wrapped data.
+                                   */
+                                  public TrophyApiHttpResponse<WrappedResponse> wrapped(String id,
+                                      RequestOptions requestOptions) {
+                                    return wrapped(id,UsersWrappedRequest.builder().build(),requestOptions);
+                                  }
+
+                                  /**
+                                   * Get a user's year-in-review wrapped data.
+                                   */
+                                  public TrophyApiHttpResponse<WrappedResponse> wrapped(String id,
+                                      UsersWrappedRequest request) {
+                                    return wrapped(id,request,null);
+                                  }
+
+                                  /**
+                                   * Get a user's year-in-review wrapped data.
+                                   */
+                                  public TrophyApiHttpResponse<WrappedResponse> wrapped(String id,
+                                      UsersWrappedRequest request, RequestOptions requestOptions) {
+                                    HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
+
+                                      .addPathSegments("users")
+                                      .addPathSegment(id)
+                                      .addPathSegments("wrapped");if (request.getYear().isPresent()) {
+                                        QueryStringMapper.addQueryParameter(httpUrl, "year", request.getYear().get(), false);
+                                      }
+                                      if (requestOptions != null) {
+                                        requestOptions.getQueryParameters().forEach((_key, _value) -> {
+                                          httpUrl.addQueryParameter(_key, _value);
+                                        } );
+                                      }
+                                      Request.Builder _requestBuilder = new Request.Builder()
+                                        .url(httpUrl.build())
+                                        .method("GET", null)
+                                        .headers(Headers.of(clientOptions.headers(requestOptions)))
+                                        .addHeader("Accept", "application/json");
+                                      Request okhttpRequest = _requestBuilder.build();
+                                      OkHttpClient client = clientOptions.httpClient();
+                                      if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
+                                        client = clientOptions.httpClientWithTimeout(requestOptions);
+                                      }
+                                      if (requestOptions != null && requestOptions.getMaxRetries().isPresent()) {
+                                        okhttpRequest = okhttpRequest.newBuilder().tag(RetryInterceptor.MaxRetriesOverride.class, new RetryInterceptor.MaxRetriesOverride(requestOptions.getMaxRetries().get())).build();
+                                      }
+                                      try (Response response = client.newCall(okhttpRequest).execute()) {
+                                        ResponseBody responseBody = response.body();
+                                        String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+                                        if (response.isSuccessful()) {
+                                          return new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, WrappedResponse.class), response);
+                                        }
+                                        try {
+                                          switch (response.code()) {
+                                            case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
+                                            case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
+                                            case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
+                                          }
+                                        }
+                                        catch (JsonProcessingException ignored) {
+                                          // unable to map error response, throwing generic error
+                                        }
+                                        Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
+                                        throw new TrophyApiApiException("Error with status code " + response.code(), response.code(), errorBody, response);
+                                      }
+                                      catch (IOException e) {
+                                        throw new TrophyApiException("Network error executing HTTP request", e);
+                                      }
+                                    }
+                                  }

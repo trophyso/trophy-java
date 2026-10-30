@@ -17,7 +17,9 @@ public enum PointsTriggerType {
 
   TIME("time"),
 
-  USER_CREATION("user_creation");
+  USER_CREATION("user_creation"),
+
+  REWARD("reward");
 
   private final String value;
 

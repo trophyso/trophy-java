@@ -43,6 +43,7 @@ import so.trophy.resources.users.requests.UsersLeaderboardRequest;
 import so.trophy.resources.users.requests.UsersMetricEventSummaryRequest;
 import so.trophy.resources.users.requests.UsersPointsEventSummaryRequest;
 import so.trophy.resources.users.requests.UsersPointsRequest;
+import so.trophy.resources.users.requests.UsersRewardsRequest;
 import so.trophy.resources.users.requests.UsersStreakRequest;
 import so.trophy.resources.users.requests.UsersWrappedRequest;
 import so.trophy.resources.users.types.UsersMetricEventSummaryResponseItem;
@@ -57,6 +58,7 @@ import so.trophy.types.User;
 import so.trophy.types.UserAchievementWithStatsResponse;
 import so.trophy.types.UserLeaderboardResponseWithHistory;
 import so.trophy.types.UserPreferencesResponse;
+import so.trophy.types.UserRewardResponse;
 import so.trophy.types.WrappedResponse;
 
 public class AsyncRawUsersClient {
@@ -919,40 +921,52 @@ public class AsyncRawUsersClient {
                       }
 
                       /**
-                       * Get a user's streak data.
+                       * Get rewards awarded to a user. Filter by redeemed state and the date the reward was awarded.
                        */
-                      public CompletableFuture<TrophyApiHttpResponse<StreakResponse>> streak(
+                      public CompletableFuture<TrophyApiHttpResponse<List<UserRewardResponse>>> rewards(
                           String id) {
-                        return streak(id,UsersStreakRequest.builder().build());
+                        return rewards(id,UsersRewardsRequest.builder().build());
                       }
 
                       /**
-                       * Get a user's streak data.
+                       * Get rewards awarded to a user. Filter by redeemed state and the date the reward was awarded.
                        */
-                      public CompletableFuture<TrophyApiHttpResponse<StreakResponse>> streak(
+                      public CompletableFuture<TrophyApiHttpResponse<List<UserRewardResponse>>> rewards(
                           String id, RequestOptions requestOptions) {
-                        return streak(id,UsersStreakRequest.builder().build(),requestOptions);
+                        return rewards(id,UsersRewardsRequest.builder().build(),requestOptions);
                       }
 
                       /**
-                       * Get a user's streak data.
+                       * Get rewards awarded to a user. Filter by redeemed state and the date the reward was awarded.
                        */
-                      public CompletableFuture<TrophyApiHttpResponse<StreakResponse>> streak(
-                          String id, UsersStreakRequest request) {
-                        return streak(id,request,null);
+                      public CompletableFuture<TrophyApiHttpResponse<List<UserRewardResponse>>> rewards(
+                          String id, UsersRewardsRequest request) {
+                        return rewards(id,request,null);
                       }
 
                       /**
-                       * Get a user's streak data.
+                       * Get rewards awarded to a user. Filter by redeemed state and the date the reward was awarded.
                        */
-                      public CompletableFuture<TrophyApiHttpResponse<StreakResponse>> streak(
-                          String id, UsersStreakRequest request, RequestOptions requestOptions) {
+                      public CompletableFuture<TrophyApiHttpResponse<List<UserRewardResponse>>> rewards(
+                          String id, UsersRewardsRequest request, RequestOptions requestOptions) {
                         HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
                           .addPathSegments("users")
                           .addPathSegment(id)
-                          .addPathSegments("streak");if (request.getHistoryPeriods().isPresent()) {
-                            QueryStringMapper.addQueryParameter(httpUrl, "historyPeriods", request.getHistoryPeriods().get(), false);
+                          .addPathSegments("rewards");if (request.getRedeemed().isPresent()) {
+                            QueryStringMapper.addQueryParameter(httpUrl, "redeemed", request.getRedeemed().get(), false);
+                          }
+                          if (request.getStartDate().isPresent()) {
+                            QueryStringMapper.addQueryParameter(httpUrl, "startDate", request.getStartDate().get(), false);
+                          }
+                          if (request.getEndDate().isPresent()) {
+                            QueryStringMapper.addQueryParameter(httpUrl, "endDate", request.getEndDate().get(), false);
+                          }
+                          if (request.getSkip().isPresent()) {
+                            QueryStringMapper.addQueryParameter(httpUrl, "skip", request.getSkip().get(), false);
+                          }
+                          if (request.getLimit().isPresent()) {
+                            QueryStringMapper.addQueryParameter(httpUrl, "limit", request.getLimit().get(), false);
                           }
                           if (requestOptions != null) {
                             requestOptions.getQueryParameters().forEach((_key, _value) -> {
@@ -972,20 +986,18 @@ public class AsyncRawUsersClient {
                           if (requestOptions != null && requestOptions.getMaxRetries().isPresent()) {
                             okhttpRequest = okhttpRequest.newBuilder().tag(RetryInterceptor.MaxRetriesOverride.class, new RetryInterceptor.MaxRetriesOverride(requestOptions.getMaxRetries().get())).build();
                           }
-                          CompletableFuture<TrophyApiHttpResponse<StreakResponse>> future = new CompletableFuture<>();
+                          CompletableFuture<TrophyApiHttpResponse<List<UserRewardResponse>>> future = new CompletableFuture<>();
                           client.newCall(okhttpRequest).enqueue(new Callback() {
                             @Override
                             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                               try (ResponseBody responseBody = response.body()) {
                                 String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                                 if (response.isSuccessful()) {
-                                  future.complete(new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, StreakResponse.class), response));
+                                  future.complete(new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, new TypeReference<List<UserRewardResponse>>() {}), response));
                                   return;
                                 }
                                 try {
                                   switch (response.code()) {
-                                    case 401:future.completeExceptionally(new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response));
-                                    return;
                                     case 404:future.completeExceptionally(new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response));
                                     return;
                                     case 422:future.completeExceptionally(new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response));
@@ -1013,42 +1025,40 @@ public class AsyncRawUsersClient {
                         }
 
                         /**
-                         * Get a user's points for a specific points system.
+                         * Get a user's streak data.
                          */
-                        public CompletableFuture<TrophyApiHttpResponse<GetUserPointsResponse>> points(
-                            String id, String key) {
-                          return points(id,key,UsersPointsRequest.builder().build());
+                        public CompletableFuture<TrophyApiHttpResponse<StreakResponse>> streak(
+                            String id) {
+                          return streak(id,UsersStreakRequest.builder().build());
                         }
 
                         /**
-                         * Get a user's points for a specific points system.
+                         * Get a user's streak data.
                          */
-                        public CompletableFuture<TrophyApiHttpResponse<GetUserPointsResponse>> points(
-                            String id, String key, RequestOptions requestOptions) {
-                          return points(id,key,UsersPointsRequest.builder().build(),requestOptions);
+                        public CompletableFuture<TrophyApiHttpResponse<StreakResponse>> streak(
+                            String id, RequestOptions requestOptions) {
+                          return streak(id,UsersStreakRequest.builder().build(),requestOptions);
                         }
 
                         /**
-                         * Get a user's points for a specific points system.
+                         * Get a user's streak data.
                          */
-                        public CompletableFuture<TrophyApiHttpResponse<GetUserPointsResponse>> points(
-                            String id, String key, UsersPointsRequest request) {
-                          return points(id,key,request,null);
+                        public CompletableFuture<TrophyApiHttpResponse<StreakResponse>> streak(
+                            String id, UsersStreakRequest request) {
+                          return streak(id,request,null);
                         }
 
                         /**
-                         * Get a user's points for a specific points system.
+                         * Get a user's streak data.
                          */
-                        public CompletableFuture<TrophyApiHttpResponse<GetUserPointsResponse>> points(
-                            String id, String key, UsersPointsRequest request,
-                            RequestOptions requestOptions) {
+                        public CompletableFuture<TrophyApiHttpResponse<StreakResponse>> streak(
+                            String id, UsersStreakRequest request, RequestOptions requestOptions) {
                           HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
                             .addPathSegments("users")
                             .addPathSegment(id)
-                            .addPathSegments("points")
-                            .addPathSegment(key);if (request.getAwards().isPresent()) {
-                              QueryStringMapper.addQueryParameter(httpUrl, "awards", request.getAwards().get(), false);
+                            .addPathSegments("streak");if (request.getHistoryPeriods().isPresent()) {
+                              QueryStringMapper.addQueryParameter(httpUrl, "historyPeriods", request.getHistoryPeriods().get(), false);
                             }
                             if (requestOptions != null) {
                               requestOptions.getQueryParameters().forEach((_key, _value) -> {
@@ -1068,14 +1078,14 @@ public class AsyncRawUsersClient {
                             if (requestOptions != null && requestOptions.getMaxRetries().isPresent()) {
                               okhttpRequest = okhttpRequest.newBuilder().tag(RetryInterceptor.MaxRetriesOverride.class, new RetryInterceptor.MaxRetriesOverride(requestOptions.getMaxRetries().get())).build();
                             }
-                            CompletableFuture<TrophyApiHttpResponse<GetUserPointsResponse>> future = new CompletableFuture<>();
+                            CompletableFuture<TrophyApiHttpResponse<StreakResponse>> future = new CompletableFuture<>();
                             client.newCall(okhttpRequest).enqueue(new Callback() {
                               @Override
                               public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                                 try (ResponseBody responseBody = response.body()) {
                                   String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                                   if (response.isSuccessful()) {
-                                    future.complete(new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, GetUserPointsResponse.class), response));
+                                    future.complete(new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, StreakResponse.class), response));
                                     return;
                                   }
                                   try {
@@ -1109,35 +1119,54 @@ public class AsyncRawUsersClient {
                           }
 
                           /**
-                           * Get active points boosts for a user in a specific points system. Returns both global boosts the user is eligible for and user-specific boosts.
+                           * Get a user's points for a specific points system.
                            */
-                          public CompletableFuture<TrophyApiHttpResponse<List<PointsBoost>>> pointsBoosts(
+                          public CompletableFuture<TrophyApiHttpResponse<GetUserPointsResponse>> points(
                               String id, String key) {
-                            return pointsBoosts(id,key,null);
+                            return points(id,key,UsersPointsRequest.builder().build());
                           }
 
                           /**
-                           * Get active points boosts for a user in a specific points system. Returns both global boosts the user is eligible for and user-specific boosts.
+                           * Get a user's points for a specific points system.
                            */
-                          public CompletableFuture<TrophyApiHttpResponse<List<PointsBoost>>> pointsBoosts(
+                          public CompletableFuture<TrophyApiHttpResponse<GetUserPointsResponse>> points(
                               String id, String key, RequestOptions requestOptions) {
+                            return points(id,key,UsersPointsRequest.builder().build(),requestOptions);
+                          }
+
+                          /**
+                           * Get a user's points for a specific points system.
+                           */
+                          public CompletableFuture<TrophyApiHttpResponse<GetUserPointsResponse>> points(
+                              String id, String key, UsersPointsRequest request) {
+                            return points(id,key,request,null);
+                          }
+
+                          /**
+                           * Get a user's points for a specific points system.
+                           */
+                          public CompletableFuture<TrophyApiHttpResponse<GetUserPointsResponse>> points(
+                              String id, String key, UsersPointsRequest request,
+                              RequestOptions requestOptions) {
                             HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
                               .addPathSegments("users")
                               .addPathSegment(id)
                               .addPathSegments("points")
-                              .addPathSegment(key)
-                              .addPathSegments("boosts");if (requestOptions != null) {
+                              .addPathSegment(key);if (request.getAwards().isPresent()) {
+                                QueryStringMapper.addQueryParameter(httpUrl, "awards", request.getAwards().get(), false);
+                              }
+                              if (requestOptions != null) {
                                 requestOptions.getQueryParameters().forEach((_key, _value) -> {
                                   httpUrl.addQueryParameter(_key, _value);
                                 } );
                               }
-                              Request okhttpRequest = new Request.Builder()
+                              Request.Builder _requestBuilder = new Request.Builder()
                                 .url(httpUrl.build())
                                 .method("GET", null)
                                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                                .addHeader("Accept", "application/json")
-                                .build();
+                                .addHeader("Accept", "application/json");
+                              Request okhttpRequest = _requestBuilder.build();
                               OkHttpClient client = clientOptions.httpClient();
                               if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
                                 client = clientOptions.httpClientWithTimeout(requestOptions);
@@ -1145,14 +1174,14 @@ public class AsyncRawUsersClient {
                               if (requestOptions != null && requestOptions.getMaxRetries().isPresent()) {
                                 okhttpRequest = okhttpRequest.newBuilder().tag(RetryInterceptor.MaxRetriesOverride.class, new RetryInterceptor.MaxRetriesOverride(requestOptions.getMaxRetries().get())).build();
                               }
-                              CompletableFuture<TrophyApiHttpResponse<List<PointsBoost>>> future = new CompletableFuture<>();
+                              CompletableFuture<TrophyApiHttpResponse<GetUserPointsResponse>> future = new CompletableFuture<>();
                               client.newCall(okhttpRequest).enqueue(new Callback() {
                                 @Override
                                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                                   try (ResponseBody responseBody = response.body()) {
                                     String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                                     if (response.isSuccessful()) {
-                                      future.complete(new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, new TypeReference<List<PointsBoost>>() {}), response));
+                                      future.complete(new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, GetUserPointsResponse.class), response));
                                       return;
                                     }
                                     try {
@@ -1186,39 +1215,35 @@ public class AsyncRawUsersClient {
                             }
 
                             /**
-                             * Get a summary of points awards over time for a user for a specific points system.
+                             * Get active points boosts for a user in a specific points system. Returns both global boosts the user is eligible for and user-specific boosts.
                              */
-                            public CompletableFuture<TrophyApiHttpResponse<List<UsersPointsEventSummaryResponseItem>>> pointsEventSummary(
-                                String id, String key, UsersPointsEventSummaryRequest request) {
-                              return pointsEventSummary(id,key,request,null);
+                            public CompletableFuture<TrophyApiHttpResponse<List<PointsBoost>>> pointsBoosts(
+                                String id, String key) {
+                              return pointsBoosts(id,key,null);
                             }
 
                             /**
-                             * Get a summary of points awards over time for a user for a specific points system.
+                             * Get active points boosts for a user in a specific points system. Returns both global boosts the user is eligible for and user-specific boosts.
                              */
-                            public CompletableFuture<TrophyApiHttpResponse<List<UsersPointsEventSummaryResponseItem>>> pointsEventSummary(
-                                String id, String key, UsersPointsEventSummaryRequest request,
-                                RequestOptions requestOptions) {
+                            public CompletableFuture<TrophyApiHttpResponse<List<PointsBoost>>> pointsBoosts(
+                                String id, String key, RequestOptions requestOptions) {
                               HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
                                 .addPathSegments("users")
                                 .addPathSegment(id)
                                 .addPathSegments("points")
                                 .addPathSegment(key)
-                                .addPathSegments("event-summary");QueryStringMapper.addQueryParameter(httpUrl, "aggregation", request.getAggregation(), false);
-                                QueryStringMapper.addQueryParameter(httpUrl, "startDate", request.getStartDate(), false);
-                                QueryStringMapper.addQueryParameter(httpUrl, "endDate", request.getEndDate(), false);
-                                if (requestOptions != null) {
+                                .addPathSegments("boosts");if (requestOptions != null) {
                                   requestOptions.getQueryParameters().forEach((_key, _value) -> {
                                     httpUrl.addQueryParameter(_key, _value);
                                   } );
                                 }
-                                Request.Builder _requestBuilder = new Request.Builder()
+                                Request okhttpRequest = new Request.Builder()
                                   .url(httpUrl.build())
                                   .method("GET", null)
                                   .headers(Headers.of(clientOptions.headers(requestOptions)))
-                                  .addHeader("Accept", "application/json");
-                                Request okhttpRequest = _requestBuilder.build();
+                                  .addHeader("Accept", "application/json")
+                                  .build();
                                 OkHttpClient client = clientOptions.httpClient();
                                 if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
                                   client = clientOptions.httpClientWithTimeout(requestOptions);
@@ -1226,14 +1251,14 @@ public class AsyncRawUsersClient {
                                 if (requestOptions != null && requestOptions.getMaxRetries().isPresent()) {
                                   okhttpRequest = okhttpRequest.newBuilder().tag(RetryInterceptor.MaxRetriesOverride.class, new RetryInterceptor.MaxRetriesOverride(requestOptions.getMaxRetries().get())).build();
                                 }
-                                CompletableFuture<TrophyApiHttpResponse<List<UsersPointsEventSummaryResponseItem>>> future = new CompletableFuture<>();
+                                CompletableFuture<TrophyApiHttpResponse<List<PointsBoost>>> future = new CompletableFuture<>();
                                 client.newCall(okhttpRequest).enqueue(new Callback() {
                                   @Override
                                   public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                                     try (ResponseBody responseBody = response.body()) {
                                       String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                                       if (response.isSuccessful()) {
-                                        future.complete(new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, new TypeReference<List<UsersPointsEventSummaryResponseItem>>() {}), response));
+                                        future.complete(new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, new TypeReference<List<PointsBoost>>() {}), response));
                                         return;
                                       }
                                       try {
@@ -1267,46 +1292,28 @@ public class AsyncRawUsersClient {
                               }
 
                               /**
-                               * Get a user's rank, value, and daily ranking history for a specific leaderboard.
+                               * Get a summary of points awards over time for a user for a specific points system.
                                */
-                              public CompletableFuture<TrophyApiHttpResponse<UserLeaderboardResponseWithHistory>> leaderboard(
-                                  String id, String key) {
-                                return leaderboard(id,key,UsersLeaderboardRequest.builder().build());
+                              public CompletableFuture<TrophyApiHttpResponse<List<UsersPointsEventSummaryResponseItem>>> pointsEventSummary(
+                                  String id, String key, UsersPointsEventSummaryRequest request) {
+                                return pointsEventSummary(id,key,request,null);
                               }
 
                               /**
-                               * Get a user's rank, value, and daily ranking history for a specific leaderboard.
+                               * Get a summary of points awards over time for a user for a specific points system.
                                */
-                              public CompletableFuture<TrophyApiHttpResponse<UserLeaderboardResponseWithHistory>> leaderboard(
-                                  String id, String key, RequestOptions requestOptions) {
-                                return leaderboard(id,key,UsersLeaderboardRequest.builder().build(),requestOptions);
-                              }
-
-                              /**
-                               * Get a user's rank, value, and daily ranking history for a specific leaderboard.
-                               */
-                              public CompletableFuture<TrophyApiHttpResponse<UserLeaderboardResponseWithHistory>> leaderboard(
-                                  String id, String key, UsersLeaderboardRequest request) {
-                                return leaderboard(id,key,request,null);
-                              }
-
-                              /**
-                               * Get a user's rank, value, and daily ranking history for a specific leaderboard.
-                               */
-                              public CompletableFuture<TrophyApiHttpResponse<UserLeaderboardResponseWithHistory>> leaderboard(
-                                  String id, String key, UsersLeaderboardRequest request,
+                              public CompletableFuture<TrophyApiHttpResponse<List<UsersPointsEventSummaryResponseItem>>> pointsEventSummary(
+                                  String id, String key, UsersPointsEventSummaryRequest request,
                                   RequestOptions requestOptions) {
                                 HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
                                   .addPathSegments("users")
                                   .addPathSegment(id)
-                                  .addPathSegments("leaderboards")
-                                  .addPathSegment(key);if (request.getRun().isPresent()) {
-                                    QueryStringMapper.addQueryParameter(httpUrl, "run", request.getRun().get(), false);
-                                  }
-                                  if (request.getNumEvents().isPresent()) {
-                                    QueryStringMapper.addQueryParameter(httpUrl, "numEvents", request.getNumEvents().get(), false);
-                                  }
+                                  .addPathSegments("points")
+                                  .addPathSegment(key)
+                                  .addPathSegments("event-summary");QueryStringMapper.addQueryParameter(httpUrl, "aggregation", request.getAggregation(), false);
+                                  QueryStringMapper.addQueryParameter(httpUrl, "startDate", request.getStartDate(), false);
+                                  QueryStringMapper.addQueryParameter(httpUrl, "endDate", request.getEndDate(), false);
                                   if (requestOptions != null) {
                                     requestOptions.getQueryParameters().forEach((_key, _value) -> {
                                       httpUrl.addQueryParameter(_key, _value);
@@ -1325,14 +1332,14 @@ public class AsyncRawUsersClient {
                                   if (requestOptions != null && requestOptions.getMaxRetries().isPresent()) {
                                     okhttpRequest = okhttpRequest.newBuilder().tag(RetryInterceptor.MaxRetriesOverride.class, new RetryInterceptor.MaxRetriesOverride(requestOptions.getMaxRetries().get())).build();
                                   }
-                                  CompletableFuture<TrophyApiHttpResponse<UserLeaderboardResponseWithHistory>> future = new CompletableFuture<>();
+                                  CompletableFuture<TrophyApiHttpResponse<List<UsersPointsEventSummaryResponseItem>>> future = new CompletableFuture<>();
                                   client.newCall(okhttpRequest).enqueue(new Callback() {
                                     @Override
                                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                                       try (ResponseBody responseBody = response.body()) {
                                         String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                                         if (response.isSuccessful()) {
-                                          future.complete(new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, UserLeaderboardResponseWithHistory.class), response));
+                                          future.complete(new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, new TypeReference<List<UsersPointsEventSummaryResponseItem>>() {}), response));
                                           return;
                                         }
                                         try {
@@ -1366,41 +1373,45 @@ public class AsyncRawUsersClient {
                                 }
 
                                 /**
-                                 * Get a user's year-in-review wrapped data.
+                                 * Get a user's rank, value, and daily ranking history for a specific leaderboard.
                                  */
-                                public CompletableFuture<TrophyApiHttpResponse<WrappedResponse>> wrapped(
-                                    String id) {
-                                  return wrapped(id,UsersWrappedRequest.builder().build());
+                                public CompletableFuture<TrophyApiHttpResponse<UserLeaderboardResponseWithHistory>> leaderboard(
+                                    String id, String key) {
+                                  return leaderboard(id,key,UsersLeaderboardRequest.builder().build());
                                 }
 
                                 /**
-                                 * Get a user's year-in-review wrapped data.
+                                 * Get a user's rank, value, and daily ranking history for a specific leaderboard.
                                  */
-                                public CompletableFuture<TrophyApiHttpResponse<WrappedResponse>> wrapped(
-                                    String id, RequestOptions requestOptions) {
-                                  return wrapped(id,UsersWrappedRequest.builder().build(),requestOptions);
+                                public CompletableFuture<TrophyApiHttpResponse<UserLeaderboardResponseWithHistory>> leaderboard(
+                                    String id, String key, RequestOptions requestOptions) {
+                                  return leaderboard(id,key,UsersLeaderboardRequest.builder().build(),requestOptions);
                                 }
 
                                 /**
-                                 * Get a user's year-in-review wrapped data.
+                                 * Get a user's rank, value, and daily ranking history for a specific leaderboard.
                                  */
-                                public CompletableFuture<TrophyApiHttpResponse<WrappedResponse>> wrapped(
-                                    String id, UsersWrappedRequest request) {
-                                  return wrapped(id,request,null);
+                                public CompletableFuture<TrophyApiHttpResponse<UserLeaderboardResponseWithHistory>> leaderboard(
+                                    String id, String key, UsersLeaderboardRequest request) {
+                                  return leaderboard(id,key,request,null);
                                 }
 
                                 /**
-                                 * Get a user's year-in-review wrapped data.
+                                 * Get a user's rank, value, and daily ranking history for a specific leaderboard.
                                  */
-                                public CompletableFuture<TrophyApiHttpResponse<WrappedResponse>> wrapped(
-                                    String id, UsersWrappedRequest request,
+                                public CompletableFuture<TrophyApiHttpResponse<UserLeaderboardResponseWithHistory>> leaderboard(
+                                    String id, String key, UsersLeaderboardRequest request,
                                     RequestOptions requestOptions) {
                                   HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
 
                                     .addPathSegments("users")
                                     .addPathSegment(id)
-                                    .addPathSegments("wrapped");if (request.getYear().isPresent()) {
-                                      QueryStringMapper.addQueryParameter(httpUrl, "year", request.getYear().get(), false);
+                                    .addPathSegments("leaderboards")
+                                    .addPathSegment(key);if (request.getRun().isPresent()) {
+                                      QueryStringMapper.addQueryParameter(httpUrl, "run", request.getRun().get(), false);
+                                    }
+                                    if (request.getNumEvents().isPresent()) {
+                                      QueryStringMapper.addQueryParameter(httpUrl, "numEvents", request.getNumEvents().get(), false);
                                     }
                                     if (requestOptions != null) {
                                       requestOptions.getQueryParameters().forEach((_key, _value) -> {
@@ -1420,14 +1431,14 @@ public class AsyncRawUsersClient {
                                     if (requestOptions != null && requestOptions.getMaxRetries().isPresent()) {
                                       okhttpRequest = okhttpRequest.newBuilder().tag(RetryInterceptor.MaxRetriesOverride.class, new RetryInterceptor.MaxRetriesOverride(requestOptions.getMaxRetries().get())).build();
                                     }
-                                    CompletableFuture<TrophyApiHttpResponse<WrappedResponse>> future = new CompletableFuture<>();
+                                    CompletableFuture<TrophyApiHttpResponse<UserLeaderboardResponseWithHistory>> future = new CompletableFuture<>();
                                     client.newCall(okhttpRequest).enqueue(new Callback() {
                                       @Override
                                       public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                                         try (ResponseBody responseBody = response.body()) {
                                           String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                                           if (response.isSuccessful()) {
-                                            future.complete(new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, WrappedResponse.class), response));
+                                            future.complete(new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, UserLeaderboardResponseWithHistory.class), response));
                                             return;
                                           }
                                           try {
@@ -1459,4 +1470,99 @@ public class AsyncRawUsersClient {
                                     });
                                     return future;
                                   }
-                                }
+
+                                  /**
+                                   * Get a user's year-in-review wrapped data.
+                                   */
+                                  public CompletableFuture<TrophyApiHttpResponse<WrappedResponse>> wrapped(
+                                      String id) {
+                                    return wrapped(id,UsersWrappedRequest.builder().build());
+                                  }
+
+                                  /**
+                                   * Get a user's year-in-review wrapped data.
+                                   */
+                                  public CompletableFuture<TrophyApiHttpResponse<WrappedResponse>> wrapped(
+                                      String id, RequestOptions requestOptions) {
+                                    return wrapped(id,UsersWrappedRequest.builder().build(),requestOptions);
+                                  }
+
+                                  /**
+                                   * Get a user's year-in-review wrapped data.
+                                   */
+                                  public CompletableFuture<TrophyApiHttpResponse<WrappedResponse>> wrapped(
+                                      String id, UsersWrappedRequest request) {
+                                    return wrapped(id,request,null);
+                                  }
+
+                                  /**
+                                   * Get a user's year-in-review wrapped data.
+                                   */
+                                  public CompletableFuture<TrophyApiHttpResponse<WrappedResponse>> wrapped(
+                                      String id, UsersWrappedRequest request,
+                                      RequestOptions requestOptions) {
+                                    HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getApiURL()).newBuilder()
+
+                                      .addPathSegments("users")
+                                      .addPathSegment(id)
+                                      .addPathSegments("wrapped");if (request.getYear().isPresent()) {
+                                        QueryStringMapper.addQueryParameter(httpUrl, "year", request.getYear().get(), false);
+                                      }
+                                      if (requestOptions != null) {
+                                        requestOptions.getQueryParameters().forEach((_key, _value) -> {
+                                          httpUrl.addQueryParameter(_key, _value);
+                                        } );
+                                      }
+                                      Request.Builder _requestBuilder = new Request.Builder()
+                                        .url(httpUrl.build())
+                                        .method("GET", null)
+                                        .headers(Headers.of(clientOptions.headers(requestOptions)))
+                                        .addHeader("Accept", "application/json");
+                                      Request okhttpRequest = _requestBuilder.build();
+                                      OkHttpClient client = clientOptions.httpClient();
+                                      if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
+                                        client = clientOptions.httpClientWithTimeout(requestOptions);
+                                      }
+                                      if (requestOptions != null && requestOptions.getMaxRetries().isPresent()) {
+                                        okhttpRequest = okhttpRequest.newBuilder().tag(RetryInterceptor.MaxRetriesOverride.class, new RetryInterceptor.MaxRetriesOverride(requestOptions.getMaxRetries().get())).build();
+                                      }
+                                      CompletableFuture<TrophyApiHttpResponse<WrappedResponse>> future = new CompletableFuture<>();
+                                      client.newCall(okhttpRequest).enqueue(new Callback() {
+                                        @Override
+                                        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                                          try (ResponseBody responseBody = response.body()) {
+                                            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+                                            if (response.isSuccessful()) {
+                                              future.complete(new TrophyApiHttpResponse<>(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, WrappedResponse.class), response));
+                                              return;
+                                            }
+                                            try {
+                                              switch (response.code()) {
+                                                case 401:future.completeExceptionally(new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response));
+                                                return;
+                                                case 404:future.completeExceptionally(new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response));
+                                                return;
+                                                case 422:future.completeExceptionally(new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response));
+                                                return;
+                                              }
+                                            }
+                                            catch (JsonProcessingException ignored) {
+                                              // unable to map error response, throwing generic error
+                                            }
+                                            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
+                                            future.completeExceptionally(new TrophyApiApiException("Error with status code " + response.code(), response.code(), errorBody, response));
+                                            return;
+                                          }
+                                          catch (IOException e) {
+                                            future.completeExceptionally(new TrophyApiException("Network error executing HTTP request", e));
+                                          }
+                                        }
+
+                                        @Override
+                                        public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                                          future.completeExceptionally(new TrophyApiException("Network error executing HTTP request", e));
+                                        }
+                                      });
+                                      return future;
+                                    }
+                                  }

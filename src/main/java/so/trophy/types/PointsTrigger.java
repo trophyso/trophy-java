@@ -51,6 +51,10 @@ public final class PointsTrigger {
 
   private final Optional<String> achievementName;
 
+  private final Optional<String> rewardKey;
+
+  private final Optional<String> rewardName;
+
   private final Optional<PointsTriggerTimeUnit> timeUnit;
 
   private final Optional<Integer> timeInterval;
@@ -70,8 +74,9 @@ public final class PointsTrigger {
   private PointsTrigger(String id, PointsTriggerType type, int points, PointsTriggerStatus status,
       Optional<String> achievementId, Optional<String> metricId, Optional<String> metricName,
       Optional<Integer> metricThreshold, Optional<Integer> streakLengthThreshold,
-      Optional<String> achievementName, Optional<PointsTriggerTimeUnit> timeUnit,
-      Optional<Integer> timeInterval, List<PointsTriggerUserAttributesItem> userAttributes,
+      Optional<String> achievementName, Optional<String> rewardKey, Optional<String> rewardName,
+      Optional<PointsTriggerTimeUnit> timeUnit, Optional<Integer> timeInterval,
+      List<PointsTriggerUserAttributesItem> userAttributes,
       Optional<PointsTriggerEventAttribute> eventAttribute,
       Optional<List<PointsTriggerEventAttributesItem>> eventAttributes, OffsetDateTime created,
       OffsetDateTime updated, Map<String, Object> additionalProperties) {
@@ -85,6 +90,8 @@ public final class PointsTrigger {
     this.metricThreshold = metricThreshold;
     this.streakLengthThreshold = streakLengthThreshold;
     this.achievementName = achievementName;
+    this.rewardKey = rewardKey;
+    this.rewardName = rewardName;
     this.timeUnit = timeUnit;
     this.timeInterval = timeInterval;
     this.userAttributes = userAttributes;
@@ -176,6 +183,22 @@ public final class PointsTrigger {
   }
 
   /**
+   * @return If the trigger has type 'reward', the key of the reward that granted these points.
+   */
+  @JsonProperty("rewardKey")
+  public Optional<String> getRewardKey() {
+    return rewardKey;
+  }
+
+  /**
+   * @return If the trigger has type 'reward', the name of the reward that granted these points.
+   */
+  @JsonProperty("rewardName")
+  public Optional<String> getRewardName() {
+    return rewardName;
+  }
+
+  /**
    * @return If the trigger has type 'time', the unit of time after which to award points
    */
   @JsonProperty("timeUnit")
@@ -243,12 +266,12 @@ public final class PointsTrigger {
   }
 
   private boolean equalTo(PointsTrigger other) {
-    return id.equals(other.id) && type.equals(other.type) && points == other.points && status.equals(other.status) && achievementId.equals(other.achievementId) && metricId.equals(other.metricId) && metricName.equals(other.metricName) && metricThreshold.equals(other.metricThreshold) && streakLengthThreshold.equals(other.streakLengthThreshold) && achievementName.equals(other.achievementName) && timeUnit.equals(other.timeUnit) && timeInterval.equals(other.timeInterval) && userAttributes.equals(other.userAttributes) && eventAttribute.equals(other.eventAttribute) && eventAttributes.equals(other.eventAttributes) && created.equals(other.created) && updated.equals(other.updated);
+    return id.equals(other.id) && type.equals(other.type) && points == other.points && status.equals(other.status) && achievementId.equals(other.achievementId) && metricId.equals(other.metricId) && metricName.equals(other.metricName) && metricThreshold.equals(other.metricThreshold) && streakLengthThreshold.equals(other.streakLengthThreshold) && achievementName.equals(other.achievementName) && rewardKey.equals(other.rewardKey) && rewardName.equals(other.rewardName) && timeUnit.equals(other.timeUnit) && timeInterval.equals(other.timeInterval) && userAttributes.equals(other.userAttributes) && eventAttribute.equals(other.eventAttribute) && eventAttributes.equals(other.eventAttributes) && created.equals(other.created) && updated.equals(other.updated);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.type, this.points, this.status, this.achievementId, this.metricId, this.metricName, this.metricThreshold, this.streakLengthThreshold, this.achievementName, this.timeUnit, this.timeInterval, this.userAttributes, this.eventAttribute, this.eventAttributes, this.created, this.updated);
+    return Objects.hash(this.id, this.type, this.points, this.status, this.achievementId, this.metricId, this.metricName, this.metricThreshold, this.streakLengthThreshold, this.achievementName, this.rewardKey, this.rewardName, this.timeUnit, this.timeInterval, this.userAttributes, this.eventAttribute, this.eventAttributes, this.created, this.updated);
   }
 
   @java.lang.Override
@@ -354,6 +377,20 @@ public final class PointsTrigger {
     _FinalStage achievementName(String achievementName);
 
     /**
+     * <p>If the trigger has type 'reward', the key of the reward that granted these points.</p>
+     */
+    _FinalStage rewardKey(Optional<String> rewardKey);
+
+    _FinalStage rewardKey(String rewardKey);
+
+    /**
+     * <p>If the trigger has type 'reward', the name of the reward that granted these points.</p>
+     */
+    _FinalStage rewardName(Optional<String> rewardName);
+
+    _FinalStage rewardName(String rewardName);
+
+    /**
      * <p>If the trigger has type 'time', the unit of time after which to award points</p>
      */
     _FinalStage timeUnit(Optional<PointsTriggerTimeUnit> timeUnit);
@@ -417,6 +454,10 @@ public final class PointsTrigger {
 
     private Optional<PointsTriggerTimeUnit> timeUnit = Optional.empty();
 
+    private Optional<String> rewardName = Optional.empty();
+
+    private Optional<String> rewardKey = Optional.empty();
+
     private Optional<String> achievementName = Optional.empty();
 
     private Optional<Integer> streakLengthThreshold = Optional.empty();
@@ -447,6 +488,8 @@ public final class PointsTrigger {
       metricThreshold(other.getMetricThreshold());
       streakLengthThreshold(other.getStreakLengthThreshold());
       achievementName(other.getAchievementName());
+      rewardKey(other.getRewardKey());
+      rewardName(other.getRewardName());
       timeUnit(other.getTimeUnit());
       timeInterval(other.getTimeInterval());
       userAttributes(other.getUserAttributes());
@@ -655,6 +698,52 @@ public final class PointsTrigger {
     }
 
     /**
+     * <p>If the trigger has type 'reward', the name of the reward that granted these points.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage rewardName(String rewardName) {
+      this.rewardName = Optional.ofNullable(rewardName);
+      return this;
+    }
+
+    /**
+     * <p>If the trigger has type 'reward', the name of the reward that granted these points.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "rewardName",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage rewardName(Optional<String> rewardName) {
+      this.rewardName = rewardName;
+      return this;
+    }
+
+    /**
+     * <p>If the trigger has type 'reward', the key of the reward that granted these points.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage rewardKey(String rewardKey) {
+      this.rewardKey = Optional.ofNullable(rewardKey);
+      return this;
+    }
+
+    /**
+     * <p>If the trigger has type 'reward', the key of the reward that granted these points.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "rewardKey",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage rewardKey(Optional<String> rewardKey) {
+      this.rewardKey = rewardKey;
+      return this;
+    }
+
+    /**
      * <p>If the trigger has type 'achievement', the name of the achievement</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
@@ -794,7 +883,7 @@ public final class PointsTrigger {
 
     @java.lang.Override
     public PointsTrigger build() {
-      return new PointsTrigger(id, type, points, status, achievementId, metricId, metricName, metricThreshold, streakLengthThreshold, achievementName, timeUnit, timeInterval, userAttributes, eventAttribute, eventAttributes, created, updated, additionalProperties);
+      return new PointsTrigger(id, type, points, status, achievementId, metricId, metricName, metricThreshold, streakLengthThreshold, achievementName, rewardKey, rewardName, timeUnit, timeInterval, userAttributes, eventAttribute, eventAttributes, created, updated, additionalProperties);
     }
 
     @java.lang.Override

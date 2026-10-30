@@ -12,6 +12,7 @@ import so.trophy.resources.admin.AsyncAdminClient;
 import so.trophy.resources.leaderboards.AsyncLeaderboardsClient;
 import so.trophy.resources.metrics.AsyncMetricsClient;
 import so.trophy.resources.points.AsyncPointsClient;
+import so.trophy.resources.rewards.AsyncRewardsClient;
 import so.trophy.resources.streaks.AsyncStreaksClient;
 import so.trophy.resources.users.AsyncUsersClient;
 
@@ -19,6 +20,8 @@ public class AsyncTrophyApiClient {
   protected final ClientOptions clientOptions;
 
   protected final Supplier<AsyncAchievementsClient> achievementsClient;
+
+  protected final Supplier<AsyncRewardsClient> rewardsClient;
 
   protected final Supplier<AsyncMetricsClient> metricsClient;
 
@@ -35,6 +38,7 @@ public class AsyncTrophyApiClient {
   public AsyncTrophyApiClient(ClientOptions clientOptions) {
     this.clientOptions = clientOptions;
     this.achievementsClient = Suppliers.memoize(() -> new AsyncAchievementsClient(clientOptions));
+    this.rewardsClient = Suppliers.memoize(() -> new AsyncRewardsClient(clientOptions));
     this.metricsClient = Suppliers.memoize(() -> new AsyncMetricsClient(clientOptions));
     this.usersClient = Suppliers.memoize(() -> new AsyncUsersClient(clientOptions));
     this.streaksClient = Suppliers.memoize(() -> new AsyncStreaksClient(clientOptions));
@@ -45,6 +49,10 @@ public class AsyncTrophyApiClient {
 
   public AsyncAchievementsClient achievements() {
     return this.achievementsClient.get();
+  }
+
+  public AsyncRewardsClient rewards() {
+    return this.rewardsClient.get();
   }
 
   public AsyncMetricsClient metrics() {

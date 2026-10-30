@@ -45,6 +45,8 @@ public final class EventResponse {
 
   private final Map<String, MetricEventLeaderboardResponse> leaderboards;
 
+  private final List<UserRewardResponse> rewards;
+
   private final Optional<String> idempotencyKey;
 
   private final Optional<Boolean> idempotentReplayed;
@@ -54,8 +56,9 @@ public final class EventResponse {
   private EventResponse(String eventId, String metricId, double total,
       List<UserAchievementResponse> achievements, MetricEventStreakResponse currentStreak,
       Map<String, MetricEventPointsResponse> points,
-      Map<String, MetricEventLeaderboardResponse> leaderboards, Optional<String> idempotencyKey,
-      Optional<Boolean> idempotentReplayed, Map<String, Object> additionalProperties) {
+      Map<String, MetricEventLeaderboardResponse> leaderboards, List<UserRewardResponse> rewards,
+      Optional<String> idempotencyKey, Optional<Boolean> idempotentReplayed,
+      Map<String, Object> additionalProperties) {
     this.eventId = eventId;
     this.metricId = metricId;
     this.total = total;
@@ -63,6 +66,7 @@ public final class EventResponse {
     this.currentStreak = currentStreak;
     this.points = points;
     this.leaderboards = leaderboards;
+    this.rewards = rewards;
     this.idempotencyKey = idempotencyKey;
     this.idempotentReplayed = idempotentReplayed;
     this.additionalProperties = additionalProperties;
@@ -125,6 +129,14 @@ public final class EventResponse {
   }
 
   /**
+   * @return Rewards awarded as a result of this event.
+   */
+  @JsonProperty("rewards")
+  public List<UserRewardResponse> getRewards() {
+    return rewards;
+  }
+
+  /**
    * @return The idempotency key used for the event, if one was provided.
    */
   @JsonProperty("idempotencyKey")
@@ -152,12 +164,12 @@ public final class EventResponse {
   }
 
   private boolean equalTo(EventResponse other) {
-    return eventId.equals(other.eventId) && metricId.equals(other.metricId) && total == other.total && achievements.equals(other.achievements) && currentStreak.equals(other.currentStreak) && points.equals(other.points) && leaderboards.equals(other.leaderboards) && idempotencyKey.equals(other.idempotencyKey) && idempotentReplayed.equals(other.idempotentReplayed);
+    return eventId.equals(other.eventId) && metricId.equals(other.metricId) && total == other.total && achievements.equals(other.achievements) && currentStreak.equals(other.currentStreak) && points.equals(other.points) && leaderboards.equals(other.leaderboards) && rewards.equals(other.rewards) && idempotencyKey.equals(other.idempotencyKey) && idempotentReplayed.equals(other.idempotentReplayed);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.eventId, this.metricId, this.total, this.achievements, this.currentStreak, this.points, this.leaderboards, this.idempotencyKey, this.idempotentReplayed);
+    return Objects.hash(this.eventId, this.metricId, this.total, this.achievements, this.currentStreak, this.points, this.leaderboards, this.rewards, this.idempotencyKey, this.idempotentReplayed);
   }
 
   @java.lang.Override
@@ -234,6 +246,15 @@ public final class EventResponse {
     _FinalStage leaderboards(String key, MetricEventLeaderboardResponse value);
 
     /**
+     * <p>Rewards awarded as a result of this event.</p>
+     */
+    _FinalStage rewards(List<UserRewardResponse> rewards);
+
+    _FinalStage addRewards(UserRewardResponse rewards);
+
+    _FinalStage addAllRewards(List<UserRewardResponse> rewards);
+
+    /**
      * <p>The idempotency key used for the event, if one was provided.</p>
      */
     _FinalStage idempotencyKey(Optional<String> idempotencyKey);
@@ -264,6 +285,8 @@ public final class EventResponse {
 
     private Optional<String> idempotencyKey = Optional.empty();
 
+    private List<UserRewardResponse> rewards = new ArrayList<>();
+
     private Map<String, MetricEventLeaderboardResponse> leaderboards = new LinkedHashMap<>();
 
     private Map<String, MetricEventPointsResponse> points = new LinkedHashMap<>();
@@ -285,6 +308,7 @@ public final class EventResponse {
       currentStreak(other.getCurrentStreak());
       points(other.getPoints());
       leaderboards(other.getLeaderboards());
+      rewards(other.getRewards());
       idempotencyKey(other.getIdempotencyKey());
       idempotentReplayed(other.getIdempotentReplayed());
       return this;
@@ -377,6 +401,44 @@ public final class EventResponse {
     )
     public _FinalStage idempotencyKey(Optional<String> idempotencyKey) {
       this.idempotencyKey = idempotencyKey;
+      return this;
+    }
+
+    /**
+     * <p>Rewards awarded as a result of this event.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage addAllRewards(List<UserRewardResponse> rewards) {
+      if (rewards != null) {
+        this.rewards.addAll(rewards);
+      }
+      return this;
+    }
+
+    /**
+     * <p>Rewards awarded as a result of this event.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage addRewards(UserRewardResponse rewards) {
+      this.rewards.add(rewards);
+      return this;
+    }
+
+    /**
+     * <p>Rewards awarded as a result of this event.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "rewards",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage rewards(List<UserRewardResponse> rewards) {
+      this.rewards.clear();
+      if (rewards != null) {
+        this.rewards.addAll(rewards);
+      }
       return this;
     }
 
@@ -497,7 +559,7 @@ public final class EventResponse {
 
     @java.lang.Override
     public EventResponse build() {
-      return new EventResponse(eventId, metricId, total, achievements, currentStreak, points, leaderboards, idempotencyKey, idempotentReplayed, additionalProperties);
+      return new EventResponse(eventId, metricId, total, achievements, currentStreak, points, leaderboards, rewards, idempotencyKey, idempotentReplayed, additionalProperties);
     }
 
     @java.lang.Override

@@ -16,8 +16,10 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import so.trophy.core.ObjectMappers;
 import java.lang.Object;
 import java.lang.String;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
@@ -33,13 +35,21 @@ public final class AchievementCompletionResponse {
 
   private final Map<String, MetricEventPointsResponse> points;
 
+  private final Map<String, MetricEventLeaderboardResponse> leaderboards;
+
+  private final List<UserRewardResponse> rewards;
+
   private final Map<String, Object> additionalProperties;
 
   private AchievementCompletionResponse(String completionId, UserAchievementResponse achievement,
-      Map<String, MetricEventPointsResponse> points, Map<String, Object> additionalProperties) {
+      Map<String, MetricEventPointsResponse> points,
+      Map<String, MetricEventLeaderboardResponse> leaderboards, List<UserRewardResponse> rewards,
+      Map<String, Object> additionalProperties) {
     this.completionId = completionId;
     this.achievement = achievement;
     this.points = points;
+    this.leaderboards = leaderboards;
+    this.rewards = rewards;
     this.additionalProperties = additionalProperties;
   }
 
@@ -64,6 +74,22 @@ public final class AchievementCompletionResponse {
     return points;
   }
 
+  /**
+   * @return A map of leaderboards by key. Only contains leaderboards that were affected by this achievement completion.
+   */
+  @JsonProperty("leaderboards")
+  public Map<String, MetricEventLeaderboardResponse> getLeaderboards() {
+    return leaderboards;
+  }
+
+  /**
+   * @return Rewards awarded as a result of this achievement completion.
+   */
+  @JsonProperty("rewards")
+  public List<UserRewardResponse> getRewards() {
+    return rewards;
+  }
+
   @java.lang.Override
   public boolean equals(Object other) {
     if (this == other) return true;
@@ -76,12 +102,12 @@ public final class AchievementCompletionResponse {
   }
 
   private boolean equalTo(AchievementCompletionResponse other) {
-    return completionId.equals(other.completionId) && achievement.equals(other.achievement) && points.equals(other.points);
+    return completionId.equals(other.completionId) && achievement.equals(other.achievement) && points.equals(other.points) && leaderboards.equals(other.leaderboards) && rewards.equals(other.rewards);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.completionId, this.achievement, this.points);
+    return Objects.hash(this.completionId, this.achievement, this.points, this.leaderboards, this.rewards);
   }
 
   @java.lang.Override
@@ -121,6 +147,24 @@ public final class AchievementCompletionResponse {
     _FinalStage putAllPoints(Map<String, MetricEventPointsResponse> points);
 
     _FinalStage points(String key, MetricEventPointsResponse value);
+
+    /**
+     * <p>A map of leaderboards by key. Only contains leaderboards that were affected by this achievement completion.</p>
+     */
+    _FinalStage leaderboards(Map<String, MetricEventLeaderboardResponse> leaderboards);
+
+    _FinalStage putAllLeaderboards(Map<String, MetricEventLeaderboardResponse> leaderboards);
+
+    _FinalStage leaderboards(String key, MetricEventLeaderboardResponse value);
+
+    /**
+     * <p>Rewards awarded as a result of this achievement completion.</p>
+     */
+    _FinalStage rewards(List<UserRewardResponse> rewards);
+
+    _FinalStage addRewards(UserRewardResponse rewards);
+
+    _FinalStage addAllRewards(List<UserRewardResponse> rewards);
   }
 
   @JsonIgnoreProperties(
@@ -130,6 +174,10 @@ public final class AchievementCompletionResponse {
     private String completionId;
 
     private UserAchievementResponse achievement;
+
+    private List<UserRewardResponse> rewards = new ArrayList<>();
+
+    private Map<String, MetricEventLeaderboardResponse> leaderboards = new LinkedHashMap<>();
 
     private Map<String, MetricEventPointsResponse> points = new LinkedHashMap<>();
 
@@ -144,6 +192,8 @@ public final class AchievementCompletionResponse {
       completionId(other.getCompletionId());
       achievement(other.getAchievement());
       points(other.getPoints());
+      leaderboards(other.getLeaderboards());
+      rewards(other.getRewards());
       return this;
     }
 
@@ -162,6 +212,83 @@ public final class AchievementCompletionResponse {
     @JsonSetter("achievement")
     public _FinalStage achievement(@NotNull UserAchievementResponse achievement) {
       this.achievement = Objects.requireNonNull(achievement, "achievement must not be null");
+      return this;
+    }
+
+    /**
+     * <p>Rewards awarded as a result of this achievement completion.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage addAllRewards(List<UserRewardResponse> rewards) {
+      if (rewards != null) {
+        this.rewards.addAll(rewards);
+      }
+      return this;
+    }
+
+    /**
+     * <p>Rewards awarded as a result of this achievement completion.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage addRewards(UserRewardResponse rewards) {
+      this.rewards.add(rewards);
+      return this;
+    }
+
+    /**
+     * <p>Rewards awarded as a result of this achievement completion.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "rewards",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage rewards(List<UserRewardResponse> rewards) {
+      this.rewards.clear();
+      if (rewards != null) {
+        this.rewards.addAll(rewards);
+      }
+      return this;
+    }
+
+    /**
+     * <p>A map of leaderboards by key. Only contains leaderboards that were affected by this achievement completion.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage leaderboards(String key, MetricEventLeaderboardResponse value) {
+      this.leaderboards.put(key, value);
+      return this;
+    }
+
+    /**
+     * <p>A map of leaderboards by key. Only contains leaderboards that were affected by this achievement completion.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage putAllLeaderboards(
+        Map<String, MetricEventLeaderboardResponse> leaderboards) {
+      if (leaderboards != null) {
+        this.leaderboards.putAll(leaderboards);
+      }
+      return this;
+    }
+
+    /**
+     * <p>A map of leaderboards by key. Only contains leaderboards that were affected by this achievement completion.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "leaderboards",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage leaderboards(Map<String, MetricEventLeaderboardResponse> leaderboards) {
+      this.leaderboards.clear();
+      if (leaderboards != null) {
+        this.leaderboards.putAll(leaderboards);
+      }
       return this;
     }
 
@@ -205,7 +332,7 @@ public final class AchievementCompletionResponse {
 
     @java.lang.Override
     public AchievementCompletionResponse build() {
-      return new AchievementCompletionResponse(completionId, achievement, points, additionalProperties);
+      return new AchievementCompletionResponse(completionId, achievement, points, leaderboards, rewards, additionalProperties);
     }
 
     @java.lang.Override

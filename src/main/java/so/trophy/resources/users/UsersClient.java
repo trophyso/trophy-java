@@ -15,6 +15,7 @@ import so.trophy.resources.users.requests.UsersLeaderboardRequest;
 import so.trophy.resources.users.requests.UsersMetricEventSummaryRequest;
 import so.trophy.resources.users.requests.UsersPointsEventSummaryRequest;
 import so.trophy.resources.users.requests.UsersPointsRequest;
+import so.trophy.resources.users.requests.UsersRewardsRequest;
 import so.trophy.resources.users.requests.UsersStreakRequest;
 import so.trophy.resources.users.requests.UsersWrappedRequest;
 import so.trophy.resources.users.types.UsersMetricEventSummaryResponseItem;
@@ -29,6 +30,7 @@ import so.trophy.types.User;
 import so.trophy.types.UserAchievementWithStatsResponse;
 import so.trophy.types.UserLeaderboardResponseWithHistory;
 import so.trophy.types.UserPreferencesResponse;
+import so.trophy.types.UserRewardResponse;
 import so.trophy.types.WrappedResponse;
 
 public class UsersClient {
@@ -249,6 +251,35 @@ public class UsersClient {
   public List<UserAchievementWithStatsResponse> achievements(String id,
       UsersAchievementsRequest request, RequestOptions requestOptions) {
     return this.rawClient.achievements(id, request, requestOptions).body();
+  }
+
+  /**
+   * Get rewards awarded to a user. Filter by redeemed state and the date the reward was awarded.
+   */
+  public List<UserRewardResponse> rewards(String id) {
+    return this.rawClient.rewards(id).body();
+  }
+
+  /**
+   * Get rewards awarded to a user. Filter by redeemed state and the date the reward was awarded.
+   */
+  public List<UserRewardResponse> rewards(String id, RequestOptions requestOptions) {
+    return this.rawClient.rewards(id, requestOptions).body();
+  }
+
+  /**
+   * Get rewards awarded to a user. Filter by redeemed state and the date the reward was awarded.
+   */
+  public List<UserRewardResponse> rewards(String id, UsersRewardsRequest request) {
+    return this.rawClient.rewards(id, request).body();
+  }
+
+  /**
+   * Get rewards awarded to a user. Filter by redeemed state and the date the reward was awarded.
+   */
+  public List<UserRewardResponse> rewards(String id, UsersRewardsRequest request,
+      RequestOptions requestOptions) {
+    return this.rawClient.rewards(id, request, requestOptions).body();
   }
 
   /**
