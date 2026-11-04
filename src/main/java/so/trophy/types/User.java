@@ -48,6 +48,8 @@ public final class User {
 
   private final boolean control;
 
+  private final boolean agenticMessagingEnabled;
+
   private final OffsetDateTime created;
 
   private final OffsetDateTime updated;
@@ -56,8 +58,8 @@ public final class User {
 
   private User(String id, Optional<String> email, Optional<String> name, Optional<String> tz,
       Optional<String> signUpDate, Optional<List<String>> deviceTokens, boolean subscribeToEmails,
-      Map<String, String> attributes, boolean control, OffsetDateTime created,
-      OffsetDateTime updated, Map<String, Object> additionalProperties) {
+      Map<String, String> attributes, boolean control, boolean agenticMessagingEnabled,
+      OffsetDateTime created, OffsetDateTime updated, Map<String, Object> additionalProperties) {
     this.id = id;
     this.email = email;
     this.name = name;
@@ -67,6 +69,7 @@ public final class User {
     this.subscribeToEmails = subscribeToEmails;
     this.attributes = attributes;
     this.control = control;
+    this.agenticMessagingEnabled = agenticMessagingEnabled;
     this.created = created;
     this.updated = updated;
     this.additionalProperties = additionalProperties;
@@ -145,6 +148,14 @@ public final class User {
   }
 
   /**
+   * @return Whether the user is opted into Trophy's agentic messaging.
+   */
+  @JsonProperty("agenticMessagingEnabled")
+  public boolean getAgenticMessagingEnabled() {
+    return agenticMessagingEnabled;
+  }
+
+  /**
    * @return The date and time the user was created, in ISO 8601 format.
    */
   @JsonProperty("created")
@@ -172,12 +183,12 @@ public final class User {
   }
 
   private boolean equalTo(User other) {
-    return id.equals(other.id) && email.equals(other.email) && name.equals(other.name) && tz.equals(other.tz) && signUpDate.equals(other.signUpDate) && deviceTokens.equals(other.deviceTokens) && subscribeToEmails == other.subscribeToEmails && attributes.equals(other.attributes) && control == other.control && created.equals(other.created) && updated.equals(other.updated);
+    return id.equals(other.id) && email.equals(other.email) && name.equals(other.name) && tz.equals(other.tz) && signUpDate.equals(other.signUpDate) && deviceTokens.equals(other.deviceTokens) && subscribeToEmails == other.subscribeToEmails && attributes.equals(other.attributes) && control == other.control && agenticMessagingEnabled == other.agenticMessagingEnabled && created.equals(other.created) && updated.equals(other.updated);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.id, this.email, this.name, this.tz, this.signUpDate, this.deviceTokens, this.subscribeToEmails, this.attributes, this.control, this.created, this.updated);
+    return Objects.hash(this.id, this.email, this.name, this.tz, this.signUpDate, this.deviceTokens, this.subscribeToEmails, this.attributes, this.control, this.agenticMessagingEnabled, this.created, this.updated);
   }
 
   @java.lang.Override
@@ -209,7 +220,14 @@ public final class User {
     /**
      * <p>Whether the user is in the control group, meaning they do not receive emails or other communications from Trophy.</p>
      */
-    CreatedStage control(boolean control);
+    AgenticMessagingEnabledStage control(boolean control);
+  }
+
+  public interface AgenticMessagingEnabledStage {
+    /**
+     * <p>Whether the user is opted into Trophy's agentic messaging.</p>
+     */
+    CreatedStage agenticMessagingEnabled(boolean agenticMessagingEnabled);
   }
 
   public interface CreatedStage {
@@ -281,12 +299,14 @@ public final class User {
   @JsonIgnoreProperties(
       ignoreUnknown = true
   )
-  public static final class Builder implements IdStage, SubscribeToEmailsStage, ControlStage, CreatedStage, UpdatedStage, _FinalStage {
+  public static final class Builder implements IdStage, SubscribeToEmailsStage, ControlStage, AgenticMessagingEnabledStage, CreatedStage, UpdatedStage, _FinalStage {
     private String id;
 
     private boolean subscribeToEmails;
 
     private boolean control;
+
+    private boolean agenticMessagingEnabled;
 
     private OffsetDateTime created;
 
@@ -321,6 +341,7 @@ public final class User {
       subscribeToEmails(other.getSubscribeToEmails());
       attributes(other.getAttributes());
       control(other.getControl());
+      agenticMessagingEnabled(other.getAgenticMessagingEnabled());
       created(other.getCreated());
       updated(other.getUpdated());
       return this;
@@ -354,8 +375,19 @@ public final class User {
      */
     @java.lang.Override
     @JsonSetter("control")
-    public CreatedStage control(boolean control) {
+    public AgenticMessagingEnabledStage control(boolean control) {
       this.control = control;
+      return this;
+    }
+
+    /**
+     * <p>Whether the user is opted into Trophy's agentic messaging.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    @JsonSetter("agenticMessagingEnabled")
+    public CreatedStage agenticMessagingEnabled(boolean agenticMessagingEnabled) {
+      this.agenticMessagingEnabled = agenticMessagingEnabled;
       return this;
     }
 
@@ -536,7 +568,7 @@ public final class User {
 
     @java.lang.Override
     public User build() {
-      return new User(id, email, name, tz, signUpDate, deviceTokens, subscribeToEmails, attributes, control, created, updated, additionalProperties);
+      return new User(id, email, name, tz, signUpDate, deviceTokens, subscribeToEmails, attributes, control, agenticMessagingEnabled, created, updated, additionalProperties);
     }
 
     @java.lang.Override
