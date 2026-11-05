@@ -21,6 +21,8 @@ public enum AdminFontFamily {
 
   ROUNDED_SANS("ROUNDED_SANS"),
 
+  SYSTEM_SANS("SYSTEM_SANS"),
+
   MODERN_SERIF("MODERN_SERIF"),
 
   BOOK_SERIF("BOOK_SERIF"),
