@@ -342,14 +342,14 @@ public class RawUsersClient {
           }
 
           /**
-           * Get a user's notification preferences.
+           * Get a user's notification, streak and agentic messaging preferences.
            */
           public TrophyApiHttpResponse<UserPreferencesResponse> getPreferences(String id) {
             return getPreferences(id,null);
           }
 
           /**
-           * Get a user's notification preferences.
+           * Get a user's notification, streak and agentic messaging preferences.
            */
           public TrophyApiHttpResponse<UserPreferencesResponse> getPreferences(String id,
               RequestOptions requestOptions) {
@@ -400,14 +400,14 @@ public class RawUsersClient {
             }
 
             /**
-             * Update a user's notification and streak preferences. Streak preferences other than <code>streak.enabled</code> require streak customization to be enabled in your Trophy dashboard settings.
+             * Update a user's notification, streak and agentic messaging preferences. Streak preferences other than <code>streak.enabled</code> require streak customization to be enabled in your Trophy dashboard settings.
              */
             public TrophyApiHttpResponse<UserPreferencesResponse> updatePreferences(String id) {
               return updatePreferences(id,UpdateUserPreferencesRequest.builder().build());
             }
 
             /**
-             * Update a user's notification and streak preferences. Streak preferences other than <code>streak.enabled</code> require streak customization to be enabled in your Trophy dashboard settings.
+             * Update a user's notification, streak and agentic messaging preferences. Streak preferences other than <code>streak.enabled</code> require streak customization to be enabled in your Trophy dashboard settings.
              */
             public TrophyApiHttpResponse<UserPreferencesResponse> updatePreferences(String id,
                 RequestOptions requestOptions) {
@@ -415,7 +415,7 @@ public class RawUsersClient {
             }
 
             /**
-             * Update a user's notification and streak preferences. Streak preferences other than <code>streak.enabled</code> require streak customization to be enabled in your Trophy dashboard settings.
+             * Update a user's notification, streak and agentic messaging preferences. Streak preferences other than <code>streak.enabled</code> require streak customization to be enabled in your Trophy dashboard settings.
              */
             public TrophyApiHttpResponse<UserPreferencesResponse> updatePreferences(String id,
                 UpdateUserPreferencesRequest request) {
@@ -423,7 +423,7 @@ public class RawUsersClient {
             }
 
             /**
-             * Update a user's notification and streak preferences. Streak preferences other than <code>streak.enabled</code> require streak customization to be enabled in your Trophy dashboard settings.
+             * Update a user's notification, streak and agentic messaging preferences. Streak preferences other than <code>streak.enabled</code> require streak customization to be enabled in your Trophy dashboard settings.
              */
             public TrophyApiHttpResponse<UserPreferencesResponse> updatePreferences(String id,
                 UpdateUserPreferencesRequest request, RequestOptions requestOptions) {

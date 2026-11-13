@@ -418,7 +418,7 @@ public class AsyncRawUsersClient {
           }
 
           /**
-           * Get a user's notification preferences.
+           * Get a user's notification, streak and agentic messaging preferences.
            */
           public CompletableFuture<TrophyApiHttpResponse<UserPreferencesResponse>> getPreferences(
               String id) {
@@ -426,7 +426,7 @@ public class AsyncRawUsersClient {
           }
 
           /**
-           * Get a user's notification preferences.
+           * Get a user's notification, streak and agentic messaging preferences.
            */
           public CompletableFuture<TrophyApiHttpResponse<UserPreferencesResponse>> getPreferences(
               String id, RequestOptions requestOptions) {
@@ -493,7 +493,7 @@ public class AsyncRawUsersClient {
             }
 
             /**
-             * Update a user's notification and streak preferences. Streak preferences other than <code>streak.enabled</code> require streak customization to be enabled in your Trophy dashboard settings.
+             * Update a user's notification, streak and agentic messaging preferences. Streak preferences other than <code>streak.enabled</code> require streak customization to be enabled in your Trophy dashboard settings.
              */
             public CompletableFuture<TrophyApiHttpResponse<UserPreferencesResponse>> updatePreferences(
                 String id) {
@@ -501,7 +501,7 @@ public class AsyncRawUsersClient {
             }
 
             /**
-             * Update a user's notification and streak preferences. Streak preferences other than <code>streak.enabled</code> require streak customization to be enabled in your Trophy dashboard settings.
+             * Update a user's notification, streak and agentic messaging preferences. Streak preferences other than <code>streak.enabled</code> require streak customization to be enabled in your Trophy dashboard settings.
              */
             public CompletableFuture<TrophyApiHttpResponse<UserPreferencesResponse>> updatePreferences(
                 String id, RequestOptions requestOptions) {
@@ -509,7 +509,7 @@ public class AsyncRawUsersClient {
             }
 
             /**
-             * Update a user's notification and streak preferences. Streak preferences other than <code>streak.enabled</code> require streak customization to be enabled in your Trophy dashboard settings.
+             * Update a user's notification, streak and agentic messaging preferences. Streak preferences other than <code>streak.enabled</code> require streak customization to be enabled in your Trophy dashboard settings.
              */
             public CompletableFuture<TrophyApiHttpResponse<UserPreferencesResponse>> updatePreferences(
                 String id, UpdateUserPreferencesRequest request) {
@@ -517,7 +517,7 @@ public class AsyncRawUsersClient {
             }
 
             /**
-             * Update a user's notification and streak preferences. Streak preferences other than <code>streak.enabled</code> require streak customization to be enabled in your Trophy dashboard settings.
+             * Update a user's notification, streak and agentic messaging preferences. Streak preferences other than <code>streak.enabled</code> require streak customization to be enabled in your Trophy dashboard settings.
              */
             public CompletableFuture<TrophyApiHttpResponse<UserPreferencesResponse>> updatePreferences(
                 String id, UpdateUserPreferencesRequest request, RequestOptions requestOptions) {

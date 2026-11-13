@@ -31,12 +31,16 @@ public final class UserPreferencesResponse {
 
   private final Optional<StreakPreferences> streak;
 
+  private final MessagingPreferences messaging;
+
   private final Map<String, Object> additionalProperties;
 
   private UserPreferencesResponse(NotificationPreferences notifications,
-      Optional<StreakPreferences> streak, Map<String, Object> additionalProperties) {
+      Optional<StreakPreferences> streak, MessagingPreferences messaging,
+      Map<String, Object> additionalProperties) {
     this.notifications = notifications;
     this.streak = streak;
+    this.messaging = messaging;
     this.additionalProperties = additionalProperties;
   }
 
@@ -48,6 +52,11 @@ public final class UserPreferencesResponse {
   @JsonProperty("streak")
   public Optional<StreakPreferences> getStreak() {
     return streak;
+  }
+
+  @JsonProperty("messaging")
+  public MessagingPreferences getMessaging() {
+    return messaging;
   }
 
   @java.lang.Override
@@ -62,12 +71,12 @@ public final class UserPreferencesResponse {
   }
 
   private boolean equalTo(UserPreferencesResponse other) {
-    return notifications.equals(other.notifications) && streak.equals(other.streak);
+    return notifications.equals(other.notifications) && streak.equals(other.streak) && messaging.equals(other.messaging);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.notifications, this.streak);
+    return Objects.hash(this.notifications, this.streak, this.messaging);
   }
 
   @java.lang.Override
@@ -80,9 +89,13 @@ public final class UserPreferencesResponse {
   }
 
   public interface NotificationsStage {
-    _FinalStage notifications(@NotNull NotificationPreferences notifications);
+    MessagingStage notifications(@NotNull NotificationPreferences notifications);
 
     Builder from(UserPreferencesResponse other);
+  }
+
+  public interface MessagingStage {
+    _FinalStage messaging(@NotNull MessagingPreferences messaging);
   }
 
   public interface _FinalStage {
@@ -100,8 +113,10 @@ public final class UserPreferencesResponse {
   @JsonIgnoreProperties(
       ignoreUnknown = true
   )
-  public static final class Builder implements NotificationsStage, _FinalStage {
+  public static final class Builder implements NotificationsStage, MessagingStage, _FinalStage {
     private NotificationPreferences notifications;
+
+    private MessagingPreferences messaging;
 
     private Optional<StreakPreferences> streak = Optional.empty();
 
@@ -115,13 +130,21 @@ public final class UserPreferencesResponse {
     public Builder from(UserPreferencesResponse other) {
       notifications(other.getNotifications());
       streak(other.getStreak());
+      messaging(other.getMessaging());
       return this;
     }
 
     @java.lang.Override
     @JsonSetter("notifications")
-    public _FinalStage notifications(@NotNull NotificationPreferences notifications) {
+    public MessagingStage notifications(@NotNull NotificationPreferences notifications) {
       this.notifications = Objects.requireNonNull(notifications, "notifications must not be null");
+      return this;
+    }
+
+    @java.lang.Override
+    @JsonSetter("messaging")
+    public _FinalStage messaging(@NotNull MessagingPreferences messaging) {
+      this.messaging = Objects.requireNonNull(messaging, "messaging must not be null");
       return this;
     }
 
@@ -143,7 +166,7 @@ public final class UserPreferencesResponse {
 
     @java.lang.Override
     public UserPreferencesResponse build() {
-      return new UserPreferencesResponse(notifications, streak, additionalProperties);
+      return new UserPreferencesResponse(notifications, streak, messaging, additionalProperties);
     }
 
     @java.lang.Override

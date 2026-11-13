@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import so.trophy.types.MessagingPreferences;
 import so.trophy.types.NotificationPreferences;
 import so.trophy.types.StreakPreferences;
 
@@ -32,12 +33,16 @@ public final class UpdateUserPreferencesRequest {
 
   private final Optional<StreakPreferences> streak;
 
+  private final Optional<MessagingPreferences> messaging;
+
   private final Map<String, Object> additionalProperties;
 
   private UpdateUserPreferencesRequest(Optional<NotificationPreferences> notifications,
-      Optional<StreakPreferences> streak, Map<String, Object> additionalProperties) {
+      Optional<StreakPreferences> streak, Optional<MessagingPreferences> messaging,
+      Map<String, Object> additionalProperties) {
     this.notifications = notifications;
     this.streak = streak;
+    this.messaging = messaging;
     this.additionalProperties = additionalProperties;
   }
 
@@ -49,6 +54,11 @@ public final class UpdateUserPreferencesRequest {
   @JsonProperty("streak")
   public Optional<StreakPreferences> getStreak() {
     return streak;
+  }
+
+  @JsonProperty("messaging")
+  public Optional<MessagingPreferences> getMessaging() {
+    return messaging;
   }
 
   @java.lang.Override
@@ -63,12 +73,12 @@ public final class UpdateUserPreferencesRequest {
   }
 
   private boolean equalTo(UpdateUserPreferencesRequest other) {
-    return notifications.equals(other.notifications) && streak.equals(other.streak);
+    return notifications.equals(other.notifications) && streak.equals(other.streak) && messaging.equals(other.messaging);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.notifications, this.streak);
+    return Objects.hash(this.notifications, this.streak, this.messaging);
   }
 
   @java.lang.Override
@@ -88,6 +98,8 @@ public final class UpdateUserPreferencesRequest {
 
     private Optional<StreakPreferences> streak = Optional.empty();
 
+    private Optional<MessagingPreferences> messaging = Optional.empty();
+
     @JsonAnySetter
     private Map<String, Object> additionalProperties = new HashMap<>();
 
@@ -97,6 +109,7 @@ public final class UpdateUserPreferencesRequest {
     public Builder from(UpdateUserPreferencesRequest other) {
       notifications(other.getNotifications());
       streak(other.getStreak());
+      messaging(other.getMessaging());
       return this;
     }
 
@@ -128,8 +141,22 @@ public final class UpdateUserPreferencesRequest {
       return this;
     }
 
+    @JsonSetter(
+        value = "messaging",
+        nulls = Nulls.SKIP
+    )
+    public Builder messaging(Optional<MessagingPreferences> messaging) {
+      this.messaging = messaging;
+      return this;
+    }
+
+    public Builder messaging(MessagingPreferences messaging) {
+      this.messaging = Optional.ofNullable(messaging);
+      return this;
+    }
+
     public UpdateUserPreferencesRequest build() {
-      return new UpdateUserPreferencesRequest(notifications, streak, additionalProperties);
+      return new UpdateUserPreferencesRequest(notifications, streak, messaging, additionalProperties);
     }
 
     public Builder additionalProperty(String key, Object value) {
