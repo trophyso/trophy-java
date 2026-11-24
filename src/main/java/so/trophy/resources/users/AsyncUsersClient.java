@@ -8,10 +8,14 @@ package so.trophy.resources.users;
 import so.trophy.core.ClientOptions;
 import so.trophy.core.RequestOptions;
 import java.lang.String;
+import java.lang.Void;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import so.trophy.resources.users.requests.CreateGoalRequest;
+import so.trophy.resources.users.requests.UpdateGoalRequest;
 import so.trophy.resources.users.requests.UpdateUserPreferencesRequest;
 import so.trophy.resources.users.requests.UsersAchievementsRequest;
+import so.trophy.resources.users.requests.UsersGoalsRequest;
 import so.trophy.resources.users.requests.UsersLeaderboardRequest;
 import so.trophy.resources.users.requests.UsersMetricEventSummaryRequest;
 import so.trophy.resources.users.requests.UsersPointsEventSummaryRequest;
@@ -22,6 +26,7 @@ import so.trophy.resources.users.requests.UsersWrappedRequest;
 import so.trophy.resources.users.types.UsersMetricEventSummaryResponseItem;
 import so.trophy.resources.users.types.UsersPointsEventSummaryResponseItem;
 import so.trophy.types.GetUserPointsResponse;
+import so.trophy.types.GoalResponse;
 import so.trophy.types.MetricResponse;
 import so.trophy.types.PointsBoost;
 import so.trophy.types.StreakResponse;
@@ -289,6 +294,110 @@ public class AsyncUsersClient {
   public CompletableFuture<List<UserRewardResponse>> rewards(String id, UsersRewardsRequest request,
       RequestOptions requestOptions) {
     return this.rawClient.rewards(id, request, requestOptions).thenApply(response -> response.body());
+  }
+
+  /**
+   * Get a user's goals, each with its steps. Filter by status, and page through them with <code>skip</code> and <code>limit</code>.
+   */
+  public CompletableFuture<List<GoalResponse>> goals(String id) {
+    return this.rawClient.goals(id).thenApply(response -> response.body());
+  }
+
+  /**
+   * Get a user's goals, each with its steps. Filter by status, and page through them with <code>skip</code> and <code>limit</code>.
+   */
+  public CompletableFuture<List<GoalResponse>> goals(String id, RequestOptions requestOptions) {
+    return this.rawClient.goals(id, requestOptions).thenApply(response -> response.body());
+  }
+
+  /**
+   * Get a user's goals, each with its steps. Filter by status, and page through them with <code>skip</code> and <code>limit</code>.
+   */
+  public CompletableFuture<List<GoalResponse>> goals(String id, UsersGoalsRequest request) {
+    return this.rawClient.goals(id, request).thenApply(response -> response.body());
+  }
+
+  /**
+   * Get a user's goals, each with its steps. Filter by status, and page through them with <code>skip</code> and <code>limit</code>.
+   */
+  public CompletableFuture<List<GoalResponse>> goals(String id, UsersGoalsRequest request,
+      RequestOptions requestOptions) {
+    return this.rawClient.goals(id, request, requestOptions).thenApply(response -> response.body());
+  }
+
+  /**
+   * Create a goal for a user, or with <code>parent</code> a step at the end of that goal's steps.
+   */
+  public CompletableFuture<GoalResponse> createGoal(String id, CreateGoalRequest request) {
+    return this.rawClient.createGoal(id, request).thenApply(response -> response.body());
+  }
+
+  /**
+   * Create a goal for a user, or with <code>parent</code> a step at the end of that goal's steps.
+   */
+  public CompletableFuture<GoalResponse> createGoal(String id, CreateGoalRequest request,
+      RequestOptions requestOptions) {
+    return this.rawClient.createGoal(id, request, requestOptions).thenApply(response -> response.body());
+  }
+
+  /**
+   * Get a user's goal or step by its key, with a goal's steps.
+   */
+  public CompletableFuture<GoalResponse> getGoal(String id, String key) {
+    return this.rawClient.getGoal(id, key).thenApply(response -> response.body());
+  }
+
+  /**
+   * Get a user's goal or step by its key, with a goal's steps.
+   */
+  public CompletableFuture<GoalResponse> getGoal(String id, String key,
+      RequestOptions requestOptions) {
+    return this.rawClient.getGoal(id, key, requestOptions).thenApply(response -> response.body());
+  }
+
+  /**
+   * Delete a user's goal.
+   */
+  public CompletableFuture<Void> deleteGoal(String id, String key) {
+    return this.rawClient.deleteGoal(id, key).thenApply(response -> response.body());
+  }
+
+  /**
+   * Delete a user's goal.
+   */
+  public CompletableFuture<Void> deleteGoal(String id, String key, RequestOptions requestOptions) {
+    return this.rawClient.deleteGoal(id, key, requestOptions).thenApply(response -> response.body());
+  }
+
+  /**
+   * Update a goal for a user.
+   */
+  public CompletableFuture<GoalResponse> updateGoal(String id, String key) {
+    return this.rawClient.updateGoal(id, key).thenApply(response -> response.body());
+  }
+
+  /**
+   * Update a goal for a user.
+   */
+  public CompletableFuture<GoalResponse> updateGoal(String id, String key,
+      RequestOptions requestOptions) {
+    return this.rawClient.updateGoal(id, key, requestOptions).thenApply(response -> response.body());
+  }
+
+  /**
+   * Update a goal for a user.
+   */
+  public CompletableFuture<GoalResponse> updateGoal(String id, String key,
+      UpdateGoalRequest request) {
+    return this.rawClient.updateGoal(id, key, request).thenApply(response -> response.body());
+  }
+
+  /**
+   * Update a goal for a user.
+   */
+  public CompletableFuture<GoalResponse> updateGoal(String id, String key,
+      UpdateGoalRequest request, RequestOptions requestOptions) {
+    return this.rawClient.updateGoal(id, key, request, requestOptions).thenApply(response -> response.body());
   }
 
   /**

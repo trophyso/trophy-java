@@ -15,6 +15,7 @@ import so.trophy.core.RetryInterceptor;
 import so.trophy.core.TrophyApiApiException;
 import so.trophy.core.TrophyApiException;
 import so.trophy.core.TrophyApiHttpResponse;
+import so.trophy.errors.ForbiddenError;
 import so.trophy.errors.UnauthorizedError;
 import so.trophy.errors.UnprocessableEntityError;
 import java.io.IOException;
@@ -106,6 +107,8 @@ public class AsyncRawStreaksClient {
             try {
               switch (response.code()) {
                 case 401:future.completeExceptionally(new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response));
+                return;
+                case 403:future.completeExceptionally(new ForbiddenError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response));
                 return;
                 case 422:future.completeExceptionally(new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response));
                 return;

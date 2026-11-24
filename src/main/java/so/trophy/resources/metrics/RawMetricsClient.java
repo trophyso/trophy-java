@@ -15,6 +15,7 @@ import so.trophy.core.TrophyApiApiException;
 import so.trophy.core.TrophyApiException;
 import so.trophy.core.TrophyApiHttpResponse;
 import so.trophy.errors.BadRequestError;
+import so.trophy.errors.ForbiddenError;
 import so.trophy.errors.UnauthorizedError;
 import so.trophy.errors.UnprocessableEntityError;
 import java.io.IOException;
@@ -94,6 +95,7 @@ public class RawMetricsClient {
           switch (response.code()) {
             case 400:throw new BadRequestError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
             case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
+            case 403:throw new ForbiddenError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
             case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
           }
         }

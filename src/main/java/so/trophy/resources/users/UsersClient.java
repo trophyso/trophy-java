@@ -9,8 +9,11 @@ import so.trophy.core.ClientOptions;
 import so.trophy.core.RequestOptions;
 import java.lang.String;
 import java.util.List;
+import so.trophy.resources.users.requests.CreateGoalRequest;
+import so.trophy.resources.users.requests.UpdateGoalRequest;
 import so.trophy.resources.users.requests.UpdateUserPreferencesRequest;
 import so.trophy.resources.users.requests.UsersAchievementsRequest;
+import so.trophy.resources.users.requests.UsersGoalsRequest;
 import so.trophy.resources.users.requests.UsersLeaderboardRequest;
 import so.trophy.resources.users.requests.UsersMetricEventSummaryRequest;
 import so.trophy.resources.users.requests.UsersPointsEventSummaryRequest;
@@ -21,6 +24,7 @@ import so.trophy.resources.users.requests.UsersWrappedRequest;
 import so.trophy.resources.users.types.UsersMetricEventSummaryResponseItem;
 import so.trophy.resources.users.types.UsersPointsEventSummaryResponseItem;
 import so.trophy.types.GetUserPointsResponse;
+import so.trophy.types.GoalResponse;
 import so.trophy.types.MetricResponse;
 import so.trophy.types.PointsBoost;
 import so.trophy.types.StreakResponse;
@@ -280,6 +284,107 @@ public class UsersClient {
   public List<UserRewardResponse> rewards(String id, UsersRewardsRequest request,
       RequestOptions requestOptions) {
     return this.rawClient.rewards(id, request, requestOptions).body();
+  }
+
+  /**
+   * Get a user's goals, each with its steps. Filter by status, and page through them with <code>skip</code> and <code>limit</code>.
+   */
+  public List<GoalResponse> goals(String id) {
+    return this.rawClient.goals(id).body();
+  }
+
+  /**
+   * Get a user's goals, each with its steps. Filter by status, and page through them with <code>skip</code> and <code>limit</code>.
+   */
+  public List<GoalResponse> goals(String id, RequestOptions requestOptions) {
+    return this.rawClient.goals(id, requestOptions).body();
+  }
+
+  /**
+   * Get a user's goals, each with its steps. Filter by status, and page through them with <code>skip</code> and <code>limit</code>.
+   */
+  public List<GoalResponse> goals(String id, UsersGoalsRequest request) {
+    return this.rawClient.goals(id, request).body();
+  }
+
+  /**
+   * Get a user's goals, each with its steps. Filter by status, and page through them with <code>skip</code> and <code>limit</code>.
+   */
+  public List<GoalResponse> goals(String id, UsersGoalsRequest request,
+      RequestOptions requestOptions) {
+    return this.rawClient.goals(id, request, requestOptions).body();
+  }
+
+  /**
+   * Create a goal for a user, or with <code>parent</code> a step at the end of that goal's steps.
+   */
+  public GoalResponse createGoal(String id, CreateGoalRequest request) {
+    return this.rawClient.createGoal(id, request).body();
+  }
+
+  /**
+   * Create a goal for a user, or with <code>parent</code> a step at the end of that goal's steps.
+   */
+  public GoalResponse createGoal(String id, CreateGoalRequest request,
+      RequestOptions requestOptions) {
+    return this.rawClient.createGoal(id, request, requestOptions).body();
+  }
+
+  /**
+   * Get a user's goal or step by its key, with a goal's steps.
+   */
+  public GoalResponse getGoal(String id, String key) {
+    return this.rawClient.getGoal(id, key).body();
+  }
+
+  /**
+   * Get a user's goal or step by its key, with a goal's steps.
+   */
+  public GoalResponse getGoal(String id, String key, RequestOptions requestOptions) {
+    return this.rawClient.getGoal(id, key, requestOptions).body();
+  }
+
+  /**
+   * Delete a user's goal.
+   */
+  public void deleteGoal(String id, String key) {
+    this.rawClient.deleteGoal(id, key).body();
+  }
+
+  /**
+   * Delete a user's goal.
+   */
+  public void deleteGoal(String id, String key, RequestOptions requestOptions) {
+    this.rawClient.deleteGoal(id, key, requestOptions).body();
+  }
+
+  /**
+   * Update a goal for a user.
+   */
+  public GoalResponse updateGoal(String id, String key) {
+    return this.rawClient.updateGoal(id, key).body();
+  }
+
+  /**
+   * Update a goal for a user.
+   */
+  public GoalResponse updateGoal(String id, String key, RequestOptions requestOptions) {
+    return this.rawClient.updateGoal(id, key, requestOptions).body();
+  }
+
+  /**
+   * Update a goal for a user.
+   */
+  public GoalResponse updateGoal(String id, String key, UpdateGoalRequest request) {
+    return this.rawClient.updateGoal(id, key, request).body();
+  }
+
+  /**
+   * Update a goal for a user.
+   */
+  public GoalResponse updateGoal(String id, String key, UpdateGoalRequest request,
+      RequestOptions requestOptions) {
+    return this.rawClient.updateGoal(id, key, request, requestOptions).body();
   }
 
   /**

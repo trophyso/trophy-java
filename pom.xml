@@ -8,10 +8,10 @@
   <!-- General project information -->
   <groupId>so.trophy</groupId>
   <artifactId>trophy-java</artifactId>
-  <version>1.31.0</version>
+  <version>1.32.0</version>
   <packaging>jar</packaging>
   <name>Trophy</name>
-  <description>Java client library for the Trophy API</description>
+  <description>Java client library for Trophy, the 1:1 customer engagement platform for consumer web and mobile apps</description>
   <url>https://github.com/trophyso/trophy-java</url>
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>

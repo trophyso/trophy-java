@@ -16,6 +16,7 @@ import so.trophy.core.RetryInterceptor;
 import so.trophy.core.TrophyApiApiException;
 import so.trophy.core.TrophyApiException;
 import so.trophy.core.TrophyApiHttpResponse;
+import so.trophy.errors.ForbiddenError;
 import so.trophy.errors.NotFoundError;
 import so.trophy.errors.UnauthorizedError;
 import so.trophy.errors.UnprocessableEntityError;
@@ -168,6 +169,7 @@ public class RawAchievementsClient {
           try {
             switch (response.code()) {
               case 401:throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
+              case 403:throw new ForbiddenError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
               case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
               case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
             }

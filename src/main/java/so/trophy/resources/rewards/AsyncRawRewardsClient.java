@@ -15,6 +15,7 @@ import so.trophy.core.TrophyApiApiException;
 import so.trophy.core.TrophyApiException;
 import so.trophy.core.TrophyApiHttpResponse;
 import so.trophy.errors.ConflictError;
+import so.trophy.errors.ForbiddenError;
 import so.trophy.errors.NotFoundError;
 import so.trophy.errors.UnprocessableEntityError;
 import java.io.IOException;
@@ -98,6 +99,8 @@ public class AsyncRawRewardsClient {
             }
             try {
               switch (response.code()) {
+                case 403:future.completeExceptionally(new ForbiddenError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response));
+                return;
                 case 404:future.completeExceptionally(new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response));
                 return;
                 case 409:future.completeExceptionally(new ConflictError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response));

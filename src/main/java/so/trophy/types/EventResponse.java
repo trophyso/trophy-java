@@ -45,6 +45,8 @@ public final class EventResponse {
 
   private final Map<String, MetricEventLeaderboardResponse> leaderboards;
 
+  private final Map<String, GoalResponse> goals;
+
   private final List<UserRewardResponse> rewards;
 
   private final Optional<String> idempotencyKey;
@@ -56,9 +58,9 @@ public final class EventResponse {
   private EventResponse(String eventId, String metricId, double total,
       List<UserAchievementResponse> achievements, MetricEventStreakResponse currentStreak,
       Map<String, MetricEventPointsResponse> points,
-      Map<String, MetricEventLeaderboardResponse> leaderboards, List<UserRewardResponse> rewards,
-      Optional<String> idempotencyKey, Optional<Boolean> idempotentReplayed,
-      Map<String, Object> additionalProperties) {
+      Map<String, MetricEventLeaderboardResponse> leaderboards, Map<String, GoalResponse> goals,
+      List<UserRewardResponse> rewards, Optional<String> idempotencyKey,
+      Optional<Boolean> idempotentReplayed, Map<String, Object> additionalProperties) {
     this.eventId = eventId;
     this.metricId = metricId;
     this.total = total;
@@ -66,6 +68,7 @@ public final class EventResponse {
     this.currentStreak = currentStreak;
     this.points = points;
     this.leaderboards = leaderboards;
+    this.goals = goals;
     this.rewards = rewards;
     this.idempotencyKey = idempotencyKey;
     this.idempotentReplayed = idempotentReplayed;
@@ -129,6 +132,14 @@ public final class EventResponse {
   }
 
   /**
+   * @return A map of the user's metric goals and steps by key. Only contains those for the event's metric that weren't completed before the event and whose total it counted towards, including any it completed.
+   */
+  @JsonProperty("goals")
+  public Map<String, GoalResponse> getGoals() {
+    return goals;
+  }
+
+  /**
    * @return Rewards awarded as a result of this event.
    */
   @JsonProperty("rewards")
@@ -164,12 +175,12 @@ public final class EventResponse {
   }
 
   private boolean equalTo(EventResponse other) {
-    return eventId.equals(other.eventId) && metricId.equals(other.metricId) && total == other.total && achievements.equals(other.achievements) && currentStreak.equals(other.currentStreak) && points.equals(other.points) && leaderboards.equals(other.leaderboards) && rewards.equals(other.rewards) && idempotencyKey.equals(other.idempotencyKey) && idempotentReplayed.equals(other.idempotentReplayed);
+    return eventId.equals(other.eventId) && metricId.equals(other.metricId) && total == other.total && achievements.equals(other.achievements) && currentStreak.equals(other.currentStreak) && points.equals(other.points) && leaderboards.equals(other.leaderboards) && goals.equals(other.goals) && rewards.equals(other.rewards) && idempotencyKey.equals(other.idempotencyKey) && idempotentReplayed.equals(other.idempotentReplayed);
   }
 
   @java.lang.Override
   public int hashCode() {
-    return Objects.hash(this.eventId, this.metricId, this.total, this.achievements, this.currentStreak, this.points, this.leaderboards, this.rewards, this.idempotencyKey, this.idempotentReplayed);
+    return Objects.hash(this.eventId, this.metricId, this.total, this.achievements, this.currentStreak, this.points, this.leaderboards, this.goals, this.rewards, this.idempotencyKey, this.idempotentReplayed);
   }
 
   @java.lang.Override
@@ -246,6 +257,15 @@ public final class EventResponse {
     _FinalStage leaderboards(String key, MetricEventLeaderboardResponse value);
 
     /**
+     * <p>A map of the user's metric goals and steps by key. Only contains those for the event's metric that weren't completed before the event and whose total it counted towards, including any it completed.</p>
+     */
+    _FinalStage goals(Map<String, GoalResponse> goals);
+
+    _FinalStage putAllGoals(Map<String, GoalResponse> goals);
+
+    _FinalStage goals(String key, GoalResponse value);
+
+    /**
      * <p>Rewards awarded as a result of this event.</p>
      */
     _FinalStage rewards(List<UserRewardResponse> rewards);
@@ -287,6 +307,8 @@ public final class EventResponse {
 
     private List<UserRewardResponse> rewards = new ArrayList<>();
 
+    private Map<String, GoalResponse> goals = new LinkedHashMap<>();
+
     private Map<String, MetricEventLeaderboardResponse> leaderboards = new LinkedHashMap<>();
 
     private Map<String, MetricEventPointsResponse> points = new LinkedHashMap<>();
@@ -308,6 +330,7 @@ public final class EventResponse {
       currentStreak(other.getCurrentStreak());
       points(other.getPoints());
       leaderboards(other.getLeaderboards());
+      goals(other.getGoals());
       rewards(other.getRewards());
       idempotencyKey(other.getIdempotencyKey());
       idempotentReplayed(other.getIdempotentReplayed());
@@ -443,6 +466,44 @@ public final class EventResponse {
     }
 
     /**
+     * <p>A map of the user's metric goals and steps by key. Only contains those for the event's metric that weren't completed before the event and whose total it counted towards, including any it completed.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage goals(String key, GoalResponse value) {
+      this.goals.put(key, value);
+      return this;
+    }
+
+    /**
+     * <p>A map of the user's metric goals and steps by key. Only contains those for the event's metric that weren't completed before the event and whose total it counted towards, including any it completed.</p>
+     * @return Reference to {@code this} so that method calls can be chained together.
+     */
+    @java.lang.Override
+    public _FinalStage putAllGoals(Map<String, GoalResponse> goals) {
+      if (goals != null) {
+        this.goals.putAll(goals);
+      }
+      return this;
+    }
+
+    /**
+     * <p>A map of the user's metric goals and steps by key. Only contains those for the event's metric that weren't completed before the event and whose total it counted towards, including any it completed.</p>
+     */
+    @java.lang.Override
+    @JsonSetter(
+        value = "goals",
+        nulls = Nulls.SKIP
+    )
+    public _FinalStage goals(Map<String, GoalResponse> goals) {
+      this.goals.clear();
+      if (goals != null) {
+        this.goals.putAll(goals);
+      }
+      return this;
+    }
+
+    /**
      * <p>A map of leaderboards by key. Only contains leaderboards that were affected by the event.</p>
      * @return Reference to {@code this} so that method calls can be chained together.
      */
@@ -559,7 +620,7 @@ public final class EventResponse {
 
     @java.lang.Override
     public EventResponse build() {
-      return new EventResponse(eventId, metricId, total, achievements, currentStreak, points, leaderboards, rewards, idempotencyKey, idempotentReplayed, additionalProperties);
+      return new EventResponse(eventId, metricId, total, achievements, currentStreak, points, leaderboards, goals, rewards, idempotencyKey, idempotentReplayed, additionalProperties);
     }
 
     @java.lang.Override

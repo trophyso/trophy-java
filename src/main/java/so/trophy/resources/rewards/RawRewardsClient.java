@@ -15,6 +15,7 @@ import so.trophy.core.TrophyApiApiException;
 import so.trophy.core.TrophyApiException;
 import so.trophy.core.TrophyApiHttpResponse;
 import so.trophy.errors.ConflictError;
+import so.trophy.errors.ForbiddenError;
 import so.trophy.errors.NotFoundError;
 import so.trophy.errors.UnprocessableEntityError;
 import java.io.IOException;
@@ -89,6 +90,7 @@ public class RawRewardsClient {
         }
         try {
           switch (response.code()) {
+            case 403:throw new ForbiddenError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
             case 404:throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
             case 409:throw new ConflictError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ErrorBody.class), response);
             case 422:throw new UnprocessableEntityError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
